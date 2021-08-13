@@ -1,0 +1,3 @@
+export const REQUEST_SUCCESS = 'REQUEST_SUCCESS';
+export const REQUEST_ERROR = 'REQUEST_ERROR';
+export const SET_REQUEST = 'SET_REQUEST';
