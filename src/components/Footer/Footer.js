@@ -1,108 +1,127 @@
 const Footer = () => {
-  return (
-    <>
-      {/* footer section here */}
-      <section className="bg-white">
-        <footer>
-          {/* Contact segment here */}
-          <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap justify-between pt-10 pb-12 px-2 lg:px-32">
-            {/* Contact us here */}
-            <div>
-              <p className="primary-color font-semibold text-sm">CONTACT US</p>
-              <div className="flex items-center pt-2">
-                <a
-                  href="mailto:test@bld.com"
-                  target="_blank"
-                  className="flex text-sm"
-                >
-                  {' '}
-                  <span className="mr-1 pt-0.5">
-                    <img
-                      src="./assets/img/vectors/mail-icon.svg"
-                      alt="mail-icon"
-                    />
-                  </span>
-                  Email
-                </a>
-                <a href="#" target="_blank" className="flex text-sm ml-10">
-                  {' '}
-                  <span className="mr-1 ">
-                    <img
-                      src="./assets/img/vectors/whatsapp-icon.svg"
-                      alt="whatsapp-icon"
-                    />
-                  </span>{' '}
-                  Whatsapp
-                </a>
-              </div>
-            </div>
-            {/* FOllow on Social media here */}
-            <div>
-              <div className="mt-5 md:mt-0 lg:mt-0">
-                <p className="primary-color font-semibold text-sm ">
-                  FOLLOW US ON SOCIAL MEDIA
-                </p>
-                <div className="flex items-center pt-2">
-                  <a href="#" target="_blank" className="flex text-sm">
-                    {' '}
-                    <span className="mr-1 pt-0.5">
-                      <img
-                        src="./assets/img/vectors/facebook-icon.svg"
-                        alt="facebook-icon"
-                      />
-                    </span>
-                    Facebook
-                  </a>
-                  <a href="#" target="_blank" className="flex text-sm ml-4">
-                    {' '}
-                    <span className="mr-1 pt-0.5">
-                      <img
-                        src="./assets/img/vectors/twitter-icon.svg"
-                        alt="twitter-icon"
-                      />
-                    </span>{' '}
-                    Twitter
-                  </a>
-                  <a href="#" target="_blank" className="flex text-sm ml-4">
-                    {' '}
-                    <span className="mr-1 pt-0.5 ">
-                      <img
-                        src="./assets/img/vectors/instagram-icon.svg"
-                        alt="instagram-icon"
-                      />
-                    </span>{' '}
-                    Instagram
-                  </a>
+    return (
+        <footer class="mt-12 text-white" style={{ background: "#D80739" }}>
+            <div class="px-7 md:px-10 lg:px-20 xl:px-40 flex flex-wrap md:flex-nowrap pt-14 pb-3">
+                <div class="w-full flex flex-col lg:w-1/3 mb-10">
+                    <p class="footer-header pb-4">contact us</p>
+
+                    <div class="flex items-center pb-4">
+                        <span>
+                            <img src="./img/mail.svg" alt="mail-icon" />
+                        </span>
+                        <a
+                            href="mailto:test@gmail.com"
+                            class="text-sm text-white ml-2.5 font-medium pt-0.5"
+                        >
+                            Email
+                        </a>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span>
+                            <img src="./img/whatsapp.svg" alt="mail-icon" />
+                        </span>
+                        <a
+                            href="whatsapp.com"
+                            target="_blank"
+                            class="text-sm text-white ml-2.5 font-medium pt-0.5"
+                        >
+                            Whatsapp
+                        </a>
+                    </div>
                 </div>
-              </div>
+
+                <div class="w-full flex flex-col lg:w-1/3 mb-10">
+                    <p class="footer-header pb-4">FOLLOW US ON SOCIAL MEDIA</p>
+
+                    <div class="flex items-center pb-4">
+                        <span>
+                            <img src="./img/face.svg" alt="mail-icon" />
+                        </span>
+                        <a
+                            href="whatsapp.com"
+                            target="_blank"
+                            class="text-sm text-white ml-2.5 font-medium pt-0.5"
+                        >
+                            Facebook
+                        </a>
+                    </div>
+
+                    <div class="flex items-center pb-4">
+                        <span>
+                            <img src="./img/twitter.svg" alt="mail-icon" />
+                        </span>
+                        <a
+                            href="whatsapp.com"
+                            target="_blank"
+                            class="text-sm text-white ml-2.5 font-medium pt-0.5"
+                        >
+                            Twitter
+                        </a>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span>
+                            <img src="./img/insta.svg" alt="mail-icon" />
+                        </span>
+                        <a
+                            href="whatsapp.com"
+                            target="_blank"
+                            class="text-sm text-white ml-2.5 font-medium pt-0.5"
+                        >
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+
+                <div class="w-full flex flex-col lg:w-1/3">
+                    <p class="footer-header pb-4">QUICK LINKS</p>
+
+                    <div class="flex items-center pb-4">
+                        <a
+                            href=""
+                            class="text-sm text-white font-medium pt-0.5"
+                        >
+                            About us{" "}
+                        </a>
+                    </div>
+
+                    <div class="flex items-center pb-4">
+                        <a
+                            href=""
+                            class="text-sm text-white font-medium pt-0.5"
+                        >
+                            Terms of use{" "}
+                        </a>
+                    </div>
+
+                    <div class="flex items-center pb-4">
+                        <a
+                            href=""
+                            class="text-sm text-white font-medium pt-0.5"
+                        >
+                            Financial Privacy Policy{" "}
+                        </a>
+                    </div>
+
+                    <div class="flex items-center pb-4">
+                        <a
+                            href=""
+                            class="text-sm text-white font-medium pt-0.5"
+                        >
+                            Accessibility{" "}
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
-          {/* Copyright region here */}
-          <div className="footer-border pt-7 pb-12 px-2 lg:px-32">
-            <div>
-              <p className="filtered__text text-sm">
-                Copyright 2020 Buylikedealers. All rights reserved.
-              </p>
-              <p className="filtered__text text-sm pt-4 lg:pt-1">
-                {' '}
-                <span>
-                  <a href="#">Terms of use and privacy policy</a>
-                </span>{' '}
-                I{' '}
-                <span>
-                  <a href="#">Financial privacy policy</a>
-                </span>{' '}
-                I{' '}
-                <span>
-                  <a href="#">Accessibility</a>
-                </span>
-              </p>
+
+            <div class="footer-border pb-10 mx-7 md:mx-10 lg:mx-20 xl:mx-40">
+                <p class="text-white text-sm font-medium py-6">
+                    Copyright 2020 Buylikedealers. All rights reserved.
+                </p>
             </div>
-          </div>
         </footer>
-      </section>
-    </>
-  );
+    );
 };
 
 export default Footer;
