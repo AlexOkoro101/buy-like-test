@@ -997,7 +997,7 @@ input.detail:checked~span:after {
 }
 
 .overview-tab.active::after {
-    /* content: url('../img/vectors/polygon.svg'); */
+    /* content: url('../public/assets/img/vectors/polygon.svg'); */
     position: absolute;
 }
 
@@ -1182,5 +1182,221 @@ input.detail:checked~span:after {
 @media (min-width: 576px) and (max-width: 767.98px) {
     .bids-dropdown-holder {
         left: 18px;
+    }
+}
+
+/*  */
+/*  */
+/*  */
+/* Transaction page */
+/*  */
+/*  */
+/*  */
+
+.page-holder {
+    /* background: #FFFFFF;
+    box-shadow: 0px 0px 15px 5px rgba(0, 58, 78, 0.05);
+    border-radius: 5px; */
+}
+
+
+.deposit-holder {
+    background: #F8FAFB;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.car-holder {
+    border-top: 1px solid rgba(31, 42, 83, 0.15);
+    border-bottom: 1px solid rgba(31, 42, 83, 0.15);
+}
+
+.info-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.info-text {
+    border: 1px solid rgba(31, 42, 83, 0.25);
+    border-radius: 3px;
+    color: #1F2A53;
+    opacity: 0.75
+}
+
+.phone-number {
+    background: url(../public/assets/img/vectors/nigeria-flag.svg) no-repeat left;
+    -webkit-appearance: none;
+    background-position-x: calc(0% + 5px);
+
+}
+
+.info-select {
+    background: url(../public/assets/img/vectors/arrow-down2.svg) no-repeat right #fff;
+    -webkit-appearance: none;
+    background-position-x: calc(100% - 5px);
+    border: 1px solid rgba(35, 41, 65, 0.25);
+    border-radius: 3px;
+    color: #1F2A53;
+    opacity: 0.75
+}
+
+.info-area {
+    border: 1px solid rgba(31, 42, 83, 0.25);
+    border-radius: 3px;
+    resize: none;
+}
+
+.info-area ::placeholder {
+    color: #1F2A53;
+    opacity: 0.75;
+}
+
+.total-border {
+    border-top: 1px solid rgba(31, 42, 83, 0.15);
+    border-bottom: 1px solid rgba(31, 42, 83, 0.15);
+}
+
+.card-input {
+    height: 30px;
+    border: 1px solid rgba(31, 42, 83, 0.75);
+    border-radius: 3px;
+}
+
+.card-input::placeholder {
+    color: #0D101B;
+    font-size: 0.563rem;
+    opacity: 0.75;
+}
+
+.card-select,
+.city-select {
+    background: url(../public/assets/img/vectors/arrow-down2.svg) no-repeat right #fff;
+    -webkit-appearance: none;
+    background-position-x: calc(100% - 5px);
+    height: 30px;
+    border: 1px solid rgba(31, 42, 83, 0.25);
+    border-radius: 3px;
+    font-size: 0.563rem;
+    opacity: 0.75;
+}
+
+.deposit-text {
+    background: url(../public/assets/img/vectors/copy-icon.svg) no-repeat right #fff;
+    border: 1px solid rgba(31, 42, 83, 0.5);
+    border-radius: 3px;
+    font-size: 0.563rem;
+    opacity: 0.75;
+    -webkit-appearance: none;
+    background-position-x: calc(100% - 5px);
+    height: 30px;
+    /* width: 80%; */
+}
+
+.paystack-btn {
+    border: 2px solid #00C3F7;
+    border-radius: 3px;
+    padding: .7em 2em;
+}
+
+.make-payment {
+    padding: 1.3em 4em;
+}
+
+.transfer-payment p {
+    color: #1F2A53;
+}
+
+.wire-transfer form label {
+
+    width: 20%;
+    text-align: right;
+    margin-right: 90px;
+}
+
+.wire-transfer form input {
+    height: 20px;
+    width: 70%;
+    border: 1px solid #000;
+}
+
+/* MEDIA QUERIES HERE */
+
+.details-tab {
+    transition: 0.3s;
+    color: rgba(31, 42, 83, 0.25);
+    font-weight: 600;
+    font-size: 0.625rem;
+    border-bottom: 1px solid rgba(31, 42, 83, 0.15);
+}
+
+.details-tab.active {
+    border-bottom: 1px solid #d80739;
+    color: #1F2A53;
+}
+
+aside {
+    width: 27%;
+
+}
+
+section {
+    width: 70%;
+
+}
+
+@media (max-width: 575.98px) {
+    aside {
+        width: 100%;
+    }
+
+    section {
+        width: 100%;
+    }
+
+    .info-holder {
+        background: none;
+        box-shadow: none;
+        border-radius: none;
+    }
+
+    .confirm-holder {}
+
+    .wire-transfer form input {
+        width: 100%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    aside {
+        width: 100%;
+    }
+
+    section {
+        width: 100%;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    aside {
+        width: 35%;
+    }
+
+    section {
+        width: 57%;
+    }
+
+    .wire-transfer form input {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    aside {
+        width: 25%;
+    }
+
+    section {
+        width: 53%;
     }
 }
