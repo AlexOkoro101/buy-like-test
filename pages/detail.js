@@ -548,57 +548,54 @@ const detail = () => {
                                     cy="125"
                                     class="progress progress-ring__circle"
                                 ></circle>
-                                <div class="timer">
-                                    <button
-                                        type="button"
-                                        class="focus:outline-none cursor-auto pill auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
-                                    >
-                                        Auction Day
-                                    </button>
-                                    <div class=" flex justify-center mt-3">
-                                        <p class="sec-black font-medium font-11">
-                                            Feb 4, 2021
-                                        </p>
-                                        <p class="sec-black font-medium font-11 ml-4">
-                                            9:06 AM
-                                        </p>
-                                    </div>
-                                    <p class="font-9 font-semibold text-center primary-blue pt-4">
-                                        TIME LEFT
-                                    </p>
-
-                                    <div class="flex mt-1.5 justify-center">
-                                        <div class="flex flex-col ml-2">
-                                            <p class="days font-13 sec-black font-semibold "></p>
-                                            <p class="primary-gray font-6">
-                                                DAYS
-                                            </p>
-                                        </div>
-
-                                        <div class=" ml-3.5">
-                                            <p class=" font-13 sec-black font-semibold hours"></p>
-                                            <p class="primary-gray font-6">
-                                                HOURS
-                                            </p>
-                                        </div>
-
-                                        <div class="flex flex-col ml-3.5">
-                                            <p class="font-13 sec-black font-semibold minutes"></p>
-                                            <p class="primary-gray font-6">
-                                                MINUTES
-                                            </p>
-                                        </div>
-
-                                        <div class="flex flex-col ml-3.5">
-                                            <p class="font-13 sec-black font-semibold seconds"></p>
-                                            <p class="primary-gray font-6">
-                                                SECONDS
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="days font-13 sec-black font-semibold"></div>
-                                </div>
                             </svg>
+
+                            <div class="timer">
+                                <button
+                                    type="button"
+                                    class="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
+                                >
+                                    Auction Day
+                                </button>
+                                <div class=" flex justify-center mt-3">
+                                    <p class="sec-black font-medium font-11">
+                                        Feb 4, 2021
+                                    </p>
+                                    <p class="sec-black font-medium font-11 ml-4">
+                                        9:06 AM
+                                    </p>
+                                </div>
+                                <p class="font-9 font-semibold text-center primary-blue pt-4">
+                                    TIME LEFT
+                                </p>
+
+                                <div class="flex mt-1.5 justify-center">
+                                    <div class="flex flex-col ml-2">
+                                        <p class="days font-13 sec-black font-semibold "></p>
+                                        <p class="primary-gray font-6">DAYS</p>
+                                    </div>
+
+                                    <div class=" ml-3.5">
+                                        <p class=" font-13 sec-black font-semibold hours"></p>
+                                        <p class="primary-gray font-6">HOURS</p>
+                                    </div>
+
+                                    <div class="flex flex-col ml-3.5">
+                                        <p class="font-13 sec-black font-semibold minutes"></p>
+                                        <p class="primary-gray font-6">
+                                            MINUTES
+                                        </p>
+                                    </div>
+
+                                    <div class="flex flex-col ml-3.5">
+                                        <p class="font-13 sec-black font-semibold seconds"></p>
+                                        <p class="primary-gray font-6">
+                                            SECONDS
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="days font-13 sec-black font-semibold"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="flex flex-col self-center mt-14">
