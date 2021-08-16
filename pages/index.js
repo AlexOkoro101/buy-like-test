@@ -1,8 +1,48 @@
 import React, { useEffect } from "react";
 import Meta from "../src/components/Head/Meta";
 import anime from "animejs";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const Home = () => {
+    const responsive2 = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5,
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 4,
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 3,
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+        },
+    };
+    const responsive = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5,
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 3,
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2,
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+        },
+    };
     useEffect(() => {
         if (typeof window !== "undefined") {
             // Easy Buy Animation here
@@ -365,94 +405,126 @@ const Home = () => {
                     </section>
                     {/*  */}
                     <section class="pb-16 px-2 lg:px-20 ">
-                        <div class="mt-20 ">
+                        <div class="mt-20 mb-12">
                             <hr class="orange-underline w-20 m-auto pb-4 " />
                             <h5 class="font-semibold primary-color text-center text-xl ">
                                 {" "}
                                 SEARCH A CATEGORY{" "}
                             </h5>
                         </div>
-                        <div class="flex flex-wrap justify-center lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
-                            <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img
-                                    src="./assets/img/hatchback.svg "
-                                    alt="Hatchback "
-                                />
-                                <div class="text-center text-xs pt-3 ">
-                                    <p class="font-semibold primary-color ">
-                                        Hatchbacks
-                                    </p>
-                                    <a
-                                        href="# "
-                                        class="primary-red font-bold pt-2 "
-                                    >
-                                        SEE MORE
-                                    </a>
+                        <Carousel
+                            swipeable={true}
+                            draggable={true}
+                            showDots={false}
+                            responsive={responsive2}
+                            ssr={true} // means to render carousel on server-side.
+                            infinite={true}
+                            autoPlay={true}
+                            autoPlaySpeed={2000}
+                            keyBoardControl={true}
+                            customTransition="all .5"
+                            transitionDuration={500}
+                            containerClass="carousel-container"
+                            removeArrowOnDeviceType={["tablet", "mobile"]}
+                            dotListClass="custom-dot-list-style"
+                            itemClass="carousel-item-padding-40-px"
+                        >
+                            <div>
+                                <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                    <img
+                                        src="./assets/img/hatchback.svg "
+                                        alt="Hatchback "
+                                    />
+                                    <div class="text-center text-xs pt-3 ">
+                                        <p class="font-semibold primary-color ">
+                                            Hatchbacks
+                                        </p>
+                                        <a
+                                            href="# "
+                                            class="primary-red font-bold pt-2 "
+                                        >
+                                            SEE MORE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img
-                                    src="./assets/img/sedans.svg "
-                                    alt="Sedans "
-                                />
-                                <div class="text-center text-xs pt-4 ">
-                                    <p class="font-semibold primary-color ">
-                                        Sedans
-                                    </p>
-                                    <a
-                                        href="# "
-                                        class="primary-red font-bold pt-2 "
-                                    >
-                                        SEE MORE
-                                    </a>
+                            <div>
+                                <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                    <img
+                                        src="./assets/img/sedans.svg "
+                                        alt="Sedans "
+                                    />
+                                    <div class="text-center text-xs pt-4 ">
+                                        <p class="font-semibold primary-color ">
+                                            Sedans
+                                        </p>
+                                        <a
+                                            href="# "
+                                            class="primary-red font-bold pt-2 "
+                                        >
+                                            SEE MORE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img src="./assets/img/van.svg " alt="Van " />
-                                <div class="text-center text-xs pt-3 ">
-                                    <p class="font-semibold primary-color ">
-                                        Vans
-                                    </p>
-                                    <a
-                                        href="# "
-                                        class="primary-red font-bold pt-2 "
-                                    >
-                                        SEE MORE
-                                    </a>
+                            <div>
+                                <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                    <img
+                                        src="./assets/img/van.svg "
+                                        alt="Van "
+                                    />
+                                    <div class="text-center text-xs pt-3 ">
+                                        <p class="font-semibold primary-color ">
+                                            Vans
+                                        </p>
+                                        <a
+                                            href="# "
+                                            class="primary-red font-bold pt-2 "
+                                        >
+                                            SEE MORE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img src="./assets/img/suv.svg " alt="SUVs " />
-                                <div class="text-center text-xs pt-3 ">
-                                    <p class="font-semibold primary-color ">
-                                        SUVs
-                                    </p>
-                                    <a
-                                        href="# "
-                                        class="primary-red font-bold pt-2 "
-                                    >
-                                        SEE MORE
-                                    </a>
+                            <div>
+                                <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                    <img
+                                        src="./assets/img/suv.svg "
+                                        alt="SUVs "
+                                    />
+                                    <div class="text-center text-xs pt-3 ">
+                                        <p class="font-semibold primary-color ">
+                                            SUVs
+                                        </p>
+                                        <a
+                                            href="# "
+                                            class="primary-red font-bold pt-2 "
+                                        >
+                                            SEE MORE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img
-                                    src="./assets/img/wagon.svg "
-                                    alt="Wagon "
-                                />
-                                <div class="text-center text-xs pt-2 ">
-                                    <p class="font-semibold primary-color ">
-                                        Wagons
-                                    </p>
-                                    <a
-                                        href="# "
-                                        class="primary-red font-bold pt-2 "
-                                    >
-                                        SEE MORE
-                                    </a>
+                            <div>
+                                <div class="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                    <img
+                                        src="./assets/img/wagon.svg "
+                                        alt="Wagon "
+                                    />
+                                    <div class="text-center text-xs pt-2 ">
+                                        <p class="font-semibold primary-color ">
+                                            Wagons
+                                        </p>
+                                        <a
+                                            href="# "
+                                            class="primary-red font-bold pt-2 "
+                                        >
+                                            SEE MORE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Carousel>
                         <div class="text-center mt-10 ">
                             <button
                                 type="button "
@@ -655,90 +727,100 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
+
                     <section class="testimonial__section px-0 lg:px-20 pb-40">
                         <div class="text-center pt-20 lg:pt-16 ">
                             <hr class="orange-underline w-20 m-auto pb-7 " />
-                            <h4 class="primary-color font-bold text-2xl ">
+                            <h4 class="primary-color mb-8 font-bold text-2xl ">
                                 JOIN OUR LEAGUE OF 500+ HAPPY CUSTOMERS
                             </h4>
                         </div>
-
-                        <div class=" splide justify-beween pt-12 ">
-                            <div class="splide__track  ">
-                                <div class="splide__list md:w-5/6 m-auto">
-                                    <div class=" splide__slide testimonial__holder p-8">
-                                        <p class="primary-color text-base font-normal ">
-                                            The car is exactly what I saw in the
-                                            picture. The staff were good
-                                            listeners and professional. The car
-                                            is exactly what I saw in the
-                                            picture.
-                                        </p>
-                                        <div class="star__rating flex pt-4 pb-2 ">
-                                            <span class="fa fa-star star checked "></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star  ml-1"></span>
-                                        </div>
-
-                                        <p class="font-bold text-base primary-color py-2 ">
-                                            {" "}
-                                            Dare Thomas{" "}
-                                        </p>
-                                        <p class="text-sm font-normal testinonial__location ">
-                                            Lagos, Nigeria{" "}
-                                        </p>
+                        <Carousel
+                            swipeable={true}
+                            draggable={true}
+                            showDots={true}
+                            responsive={responsive}
+                            ssr={true} // means to render carousel on server-side.
+                            infinite={true}
+                            autoPlay={true}
+                            autoPlaySpeed={1000}
+                            keyBoardControl={true}
+                            customTransition="all .5"
+                            transitionDuration={500}
+                            containerClass="carousel-container"
+                            removeArrowOnDeviceType={["tablet", "mobile"]}
+                            dotListClass="custom-dot-list-style"
+                            itemClass="carousel-item-padding-40-px"
+                        >
+                            <div>
+                                <div class=" splide__slide testimonial__holder p-8 ">
+                                    <p class="primary-color text-base font-normal ">
+                                        The car is exactly .
+                                    </p>
+                                    <div class="star__rating flex pt-4 pb-2 ">
+                                        <span class="fa fa-star star checked "></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star  ml-1"></span>
                                     </div>
-                                    <div class=" splide__slide testimonial__holder  p-8 ">
-                                        <p class="primary-color text-base font-normal ">
-                                            The car is exactly what I saw in the
-                                            picture. The staff were good
-                                            listeners and professional. The car
-                                            is exactly what I saw in the
-                                            picture.
-                                        </p>
-                                        <div class="star__rating flex pt-4 pb-2 ">
-                                            <span class="fa fa-star star checked "></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star  ml-1"></span>
-                                        </div>
-                                        <p class="font-bold text-base primary-color py-2 ">
-                                            {" "}
-                                            Dare Thomas{" "}
-                                        </p>
-                                        <p class="text-sm font-normal testinonial__location ">
-                                            Lagos, Nigeria{" "}
-                                        </p>
-                                    </div>
-                                    <div class=" splide__slide testimonial__holder p-8 ">
-                                        <p class="primary-color text-base font-normal ">
-                                            The car is exactly what I saw in the
-                                            picture. The staff were good
-                                            listeners and professional. The car
-                                            is exactly what I saw in the
-                                            picture.
-                                        </p>
-                                        <div class="star__rating flex pt-4 pb-2 ">
-                                            <span class="fa fa-star star checked "></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star checked ml-1"></span>
-                                            <span class="fa fa-star star  ml-1"></span>
-                                        </div>
-                                        <p class="font-bold text-base primary-color py-2 ">
-                                            {" "}
-                                            Dare Thomas{" "}
-                                        </p>
-                                        <p class="text-sm font-normal testinonial__location ">
-                                            Lagos, Nigeria{" "}
-                                        </p>
-                                    </div>
+                                    <p class="font-bold text-base primary-color py-2 ">
+                                        {" "}
+                                        Dare Thomas{" "}
+                                    </p>
+                                    <p class="text-sm font-normal testinonial__location ">
+                                        Lagos, Nigeria{" "}
+                                    </p>
                                 </div>
                             </div>
-                        </div>
+                            <div>
+                                <div class=" splide__slide testimonial__holder  p-8 ">
+                                    <p class="primary-color text-base font-normal ">
+                                        The car is exactly what I saw in the
+                                        picture. The staff
+                                    </p>
+                                    <div class="star__rating flex pt-4 pb-2 ">
+                                        <span class="fa fa-star star checked "></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star  ml-1"></span>
+                                    </div>
+                                    <p class="font-bold text-base primary-color py-2 ">
+                                        {" "}
+                                        Dare Thomas{" "}
+                                    </p>
+                                    <p class="text-sm font-normal testinonial__location ">
+                                        Lagos, Nigeria{" "}
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <div class=" splide__slide testimonial__holder p-8">
+                                    <p class="primary-color text-base font-normal ">
+                                        The car is exactly what I saw in the
+                                        picture. The staff were good listeners
+                                        and professional. The car is exactly
+                                        what I saw in the picture.
+                                    </p>
+                                    <div class="star__rating flex pt-4 pb-2 ">
+                                        <span class="fa fa-star star checked "></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star checked ml-1"></span>
+                                        <span class="fa fa-star star  ml-1"></span>
+                                    </div>
+
+                                    <p class="font-bold text-base primary-color py-2 ">
+                                        {" "}
+                                        Dare Thomas{" "}
+                                    </p>
+                                    <p class="text-sm font-normal testinonial__location ">
+                                        Lagos, Nigeria{" "}
+                                    </p>
+                                </div>
+                            </div>
+                        </Carousel>
                     </section>
                     {/*  */}
 
