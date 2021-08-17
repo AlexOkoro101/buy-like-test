@@ -29,10 +29,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/profile/current-bids-2": [
+    "/profile/current-bids-3": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/profile/current-bids-2.js"
+      "static/chunks/pages/profile/current-bids-3.js"
     ]
   },
   "ampFirstPages": []
