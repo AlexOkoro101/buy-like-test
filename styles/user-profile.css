@@ -1,0 +1,217 @@
+/* MEDIA QUERIES HERE */
+
+.container-main {
+    width: 85%;
+}
+
+body {
+    background: #FDFEFF;
+}
+
+select {
+    background: url('../public/assets/img/vectors/arrow-down2.svg') no-repeat right #ddd;
+    -webkit-appearance: none;
+    background-position-x: calc(100% - 5px);
+}
+
+button:focus {
+    outline: none;
+}
+
+aside {
+    width: 23%;
+}
+
+.profile-sidebar {
+    background: #F8FAFB;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.profile-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+}
+
+.card-holder {
+    background: #FFFFFF;
+    border: 1px solid rgba(31, 42, 83, 0.75);
+    border-radius: 5px;
+    width: 169px
+}
+
+.add-new-card {
+    background: rgba(73, 165, 198, 0.15);
+    border: 1px dashed #49A5C6;
+    border-radius: 5px;
+    width: 169px
+}
+
+.fa {
+    font-size: 0.875rem !important;
+}
+
+section {
+    width: 75%;
+    /* width: 100%; */
+}
+
+.gray-text {
+    color: rgba(13, 16, 27, 0.75);
+}
+
+.light-gray-text {
+    color: rgba(13, 16, 27, 0.5);
+}
+
+.blue-text {
+    color: #1F2A53;
+}
+
+.border {
+    border: 0.8px solid rgba(13, 16, 27, 0.25);
+}
+
+.profile-control {
+    background: #FFFFFF;
+    border: 1px solid rgba(31, 42, 83, 0.5);
+    border-radius: 3px;
+    height: 30px
+}
+
+.light-border {
+    border: 1px solid rgba(31, 42, 83, 0.15);
+}
+
+.bid-card {
+    height: 170px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px 1px rgba(31, 42, 83, 0.03);
+    border-radius: 7px;
+}
+
+.small-car-card {
+    border-radius: 3px;
+    width: 61px;
+    height: 37px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.blue-div {
+    background: rgba(73, 165, 198, 0.1);
+    height: 67px;
+}
+
+.tiny-car-card {
+    border-radius: 3px;
+    width: 53px;
+    height: 32px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.side-card {
+    width: 300px;
+    height: 360px;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.menu-card {
+    /* width: 265px; */
+    height: 265px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 5px 1px rgba(31, 42, 83, 0.03);
+    border-radius: 5px;
+}
+
+
+/* The Modal (background) */
+
+.modal {
+    padding: 40px 0px;
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    background: rgba(31, 42, 83, 0.75);
+}
+
+
+/* Modal Content */
+
+.modal-content {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.active {
+    display: block !important;
+}
+
+.changeStyle {
+    border-left: 2px solid #0C74D4;
+    color: #0C74D4;
+}
+
+.changeStyle:focus {
+    outline: none;
+}
+
+@media (max-width: 575.98px) {
+    .container-main {
+        width: 100%;
+    }
+    aside {
+        width: 100%;
+    }
+    section {
+        width: 100%;
+    }
+    .modal {
+        padding: 180px 0px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container-main {
+        width: 100%;
+    }
+    aside {
+        width: 100%;
+    }
+    section {
+        width: 100%;
+    }
+    .modal {
+        padding: 180px 0px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .container-main {
+        width: 100%;
+    }
+    aside {
+        width: 33.33%;
+    }
+    section {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {}
