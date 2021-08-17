@@ -2,6 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/profile/account-menu": "pages/profile/account-menu.js",
-  "/": "pages/index.js"
+  "/": "pages/index.js",
+  "/profile/current-bids": "pages/profile/current-bids.js",
+  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js",
+  "/profile/account-menu": "pages/profile/account-menu.js"
 }
