@@ -23,7 +23,7 @@ const detail = () => {
     };
     return (
         <div>
-            <section class="flex flex-wrap justify-center pt-20 lg:pt-28 px-5 xl:px-0">
+            <section class="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                 <div class="details-border-b py-1 block lg:hidden">
                     <p class="font-13 font-bold primary-color">
                         2015 MERCEDES-BENZ GLK-CLASS GLK350
@@ -515,7 +515,7 @@ const detail = () => {
                 </div>
             </section>
 
-            <section class=" mt-20">
+            <section class="w-full mt-20">
                 <div class=" justify-center mb-10 block lg:hidden"></div>
 
                 <div class="flex justify-around flex-wrap">
@@ -614,7 +614,7 @@ const detail = () => {
                     </div>
                 </div>
             </section>
-            <section class="mt-14 pt-7 px-5 vehicle-details">
+            <section class="mt-14 pt-7 w-full px-5 vehicle-details">
                 <div class="text-center py-3">
                     <hr class="red-underline2 w-20 m-auto pb-4 " />
                     <h4 class="font-bold primary-color text-xl ">
@@ -625,7 +625,7 @@ const detail = () => {
                     </p>
                 </div>
 
-                <div class="flex flex-wrap justify-center mt-8">
+                <div class="flex flex-wrap justify-center w-full mt-8">
                     <div class="flex flex-col w-1/2 lg:w-1/3 mb-10 lg:mb-20">
                         <div class="self-center">
                             <img
@@ -713,7 +713,7 @@ const detail = () => {
                 </div>
             </section>
 
-            <section class="py-4 overview-section">
+            <section class="py-4 w-full overview-section">
                 <div class="flex justify-center px-5">
                     <div class="overview-tab relative mr-6 lg:mr-16 active lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5">
                         <p href class="lg:py-1.5 ">
@@ -873,7 +873,7 @@ const detail = () => {
                     </a>
                 </div>
             </section>
-            <section class="overview-section py-3 px-7">
+            <section class="overview-section w-full py-3 px-7">
                 <div class="text-center py-3">
                     <hr class="red-underline2 w-20 m-auto pb-4" />
                     <h4 class="font-bold primary-color text-xl ">

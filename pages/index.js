@@ -235,11 +235,11 @@ const Home = () => {
     });
 
     return (
-        <section>
+        <section className="w-full">
             <Meta />
-            <main>
+            <main className="w-full">
                 {/* Hero section here */}
-                <section className="Hero__section mt-0 bg-gray-700 pt-20  ">
+                <section className="Hero__section mt-0  w-full bg-gray-700 pt-20  ">
                     {/* Hero Text here */}
                     <div className="text-center pt-10">
                         <h1 className="text-3xl  lg:text-5xl primary-red font-bold hero-text ">
@@ -321,7 +321,7 @@ const Home = () => {
                     </div>
                     <section
                         style={{ background: "#E1E1E1" }}
-                        class=" px-2 lg:px-20 "
+                        class=" px-2 lg:px-20 w-full "
                     >
                         <div class=" request__holder relative w-full py-16  ">
                             <form action="">
@@ -404,7 +404,7 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class="pb-16 px-2 lg:px-20 ">
+                    <section class="pb-16 px-2 w-full lg:px-20 ">
                         <div class="mt-20 mb-12">
                             <hr class="orange-underline w-20 m-auto pb-4 " />
                             <h5 class="font-semibold primary-color text-center text-xl ">
@@ -535,7 +535,10 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class=" filtered__section " id="number-offset">
+                    <section
+                        class="w-full filtered__section "
+                        id="number-offset"
+                    >
                         <div class="relative px-2 py-3 lg:px-20 ">
                             <div class="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-32 ">
                                 <div
@@ -575,7 +578,7 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class="wholesale__section pb-12 px-2 lg:px-20 ">
+                    <section class="wholesale__section w-full pb-12 px-2 lg:px-20 ">
                         <div class="flex flex-wrap lg:flex-nowrap md:flex-nowrap justify-between pt-10 ">
                             <div class="w-full md:w-1/2 xl:w-2/5 ">
                                 <div>
@@ -603,7 +606,7 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class="easybuy__section ">
+                    <section class="w-full easybuy__section ">
                         <div class="relative lg:pr-20 ">
                             <div class="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-32 ">
                                 <div class="relative " id="easyBuywaypoint">
@@ -649,7 +652,7 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class="works__section pb-12 ">
+                    <section class="w-full works__section pb-12 ">
                         <div class="px-2 lg:px-20 pt-16 ">
                             <div class="text-center ">
                                 <hr class="red-underline w-20 m-auto pb-3 " />
@@ -728,7 +731,7 @@ const Home = () => {
                     </section>
                     {/*  */}
 
-                    <section class="testimonial__section px-0 lg:px-20 pb-40">
+                    <section class="testimonial__section w-full px-0 lg:px-20 pb-40">
                         <div class="text-center pt-20 lg:pt-16 ">
                             <hr class="orange-underline w-20 m-auto pb-7 " />
                             <h4 class="primary-color mb-8 font-bold text-2xl ">
@@ -824,8 +827,8 @@ const Home = () => {
                     </section>
                     {/*  */}
 
-                    <section>
-                        <div class="white__bg px-7 md:px-10 lg:px-20 xl:px-40">
+                    <section className="w-full">
+                        <div class="white__bg w-full px-7 md:px-10 lg:px-20 xl:px-40">
                             <div class="py-14">
                                 <div class="feature__holder ">
                                     <div class="flex flex-wrap md:flex-nowrap lg:flex-nowrap pt-4">
@@ -976,7 +979,7 @@ const Home = () => {
                         </div>
                     </section>
                     {/*  */}
-                    <section class="bg-white px-7 md:px-10 lg:px-20 xl:px-40 ">
+                    <section class="bg-white w-full px-7 md:px-10 lg:px-20 xl:px-40 ">
                         <div class="text-center pt-20 lg:pt-16 ">
                             <hr class="orange-underline w-20 m-auto pb-7 " />
                             <h4 class="primary-color font-bold text-2xl ">
