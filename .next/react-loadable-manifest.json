@@ -4,11 +4,5 @@
       "id": "./node_modules/next/dist/client/dev/noop.js",
       "file": "static/chunks/0.js"
     }
-  ],
-  "libphonenumber-js-utils": [
-    {
-      "id": "./node_modules/libphonenumber-js-utils/dist/libphonenumber.js",
-      "file": "static/chunks/1.js"
-    }
   ]
 }
