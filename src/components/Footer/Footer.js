@@ -1,13 +1,13 @@
 const Footer = () => {
     return (
-        <footer class="mt-12 text-white" style={{ background: "#D80739" }}>
+        <footer class=" text-white" style={{ background: "#D80739" }}>
             <div class="px-7 md:px-10 lg:px-20 xl:px-40 flex flex-wrap md:flex-nowrap pt-14 pb-3">
                 <div class="w-full flex flex-col lg:w-1/3 mb-10">
                     <p class="footer-header pb-4">contact us</p>
 
                     <div class="flex items-center pb-4">
                         <span>
-                            <img src="./img/mail.svg" alt="mail-icon" />
+                            <img src="../img/mail.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="mailto:test@gmail.com"
@@ -19,7 +19,7 @@ const Footer = () => {
 
                     <div class="flex items-center">
                         <span>
-                            <img src="./img/whatsapp.svg" alt="mail-icon" />
+                            <img src="../img/whatsapp.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -36,7 +36,7 @@ const Footer = () => {
 
                     <div class="flex items-center pb-4">
                         <span>
-                            <img src="./img/face.svg" alt="mail-icon" />
+                            <img src="../img/face.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -49,7 +49,7 @@ const Footer = () => {
 
                     <div class="flex items-center pb-4">
                         <span>
-                            <img src="./img/twitter.svg" alt="mail-icon" />
+                            <img src="../img/twitter.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -62,7 +62,7 @@ const Footer = () => {
 
                     <div class="flex items-center">
                         <span>
-                            <img src="./img/insta.svg" alt="mail-icon" />
+                            <img src="../img/insta.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"

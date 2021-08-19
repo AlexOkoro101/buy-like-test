@@ -1,0 +1,226 @@
+/* Search Results styles here */
+
+.main {
+    background: #FDFEFF;
+}
+
+.filter-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 5px 3px rgba(31, 42, 83, 0.03);
+    height: 680px;
+}
+
+.border-bt {
+    border-bottom: 0.8px solid rgba(13, 16, 27, 0.15);
+}
+
+.search-results-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 2px 10px 2px rgba(0, 58, 78, 0.03);
+    border-radius: 5px;
+    height: 42px;
+}
+
+.search-result-control {
+    background: #FFFFFF;
+    border: 0.8px solid rgba(13, 16, 27, 0.25);
+    border-radius: 3px;
+    height: 24px;
+    width: 305px;
+}
+
+.search-result-control-mobile {
+    background: #FFFFFF;
+    border: 0.75px solid rgba(13, 16, 27, 0.5);
+    height: 36px;
+    border-radius: 3px;
+}
+
+.search-result-control-mobile::placeholder {
+    color: rgba(13, 16, 27, 0.85);
+    font-size: 0.875rem;
+}
+
+.search-result-control::placeholder {
+    font-size: 0.625rem;
+    color: rgba(13, 16, 27, 0.5);
+}
+
+.view-btn {
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+}
+
+.view-btn.list {
+    background: rgba(13, 16, 27, 0.05);
+}
+
+.view-btn.grid {
+    background: #D80739;
+}
+
+.svg-tab {
+    fill: rgba(13, 16, 27, 0.25);
+}
+
+.active.svg-tab {
+    fill: white;
+}
+
+.tab-toggle {
+    background: rgba(13, 16, 27, 0.05);
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+}
+
+.active.tab-toggle {
+    background: #D80739;
+}
+
+.select-result-control {
+    background: #FFFFFF;
+    border: 1px solid rgba(13, 16, 27, 0.25);
+    box-sizing: border-box;
+    border-radius: 3px;
+    width: 124px;
+    height: 24px;
+    color: rgba(13, 16, 27, 0.5);
+}
+
+.select-result-control-mobile {
+    background: #FFFFFF;
+    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    height: 36px;
+}
+
+.filter-pill {
+    background: rgba(12, 116, 212, 0.75);
+    box-shadow: 0px 4px 10px rgba(73, 165, 198, 0.1);
+    border-radius: 15px;
+    height: 24px;
+}
+
+.car-display-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 5px 1px rgba(31, 42, 83, 0.03);
+    border-radius: 5px;
+    width: 305px;
+}
+
+.car-display-list-holder {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 5px 1px rgba(31, 42, 83, 0.03);
+    border-radius: 5px;
+}
+
+.action-btn {
+    box-shadow: 0px 4px 10px rgba(73, 165, 198, 0.1);
+    border-radius: 2px;
+    height: 14.22px;
+    left: 2px;
+}
+
+.action-btn.buy {
+    background: #388E3C;
+}
+
+.action-btn.bid {
+    background: #0C74D4;
+}
+
+
+/* Tab content - closed */
+
+.tab-content {
+    max-height: 0;
+    -webkit-transition: max-height .35s;
+    -o-transition: max-height .35s;
+    transition: max-height .35s;
+}
+
+
+/* content height here */
+
+.tab input:checked~.tab-content {
+    max-height: 100vh;
+}
+
+
+/* Icon HEre */
+
+.tab label::after {
+    float: right;
+    display: block;
+    -webkit-transition: all .35s;
+    -o-transition: all .35s;
+    transition: all .35s;
+}
+
+.tab input[type=radio]+label::after {
+    content: url("../public/assets/img/vectors/arrow-down.svg");
+}
+
+
+/* Icon formatting - open */
+
+.tab input[type=checkbox]:checked+label::after {
+    transform: rotate(315deg);
+}
+
+.tab input[type=radio]:checked+label::after {
+    transform: rotateX(180deg);
+}
+
+
+/* custom select style here */
+
+label.search {
+    position: relative;
+}
+
+span.search {
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(13, 16, 27, 0.25);
+    display: inline-block;
+    border-radius: 2px;
+    transition: all linear 0.3s;
+}
+
+span.search:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-bottom: 1px solid #0D101B;
+    border-right: 1px solid #0D101B;
+    height: 10px;
+    width: 5px;
+    transform: rotate(45deg);
+    visibility: hidden;
+}
+
+input.search {
+    display: none;
+}
+
+input.search:checked~span {
+    background: inherit;
+    border: none;
+}
+
+input.search:checked~span:after {
+    visibility: visible;
+}
+
+.select-group {
+    border: 1px solid rgba(13, 16, 27, 0.5);
+    box-shadow: 0px 0px 10px rgba(73, 165, 198, 0.1);
+    border-radius: 5px;
+    font-size: 0.688rem;
+    width: 77px;
+    height: 24px;
+}
