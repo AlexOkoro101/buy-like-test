@@ -9,7 +9,7 @@ const Meta = ({ title, keywords, description }) => {
             <meta name="keywords" content={keywords} />
             <meta name="description" content={description} />
             <meta charSet="utf-8" />
-            <link rel="icon" href="/favicon" />
+            <link rel="icon" href="../../public/favicon.ico" />
 
             <link
                 rel="stylesheet"

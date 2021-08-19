@@ -1,0 +1,65 @@
+.signup-bg {
+    background: url("../public/assets/img/signup-bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.options-holder {
+    background: #FFFFFF;
+    box-shadow: 5px 5px 10px 5px rgba(0, 58, 78, 0.1);
+    border-radius: 5px;
+    width: 35%;
+}
+
+.form-holder{
+    background: #FFFFFF;
+    box-shadow: 5px 5px 10px 5px rgba(0, 58, 78, 0.1);
+    border-radius: 5px;
+}
+
+.options-btn {
+    border: 1px solid #1F2A53;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 4px 10px rgba(73, 165, 198, 0.1));
+    border-radius: 5px;
+    height: 36px;
+}
+
+.login-control {
+    height: 36px;
+    background: #FFFFFF;
+    border: 1px solid rgba(31, 42, 83, 0.5);
+    box-sizing: border-box;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.login-control::placeholder {
+    font-size: 0.75rem;
+    color: rgba(31, 42, 83, 0.75);
+    opacity: 0.75;
+}
+
+@media (max-width: 575.98px) {
+    .options-holder {
+        width: 95%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .options-holder {
+        width: 95%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .options-holder {
+        width: 60%;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .options-holder {
+        width: 60%;
+    }
+}
