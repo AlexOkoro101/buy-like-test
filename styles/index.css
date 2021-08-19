@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
 :root {
     --primary-color: #1F2A53;
     --red: #D80739;
@@ -147,6 +148,7 @@ a {
         width: 1.125em;
         height: .125em;
     }
+
     .navicon::before,
     .navicon::after {
         display: block;
@@ -157,27 +159,35 @@ a {
         content: '';
         background: #3D4852;
     }
+
     .navicon::before {
         top: 5px;
     }
+
     .navicon::after {
         top: -5px;
     }
+
     .menu-btn:not(:checked)~.menu {
         display: none;
     }
+
     .menu-btn:checked~.menu {
         display: block;
     }
+
     .menu-btn:checked~.menu-icon .navicon {
         background: transparent;
     }
+
     .menu-btn:checked~.menu-icon .navicon::before {
         transform: rotate(-45deg);
     }
+
     .menu-btn:checked~.menu-icon .navicon::after {
         transform: rotate(45deg);
     }
+
     .menu-btn:checked~.menu-icon .navicon::before,
     .menu-btn:checked~.menu-icon .navicon::after {
         top: 0;
@@ -393,6 +403,7 @@ progress::-moz-progress-bar {
         left: 105px;
         top: 10px;
     }
+
     .subtract {
         top: -2px;
         left: 50px;
@@ -404,6 +415,7 @@ progress::-moz-progress-bar {
         left: 105px;
         top: 10px;
     }
+
     .subtract {
         top: -2px;
         left: 50px;
@@ -415,6 +427,7 @@ progress::-moz-progress-bar {
         left: 165px;
         top: 10px;
     }
+
     .subtract {
         top: -2px;
         left: 110px;
@@ -451,6 +464,8 @@ progress::-moz-progress-bar {
     background: #FFFFFF;
     box-shadow: 0px 0px 5px 1px rgba(0, 58, 78, 0.1);
     border-radius: 10px;
+    width: 90%;
+    height: 250px
 }
 
 .star.checked {
@@ -478,10 +493,6 @@ progress::-moz-progress-bar {
     background: #0C74D4 !important;
 }
 
-.splide--draggable>.splide__track>.splide__list>.splide__slide {
-    width: 330px;
-    margin: 5px;
-}
 
 
 /* MEDIA QUERIES HERE */
@@ -524,7 +535,8 @@ progress::-moz-progress-bar {
     color: var(--primary-color);
     opacity: 0.75;
 }
-.feature__header.active{
+
+.feature__header.active {
     color: var(--primary-blue);
 }
 
@@ -557,7 +569,7 @@ progress::-moz-progress-bar {
 
 
 /* footer styles here */
-.footer-header{
+.footer-header {
     font-weight: bold;
     color: white;
     text-transform: uppercase;
@@ -568,7 +580,7 @@ progress::-moz-progress-bar {
 }
 
 
-footer{
+footer {
     background: var(--red);
 }
 
@@ -598,6 +610,7 @@ footer{
     .rem2-5 {
         font-size: 1.5rem;
     }
+
     .first-to {
         font-size: 1rem;
         color: #100942;
@@ -608,6 +621,7 @@ footer{
     .rem2-5 {
         font-size: 1.5rem;
     }
+
     .first-to {
         font-size: 1rem;
         color: #100942;
@@ -616,18 +630,20 @@ footer{
 
 
 /* Confirmation page styles here */
-.edit-btn:hover{
+.edit-btn:hover {
     background: rgba(13, 16, 27, 0.05);
-border-radius: 5px;
-height: 32px;
-padding: 5px 10px;
-} 
-.confirmation__holder{
+    border-radius: 5px;
+    height: 32px;
+    padding: 5px 10px;
+}
+
+.confirmation__holder {
     background: #FFFFFF;
     box-shadow: 0px 3px 10px rgba(0, 58, 78, 0.1);
     border-radius: 5px;
 }
-.request__section{
+
+.request__section {
     background: #C2DCF4;
 }
 
