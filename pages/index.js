@@ -239,7 +239,7 @@ const Home = () => {
                                         />
                                     </button>
                                     <button
-                                        type="button "
+                                        type="button"
                                         className=" hero__btn focus:outline-none py-1 px-2"
                                         id="next-btn"
                                         onClick={() => console.log("Next")}
