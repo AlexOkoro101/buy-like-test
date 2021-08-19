@@ -250,7 +250,7 @@ const Home = () => {
                         </h1>
                     </div>
                     {/* Hero Image here */}
-                    <div className="flex mb-24 flex-wrap  justify-center lg:justify-end 2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-4 pb-24 ">
+                    <div className="flex mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-4 pb-24 ">
                         <div>
                             <img
                                 src="./assets/img/hero-range.svg"
