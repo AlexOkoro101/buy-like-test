@@ -1,0 +1,20 @@
+.intl-tel-input {
+    height: 36px;
+    background: #FFFFFF;
+    border: 1px solid rgba(31, 42, 83, 0.5);
+    box-sizing: border-box;
+    border-radius: 3px;
+    width: 100%;
+}
+.intl-tel-input input {
+    outline: none;
+    width: 100%;
+    padding-top: 5px;
+}
+.intl-tel-input input::placeholder {
+    font-size: 12px;
+}
+.input-error {
+    font-size: 12px;
+    color: crimson;
+}

@@ -4,6 +4,7 @@ import '../styles/font.css';
 import '../styles/onboarding.css';
 import '../styles/user-profile.css';
 import '../styles/search-results.css';
+import '../styles/telInput.css';
 import App from '../src/components/App';
 
 import { Provider } from 'react-redux';
