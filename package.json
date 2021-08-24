@@ -12,6 +12,7 @@
     "animejs": "^3.2.1",
     "autoprefixer": "^10.0.4",
     "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
     "next": "latest",
     "next-redux-wrapper": "^6.0.2",
     "postcss": "^8.1.10",

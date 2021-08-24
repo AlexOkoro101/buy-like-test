@@ -3,59 +3,60 @@ import Link from "next/link";
 const Navbar = () => {
     return (
         <header className="">
-            <nav class="nav-bar flex flex-wrap items-center justify-between px-7 py-3 lg:px-16">
-                <div class="flex flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
+            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-3 lg:px-16">
+                <div className="flex flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
                     <Link href="/">
                         {/* <span className="font-semibold text-xs ">BUY LIKE DEALERS</span> */}
                         <img
                             src="../../../assets/img/Logo.svg"
                             alt="Logo"
                             style={{ cursor: "pointer" }}
-                            class="w-48"
+                            className="w-48"
                         />
                     </Link>
                 </div>
 
-                <input class="menu-btn hidden" type="checkbox" id="menu-btn" />
-                <label
-                    class="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none"
-                    for="menu-btn"
-                >
-                    <span class="navicon bg-grey-darkest flex items-center relative"></span>
+                <input
+                    className="menu-btn hidden"
+                    type="checkbox"
+                    id="menu-btn"
+                />
+                <label className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none">
+                    <span className="navicon bg-grey-darkest flex items-center relative"></span>
                 </label>
 
-                <ul class="menu border-b md:border-none text-xs flex justify-end items-center list-reset m-0 w-full md:w-auto">
-                    <li class="font-10 sec-black font-medium">
+                <ul className="menu border-b md:border-none text-xs flex justify-end items-center list-reset m-0 w-full md:w-auto">
+                    <li className="font-10 sec-black font-medium">
                         <a
                             href="/"
-                            class="block md:inline-block uppercase px-2 lg:px-3 py-3 hover:no-underline hover:text-current"
+                            className="block md:inline-block uppercase px-2 lg:px-3 py-3 hover:no-underline hover:text-current"
                         >
                             how it works
                         </a>
                     </li>
 
-                    <li class="font-10 sec-black font-medium">
+                    <li className="font-10 sec-black font-medium">
                         <a
                             href="/"
-                            class="block md:inline-block uppercase px-2 lg:px-3 py-3 hover:no-underline hover:text-current"
+                            className="block md:inline-block uppercase px-2 lg:px-3 py-3 hover:no-underline hover:text-current"
                         >
                             about us
                         </a>
                     </li>
 
-                    <li class="text-xs ml-2">
+                    <li className="text-xs ml-2">
                         <button
                             type="button"
-                            class="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                            className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
                         >
                             REGISTER
                         </button>
                     </li>
 
-                    <li class="text-xs">
+                    <li className="text-xs">
                         <button
                             type="button"
-                            class="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
+                            className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
                         >
                             LOGIN
                         </button>
