@@ -6,11 +6,12 @@ import "react-multi-carousel/lib/styles.css";
 import { connect } from "react-redux";
 import { getCars } from "../redux/actions/carsAction";
 import { useSelector, useDispatch } from "react-redux";
-
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { searchTerm } from "../redux/actions/carsAction";
 //
 const Home = ({ getCars, cars }) => {
     //
-
     const responsive2 = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -61,8 +62,8 @@ const Home = ({ getCars, cars }) => {
         }
         return validVehicleYears;
     });
-    const isSearching = useSelector((state) => state.Cars.searchTerm);
     const [index, setIndex] = useState(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         getCars();
@@ -97,7 +98,6 @@ const Home = ({ getCars, cars }) => {
         let heroTimeline = anime.timeline({
             autoplay: true,
         });
-        console.log(isSearching);
         switch (event) {
             case "prev":
                 const nextIndex = index - 1;
@@ -153,7 +153,12 @@ const Home = ({ getCars, cars }) => {
                 break;
         }
     }
-
+    const { register, handleSubmit } = useForm();
+    const router = useRouter();
+    const onSubmit = (data) => {
+        dispatch(searchTerm(data));
+        router.push("/search");
+    };
     //
     //
     return (
@@ -268,15 +273,18 @@ const Home = ({ getCars, cars }) => {
                         className=" px-2 lg:px-20 w-full "
                     >
                         <div className=" request__holder relative w-full py-16  ">
-                            <form action="">
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="flex  flex-wrap justify-center ">
                                     <div className="flex flex-col mr-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label className="primary-black font-semibold text-sm ">
                                             Select Year
                                         </label>
-                                        <select className="form__control px-1.5 w-full font-13 focus:outline-none ">
+                                        <select
+                                            {...register("year")}
+                                            className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                        >
                                             {years.map((x) => (
-                                                <option>{x}</option>
+                                                <option value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -289,11 +297,17 @@ const Home = ({ getCars, cars }) => {
                                             Select Model
                                         </label>
                                         <select
+                                            {...register("model")}
                                             name=" "
                                             id="model "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         >
-                                            <option value=" ">Evoque</option>
+                                            <option value="evoque">
+                                                Evoque
+                                            </option>
+                                            <option value="evoque">
+                                                Evoque
+                                            </option>
                                         </select>
                                     </div>
 
@@ -308,9 +322,10 @@ const Home = ({ getCars, cars }) => {
                                             name=" "
                                             id="year "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                            {...register("make")}
                                         >
                                             {make.map((x) => (
-                                                <option>{x}</option>
+                                                <option value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -323,18 +338,25 @@ const Home = ({ getCars, cars }) => {
                                             Select Price Range
                                         </label>
                                         <select
+                                            {...register("range")}
                                             name=" "
                                             id="range "
                                             className="form__control w-full px-1.5 font-13 focus:outline-none "
                                         >
-                                            <option value=" ">
+                                            <option value="200">
+                                                $150.000 - $200,000
+                                            </option>
+                                            <option value="200">
                                                 $150.000 - $200,000
                                             </option>
                                         </select>
                                     </div>
 
                                     <div className="flex-col flex mt-4 pt-1 ml-1 xl:ml-1 lg:ml-3 pb-5 w-full md:w-40 lg:w-40">
-                                        <button className="estimate__btn uppercase focus:outline-none font-semibold">
+                                        <button
+                                            type="submit"
+                                            className="estimate__btn uppercase focus:outline-none font-semibold"
+                                        >
                                             search
                                         </button>
                                     </div>

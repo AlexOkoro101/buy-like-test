@@ -3,6 +3,7 @@ import {
     FETCHING_CARS,
     FETCH_SUCCESSFUL,
     FETCHING_CARS_FAILED,
+    SEARCHING,
 } from "../types";
 const api = process.env.cars_api;
 
@@ -43,4 +44,25 @@ export const getCars = () => async (dispatch) => {
         });
         console.log(error);
     }
+};
+export const searchTerm = (event) => async (dispatch) => {
+    dispatch({
+        type: SEARCHING,
+        payload: event,
+    });
+    // if (!Array.isArray(state.cart)) {
+    //     state.cart = [];
+    //     console.log(state.cart);
+    // }
+    // if (action.payload) {
+    //     const itemCartIndex = state.cart.findIndex(
+    //         ({ id }) => id === action.payload.id
+    //     );
+    //     if (itemCartIndex !== -1) {
+    //         state.cart[itemCartIndex] = action.payload;
+    //     } else {
+    //         state.cart.push(action.payload);
+    //     }
+    //     console.log(state.cart);
+    // }
 };
