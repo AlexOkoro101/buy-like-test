@@ -2,20 +2,23 @@ import { useState, useEffect } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
 import { getCars } from "../../redux/actions/carsAction";
+import { useSelector, useDispatch } from "react-redux";
+
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
+    const searchTerm = useSelector((state) => state.Cars.searchTerm);
+
     // useEffect(() =>
 
     // )
 
     const activateList = () => {
         let datass = props.getCars();
-        console.log(datass);
+        console.log(searchTerm);
         setgrid(false);
     };
 
     const activateGrid = () => {
-        console.log(props.cars);
         setgrid(true);
     };
 
@@ -2182,8 +2185,8 @@ const Search = (props) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error } = state.Cars;
-    return { cars, loading, error };
+    const { cars, loading, error, searchTerm } = state.Cars;
+    return { cars, loading, error, searchTerm };
 };
 
 export default connect(mapStateToProps, { getCars })(Search);
