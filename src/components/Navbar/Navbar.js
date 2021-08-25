@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+    const router = useRouter()
+
     return (
         <header className="">
             <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-3 lg:px-16">
@@ -45,6 +48,7 @@ const Navbar = () => {
 
                     <li className="text-xs ml-2">
                         <button
+                            onClick={() => {router.push('/auth/signup')}}
                             type="button"
                             className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
                         >
@@ -54,6 +58,7 @@ const Navbar = () => {
 
                     <li className="text-xs">
                         <button
+                            onClick={() => {router.push('/auth/login')}}
                             type="button"
                             className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
                         >

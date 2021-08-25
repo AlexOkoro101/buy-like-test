@@ -62,7 +62,10 @@
 .signup-container button, .facebook-btn i {
     margin-right: 19px;
     color: #1976D2;
-    font-size: 17px;
+    
+}
+.facebook-btn i {
+    font-size: 17px !important;
 }
 .signup-container button div {
     background: transparent !important;

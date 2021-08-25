@@ -63,7 +63,7 @@ const EmailSignup = () => {
                             <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
 
                                 <div className="flex flex-col mb-3 w-full lg:mb-0 ">
-                                    <label className="pb-1 sec-black font-10 font-medium" for="first-name">First name</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">First name</label>
                                     <input 
                                         className="login-control focus:outline-none px-2" 
                                         type="text"
@@ -80,7 +80,7 @@ const EmailSignup = () => {
                                 </div>
 
                                 <div className="flex flex-col mb-3 w-full lg:ml-3.5 md:ml-3.5 lg:mb-0">
-                                    <label className="pb-1 sec-black font-10 font-medium" for="last-name">Last name</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">Last name</label>
                                     <input 
                                         className="login-control focus:outline-none px-2" 
                                         type="text"
@@ -100,7 +100,7 @@ const EmailSignup = () => {
                             <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
 
                                 <div className="flex flex-col mb-3 w-full lg:w-6/12 lg:mb-0 ">
-                                    <label className="pb-1 sec-black font-10 font-medium" for="phone">Phone number</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">Phone number</label>
                                         <IntlTelInput
                                             ref={phoneRef}
                                             fieldName="phoneNumber"
@@ -118,7 +118,7 @@ const EmailSignup = () => {
                                 </div>
 
                                 <div className="flex flex-col mb-3 w-full lg:w-6/12 lg:ml-3.5 md:ml-3.5 lg:mb-0">
-                                    <label className="pb-1 sec-black font-10 font-medium" for="email">Email ddress</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">Email ddress</label>
                                     <input className="login-control focus:outline-none px-2" 
                                         id="email"
                                         name="email"
