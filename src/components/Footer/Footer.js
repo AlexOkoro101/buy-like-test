@@ -34,6 +34,7 @@ const Footer = () => {
                 <div className="w-full flex flex-col lg:w-1/3 mb-10">
                     <p className="footer-header pb-4">FOLLOW US ON SOCIAL MEDIA</p>
 
+
                     <div className="flex items-center pb-4">
                         <span>
                             <img src="../img/face.svg" alt="mail-icon" />
