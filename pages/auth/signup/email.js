@@ -4,12 +4,44 @@ import 'react-intl-tel-input/dist/main.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRef, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from "react-redux";
+import { enviroment } from "../../../src/components/enviroment";
+import { login } from "../../../redux/features/userSlice";
  
 
 const EmailSignup = () => {
+    const [error, seterror] = useState(null)
+    const [isLoading, setisLoading] = useState(false)
+
+    const toastError = () => toast.error(`${error ? error : 'Could not sign up'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+    const toastSuccess = () => toast.success(`${error ? error : 'Account created Successfully'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+
+    //action access
+    const dispatch = useDispatch();
+
+    
     const [phone, setphone] = useState('')
     const [phoneError, setphoneError] = useState(null)
     const phoneRef = useRef(null)
+
     const validatePhone = () => {
         if(!phone) {
             setphoneError(true)
@@ -19,38 +51,105 @@ const EmailSignup = () => {
         }
     }
     const changeNumber = () => {
-        // console.log(phoneRef.current)
+        formik.values.number = `${phoneRef.current.selectedCountryData.dialCode}` + `${phoneRef.current.state.value}`
         setphone(`${phoneRef.current.selectedCountryData.dialCode}` + `${phoneRef.current.state.value}`)
         if(phoneRef) {
             setphoneError(false)
         }
     }
+
+
     const formik = useFormik({
         initialValues: {
             firstName: '',
-            lastName: '',
-            phoneNumber: '123',
+            lastname: '',
+            number: '123',
             email: '',
+            password: ''
         },
         validationSchema: Yup.object({
         firstName: Yup.string()
             .min(3, 'Must be 3 characters or more')
             .required('First name is required'),
-        lastName: Yup.string()
+        lastname: Yup.string()
             .min(3, 'Must be 3 characters or more')
             .required('Last name is required'),
-        phoneNumber: Yup.string()
+        number: Yup.string()
         .required('Phone number is required'),
-        email: Yup.string().email('Invalid email address').required('Email is required'),
+        email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+        password: Yup.string()
+        .min(6, ({ min }) => `Password must be at least ${min} characters`)
+        .required('Password number is required'),
         }),
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+            // notify()
+            setisLoading(true)
+            seterror(null)
+            console.log(values)
+            
+            fetch(enviroment.BASE_URL + 'auth/register', {
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                credentials: "same-origin",
+                body: JSON.stringify(values)
+            })
+            .then(res => {
+                console.log(res)
+                if(!res.ok) {
+                  setisLoading(false)
+                  seterror(res.statusText)
+                  toastError()
+                  throw Error("Could not sign up")
+                }
+                setisLoading(false)
+                return res.json()
+          
+            })
+            .then(data => {
+                  console.log(data)
+                  if(data?.error) {
+                      seterror(data?.message)
+                      toastError()
+                  } else {
+                    console.log(data)
+                    seterror(data?.message)
+                    toastSuccess()
+                  }
+                const now = new Date()
+                //save data to local storage
+                const item = {
+                  userToken: data.data._token,
+                  expiry: now.getTime() + 3600000,
+                }
+                localStorage.setItem('userToken', JSON.stringify(item));
+          
+                //save data to store
+                dispatch(
+                  login({
+                    token: data.data._token,
+                    vehicle: null,
+                    loading: false,
+                    error: null,
+                    success: null,
+                  })
+                )
+            })
+            .catch(e => {
+                // seterror(e.message)
+                setisLoading(false)
+                console.log(e.message)
+            })
         },
       });
+
+
     return ( 
         <section className="w-full">
             <Meta />
             <main>
+                <ToastContainer />
                 <div className="signup-bg py-20">
                     <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
                         <div className="text-center">
@@ -84,15 +183,15 @@ const EmailSignup = () => {
                                     <input 
                                         className="login-control focus:outline-none px-2" 
                                         type="text"
-                                        id="lastName"
-                                        name="lastName"
+                                        id="lastname"
+                                        name="lastname"
                                         placeholder="What is your last name?" 
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.lastName}
+                                        value={formik.values.lastname}
                                         />
-                                        {formik.touched.lastName && formik.errors.lastName ? (
-                                            <div className="input-error">{formik.errors.lastName}</div>
+                                        {formik.touched.lastname && formik.errors.lastname ? (
+                                            <div className="input-error">{formik.errors.lastname}</div>
                                         ) : null}
                                 </div>
                             </div>
@@ -103,8 +202,8 @@ const EmailSignup = () => {
                                     <label className="pb-1 sec-black font-10 font-medium">Phone number</label>
                                         <IntlTelInput
                                             ref={phoneRef}
-                                            fieldName="phoneNumber"
-                                            fieldId="phoneNumber"
+                                            fieldName="number"
+                                            fieldId="number"
                                             preferredCountries={['ng']}
                                             containerClassName="intl-tel-input"
                                             inputClassName="form-control"
@@ -132,12 +231,28 @@ const EmailSignup = () => {
                                         ) : null}
                                 </div>
                             </div>
+                            <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
+                                <div className="flex flex-col mb-3 w-full lg:w-full lg:mb-0">
+                                    <label className="pb-1 sec-black font-10 font-medium">Password</label>
+                                    <input className="login-control focus:outline-none px-2" 
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.password}
+                                        placeholder="Enter password" />
+                                        {formik.touched.password && formik.errors.password ? (
+                                            <div className="input-error">{formik.errors.password}</div>
+                                        ) : null}
+                                </div>
+                            </div>
 
                             <div className="text-center pt-3">
                                 <button
                                     type="submit"
                                     className="focus:outline-none primary-btn  text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2">
-                                    create my account </button>
+                                    {isLoading ? 'Creating Account' : 'create my account'} </button>
                             </div>
                         </form>
 
