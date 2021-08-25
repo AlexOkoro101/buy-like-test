@@ -47,7 +47,7 @@ const Profile = () => {
                                     aria-hidden="true"></i>
                             </span>
 
-                            <div id="side" className="w-full mt-8" oncl>
+                            <div id="side" className="w-full mt-8">
                                 <button onClick={activateProfile} className={"head w-full py-3.5 pl-10 flex items-center " + (profileTab ? "changeStyle" : "")}>
                                     <i className="fa fa-user" aria-hidden="true"></i>
                                     <span className="ml-1.5 text-sm font-medium">Profile</span>
@@ -92,26 +92,26 @@ const Profile = () => {
                                                 </div>
                                                 <span className="border-b-4 border-gray-100 w-full md:hidden"></span>
                                                 <div className="col-span-3 w-full">
-                                                    <label for="first_name" className="block font-10 font-medium pb-1 sec-black">First
+                                                    <label htmlFor="first_name" className="block font-10 font-medium pb-1 sec-black">First
                                                         name</label>
                                                     <input type="text" id="first_name" placeholder="Enter your first name"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
                                                 </div>
 
                                                 <div className="col-span-3 w-full">
-                                                    <label for="last_name" className="block font-10 font-medium pb-1 sec-black">Last
+                                                    <label htmlFor="last_name" className="block font-10 font-medium pb-1 sec-black">Last
                                                         name</label>
                                                     <input type="text" id="last_name" placeholder="Enter your last name"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
                                                 </div>
                                                 <div className="col-span-3 w-full">
-                                                    <label for="phone" className="block font-10 font-medium pb-1 sec-black">Phone
+                                                    <label htmlFor="phone" className="block font-10 font-medium pb-1 sec-black">Phone
                                                         Number</label>
                                                     <input type="tel" id="phone" placeholder="Enter your phone number"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
                                                 </div>
                                                 <div className="col-span-3 w-full">
-                                                    <label for="phone" className="block font-10 font-medium pb-1 sec-black">Email
+                                                    <label htmlFor="phone" className="block font-10 font-medium pb-1 sec-black">Email
                                                         Address</label>
                                                     <input type="email" id="email" placeholder="Enter your email address"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
@@ -120,7 +120,7 @@ const Profile = () => {
                                                 <span className="border-b-4 border-gray-100 w-full md:hidden"></span>
 
                                                 <div className="col-span-3 w-full">
-                                                    <label for="country"
+                                                    <label htmlFor="country"
                                                         className="block font-10 font-medium pb-1 sec-black">Country</label>
                                                     <select id="country"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none">
@@ -131,27 +131,27 @@ const Profile = () => {
                                                 </div>
 
                                                 <div className="col-span-6 w-full">
-                                                    <label for="address_one"
+                                                    <label htmlFor="address_one"
                                                         className="block font-10 font-medium pb-1 sec-black">Address Line 1</label>
                                                     <input type="text" id="address_one"
                                                         className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
                                                 </div>
 
                                                 <div className="col-span-6 w-full">
-                                                    <label for="address_two"
+                                                    <label htmlFor="address_two"
                                                         className="block font-10 font-medium pb-1 sec-black">Address Line 2</label>
                                                     <input type="text" id="address_two"
                                                         className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
                                                 </div>
 
                                                 <div className="col-span-2 w-full ">
-                                                    <label for="city" className="block font-10 font-medium pb-1 sec-black">City</label>
+                                                    <label htmlFor="city" className="block font-10 font-medium pb-1 sec-black">City</label>
                                                     <input type="text" id="city" placeholder="Enter city"
                                                         className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
                                                 </div>
 
                                                 <div className="col-span-2 w-full ">
-                                                    <label for="province" className="block font-10 font-medium pb-1 sec-black">State /
+                                                    <label htmlFor="province" className="block font-10 font-medium pb-1 sec-black">State /
                                                         Province</label>
                                                     <select id="province"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white focus:outline-none">
@@ -162,7 +162,7 @@ const Profile = () => {
                                                 </div>
 
                                                 <div className="col-span-2 w-full ">
-                                                    <label for="postal_code" className="block font-10 font-medium pb-1 sec-black">ZIP /
+                                                    <label htmlFor="postal_code" className="block font-10 font-medium pb-1 sec-black">ZIP /
                                                         Postal</label>
                                                     <input type="text" id="postal_code" placeholder="Enter Zipcode"
                                                         className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
@@ -242,7 +242,7 @@ const Profile = () => {
                                                     Password Settings
                                                 </h2>
                                                 <div className="col-span-6">
-                                                    <label className="block pb-1 font-10 font-medium sec-black" for="password">
+                                                    <label className="block pb-1 font-10 font-medium sec-black" htmlFor="password">
                                                         Enter current password
                                                     </label>
                                                     <input id="password" className="px-3 profile-control focus:outline-none w-full"
@@ -250,7 +250,7 @@ const Profile = () => {
                                                 </div>
 
                                                 <div className="col-span-6">
-                                                    <label className="block pb-1 font-10 font-medium sec-black " for="newPassword">
+                                                    <label className="block pb-1 font-10 font-medium sec-black " htmlFor="newPassword">
                                                         Enter new password
                                                     </label>
                                                     <input id="newPassword" className="px-3 profile-control focus:outline-none w-full"
@@ -258,7 +258,7 @@ const Profile = () => {
                                                 </div>
 
                                                 <div className="col-span-6">
-                                                    <label className="block pb-1 font-10 font-medium sec-black " for="confirm">
+                                                    <label className="block pb-1 font-10 font-medium sec-black " htmlFor="confirm">
                                                         Confirm new password
                                                     </label>
                                                     <input id="confirm" className="px-3 profile-control focus:outline-none w-full"
@@ -294,7 +294,7 @@ const Profile = () => {
                         {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
                         <form action="" className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
                             <div className="col-span-6 mb-2">
-                                <label className="block pb-1.5 font-10 primary-black" for="card_number"> Card Number </label>
+                                <label className="block pb-1.5 font-10 primary-black" htmlFor="card_number"> Card Number </label>
                                 <input id="card_number" className="profile-control focus:outline-none p-2 w-full" type="text"
                                     placeholder="Enter your 12 or 16 digit card number" />
                             </div>
@@ -319,7 +319,7 @@ const Profile = () => {
                                     className="bg-white focus:outline-none profile-control p-2 col-span-2 w-full" />
                             </div>
                             <div className="col-span-6 mt-2">
-                                <label className="block font-10 primary-black pb-1.5" for="cardName"> Card Name </label>
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Card Name </label>
                                 <input className="profile-control focus:outline-none p-2 w-full" type="text"
                                     placeholder="Add a name to help you identify this card" />
                             </div>
