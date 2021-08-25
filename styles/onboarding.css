@@ -40,6 +40,40 @@
     color: rgba(31, 42, 83, 0.75);
     opacity: 0.75;
 }
+.signup-container button, .facebook-btn {
+    border: 1px solid #1F2A53 !important;
+    box-sizing: border-box !important;
+    filter: drop-shadow(0px 4px 10px rgba(73, 165, 198, 0.1)) !important;
+    border-radius: 5px !important;
+    height: 36px !important;
+    font-size: .75rem !important;
+    line-height: 1rem !important;
+    padding-left: .625rem !important;
+    padding-right: .625rem !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: .625rem !important;
+    display: flex !important;
+    color: #1f2a53 !important;
+    background-color: initial !important;
+    box-shadow: none !important;
+    font-family: inherit !important;
+}
+.signup-container button, .facebook-btn i {
+    margin-right: 19px;
+    color: #1976D2;
+    
+}
+.facebook-btn i {
+    font-size: 17px !important;
+}
+.signup-container button div {
+    background: transparent !important;
+    padding: 0 !important;
+}
+.signup-container button span {
+    font-weight: 400 !important;
+}
 
 @media (max-width: 575.98px) {
     .options-holder {

@@ -3,6 +3,7 @@ import Cars from "./carsReducers";
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
+    user: requestReducer,
     Cars,
     vehicle: requestReducer,
 });
