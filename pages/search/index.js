@@ -6,15 +6,17 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
+    const [data, setData] = useState([]);
     const searchTerm = useSelector((state) => state.Cars.searchTerm);
 
-    // useEffect(() =>
-
-    // )
+    useEffect(() => {
+        if (Object.entries(searchTerm).length !== 0) {
+            setData(searchTerm);
+        }
+    }, [searchTerm]);
 
     const activateList = () => {
         let datass = props.getCars();
-        console.log(searchTerm);
         setgrid(false);
     };
 
@@ -1371,419 +1373,75 @@ const Search = (props) => {
                                 className="flex flex-wrap justify-center lg:justify-between display-type"
                                 id="car-grid"
                             >
-                                {/* <!-- Car 1 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../assets/img/cars/AudiA3.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Audi A3
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
-                                                    {" "}
-                                                    Feb 22, 2020
+                                {data &&
+                                    data?.map((ele) => (
+                                        <div className="car-display-holder p-4 mb-4">
+                                            <img
+                                                className="img-fluid"
+                                                src={
+                                                    ele?.images?.image_largeUrl
+                                                }
+                                                className="br-5 "
+                                                alt="Audi A3"
+                                            />
+                                            <div className="mt-3">
+                                                <p className="text-xs primary-black font-medium">
+                                                    {ele?.vehicleName
+                                                        ? ele?.vehicleName
+                                                        : [
+                                                              ele?.make,
+                                                              ele.model,
+                                                          ].join(" ")}
                                                 </p>
-                                            </div>
-                                        </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $30,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Place bid
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 2 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../assets/img/cars/fordescape.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Ford Escape
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
+                                                <p className="sec-black font-11 flex items-center pt-2">
                                                     {" "}
-                                                    Feb 22, 2020
+                                                    {ele?.year}{" "}
+                                                    <span className="ml-6">
+                                                        205,456 miles
+                                                    </span>
                                                 </p>
+                                                <div className="flex pt-2">
+                                                    <p className="flex items-center sec-black font-10">
+                                                        {" "}
+                                                        <span className="mr-1">
+                                                            <img
+                                                                src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                alt="location"
+                                                            />
+                                                        </span>{" "}
+                                                        {ele?.pickupLocation}
+                                                    </p>
+                                                    <div className="ml-auto flex self-center">
+                                                        <img
+                                                            className="img-fluid"
+                                                            src="../../assets/img/vectors/red-date.svg"
+                                                            alt="date"
+                                                        />
+                                                        <p className="sec-black font-10 ml-1">
+                                                            {" "}
+                                                            {new Date(
+                                                                ele?.auctionEndTime
+                                                            ).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex pt-3">
+                                                    <p className=" sec-black text-base">
+                                                        ${" "}
+                                                        {ele?.mmrPrice?.toLocaleString()}
+                                                    </p>
+                                                    <div className="ml-auto  self-center">
+                                                        <button
+                                                            type="button"
+                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                        >
+                                                            Place bid
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $32,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Buy Now
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 3 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../../assets/img/cars/highlander.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Toyota Highlander XLE
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
-                                                    {" "}
-                                                    Feb 22, 2020
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $30,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Buy Now
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 4 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../../assets/img/cars/tacoma.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Toyota Tacoma
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
-                                                    {" "}
-                                                    Feb 22, 2020
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $30,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Place bid
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 5 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../../assets/img/cars/highlander2.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Toyota Highlander
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
-                                                    {" "}
-                                                    Feb 22, 2020
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $30,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Place bid
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 6 --> */}
-                                <div className="car-display-holder p-4 mb-4">
-                                    <img
-                                        className="img-fluid"
-                                        src="../../assets/img/cars/Rav4.png"
-                                        className="br-5 "
-                                        alt="Audi A3"
-                                    />
-
-                                    {/* <!-- Car details here --> */}
-                                    <div className="mt-3">
-                                        {/* <!-- name --> */}
-                                        <p className="text-xs primary-black font-medium">
-                                            Toyota RAV4
-                                        </p>
-
-                                        {/* <!-- Mileage --> */}
-                                        <p className="sec-black font-11 flex items-center pt-2">
-                                            {" "}
-                                            2020{" "}
-                                            <span className="ml-6">
-                                                205,456 miles
-                                            </span>
-                                        </p>
-
-                                        {/* <!-- location here --> */}
-                                        <div className="flex pt-2">
-                                            <p className="flex items-center sec-black font-10">
-                                                {" "}
-                                                <span className="mr-1">
-                                                    <img
-                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                        alt="location"
-                                                    />
-                                                </span>{" "}
-                                                Houston, Texas
-                                            </p>
-                                            {/* <!-- date here --> */}
-                                            <div className="ml-auto flex self-center">
-                                                <img
-                                                    className="img-fluid"
-                                                    src="../../assets/img/vectors/red-date.svg"
-                                                    alt="date"
-                                                />
-                                                <p className="sec-black font-10 ml-1">
-                                                    {" "}
-                                                    Feb 22, 2020
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* <!-- Price here --> */}
-                                        <div className="flex pt-3">
-                                            <p className=" sec-black text-base">
-                                                $30,500
-                                            </p>
-                                            {/* <!-- Bid button here --> */}
-                                            <div className="ml-auto  self-center">
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                >
-                                                    Place bid
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    ))}
                             </div>
                         )}
 
@@ -1794,388 +1452,159 @@ const Search = (props) => {
                                 id="car-list"
                             >
                                 {/* <!-- Car 1 --> */}
-                                <div className="car-display-list-holder flex flex-wrap w-full p-4 mb-4">
-                                    {/* <!-- image to details here --> */}
-                                    <div className="flex flex-wrap">
-                                        <img
-                                            className="img-fluid"
-                                            src="../../assets/img/cars/AudiA3.png"
-                                            alt=""
-                                        />
+                                {data &&
+                                    data?.map((ele) => (
+                                        <div className="car-display-list-holder flex flex-wrap w-full p-4 mb-4">
+                                            {/* <!-- image to details here --> */}
+                                            <div className="flex flex-wrap">
+                                                <img
+                                                    className="img-fluid"
+                                                    src={
+                                                        ele?.images
+                                                            ?.image_smallUrl
+                                                    }
+                                                    alt=""
+                                                />
 
-                                        {/* <!-- Details here --> */}
-                                        <div className="lg:ml-3 py-4">
-                                            <p className="text-base primary-black ">
-                                                2020 Audi A3
-                                            </p>
+                                                {/* <!-- Details here --> */}
+                                                <div className="lg:ml-3 py-4">
+                                                    <p className="text-base primary-black ">
+                                                        {ele?.vehicleName
+                                                            ? ele?.vehicleName
+                                                            : [
+                                                                  ele?.make,
+                                                                  ele.model,
+                                                              ].join(" ")}
+                                                    </p>
 
-                                            {/* <!-- location to mileage here  --> */}
-                                            <table className="min-w-full ">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                Houston, Texas
-                                                            </p>
-                                                        </td>
+                                                    {/* <!-- location to mileage here  --> */}
+                                                    <table className="min-w-full ">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black ">
+                                                                        {" "}
+                                                                        <span className="mr-1">
+                                                                            <img
+                                                                                src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                alt="beacon"
+                                                                            />
+                                                                        </span>{" "}
+                                                                        {
+                                                                            ele?.pickupLocation
+                                                                        }
+                                                                    </p>
+                                                                </td>
 
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/speedometer.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                205,456 miles
-                                                            </p>
-                                                        </td>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black ">
+                                                                        {" "}
+                                                                        <span className="mr-1">
+                                                                            <img
+                                                                                src="../../assets/img/vectors/speedometer.svg"
+                                                                                alt="beacon"
+                                                                            />
+                                                                        </span>{" "}
+                                                                        205,456
+                                                                        miles
+                                                                    </p>
+                                                                </td>
 
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-date.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>
-                                                                Feb 22, 2020 at
-                                                                4:30 PM
-                                                            </p>
-                                                        </td>
-                                                    </tr>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black">
+                                                                        {" "}
+                                                                        <span className="mr-1">
+                                                                            <img
+                                                                                src="../../assets/img/vectors/red-date.svg"
+                                                                                alt="beacon"
+                                                                            />
+                                                                        </span>
+                                                                        {new Date(
+                                                                            ele?.auctionEndTime
+                                                                        ).toLocaleDateString()}
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
 
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Blue exterior
-                                                            </p>
-                                                        </td>
+                                                            <tr>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black">
+                                                                        Exterior
+                                                                        {""}
+                                                                        {
+                                                                            ele?.sourceExteriorColor
+                                                                        }
+                                                                    </p>
+                                                                </td>
 
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Cream interior
-                                                            </p>
-                                                        </td>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black">
+                                                                        Interior{" "}
+                                                                        {""}
+                                                                        {
+                                                                            ele?.interiorColor
+                                                                        }
+                                                                    </p>
+                                                                </td>
 
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                VIN:
-                                                                123456789ABC
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                    <p className="flex items-center text-xs primary-black">
+                                                                        VIN:{" "}
+                                                                        {""}
+                                                                        {
+                                                                            ele?.VIN
+                                                                        }
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
 
-                                            {/* <!-- others here --> */}
-                                            <div className="flex border-t my-3 py-3">
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Non-Accident
+                                                    {/* <!-- others here --> */}
+                                                    <div className="flex border-t my-3 py-3">
+                                                        <p className="flex items-center font-11 primary-black mr-6">
+                                                            Vehicle Type{""}
+                                                            {ele?.vehicleType}
+                                                        </p>
+                                                        <p className="flex items-center font-11 primary-black mr-6">
+                                                            {ele?.exteriorColor}
+                                                        </p>
+                                                        <p className="flex items-center font-11 primary-black mr-6">
+                                                            {" "}
+                                                            Fully Loaded
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="ml-auto py-4 items-end flex flex-col">
+                                                <p className="primary-black text-base">
+                                                    ${" "}
+                                                    {ele?.mmrPrice?.toLocaleString()}
                                                 </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    Green Light Car
-                                                </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Fully Loaded
-                                                </p>
+                                                <div className="relative pt-1.5">
+                                                    <img
+                                                        src="../../assets/img/vectors/buy.svg"
+                                                        alt="buy"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                    >
+                                                        BUY NOW
+                                                    </button>
+                                                </div>
+
+                                                <div>
+                                                    <button
+                                                        type="button"
+                                                        className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="ml-auto py-4 items-end flex flex-col">
-                                        <p className="primary-black text-base">
-                                            $30,500
-                                        </p>
-                                        <div className="relative pt-1.5">
-                                            <img
-                                                src="../../assets/img/vectors/buy.svg"
-                                                alt="buy"
-                                            />
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                            >
-                                                BUY NOW
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 2 --> */}
-                                <div className="car-display-list-holder flex w-full p-4 mb-4">
-                                    {/* <!-- image to details here --> */}
-                                    <div className="flex">
-                                        <img
-                                            className="img-fluid"
-                                            src="../../assets/img/cars/AudiA3.png"
-                                            alt=""
-                                        />
-
-                                        {/* <!-- Details here --> */}
-                                        <div className="ml-3 py-4">
-                                            <p className="text-base primary-black ">
-                                                2020 Audi A3
-                                            </p>
-
-                                            {/* <!-- location to mileage here  --> */}
-                                            <table className="min-w-full ">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                Houston, Texas
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/speedometer.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                Houston, Texas
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-date.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>
-                                                                Feb 22, 2020 at
-                                                                4:30 PM
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Blue exterior
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Cream interior
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                VIN:
-                                                                123456789ABC
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                            {/* <!-- others here --> */}
-                                            <div className="flex border-t my-3 py-3">
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Non-Accident
-                                                </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    Green Light Car
-                                                </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Fully Loaded
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ml-auto py-4 items-end flex flex-col">
-                                        <p className="primary-black text-base">
-                                            $30,500
-                                        </p>
-                                        <div className="relative pt-1.5">
-                                            <img
-                                                src="../../assets/img/vectors/bid.svg"
-                                                alt="buy"
-                                            />
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none text-white action-btn bid px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                            >
-                                                BID NOW
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Car 3 --> */}
-                                <div className="car-display-list-holder flex w-full p-4 mb-4">
-                                    {/* <!-- image to details here --> */}
-                                    <div className="flex">
-                                        <img
-                                            className="img-fluid"
-                                            src="../../assets/img/cars/AudiA3.png"
-                                            alt=""
-                                        />
-
-                                        {/* <!-- Details here --> */}
-                                        <div className="ml-3 py-4">
-                                            <p className="text-base primary-black ">
-                                                2020 Audi A3
-                                            </p>
-
-                                            {/* <!-- location to mileage here  --> */}
-                                            <table className="min-w-full ">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                Houston, Texas
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black ">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/speedometer.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>{" "}
-                                                                Houston, Texas
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                {" "}
-                                                                <span className="mr-1">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/red-date.svg"
-                                                                        alt="beacon"
-                                                                    />
-                                                                </span>
-                                                                Feb 22, 2020 at
-                                                                4:30 PM
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Blue exterior
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                Cream interior
-                                                            </p>
-                                                        </td>
-
-                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                            <p className="flex items-center text-xs primary-black">
-                                                                VIN:
-                                                                123456789ABC
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                            {/* <!-- others here --> */}
-                                            <div className="flex border-t my-3 py-3">
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Non-Accident
-                                                </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    Green Light Car
-                                                </p>
-                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                    {" "}
-                                                    Fully Loaded
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ml-auto py-4 items-end flex flex-col">
-                                        <p className="primary-black text-base">
-                                            $30,500
-                                        </p>
-                                        <div className="relative pt-1.5">
-                                            <img
-                                                src="../../assets/img/vectors/buy.svg"
-                                                alt="buy"
-                                            />
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                            >
-                                                BUY NOW
-                                            </button>
-                                        </div>
-
-                                        <div>
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                    ))}
                             </div>
                         )}
                     </div>

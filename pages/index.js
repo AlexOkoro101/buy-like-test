@@ -51,7 +51,7 @@ const Home = ({ getCars, cars }) => {
         },
     };
     const [car, setCars] = useState(null);
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState(null);
     const [make, setMake] = useState(["toyota", "honda", "accord"]);
     const [years, setYears] = useState(() => {
         let year = 2000;
@@ -70,7 +70,7 @@ const Home = ({ getCars, cars }) => {
         async function fetchData() {
             try {
                 let res = await fetch(
-                    `https://buylikepoint.us/json.php?year=&make=Toyota&model=camry&price=3000&page=1&apiKey=Switch!2020`,
+                    `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
                     {
                         method: "GET",
                         headers: {},
@@ -101,53 +101,17 @@ const Home = ({ getCars, cars }) => {
         switch (event) {
             case "prev":
                 const nextIndex = index - 1;
-                if (nextIndex < 0) {
+                if (nextIndex <= 0) {
                     setIndex(images.length - 1); // returns last index of images array if index is less than 0
-                    heroTimeline.add(
-                        {
-                            targets: ".hero-image",
-                            translateX: [+450, 0],
-                            easing: "linear",
-                            duration: 1240,
-                        },
-                        0
-                    );
                 } else {
                     setIndex(nextIndex);
-                    heroTimeline.add(
-                        {
-                            targets: ".hero-image",
-                            translateX: [+450, 0],
-                            easing: "linear",
-                            duration: 1240,
-                        },
-                        0
-                    );
                 }
             case "next":
                 if (index < images.length - 1) {
                     setIndex(index + 1); // increases index by 1
-                    heroTimeline.add(
-                        {
-                            targets: ".hero-image",
-                            translateX: [-45, 0],
-                            easing: "linear",
-                            duration: 1240,
-                        },
-                        0
-                    );
                 }
                 if (index === images.length - 1) {
                     setIndex(0);
-                    heroTimeline.add(
-                        {
-                            targets: ".hero-image",
-                            translateX: [-45, 0],
-                            easing: "linear",
-                            duration: 1240,
-                        },
-                        0
-                    );
                 }
             default:
                 break;
@@ -169,7 +133,7 @@ const Home = ({ getCars, cars }) => {
                 {/* Hero section here */}
                 <section className="Hero__section mt-0  w-full bg-gray-700 pt-20  ">
                     {/* Hero Text here */}
-                    <div className="text-center pt-10">
+                    <div className="text-center py-10">
                         <h1 className="text-3xl  lg:text-5xl primary-red font-bold hero-text ">
                             WHAT CAR ARE YOU LOOKING FOR? <br />{" "}
                             <span className="font-medium hero__sub__text text-3xl lg:text-4xl ">
@@ -178,95 +142,107 @@ const Home = ({ getCars, cars }) => {
                         </h1>
                     </div>
                     {/* Hero Image here */}
-                    <div className="flex mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-4 pb-24 ">
-                        <div
-                            style={{ width: "350px", height: "280px" }}
-                            className="rounded-lg shadow-lg overflow-hidden transition-all "
-                        >
-                            {images && (
-                                <img
-                                    id="one"
-                                    src={images[index]?.images?.image_largeUrl}
-                                    alt="Hero-Image "
-                                    class="h-full w-full hero-image"
-                                />
-                            )}
-                        </div>
-                        <div
-                            className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "
-                            style={{ height: "250px" }}
-                        >
-                            <div className="flex ">
-                                {/* Progress bar here */}
-                                <div className=" w-1/2 ">
-                                    <progress value={10} max={100} />
+                    <div style={{ minHeight: "280px" }}>
+                        {images && (
+                            <div className="flex  mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-5 pb-24 ">
+                                <div
+                                    style={{ width: "350px", height: "280px" }}
+                                    className="rounded-lg shadow-lg overflow-hidden transition-all "
+                                >
+                                    {images && (
+                                        <img
+                                            id="one"
+                                            src={
+                                                images[index]?.images
+                                                    ?.image_largeUrl
+                                            }
+                                            alt="Hero-Image "
+                                            class="h-full w-full hero-image"
+                                        />
+                                    )}
                                 </div>
-                                {/* Controller here */}
-                                <div className="ml-auto hero-btns">
-                                    <button
-                                        type="button "
-                                        className=" hero__btn focus:outline-none py-2 px-2.5 mx-3 "
-                                        id="prev-btn"
-                                        onClick={() => execute("prev")}
-                                    >
-                                        <img
-                                            src="./assets/img/vectors/left-arrow.svg "
-                                            alt="arrow "
-                                        />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className=" hero__btn focus:outline-none py-2 px-2.5"
-                                        id="next-btn"
-                                        onClick={() => execute("next")}
-                                    >
-                                        <img
-                                            src="./assets/img/vectors/right-arrow.svg "
-                                            alt="arrow "
-                                        />
-                                    </button>
+                                <div
+                                    className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "
+                                    style={{ height: "250px" }}
+                                >
+                                    <div className="flex ">
+                                        {/* Progress bar here */}
+                                        <div className=" w-1/2 ">
+                                            <progress value={10} max={100} />
+                                        </div>
+                                        {/* Controller here */}
+                                        <div className="ml-auto hero-btns">
+                                            <button
+                                                type="button "
+                                                className=" hero__btn focus:outline-none py-2 px-2.5 mx-3 "
+                                                id="prev-btn"
+                                                onClick={() => execute("prev")}
+                                            >
+                                                <img
+                                                    src="./assets/img/vectors/left-arrow.svg "
+                                                    alt="arrow "
+                                                />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className=" hero__btn focus:outline-none py-2 px-2.5"
+                                                id="next-btn"
+                                                onClick={() => execute("next")}
+                                            >
+                                                <img
+                                                    src="./assets/img/vectors/right-arrow.svg "
+                                                    alt="arrow "
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {/* Car details here */}
+                                    {images && (
+                                        <div className="primary-color text-left car-details-div text-base mt-1 ">
+                                            <p
+                                                className="font-bold text-left "
+                                                id="car__name"
+                                            >
+                                                {images[index]?.vehicleName
+                                                    ? images[index]?.vehicleName
+                                                    : `${
+                                                          images[index]?.make +
+                                                          " " +
+                                                          "" +
+                                                          "" +
+                                                          images[index]?.model
+                                                      }`}
+                                            </p>
+                                            <p
+                                                className="font-normal"
+                                                id="car__year"
+                                            >
+                                                2019
+                                            </p>
+                                        </div>
+                                    )}
+                                    {/* Price & milage details here */}
+                                    <div className="primary-color flex mt-3 price-mileage-div ">
+                                        <div className="primary-color ">
+                                            <h5 className="font-medium mileage ">
+                                                2,124 mi
+                                            </h5>
+                                            <p className="font-bold range ">
+                                                RANGE
+                                            </p>
+                                        </div>
+                                        {/* dividing line here */}
+                                        <div className="vl mx-3 " />
+                                        {/* Price here */}
+                                        <div>
+                                            <h3 className="primary-red font-extrabold car__price">
+                                                $111,900
+                                            </h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            {/* Car details here */}
-                            {images && (
-                                <div className="primary-color text-left car-details-div text-base mt-1 ">
-                                    <p
-                                        className="font-bold text-left "
-                                        id="car__name"
-                                    >
-                                        {images[index]?.vehicleName
-                                            ? images[index]?.vehicleName
-                                            : `${
-                                                  images[index]?.make +
-                                                  " " +
-                                                  "" +
-                                                  "" +
-                                                  images[index]?.model
-                                              }`}
-                                    </p>
-                                    <p className="font-normal" id="car__year">
-                                        2019
-                                    </p>
-                                </div>
-                            )}
-                            {/* Price & milage details here */}
-                            <div className="primary-color flex mt-3 price-mileage-div ">
-                                <div className="primary-color ">
-                                    <h5 className="font-medium mileage ">
-                                        2,124 mi
-                                    </h5>
-                                    <p className="font-bold range ">RANGE</p>
-                                </div>
-                                {/* dividing line here */}
-                                <div className="vl mx-3 " />
-                                {/* Price here */}
-                                <div>
-                                    <h3 className="primary-red font-extrabold car__price">
-                                        $111,900
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
+                        )}
                     </div>
                     <section
                         style={{ background: "#E1E1E1" }}
