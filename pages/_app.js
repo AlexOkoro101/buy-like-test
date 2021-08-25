@@ -10,7 +10,7 @@ import App from '../src/components/App';
 
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
-import store from  '../redux/store';
+import {store} from  '../redux/store';
 import { useEffect } from 'react';
 import Login from './auth/login/index';
 import { login, selectUser } from '../redux/features/userSlice';
