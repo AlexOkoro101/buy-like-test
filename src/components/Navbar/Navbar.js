@@ -3,6 +3,17 @@ import { useRouter } from "next/router";
 
 const Navbar = () => {
     const router = useRouter()
+    let dropdown;
+
+    function toggleView() {
+        const menu = document.querySelector('#menu');
+        if(menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+        } else {
+            menu.classList.add('hidden');
+        }
+    
+    }
 
     return (
         <header className="">
@@ -21,6 +32,7 @@ const Navbar = () => {
 
                 <input className="menu-btn hidden" type="checkbox" id="menu-btn" />
                 <label
+                    onClick={toggleView}
                     className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none"
                     
                 >
@@ -28,7 +40,7 @@ const Navbar = () => {
                     <span className="navicon bg-grey-darkest flex items-center relative"></span>
                 </label>
 
-                <ul className="menu border-b md:border-none text-xs flex justify-end items-center list-reset m-0 w-full md:w-auto">
+                <ul id="menu" className={"hidden md:flex menu border-b md:border-none text-xs justify-end items-center list-reset m-0 w-full md:w-auto " + (dropdown ? "block" : "")}>
                     <li className="font-10 sec-black font-medium">
                         <a
                             href="/"

@@ -157,7 +157,7 @@ const Home = ({ getCars, cars }) => {
                                                     ?.image_largeUrl
                                             }
                                             alt="Hero-Image "
-                                            class="h-full w-full hero-image"
+                                            className="h-full w-full hero-image"
                                         />
                                     )}
                                 </div>
@@ -267,7 +267,7 @@ const Home = ({ getCars, cars }) => {
 
                                     <div className="flex flex-col mx-3 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
-                                            for="model "
+                                            htmlFor="model "
                                             className="primary-black font-semibold text-sm "
                                         >
                                             Select Model
@@ -289,7 +289,7 @@ const Home = ({ getCars, cars }) => {
 
                                     <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
-                                            for="year "
+                                            htmlFor="year "
                                             className="primary-black font-semibold text-sm "
                                         >
                                             Select Make
@@ -308,7 +308,7 @@ const Home = ({ getCars, cars }) => {
 
                                     <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
-                                            for="range "
+                                            htmlFor="range "
                                             className="primary-black font-semibold text-sm "
                                         >
                                             Select Price Range
@@ -787,10 +787,10 @@ const Home = ({ getCars, cars }) => {
                                                         <path
                                                             d="M1.5 2L10.5 11L1.5 20"
                                                             stroke="#1F2A53"
-                                                            stroke-opacity="0.75"
-                                                            stroke-width="2.75"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeOpacity="0.75"
+                                                            strokeWidth="2.75"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </svg>
                                                 </div>
@@ -812,10 +812,10 @@ const Home = ({ getCars, cars }) => {
                                                         <path
                                                             d="M1.5 2L10.5 11L1.5 20"
                                                             stroke="#1F2A53"
-                                                            stroke-opacity="0.75"
-                                                            stroke-width="2.75"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeOpacity="0.75"
+                                                            strokeWidth="2.75"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </svg>
                                                 </div>
@@ -837,10 +837,10 @@ const Home = ({ getCars, cars }) => {
                                                         <path
                                                             d="M1.5 2L10.5 11L1.5 20"
                                                             stroke="#1F2A53"
-                                                            stroke-opacity="0.75"
-                                                            stroke-width="2.75"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeOpacity="0.75"
+                                                            strokeWidth="2.75"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </svg>
                                                 </div>
@@ -862,10 +862,10 @@ const Home = ({ getCars, cars }) => {
                                                         <path
                                                             d="M1.5 2L10.5 11L1.5 20"
                                                             stroke="#1F2A53"
-                                                            stroke-opacity="0.75"
-                                                            stroke-width="2.75"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeOpacity="0.75"
+                                                            strokeWidth="2.75"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </svg>
                                                 </div>
@@ -887,10 +887,10 @@ const Home = ({ getCars, cars }) => {
                                                         <path
                                                             d="M1.5 2L10.5 11L1.5 20"
                                                             stroke="#1F2A53"
-                                                            stroke-opacity="0.75"
-                                                            stroke-width="2.75"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeOpacity="0.75"
+                                                            strokeWidth="2.75"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </svg>
                                                 </div>
