@@ -13,7 +13,6 @@ import { searchTerm } from "../redux/actions/carsAction";
 //
 const Home = ({ getCars, cars }) => {
     //
-
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -54,7 +53,7 @@ const Home = ({ getCars, cars }) => {
     };
 
     const [car, setCars] = useState(null);
-    const [images, setImages] = useState(null);
+    const [images, setImages] = useState(cars);
     const [make, setMake] = useState(["toyota", "honda", "accord"]);
     const [years, setYears] = useState(() => {
         let year = 2000;
@@ -69,7 +68,7 @@ const Home = ({ getCars, cars }) => {
     const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
     useEffect(() => {
-        if (seconds <= 70) {
+        if (seconds <= 50) {
             setTimeout(() => setSeconds(seconds + 1), 100);
         } else {
             execute("next");
@@ -77,33 +76,35 @@ const Home = ({ getCars, cars }) => {
         }
     });
     useEffect(() => {
-        getCars();
-        async function fetchData() {
-            try {
-                let res = await fetch(
-                    `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
-                    {
-                        method: "GET",
-                        headers: {},
-                        credentials: "same-origin",
+        if (cars.length <= 0) {
+            getCars();
+            async function fetchData() {
+                try {
+                    let res = await fetch(
+                        `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
+                        {
+                            method: "GET",
+                            headers: {},
+                            credentials: "same-origin",
+                        }
+                    )
+                        .then(function (response) {
+                            return response.text();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    const dada = JSON.parse(res);
+                    if (dada) {
+                        setCars(dada.data);
+                        setImages(dada.data);
                     }
-                )
-                    .then(function (response) {
-                        return response.text();
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                const dada = JSON.parse(res);
-                if (dada) {
-                    setCars(dada.data);
-                    setImages(dada.data);
+                } catch (error) {
+                    console.log(error);
                 }
-            } catch (error) {
-                console.log(error);
             }
+            fetchData();
         }
-        fetchData();
     }, []);
     function execute(event) {
         let heroTimeline = anime.timeline({

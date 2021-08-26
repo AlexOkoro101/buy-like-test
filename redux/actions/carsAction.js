@@ -29,12 +29,14 @@ export const getCars = () => async (dispatch) => {
                 });
                 console.log(error);
             });
-        const dada = JSON.parse(res);
-        if (dada) {
-            dispatch({
-                type: FETCH_SUCCESSFUL,
-                payload: dada.data,
-            });
+        if (res) {
+            const dada = JSON.parse(res);
+            if (dada) {
+                dispatch({
+                    type: FETCH_SUCCESSFUL,
+                    payload: dada.data,
+                });
+            }
         }
     } catch (error) {
         dispatch({
@@ -45,7 +47,6 @@ export const getCars = () => async (dispatch) => {
     }
 };
 export const searchTerm = (event) => async (dispatch) => {
-    console.log(event.year);
     dispatch({
         type: SEARCHING,
     });
@@ -70,12 +71,14 @@ export const searchTerm = (event) => async (dispatch) => {
                 });
                 console.log(error);
             });
-        const dada = JSON.parse(res);
-        if (dada) {
-            dispatch({
-                type: SEARCHING_SUCCESS,
-                payload: dada.data,
-            });
+        if (res) {
+            const dada = JSON.parse(res);
+            if (dada) {
+                dispatch({
+                    type: SEARCHING_SUCCESS,
+                    payload: dada.data,
+                });
+            }
         }
     } catch (error) {
         dispatch({
