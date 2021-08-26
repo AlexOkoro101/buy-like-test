@@ -10,9 +10,10 @@ import { enviroment } from "../../../src/components/enviroment";
 import { login } from "../../../redux/reducers/userReducer";
 import { useRouter } from "next/router";
 import ClipLoader from "react-spinners/ClipLoader";
+import { connect } from 'react-redux';
 
 
-const EmailSignup = () => {
+const EmailSignup = ({ beginLogin }) => {
     //router
     const router = useRouter()
 
@@ -131,18 +132,11 @@ const EmailSignup = () => {
                 localStorage.setItem('userToken', JSON.stringify(item));
           
                 //save data to store
-                dispatch(
-                  {
-                      type: login,
-                      payload: {
-                        token: data.data._token,
-                        vehicle: null,
-                        loading: false,
-                        error: null,
-                        success: null,
-                      }
-                  }
-                )
+                beginLogin({
+                    token: data.data._token,
+                    success: true,
+                    vehicles: null,
+                });
             })
             .catch(e => {
                 // seterror(e.message)
@@ -252,4 +246,13 @@ const EmailSignup = () => {
      );
 }
  
-export default EmailSignup;
+
+export default connect(
+    () => ({}),
+    (dispatch) => ({
+      beginLogin: (payload) => dispatch({
+        type: 'login',
+        payload,
+      })
+    })
+  )(EmailSignup);

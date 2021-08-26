@@ -6,11 +6,11 @@ import * as Yup from 'yup';
 import { useRef, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enviroment } from "../../../src/components/enviroment";
-import { login } from "../../../redux/features/userSlice";
 import { useRouter } from "next/router";
 import ClipLoader from "react-spinners/ClipLoader";
+import { selectToken } from "../../../redux/reducers/userReducer";
 
 
 const OnBoarding = () => {
@@ -19,6 +19,8 @@ const OnBoarding = () => {
 
     const [error, seterror] = useState(null)
     const [isLoading, setisLoading] = useState(false)
+
+    const token = useSelector(selectToken);
 
     const toastError = () => toast.error(`${error ? error : 'Could not create account'}`, {
         position: "top-right",
@@ -86,10 +88,14 @@ const OnBoarding = () => {
             setisLoading(true)
             seterror(null)
             console.log(values)
+            console.log("user token", token)
             
             fetch(enviroment.BASE_URL + 'auth/user/profile', {
                 method: 'POST',
-                headers: {"Content-Type": "application/json"},
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
                 credentials: "same-origin",
                 body: JSON.stringify(values)
             })

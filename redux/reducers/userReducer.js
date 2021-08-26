@@ -1,14 +1,14 @@
 const initialState = {
-    user: null
+    
   }
   
   const User = (state, action) => {
     switch (action.type) {
       case 'login': {
-        const { user } = action.payload;
+        // const { user } = action.payload;
         return {
           ...state,
-          user,
+          ...action.payload,
         }
       }
       case 'logout': {
@@ -21,5 +21,5 @@ const initialState = {
         return initialState;
     }
   }
-  
+  export const selectToken = (state) => state.userState.token;
   export default User;
