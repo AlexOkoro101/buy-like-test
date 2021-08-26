@@ -12,7 +12,6 @@ const initialState = {
     cars: {},
     loading: false,
     error: {},
-    searchTerm: {},
 };
 
 const Cars = (state = initialState, action) => {
@@ -38,21 +37,20 @@ const Cars = (state = initialState, action) => {
         case SEARCHING:
             return {
                 ...state,
-                searchTerm: {},
                 loading: false,
                 error: {},
             };
         case SEARCHING_SUCCESS:
             return {
                 ...state,
-                searchTerm: action.payload,
+                cars: action.payload,
                 loading: false,
                 error: {},
             };
         case SEARCHING_FAILED:
             return {
                 ...state,
-                searchTerm: {},
+                cars: {},
                 loading: false,
                 error: action.payload,
             };

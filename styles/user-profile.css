@@ -161,6 +161,7 @@ section {
 
 .active {
     display: block !important;
+    border-bottom: 3px solid #de472c;
 }
 
 .changeStyle {
@@ -198,12 +199,15 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 100%;
     }
+
     section {
         width: 100%;
     }
+
     .modal {
         padding: 180px 0px;
     }
@@ -213,12 +217,15 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 100%;
     }
+
     section {
         width: 100%;
     }
+
     .modal {
         padding: 180px 0px;
     }
@@ -228,9 +235,11 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 33.33%;
     }
+
     section {
         width: 100%;
     }
