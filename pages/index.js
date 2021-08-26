@@ -279,20 +279,24 @@ const Home = ({ getCars, cars }) => {
                         <div className=" request__holder relative w-full py-16  ">
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="flex  flex-wrap justify-center ">
-                                    <div className="flex flex-col mr-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label className="primary-black font-semibold text-sm ">
-                                            Select Year
+                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
+                                        <label
+                                            for="year "
+                                            className="primary-black font-semibold text-sm "
+                                        >
+                                            Select Make
                                         </label>
                                         <select
-                                            {...register("year")}
+                                            name=" "
+                                            id="year "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                            {...register("make")}
                                         >
-                                            {years.map((x) => (
+                                            {make.map((x) => (
                                                 <option value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
-
                                     <div className="flex flex-col mx-3 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
                                             for="model "
@@ -315,44 +319,17 @@ const Home = ({ getCars, cars }) => {
                                         </select>
                                     </div>
 
-                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label
-                                            for="year "
-                                            className="primary-black font-semibold text-sm "
-                                        >
-                                            Select Make
+                                    <div className="flex flex-col mr-3 pb-5 w-full md:w-52 lg:w-52">
+                                        <label className="primary-black font-semibold text-sm ">
+                                            Select Year
                                         </label>
                                         <select
-                                            name=" "
-                                            id="year "
+                                            {...register("year")}
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
-                                            {...register("make")}
                                         >
-                                            {make.map((x) => (
+                                            {years.map((x) => (
                                                 <option value={x}>{x}</option>
                                             ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label
-                                            for="range "
-                                            className="primary-black font-semibold text-sm "
-                                        >
-                                            Select Price Range
-                                        </label>
-                                        <select
-                                            {...register("range")}
-                                            name=" "
-                                            id="range "
-                                            className="form__control w-full px-1.5 font-13 focus:outline-none "
-                                        >
-                                            <option value="200">
-                                                $150.000 - $200,000
-                                            </option>
-                                            <option value="200">
-                                                $150.000 - $200,000
-                                            </option>
                                         </select>
                                     </div>
 
