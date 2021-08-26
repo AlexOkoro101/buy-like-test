@@ -158,18 +158,29 @@ const Home = ({ getCars, cars }) => {
                                 <div
                                     style={{ width: "350px", height: "280px" }}
                                     className="rounded-lg shadow-lg overflow-hidden transition-all "
+                                    onClick={() => {
+                                        router.push({
+                                            pathname:
+                                                "/search/" + images[index].VIN,
+                                        });
+                                    }}
                                 >
-                                    {images && (
-                                        <img
-                                            id="one"
-                                            src={
-                                                images[index]?.images
-                                                    ?.image_largeUrl
-                                            }
-                                            alt="Hero-Image "
-                                            class="h-full w-full hero-image"
-                                        />
-                                    )}
+                                    <div className="imgWrap">
+                                        <p className="description font-bold text-base primary-color">
+                                            View Vehicle
+                                        </p>
+                                        {images && (
+                                            <img
+                                                id="one"
+                                                src={
+                                                    images[index]?.images
+                                                        ?.image_largeUrl
+                                                }
+                                                alt="Hero-Image "
+                                                class="h-full w-full hero-image"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                                 <div
                                     className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "

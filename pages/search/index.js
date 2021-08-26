@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
 import { getCars } from "../../redux/actions/carsAction";
-import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
+import { useSelector, useDispatch } from "react-redux";
+import Link from "next/link";
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
     const [data, setData] = useState([]);
-    const searchTerm = useSelector((state) => state.Cars.searchTerm);
+    const searchTerm = useSelector((state) => state.Cars.cars);
+    const router = useRouter();
 
     useEffect(() => {
         if (Object.entries(searchTerm).length !== 0) {
@@ -16,7 +19,6 @@ const Search = (props) => {
     }, [searchTerm]);
 
     const activateList = () => {
-        let datass = props.getCars();
         setgrid(false);
     };
 
@@ -1430,6 +1432,13 @@ const Search = (props) => {
                                                         <button
                                                             type="button"
                                                             className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                            onClick={() => {
+                                                                router.push({
+                                                                    pathname:
+                                                                        "/search/" +
+                                                                        ele.VIN,
+                                                                });
+                                                            }}
                                                         >
                                                             Place bid
                                                         </button>
@@ -1603,6 +1612,13 @@ const Search = (props) => {
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                        onClick={() => {
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
+                                                        }}
                                                     >
                                                         View Details
                                                     </button>
@@ -1619,8 +1635,8 @@ const Search = (props) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error, searchTerm } = state.Cars;
-    return { cars, loading, error, searchTerm };
+    const { cars, loading, error } = state.Cars;
+    return { cars, loading, error };
 };
 
 export default connect(mapStateToProps, { getCars })(Search);
