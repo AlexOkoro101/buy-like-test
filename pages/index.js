@@ -13,25 +13,7 @@ import { searchTerm } from "../redux/actions/carsAction";
 //
 const Home = ({ getCars, cars }) => {
     //
-    const responsive2 = {
-        superLargeDesktop: {
-            // the naming can be any, depends on you.
-            breakpoint: { max: 4000, min: 3000 },
-            items: 5,
-        },
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 4,
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 3,
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-        },
-    };
+
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -51,6 +33,26 @@ const Home = ({ getCars, cars }) => {
             items: 1,
         },
     };
+    const data = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5,
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 5,
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2,
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+        },
+    };
+
     const [car, setCars] = useState(null);
     const [images, setImages] = useState(null);
     const [make, setMake] = useState(["toyota", "honda", "accord"]);
@@ -67,7 +69,7 @@ const Home = ({ getCars, cars }) => {
     const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
     useEffect(() => {
-        if (seconds <= 100) {
+        if (seconds <= 70) {
             setTimeout(() => setSeconds(seconds + 1), 100);
         } else {
             execute("next");
@@ -186,10 +188,11 @@ const Home = ({ getCars, cars }) => {
                                     className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "
                                     style={{ height: "250px" }}
                                 >
-                                    <div className="flex ">
+                                    <div className="flex transition-all">
                                         {/* Progress bar here */}
-                                        <div className=" w-1/2 ">
+                                        <div className="transition-all w-1/2 ">
                                             <progress
+                                                className="transition-all"
                                                 value={seconds}
                                                 max={100}
                                             />
@@ -373,119 +376,71 @@ const Home = ({ getCars, cars }) => {
                                 SEARCH A CATEGORY{" "}
                             </h5>
                         </div>
-                        <Carousel
-                            swipeable={true}
-                            draggable={true}
-                            showDots={false}
-                            responsive={responsive2}
-                            ssr={true} // means to render carousel on server-side.
-                            infinite={true}
-                            autoPlay={true}
-                            autoPlaySpeed={2000}
-                            keyBoardControl={true}
-                            customTransition="all .5"
-                            transitionDuration={500}
-                            containerclassName="carousel-container"
-                            removeArrowOnDeviceType={["tablet", "mobile"]}
-                            dotListclassName="custom-dot-list-style"
-                            itemclassName="carousel-item-padding-40-px"
-                        >
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/hatchback.svg "
-                                        alt="Hatchback "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            Hatchbacks
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/sedans.svg "
-                                        alt="Sedans "
-                                    />
-                                    <div className="text-center text-xs pt-4 ">
-                                        <p className="font-semibold primary-color ">
-                                            Sedans
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/van.svg "
-                                        alt="Van "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            Vans
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/suv.svg "
-                                        alt="SUVs "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            SUVs
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/wagon.svg "
-                                        alt="Wagon "
-                                    />
-                                    <div className="text-center text-xs pt-2 ">
-                                        <p className="font-semibold primary-color ">
-                                            Wagons
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </Carousel>
+                        {images && (
+                            <Carousel
+                                swipeable={true}
+                                draggable={true}
+                                showDots={false}
+                                responsive={data}
+                                ssr={true} // means to render carousel on server-side.
+                                infinite={true}
+                                autoPlay={true}
+                                autoPlaySpeed={1500}
+                                keyBoardControl={true}
+                                customTransition="all .7"
+                                transitionDuration={1000}
+                                containerclassName="carousel-container"
+                                removeArrowOnDeviceType={["tablet", "mobile"]}
+                                dotListclassName="custom-dot-list-style"
+                                itemclassName="carousel-item-padding-40-px"
+                            >
+                                {images &&
+                                    images.map((ele) => (
+                                        <div>
+                                            <div className="car__holder flex my-3 flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                                <img
+                                                    src={
+                                                        ele?.images
+                                                            ?.image_largeUrl
+                                                    }
+                                                    alt="Hatchback "
+                                                />
+                                                <div className="text-center text-xs pt-3 ">
+                                                    <p
+                                                        className="font-semibold primary-color "
+                                                        style={{
+                                                            height: "50px",
+                                                        }}
+                                                    >
+                                                        {ele?.vehicleName
+                                                            ? ele?.vehicleName
+                                                            : `${
+                                                                  ele?.make +
+                                                                  " " +
+                                                                  "" +
+                                                                  "" +
+                                                                  ele?.model
+                                                              }`}
+                                                    </p>
+                                                    <a
+                                                        href="# "
+                                                        className="primary-red font-bold pt-5 "
+                                                        onClick={() => {
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
+                                                        }}
+                                                    >
+                                                        SEE MORE
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                            </Carousel>
+                        )}
                         <div className="text-center mt-10 ">
                             <button
                                 type="button "
@@ -709,8 +664,8 @@ const Home = ({ getCars, cars }) => {
                             autoPlay={true}
                             autoPlaySpeed={1000}
                             keyBoardControl={true}
-                            customTransition="all .5"
-                            transitionDuration={500}
+                            customTransition="all .8"
+                            transitionDuration={1000}
                             containerclassName="carousel-container"
                             removeArrowOnDeviceType={["tablet", "mobile"]}
                             dotListclassName="custom-dot-list-style"

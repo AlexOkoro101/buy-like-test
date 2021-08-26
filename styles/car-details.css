@@ -14,7 +14,7 @@
     transition: 0.3s;
 }
 
-.details-tab.active {
+.details-tab .active {
     border-bottom: 2px solid #D80739;
     color: #D80739;
 }

@@ -46,7 +46,7 @@ const MyApp = ({ Component, pageProps }) => {
     const user = useSelector(selectUser);
     return (
         <Provider store={store}>
-            <PersistGate loading={true} persistor={persistor}>
+            <PersistGate loading={null} persistor={persistor}>
                 {" "}
                 <App>
                     <Component {...pageProps} />
