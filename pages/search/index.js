@@ -1,22 +1,42 @@
 import { useState, useEffect } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
-import { getCars } from "../../redux/actions/carsAction";
+import { searchTerm } from "../../redux/actions/carsAction";
 import { useRouter } from "next/router";
 
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
+    const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
-    const searchTerm = useSelector((state) => state.Cars.cars);
+    const searchTerms = useSelector((state) => state.Cars.cars);
     const router = useRouter();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if (Object.entries(searchTerm).length !== 0) {
-            setData(searchTerm);
+        if (Object.entries(searchTerms).length > 1) {
+            setData(searchTerms);
+        } else if (isSearching === false) {
+            const data = {
+                make: "",
+                year: "",
+            };
+            dispatch(searchTerm(data));
+            console.log("loop");
         }
-    }, [searchTerm]);
+    }, [searchTerms]);
+
+    const handleSearch = async (e) => {
+        setIsSearching(true);
+        const data = {
+            make: e.target.value,
+            year: "",
+        };
+
+        await dispatch(searchTerm(data));
+        setData(searchTerms);
+    };
 
     const activateList = () => {
         setgrid(false);
@@ -1134,13 +1154,10 @@ const Search = (props) => {
                                         className="search-result-control-mobile px-3 w-11/12 md:w-full focus:outline-none "
                                         type="text"
                                         placeholder="Search 7685 cars"
+                                        onChange={(event) =>
+                                            handleSearch(event)
+                                        }
                                     />
-                                </div>
-
-                                <div className="ml-auto">
-                                    <select className="select-result-control-mobile font-10 focus:outline-none">
-                                        <option>Sort by: Default</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -1175,20 +1192,12 @@ const Search = (props) => {
                                     className="search-result-control px-3  focus:outline-none"
                                     type="text"
                                     placeholder="Search 7685 cars"
+                                    onChange={(event) => handleSearch(event)}
                                 />
                             </div>
 
                             {/* <!-- Third section here --> */}
                             <div className="flex">
-                                <div className="lg:block  hidden">
-                                    <label className="font-11 primary-black mr-1 ">
-                                        Sort by:{" "}
-                                    </label>
-                                    <select className="select-result-control font-10 focus:outline-none">
-                                        <option>Default</option>
-                                    </select>
-                                </div>
-
                                 {/* <!-- grid view tab here --> */}
                                 <button
                                     type="button"
@@ -1639,4 +1648,4 @@ const mapStateToProps = (state) => {
     return { cars, loading, error };
 };
 
-export default connect(mapStateToProps, { getCars })(Search);
+export default connect(mapStateToProps, { searchTerm })(Search);
