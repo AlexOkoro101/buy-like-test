@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm } from "../redux/actions/carsAction";
+
 //
 const Home = ({ getCars, cars }) => {
     //
@@ -62,9 +63,17 @@ const Home = ({ getCars, cars }) => {
         }
         return validVehicleYears;
     });
+    const [seconds, setSeconds] = useState(0);
     const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
-
+    useEffect(() => {
+        if (seconds <= 100) {
+            setTimeout(() => setSeconds(seconds + 1), 100);
+        } else {
+            execute("next");
+            setSeconds(0);
+        }
+    });
     useEffect(() => {
         getCars();
         async function fetchData() {
@@ -107,16 +116,17 @@ const Home = ({ getCars, cars }) => {
                     setIndex(nextIndex);
                 }
             case "next":
-                if (index < images.length - 1) {
+                if (index < images.length) {
                     setIndex(index + 1); // increases index by 1
                 }
-                if (index === images.length - 1) {
+                if (index === images.length - 2) {
                     setIndex(0);
                 }
             default:
                 break;
         }
     }
+
     const { register, handleSubmit } = useForm();
     const router = useRouter();
     const onSubmit = (data) => {
@@ -168,7 +178,10 @@ const Home = ({ getCars, cars }) => {
                                     <div className="flex ">
                                         {/* Progress bar here */}
                                         <div className=" w-1/2 ">
-                                            <progress value={10} max={100} />
+                                            <progress
+                                                value={seconds}
+                                                max={100}
+                                            />
                                         </div>
                                         {/* Controller here */}
                                         <div className="ml-auto hero-btns">

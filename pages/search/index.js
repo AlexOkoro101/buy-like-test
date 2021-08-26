@@ -1426,10 +1426,6 @@ const Search = (props) => {
                                                     </div>
                                                 </div>
                                                 <div className="flex pt-3">
-                                                    <p className=" sec-black text-base">
-                                                        ${" "}
-                                                        {ele?.mmrPrice?.toLocaleString()}
-                                                    </p>
                                                     <div className="ml-auto  self-center">
                                                         <button
                                                             type="button"
@@ -1457,14 +1453,25 @@ const Search = (props) => {
                                         <div className="car-display-list-holder flex flex-wrap w-full p-4 mb-4">
                                             {/* <!-- image to details here --> */}
                                             <div className="flex flex-wrap">
-                                                <img
-                                                    className="img-fluid"
-                                                    src={
-                                                        ele?.images
-                                                            ?.image_smallUrl
-                                                    }
-                                                    alt=""
-                                                />
+                                                <div
+                                                    style={{
+                                                        width: "300px",
+                                                        height: "280px",
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="img-fluid"
+                                                        src={
+                                                            ele?.images
+                                                                ?.image_largeUrl
+                                                        }
+                                                        alt=""
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "auto",
+                                                        }}
+                                                    />
+                                                </div>
 
                                                 {/* <!-- Details here --> */}
                                                 <div className="lg:ml-3 py-4">
@@ -1529,7 +1536,8 @@ const Search = (props) => {
                                                             <tr>
                                                                 <td className="py-1.5 pr-20 whitespace-no-wrap">
                                                                     <p className="flex items-center text-xs primary-black">
-                                                                        Exterior
+                                                                        Exterior:{" "}
+                                                                        {""}
                                                                         {""}
                                                                         {
                                                                             ele?.sourceExteriorColor
@@ -1563,7 +1571,8 @@ const Search = (props) => {
                                                     {/* <!-- others here --> */}
                                                     <div className="flex border-t my-3 py-3">
                                                         <p className="flex items-center font-11 primary-black mr-6">
-                                                            Vehicle Type{""}
+                                                            Vehicle Type: {""}
+                                                            {""}
                                                             {ele?.vehicleType}
                                                         </p>
                                                         <p className="flex items-center font-11 primary-black mr-6">
@@ -1577,10 +1586,6 @@ const Search = (props) => {
                                                 </div>
                                             </div>
                                             <div className="ml-auto py-4 items-end flex flex-col">
-                                                <p className="primary-black text-base">
-                                                    ${" "}
-                                                    {ele?.mmrPrice?.toLocaleString()}
-                                                </p>
                                                 <div className="relative pt-1.5">
                                                     <img
                                                         src="../../assets/img/vectors/buy.svg"
