@@ -116,8 +116,8 @@ const Home = ({ getCars, cars }) => {
                     setIndex(nextIndex);
                 }
             case "next":
-                if (index < images.length) {
-                    setIndex(index + 1); // increases index by 1
+                if (index < images.length - 1) {
+                    setIndex(index + 2); // increases index by 1
                 }
                 if (index === images.length - 2) {
                     setIndex(0);
