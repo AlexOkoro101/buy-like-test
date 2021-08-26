@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { login } from "../../../redux/features/userSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ClipLoader from "react-spinners/ClipLoader";
 
  
 
@@ -87,6 +88,7 @@ const Login = () => {
                   } else {
                     seterror(data?.message)
                     toastSuccess()
+                    router.push('/search')
                   }
                 const now = new Date()
                 //save data to local storage
@@ -166,7 +168,7 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         className="focus:outline-none primary-btn  text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2">
-                                        {isLoading ? "logging in" : "login"} </button>
+                                        {isLoading ? (<ClipLoader color="#fff" size={20} loading />) : "login"} </button>
                                 </div>
                             </form>
 

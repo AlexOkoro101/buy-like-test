@@ -1,4 +1,5 @@
 import Meta from "../../../src/components/Head/Meta"
+import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -7,19 +8,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from "react-redux";
 import { enviroment } from "../../../src/components/enviroment";
-import { login } from "../../../redux/reducers/userReducer";
+import { login } from "../../../redux/features/userSlice";
 import { useRouter } from "next/router";
 import ClipLoader from "react-spinners/ClipLoader";
 
 
-const EmailSignup = () => {
+const OnBoarding = () => {
     //router
     const router = useRouter()
 
     const [error, seterror] = useState(null)
     const [isLoading, setisLoading] = useState(false)
 
-    const toastError = () => toast.error(`${error ? error : 'Could not sign up'}`, {
+    const toastError = () => toast.error(`${error ? error : 'Could not create account'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -28,7 +29,7 @@ const EmailSignup = () => {
         draggable: true,
         progress: undefined,
     });
-    const toastSuccess = () => toast.success(`${error ? error : 'Account created Successfully'}`, {
+    const toastSuccess = () => toast.success(`${error ? error : 'Account created'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -55,7 +56,7 @@ const EmailSignup = () => {
         }
     }
     const changeNumber = () => {
-        formik.values.number = `${phoneRef.current.selectedCountryData.dialCode}` + `${phoneRef.current.state.value}`
+        formik.values.phoneNumber = `${phoneRef.current.selectedCountryData.dialCode}` + `${phoneRef.current.state.value}`
         setphone(`${phoneRef.current.selectedCountryData.dialCode}` + `${phoneRef.current.state.value}`)
         if(phoneRef) {
             setphoneError(false)
@@ -65,27 +66,20 @@ const EmailSignup = () => {
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            // number: '123',
-            email: '',
-            password: ''
+            address: '',
+            state: '',
+            phoneNumber: '123',
+            city: '',
         },
         validationSchema: Yup.object({
-        firstName: Yup.string()
-            .min(3, 'Must be 3 characters or more')
-            .required('First name is required'),
-        lastName: Yup.string()
-            .min(3, 'Must be 3 characters or more')
-            .required('Last name is required'),
-        // number: Yup.string()
-        // .required('Phone number is required'),
-        email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-        password: Yup.string()
-        .min(6, ({ min }) => `Password must be at least ${min} characters`)
-        .required('Password number is required'),
+        address: Yup.string()
+            .required('Address is required'),
+        state: Yup.string()
+            .required('State is required'),
+        phoneNumber: Yup.string()
+        .required('Phone number is required'),
+        city: Yup.string()
+        .required('City is required'),
         }),
         onSubmit: values => {
             // notify()
@@ -93,56 +87,35 @@ const EmailSignup = () => {
             seterror(null)
             console.log(values)
             
-            fetch(enviroment.BASE_URL + 'auth/register', {
+            fetch(enviroment.BASE_URL + 'auth/user/profile', {
                 method: 'POST',
                 headers: {"Content-Type": "application/json"},
                 credentials: "same-origin",
                 body: JSON.stringify(values)
             })
             .then(res => {
-                // console.log(res)
+                console.log(res)
                 if(!res.ok) {
                   setisLoading(false)
                   seterror(res.statusText)
                   toastError()
-                  throw Error("Could not sign up")
+                  throw Error("Could not make update")
                 }
                 setisLoading(false)
                 return res.json()
           
             })
             .then(data => {
-                //   console.log(data)
+                  console.log(data)
                   if(data?.error) {
                       seterror(data?.message)
                       toastError()
                     } else {
-                        // console.log(data)
+                        console.log(data)
                         seterror(data?.message)
                         toastSuccess()
-                        router.push('/auth/signup/onboarding')
-                  }
-                const now = new Date()
-                //save data to local storage
-                const item = {
-                  userToken: data.data._token,
-                  expiry: now.getTime() + 3600000,
-                }
-                localStorage.setItem('userToken', JSON.stringify(item));
-          
-                //save data to store
-                dispatch(
-                  {
-                      type: login,
-                      payload: {
-                        token: data.data._token,
-                        vehicle: null,
-                        loading: false,
-                        error: null,
-                        success: null,
-                      }
-                  }
-                )
+                        router.push('/auth/login')
+                    }
             })
             .catch(e => {
                 // seterror(e.message)
@@ -160,7 +133,7 @@ const EmailSignup = () => {
                 <div className="signup-bg py-20">
                     <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
                         <div className="text-center">
-                            <p className="text-sm primary-color font-medium">Enter your details to sign up with your email address
+                            <p className="text-sm primary-color font-medium">Enter these additonal details to complete sign up
                             </p>
                         </div>
 
@@ -169,79 +142,80 @@ const EmailSignup = () => {
                             <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
 
                                 <div className="flex flex-col mb-3 w-full lg:mb-0 ">
-                                    <label className="pb-1 sec-black font-10 font-medium">First name</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">Address</label>
                                     <input 
                                         className="login-control focus:outline-none px-2" 
                                         type="text"
-                                        id="firstName"
-                                        name="firstName"
-                                        placeholder="What is your first name?" 
+                                        id="address"
+                                        name="address"
+                                        placeholder="What is your address ?" 
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.firstName}
+                                        value={formik.values.address}
                                         />
-                                        {formik.touched.firstName && formik.errors.firstName ? (
-                                            <div className="input-error">{formik.errors.firstName}</div>
+                                        {formik.touched.address && formik.errors.address ? (
+                                            <div className="input-error">{formik.errors.address}</div>
                                         ) : null}
                                 </div>
 
                                 <div className="flex flex-col mb-3 w-full lg:ml-3.5 md:ml-3.5 lg:mb-0">
-                                    <label className="pb-1 sec-black font-10 font-medium">Last name</label>
+                                    <label className="pb-1 sec-black font-10 font-medium">State</label>
                                     <input 
                                         className="login-control focus:outline-none px-2" 
                                         type="text"
-                                        id="lastName"
-                                        name="lastName"
-                                        placeholder="What is your last name?" 
+                                        id="state"
+                                        name="state"
+                                        placeholder="What is your state ?" 
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.lastName}
+                                        value={formik.values.state}
                                         />
-                                        {formik.touched.lastName && formik.errors.lastName ? (
-                                            <div className="input-error">{formik.errors.lastName}</div>
+                                        {formik.touched.state && formik.errors.state ? (
+                                            <div className="input-error">{formik.errors.state}</div>
                                         ) : null}
                                 </div>
                             </div>
 
                             <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
 
-                                <div className="flex flex-col mb-3 w-full lg:w-6/12  lg:mb-0">
-                                    <label className="pb-1 sec-black font-10 font-medium">Email ddress</label>
+                                <div className="flex flex-col mb-3 w-full lg:w-6/12 lg:mb-0">
+                                    <label className="pb-1 sec-black font-10 font-medium">City</label>
                                     <input className="login-control focus:outline-none px-2" 
-                                        id="email"
-                                        name="email"
-                                        type="email"
+                                        id="text"
+                                        name="city"
+                                        type="city"
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.email}
-                                        placeholder="What is your email address?" />
-                                        {formik.touched.email && formik.errors.email ? (
-                                            <div className="input-error">{formik.errors.email}</div>
+                                        value={formik.values.city}
+                                        placeholder="What is your city ?" />
+                                        {formik.touched.city && formik.errors.city ? (
+                                            <div className="input-error">{formik.errors.city}</div>
                                         ) : null}
                                 </div>
-                                <div className="flex flex-col mb-3 w-full lg:w-6/12 lg:ml-3.5 md:ml-3.5 lg:mb-0">
-                                    <label className="pb-1 sec-black font-10 font-medium">Password</label>
-                                    <input className="login-control focus:outline-none px-2" 
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        value={formik.values.password}
-                                        placeholder="Enter password" />
-                                        {formik.touched.password && formik.errors.password ? (
-                                            <div className="input-error">{formik.errors.password}</div>
-                                        ) : null}
+                                <div className="flex flex-col mb-3 w-full lg:w-6/12  lg:ml-3.5 md:ml-3.5 lg:mb-0 ">
+                                    <label className="pb-1 sec-black font-10 font-medium">Phone number</label>
+                                        <IntlTelInput
+                                            ref={phoneRef}
+                                            fieldName="phoneNumber"
+                                            fieldId="phoneNumber"
+                                            preferredCountries={['ng']}
+                                            containerClassName="intl-tel-input"
+                                            inputClassName="form-control"
+                                            placeholder="905 665 7840"
+                                            onPhoneNumberChange={changeNumber}
+                                            onPhoneNumberBlur={validatePhone}
+                                        />
+                                        {phoneError &&  (
+                                            <div className="input-error">Phone number is required</div>
+                                        )}
                                 </div>
-                            </div>
-                            <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5">
                             </div>
 
                             <div className="text-center pt-3">
                                 <button
                                     type="submit"
                                     className="focus:outline-none primary-btn  text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2">
-                                    {isLoading ? (<ClipLoader color="#fff" size={25} loading />) : 'create my account'} </button>
+                                    {isLoading ? (<ClipLoader color="#fff" size={25} loading />) : 'update my account'} </button>
                             </div>
                         </form>
 
@@ -252,4 +226,4 @@ const EmailSignup = () => {
      );
 }
  
-export default EmailSignup;
+export default OnBoarding;
