@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
+import { selectToken } from "../../redux/reducers/userReducer";
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
@@ -13,6 +14,7 @@ const Search = (props) => {
     const searchTerms = useSelector((state) => state.Cars.cars);
     const router = useRouter();
     const dispatch = useDispatch();
+    const user = useSelector(selectToken)
 
     useEffect(() => {
         if (Object.entries(searchTerms).length > 1) {
@@ -25,7 +27,10 @@ const Search = (props) => {
             dispatch(searchTerm(data));
             console.log("loop");
         }
-    }, [searchTerms]);
+        if(!user.login) {
+            router.push('/auth/login')
+        }
+    }, [searchTerms, user]);
 
     const handleSearch = async (e) => {
         setIsSearching(true);
@@ -104,6 +109,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="selectAllMakeAndModel"
+                                                    name="selectAllMakeAndModel"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -120,6 +127,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Acura"
+                                                    name="Acura"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -136,6 +145,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Alfa Romeo"
+                                                    name="Alfa Romeo"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -151,6 +162,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Audi"
+                                                    name="Audi"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -166,6 +179,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="BMW"
+                                                    name="BMW"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -250,6 +265,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="SelectAllBodyType"
+                                                    name="SelectAllBodyType"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -266,6 +283,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Sedan/Saloon"
+                                                    name="Sedan/Saloon"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -282,6 +301,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="SUV"
+                                                    name="SUV"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -298,6 +319,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Coupe"
+                                                    name="Coupe"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -314,6 +337,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Hatchback"
+                                                    name="Hatchback"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -330,6 +355,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Wagon"
+                                                    name="Wagon"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -373,6 +400,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="SelectAllLocation"
+                                                    name="SelectAllLocation"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -389,6 +418,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Alaska"
+                                                    name="Alaska"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -405,6 +436,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Alabama"
+                                                    name="Alabama"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -421,6 +454,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Arkansas"
+                                                    name="Arkansas"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -437,6 +472,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value="Carlifonia"
+                                                    name="Carlifonia"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -518,7 +555,7 @@ const Search = (props) => {
                                             Select All
                                         </p>
                                         <div className="ml-auto">
-                                            <input type="radio" />
+                                            <input type="radio" name="SelectAllTransmission" value="SelectAllTransmission" />
                                         </div>
                                     </div>
 
@@ -528,7 +565,7 @@ const Search = (props) => {
                                             Automatic
                                         </p>
                                         <div className="ml-auto">
-                                            <input type="radio" />
+                                            <input type="radio" name="Automatic" value="Automatic" />
                                         </div>
                                     </div>
 
@@ -538,7 +575,7 @@ const Search = (props) => {
                                             Manual
                                         </p>
                                         <div className="ml-auto">
-                                            <input type="radio" />
+                                            <input type="radio" name="Manual" value="Manual" />
                                         </div>
                                     </div>
 
@@ -578,6 +615,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -594,6 +633,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -610,6 +651,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -626,6 +669,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -642,6 +687,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -685,6 +732,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -701,6 +750,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -717,6 +768,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -733,6 +786,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -749,6 +804,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -792,6 +849,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -808,6 +867,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -824,6 +885,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -840,6 +903,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -856,6 +921,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -899,6 +966,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -915,6 +984,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -931,6 +1002,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -973,6 +1046,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -989,6 +1064,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1032,6 +1109,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1048,6 +1127,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1064,6 +1145,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1080,6 +1163,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1096,6 +1181,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1111,6 +1198,8 @@ const Search = (props) => {
                                             <label className="search">
                                                 <input
                                                     type="checkbox"
+                                                    value=""
+                                                    name=""
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>

@@ -88,13 +88,13 @@ const OnBoarding = () => {
             setisLoading(true)
             seterror(null)
             console.log(values)
-            console.log("user token", token)
+            console.log("user token", token.token)
             
             fetch(enviroment.BASE_URL + 'auth/user/profile', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token.token}`
                 },
                 credentials: "same-origin",
                 body: JSON.stringify(values)

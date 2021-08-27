@@ -13,13 +13,12 @@ const initialState = {
       }
       case 'logout': {
         return {
-          ...state,
-          user: null,
+          
         }
       }
       default:
         return initialState;
     }
   }
-  export const selectToken = (state) => state.userState.token;
+  export const selectToken = (state) => state.userState;
   export default User;

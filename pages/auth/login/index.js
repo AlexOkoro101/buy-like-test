@@ -1,19 +1,21 @@
 // import Meta from "../../../src/components/Head/Meta"
-import { useFormik } from 'formik';
+import {useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
 import Meta from '../../../src/components/Head/Meta';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from "../../../redux/features/userSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ClipLoader from "react-spinners/ClipLoader";
+import { connect } from 'react-redux';
+import { selectToken } from '../../../redux/reducers/userReducer';
 
  
 
-const Login = () => {
+const LogIn = ({ beginLogin }) => {
     const [error, seterror] = useState(null)
     const [isLoading, setisLoading] = useState(false)
     
@@ -99,23 +101,27 @@ const Login = () => {
                 localStorage.setItem('userToken', JSON.stringify(item));
           
                 //save data to store
-                dispatch(
-                  login({
+                beginLogin({
                     token: data.data._token,
-                    vehicle: null,
-                    loading: false,
-                    error: null,
-                    success: null,
-                  })
-                )
+                    login: true,
+                });
               })
               .catch(e => {
                 // seterror(e.message)
                 setisLoading(false)
                 console.log(e.message)
-              })
+            })
         },
-      });
+    });
+    
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(user.login) {
+           router.push('/search')
+        }
+    }, []);
+
+      
     return ( 
         <>
             <section className="w-full">
@@ -179,5 +185,14 @@ const Login = () => {
         </>
      );
 }
+
  
-export default Login;
+export default connect(
+    () => ({}),
+    (dispatch) => ({
+      beginLogin: (payload) => dispatch({
+        type: 'login',
+        payload,
+      })
+    })
+  )(LogIn);

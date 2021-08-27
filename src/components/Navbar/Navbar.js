@@ -1,8 +1,41 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../../redux/features/userSlice";
+import { selectToken } from "../../../redux/reducers/userReducer";
+import { connect } from 'react-redux';
 
-const Navbar = () => {
-    const router = useRouter()
+const Navbar = ({ beginLogin, beginLogout }) => {
+     // var Spinner = require('react-spinkit');
+    const dispatch = useDispatch();
+    const router = useRouter();
+
+    const retrieveData = () => {
+        const getToken = localStorage.getItem("userToken");
+        if (!getToken) {
+            return null;
+        }
+        const item = JSON.parse(getToken);
+        const now = new Date();
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            window.localStorage.clear();
+            return null;
+        }
+        // return item.value
+        beginLogin({
+            token: item.userToken,
+        });
+
+    }
+
+
+    const user = useSelector(selectToken)
+    // console.log(user.login)
+
+
     let dropdown;
 
     function toggleView() {
@@ -14,6 +47,11 @@ const Navbar = () => {
         }
     
     }
+
+    const handleLogout = () => {
+        window.localStorage.clear();
+        beginLogout();
+      }
 
     return (
         <header className="">
@@ -59,29 +97,56 @@ const Navbar = () => {
                         </a>
                     </li>
 
-                    <li className="text-xs ml-2">
+                    {user.login ? (
+                        <li className="text-xs ml-2">
                         <button
-                            onClick={() => {router.push('/auth/signup')}}
+                            onClick={handleLogout}
                             type="button"
                             className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
                         >
-                            REGISTER
+                            LOGOUT
                         </button>
                     </li>
+                    ) : (
+                        <>
+                            <li className="text-xs ml-2">
+                                <button
+                                    onClick={() => {router.push('/auth/signup')}}
+                                    type="button"
+                                    className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                                >
+                                    REGISTER
+                                </button>
+                            </li>
 
-                    <li className="text-xs">
-                        <button
-                            onClick={() => {router.push('/auth/login')}}
-                            type="button"
-                            className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
-                        >
-                            LOGIN
-                        </button>
-                    </li>
+                            <li className="text-xs">
+                                <button
+                                    onClick={() => {router.push('/auth/login')}}
+                                    type="button"
+                                    className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
+                                >
+                                    LOGIN
+                                </button>
+                            </li>
+
+                        </>
+                    )}
+
                 </ul>
             </nav>
         </header>
     );
 };
 
-export default Navbar;
+export default connect(
+    () => ({}),
+    (dispatch) => ({
+      beginLogin: (payload) => dispatch({
+        type: 'login',
+        payload,
+      }),
+      beginLogout: () => dispatch({
+        type: 'logout'
+      })
+    })
+  )(Navbar);
