@@ -1,17 +1,6 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectToken } from "../../redux/reducers/userReducer";
 import Meta from "../../src/components/Head/Meta"
 
 const CurrentBids3 = () => {
-    const user = useSelector(selectToken)
-    useEffect(() => {
-        if(!user.login) {
-           router.push('/auth/login')
-        }
-    }, []);
-
-
     return ( 
         <div>
             <Meta></Meta>

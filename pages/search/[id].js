@@ -16,10 +16,6 @@ const CarDetails = ({ cars }) => {
             setDetail(found);
         }
 
-        if(!user.login) {
-            router.push('/auth/login')
-        }
-
     });
     const openForm = (evt, status) => {
         console.log(carDetail);
