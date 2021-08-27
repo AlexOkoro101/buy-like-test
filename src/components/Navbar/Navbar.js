@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../redux/features/userSlice";
 import { selectToken } from "../../../redux/reducers/userReducer";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-const Navbar = ({ beginLogin, beginLogout }) => {
-     // var Spinner = require('react-spinkit');
+const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -28,30 +27,27 @@ const Navbar = ({ beginLogin, beginLogout }) => {
         beginLogin({
             token: item.userToken,
         });
+    };
 
-    }
-
-
-    const user = useSelector(selectToken)
+    const user = useSelector(selectToken);
     // console.log(user.login)
-
 
     let dropdown;
 
     function toggleView() {
-        const menu = document.querySelector('#menu');
-        if(menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
+        const menu = document.querySelector("#menu");
+        if (menu.classList.contains("hidden")) {
+            menu.classList.remove("hidden");
         } else {
-            menu.classList.add('hidden');
+            menu.classList.add("hidden");
         }
-    
     }
 
     const handleLogout = () => {
         window.localStorage.clear();
+        window.location.reload();
         beginLogout();
-      }
+    };
 
     return (
         <header className="">
@@ -68,17 +64,25 @@ const Navbar = ({ beginLogin, beginLogout }) => {
                     </Link>
                 </div>
 
-                <input className="menu-btn hidden" type="checkbox" id="menu-btn" />
+                <input
+                    className="menu-btn hidden"
+                    type="checkbox"
+                    id="menu-btn"
+                />
                 <label
                     onClick={toggleView}
                     className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none"
-                    
                 >
-
                     <span className="navicon bg-grey-darkest flex items-center relative"></span>
                 </label>
 
-                <ul id="menu" className={"hidden md:flex menu border-b md:border-none text-xs justify-end items-center list-reset m-0 w-full md:w-auto " + (dropdown ? "block" : "")}>
+                <ul
+                    id="menu"
+                    className={
+                        "hidden md:flex menu border-b md:border-none text-xs justify-end items-center list-reset m-0 w-full md:w-auto " +
+                        (dropdown ? "block" : "")
+                    }
+                >
                     <li className="font-10 sec-black font-medium">
                         <a
                             href="/"
@@ -96,42 +100,49 @@ const Navbar = ({ beginLogin, beginLogout }) => {
                             about us
                         </a>
                     </li>
-
-                    {user.login ? (
-                        <li className="text-xs ml-2">
-                        <button
-                            onClick={handleLogout}
-                            type="button"
-                            className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
-                        >
-                            LOGOUT
-                        </button>
-                    </li>
-                    ) : (
+                    {auth === false ? (
                         <>
-                            <li className="text-xs ml-2">
-                                <button
-                                    onClick={() => {router.push('/auth/signup')}}
-                                    type="button"
-                                    className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
-                                >
-                                    REGISTER
-                                </button>
-                            </li>
+                            {loggedIn ? (
+                                <li className="text-xs ml-2">
+                                    <button
+                                        onClick={handleLogout}
+                                        type="button"
+                                        className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                                    >
+                                        LOGOUT
+                                    </button>
+                                </li>
+                            ) : (
+                                <>
+                                    <li className="text-xs ml-2">
+                                        <button
+                                            onClick={() => {
+                                                router.push("/auth/signup");
+                                            }}
+                                            type="button"
+                                            className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                                        >
+                                            REGISTER
+                                        </button>
+                                    </li>
 
-                            <li className="text-xs">
-                                <button
-                                    onClick={() => {router.push('/auth/login')}}
-                                    type="button"
-                                    className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
-                                >
-                                    LOGIN
-                                </button>
-                            </li>
-
+                                    <li className="text-xs">
+                                        <button
+                                            onClick={() => {
+                                                router.push("/auth/login");
+                                            }}
+                                            type="button"
+                                            className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
+                                        >
+                                            LOGIN
+                                        </button>
+                                    </li>
+                                </>
+                            )}
                         </>
+                    ) : (
+                        ""
                     )}
-
                 </ul>
             </nav>
         </header>
@@ -141,12 +152,14 @@ const Navbar = ({ beginLogin, beginLogout }) => {
 export default connect(
     () => ({}),
     (dispatch) => ({
-      beginLogin: (payload) => dispatch({
-        type: 'login',
-        payload,
-      }),
-      beginLogout: () => dispatch({
-        type: 'logout'
-      })
+        beginLogin: (payload) =>
+            dispatch({
+                type: "login",
+                payload,
+            }),
+        beginLogout: () =>
+            dispatch({
+                type: "logout",
+            }),
     })
-  )(Navbar);
+)(Navbar);
