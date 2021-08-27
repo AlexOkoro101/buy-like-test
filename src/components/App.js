@@ -34,7 +34,7 @@ const App = ({ children }) => {
         }
         console.log("lll");
         myFunction();
-    }, [user, auth]);
+    }, [user]);
     return (
         <>
             <Meta />

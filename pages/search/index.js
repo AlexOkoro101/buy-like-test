@@ -19,12 +19,27 @@ const Search = ({ cars, params, loading }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
-
+    const [years, setYears] = useState(() => {
+        let year = 2000;
+        const currentYear = new Date().getFullYear();
+        let validVehicleYears = [];
+        while (year <= currentYear) {
+            validVehicleYears.push(year++);
+        }
+        return validVehicleYears;
+    });
     useEffect(() => {
         if (cars.length > 1) {
             setData(cars);
         }
-    }, [cars]);
+        const datas = {
+            make: paramValue?.make || "",
+            year: paramValue?.year || "",
+            model: paramValue?.model || "",
+            page: pageIndex,
+        };
+        dispatch(fetchMore(datas, data));
+    }, [cars, paramValue]);
 
     const handleSearch = async (e) => {
         setIsSearching(true);
@@ -47,7 +62,27 @@ const Search = ({ cars, params, loading }) => {
         dispatch(fetchMore(datas, data));
         setPageIndex(pageIndex + 1);
     };
-
+    const handleYear = async (e) => {
+        await setParam({
+            make: paramValue.make,
+            model: paramValue.model,
+            year: e,
+        });
+    };
+    const handleModel = async (e) => {
+        await setParam({
+            make: paramValue.make,
+            year: paramValue.year,
+            model: e,
+        });
+    };
+    const handleMake = async (e) => {
+        await setParam({
+            make: e,
+            year: paramValue.year,
+            model: paramValue.model,
+        });
+    };
     const activateList = () => {
         setgrid(false);
     };
@@ -222,16 +257,19 @@ const Search = ({ cars, params, loading }) => {
                                     Year
                                 </label>
                                 <div className="tab-content overflow-hidden">
-                                    <div className="flex justify-between py-4">
-                                        <div>
-                                            <select className="select-group">
-                                                <option>2018</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <select className="select-group">
-                                                <option>2020</option>
+                                    <div className="flex justify-center py-4">
+                                        <div className="w-full">
+                                            <select
+                                                className="select-group"
+                                                onChange={(e) =>
+                                                    handleYear(e.target.value)
+                                                }
+                                            >
+                                                {years.map((x) => (
+                                                    <option key={x} value={x}>
+                                                        {x}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
