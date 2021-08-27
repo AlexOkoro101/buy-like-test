@@ -7,10 +7,14 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
+import { Formik, Field, Form } from 'formik';
+
+
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
+    const [filter, setfilter] = useState([]);
     const searchTerms = useSelector((state) => state.Cars.cars);
     const router = useRouter();
     const dispatch = useDispatch();
@@ -27,10 +31,8 @@ const Search = (props) => {
             dispatch(searchTerm(data));
             console.log("loop");
         }
-        if(!user.login) {
-            router.push('/auth/login')
-        }
-    }, [searchTerms, user]);
+        
+    }, [searchTerms]);
 
     const handleSearch = async (e) => {
         setIsSearching(true);
@@ -84,6 +86,7 @@ const Search = (props) => {
                         </div>
 
                         {/* <!-- Filters --> */}
+                        
                         <div>
                             {/* <!-- MAke and Model Here --> */}
                             <div className="tab border-bt py-4 overflow-hidden ">
@@ -111,6 +114,7 @@ const Search = (props) => {
                                                     type="checkbox"
                                                     value="selectAllMakeAndModel"
                                                     name="selectAllMakeAndModel"
+                                                    // checked={selectAllMakeAndModel}
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>

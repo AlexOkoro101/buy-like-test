@@ -114,13 +114,6 @@ const LogIn = ({ beginLogin }) => {
         },
     });
     
-    const user = useSelector(selectToken)
-    useEffect(() => {
-        if(user.login) {
-           router.push('/search')
-        }
-    }, []);
-
       
     return ( 
         <>

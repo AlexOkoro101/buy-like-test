@@ -4,8 +4,10 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
+import { useSelector } from "react-redux";
+import { selectToken } from "../../../redux/reducers/userReducer";
 
 const SignupOptions = () => {
     //redirect
@@ -13,6 +15,13 @@ const SignupOptions = () => {
 
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
+
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(user.login) {
+           router.push('/search')
+        }
+    }, []);
 
     const toastError = () => toast.error(`${error ? error : 'Could not login'}`, {
         position: "top-right",
@@ -132,7 +141,7 @@ const SignupOptions = () => {
             console.log(res)
             if(!res.ok) {
               setisLoading(false)
-            //   seterror(res.statusText)
+              seterror(res.statusText)
               toastError()
               throw Error("Could not sign up")
             }
