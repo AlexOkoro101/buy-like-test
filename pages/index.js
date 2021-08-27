@@ -52,7 +52,7 @@ const Home = ({ getCars, cars }) => {
         },
     };
 
-    const [car, setCars] = useState(null);
+    const [car, setCars] = useState([]);
     const [images, setImages] = useState(cars);
     const [make, setMake] = useState(["toyota", "honda", "accord"]);
     const [years, setYears] = useState(() => {
@@ -76,7 +76,8 @@ const Home = ({ getCars, cars }) => {
         }
     });
     useEffect(() => {
-        if (cars.length <= 0) {
+        console.log(cars);
+        if (car.length <= 0) {
             getCars();
             async function fetchData() {
                 try {
@@ -156,7 +157,7 @@ const Home = ({ getCars, cars }) => {
                     </div>
                     {/* Hero Image here */}
                     <div style={{ minHeight: "280px" }}>
-                        {images && (
+                        {images.length > 0 && (
                             <div className="flex  mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-5 pb-24 ">
                                 <div
                                     style={{ width: "350px", height: "280px" }}
@@ -293,7 +294,9 @@ const Home = ({ getCars, cars }) => {
                                             {...register("make")}
                                         >
                                             {make.map((x) => (
-                                                <option key={x} value={x}>{x}</option>
+                                                <option key={x} value={x}>
+                                                    {x}
+                                                </option>
                                             ))}
                                         </select>
                                     </div>
@@ -328,7 +331,9 @@ const Home = ({ getCars, cars }) => {
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         >
                                             {years.map((x) => (
-                                                <option key={x} value={x}>{x}</option>
+                                                <option key={x} value={x}>
+                                                    {x}
+                                                </option>
                                             ))}
                                         </select>
                                     </div>
@@ -372,7 +377,7 @@ const Home = ({ getCars, cars }) => {
                                 dotListclassName="custom-dot-list-style"
                                 itemclassName="carousel-item-padding-40-px"
                             >
-                                {images &&
+                                {images.length > 0 &&
                                     images.map((ele) => (
                                         <div key={ele.VIN}>
                                             <div className="car__holder flex my-3 flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">

@@ -9,9 +9,10 @@ import {
 } from "../types";
 //
 const initialState = {
-    cars: {},
+    cars: [],
     loading: false,
     error: {},
+    params: {},
 };
 
 const Cars = (state = initialState, action) => {
@@ -39,6 +40,7 @@ const Cars = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: {},
+                params: action.payload,
             };
         case SEARCHING_SUCCESS:
             return {
