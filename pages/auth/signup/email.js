@@ -134,8 +134,7 @@ const EmailSignup = ({ beginLogin }) => {
                 //save data to store
                 beginLogin({
                     token: data.data._token,
-                    success: true,
-                    vehicles: null,
+                    login: false,
                 });
             })
             .catch(e => {

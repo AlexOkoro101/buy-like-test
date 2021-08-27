@@ -1,7 +1,18 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectToken } from "../../redux/reducers/userReducer";
 import Meta from "../../src/components/Head/Meta";
 
 const Profile = () => {
+
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(!user.login) {
+           router.push('/auth/login')
+        }
+    }, []);
+
+
     // Initial Tab state
     const [profileTab, setprofileTab] = useState(true)
     const [paymentsTab, setpaymentsTab] = useState(false)
