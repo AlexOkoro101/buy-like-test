@@ -9,28 +9,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm } from "../redux/actions/carsAction";
+
 //
 const Home = ({ getCars, cars }) => {
     //
-    const responsive2 = {
-        superLargeDesktop: {
-            // the naming can be any, depends on you.
-            breakpoint: { max: 4000, min: 3000 },
-            items: 5,
-        },
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 4,
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 3,
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-        },
-    };
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -50,8 +32,28 @@ const Home = ({ getCars, cars }) => {
             items: 1,
         },
     };
+    const data = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5,
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 5,
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2,
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+        },
+    };
+
     const [car, setCars] = useState(null);
-    const [images, setImages] = useState(null);
+    const [images, setImages] = useState(cars);
     const [make, setMake] = useState(["toyota", "honda", "accord"]);
     const [years, setYears] = useState(() => {
         let year = 2000;
@@ -62,37 +64,47 @@ const Home = ({ getCars, cars }) => {
         }
         return validVehicleYears;
     });
+    const [seconds, setSeconds] = useState(0);
     const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
-
     useEffect(() => {
-        getCars();
-        async function fetchData() {
-            try {
-                let res = await fetch(
-                    `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
-                    {
-                        method: "GET",
-                        headers: {},
-                        credentials: "same-origin",
-                    }
-                )
-                    .then(function (response) {
-                        return response.text();
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                const dada = JSON.parse(res);
-                if (dada) {
-                    setCars(dada.data);
-                    setImages(dada.data);
-                }
-            } catch (error) {
-                console.log(error);
-            }
+        if (seconds <= 50) {
+            setTimeout(() => setSeconds(seconds + 1), 100);
+        } else {
+            execute("next");
+            setSeconds(0);
         }
-        fetchData();
+    });
+    useEffect(() => {
+        if (cars.length <= 0) {
+            getCars();
+            async function fetchData() {
+                try {
+                    let res = await fetch(
+                        `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
+                        {
+                            method: "GET",
+                            headers: {},
+                            credentials: "same-origin",
+                        }
+                    )
+                        .then(function (response) {
+                            return response.text();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    const dada = JSON.parse(res);
+                    if (dada) {
+                        setCars(dada.data);
+                        setImages(dada.data);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            fetchData();
+        }
     }, []);
     function execute(event) {
         let heroTimeline = anime.timeline({
@@ -108,15 +120,16 @@ const Home = ({ getCars, cars }) => {
                 }
             case "next":
                 if (index < images.length - 1) {
-                    setIndex(index + 1); // increases index by 1
+                    setIndex(index + 2); // increases index by 1
                 }
-                if (index === images.length - 1) {
+                if (index === images.length - 2) {
                     setIndex(0);
                 }
             default:
                 break;
         }
     }
+
     const { register, handleSubmit } = useForm();
     const router = useRouter();
     const onSubmit = (data) => {
@@ -148,27 +161,42 @@ const Home = ({ getCars, cars }) => {
                                 <div
                                     style={{ width: "350px", height: "280px" }}
                                     className="rounded-lg shadow-lg overflow-hidden transition-all "
+                                    onClick={() => {
+                                        router.push({
+                                            pathname:
+                                                "/search/" + images[index].VIN,
+                                        });
+                                    }}
                                 >
-                                    {images && (
-                                        <img
-                                            id="one"
-                                            src={
-                                                images[index]?.images
-                                                    ?.image_largeUrl
-                                            }
-                                            alt="Hero-Image "
-                                            className="h-full w-full hero-image"
-                                        />
-                                    )}
+                                    <div className="imgWrap">
+                                        <p className="description font-bold text-base primary-color">
+                                            View Vehicle
+                                        </p>
+                                        {images && (
+                                            <img
+                                                id="one"
+                                                src={
+                                                    images[index]?.images
+                                                        ?.image_largeUrl
+                                                }
+                                                alt="Hero-Image "
+                                                class="h-full w-full hero-image"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                                 <div
                                     className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "
                                     style={{ height: "250px" }}
                                 >
-                                    <div className="flex ">
+                                    <div className="flex transition-all">
                                         {/* Progress bar here */}
-                                        <div className=" w-1/2 ">
-                                            <progress value={10} max={100} />
+                                        <div className="transition-all w-1/2 ">
+                                            <progress
+                                                className="transition-all"
+                                                value={seconds}
+                                                max={100}
+                                            />
                                         </div>
                                         {/* Controller here */}
                                         <div className="ml-auto hero-btns">
@@ -251,20 +279,24 @@ const Home = ({ getCars, cars }) => {
                         <div className=" request__holder relative w-full py-16  ">
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="flex  flex-wrap justify-center ">
-                                    <div className="flex flex-col mr-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label className="primary-black font-semibold text-sm ">
-                                            Select Year
+                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
+                                        <label
+                                            for="year "
+                                            className="primary-black font-semibold text-sm "
+                                        >
+                                            Select Make
                                         </label>
                                         <select
-                                            {...register("year")}
+                                            name=" "
+                                            id="year "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                            {...register("make")}
                                         >
-                                            {years.map((x) => (
+                                            {make.map((x) => (
                                                 <option value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
-
                                     <div className="flex flex-col mx-3 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
                                             htmlFor="model "
@@ -287,44 +319,17 @@ const Home = ({ getCars, cars }) => {
                                         </select>
                                     </div>
 
-                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label
-                                            htmlFor="year "
-                                            className="primary-black font-semibold text-sm "
-                                        >
-                                            Select Make
+                                    <div className="flex flex-col mr-3 pb-5 w-full md:w-52 lg:w-52">
+                                        <label className="primary-black font-semibold text-sm ">
+                                            Select Year
                                         </label>
                                         <select
-                                            name=" "
-                                            id="year "
+                                            {...register("year")}
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
-                                            {...register("make")}
                                         >
-                                            {make.map((x) => (
+                                            {years.map((x) => (
                                                 <option value={x}>{x}</option>
                                             ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
-                                        <label
-                                            htmlFor="range "
-                                            className="primary-black font-semibold text-sm "
-                                        >
-                                            Select Price Range
-                                        </label>
-                                        <select
-                                            {...register("range")}
-                                            name=" "
-                                            id="range "
-                                            className="form__control w-full px-1.5 font-13 focus:outline-none "
-                                        >
-                                            <option value="200">
-                                                $150.000 - $200,000
-                                            </option>
-                                            <option value="200">
-                                                $150.000 - $200,000
-                                            </option>
                                         </select>
                                     </div>
 
@@ -349,119 +354,71 @@ const Home = ({ getCars, cars }) => {
                                 SEARCH A CATEGORY{" "}
                             </h5>
                         </div>
-                        <Carousel
-                            swipeable={true}
-                            draggable={true}
-                            showDots={false}
-                            responsive={responsive2}
-                            ssr={true} // means to render carousel on server-side.
-                            infinite={true}
-                            autoPlay={true}
-                            autoPlaySpeed={2000}
-                            keyBoardControl={true}
-                            customTransition="all .5"
-                            transitionDuration={500}
-                            containerclassName="carousel-container"
-                            removeArrowOnDeviceType={["tablet", "mobile"]}
-                            dotListclassName="custom-dot-list-style"
-                            itemclassName="carousel-item-padding-40-px"
-                        >
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/hatchback.svg "
-                                        alt="Hatchback "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            Hatchbacks
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/sedans.svg "
-                                        alt="Sedans "
-                                    />
-                                    <div className="text-center text-xs pt-4 ">
-                                        <p className="font-semibold primary-color ">
-                                            Sedans
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/van.svg "
-                                        alt="Van "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            Vans
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/suv.svg "
-                                        alt="SUVs "
-                                    />
-                                    <div className="text-center text-xs pt-3 ">
-                                        <p className="font-semibold primary-color ">
-                                            SUVs
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                    <img
-                                        src="./assets/img/wagon.svg "
-                                        alt="Wagon "
-                                    />
-                                    <div className="text-center text-xs pt-2 ">
-                                        <p className="font-semibold primary-color ">
-                                            Wagons
-                                        </p>
-                                        <a
-                                            href="# "
-                                            className="primary-red font-bold pt-2 "
-                                        >
-                                            SEE MORE
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </Carousel>
+                        {images && (
+                            <Carousel
+                                swipeable={true}
+                                draggable={true}
+                                showDots={false}
+                                responsive={data}
+                                ssr={true} // means to render carousel on server-side.
+                                infinite={true}
+                                autoPlay={true}
+                                autoPlaySpeed={1500}
+                                keyBoardControl={true}
+                                customTransition="all .7"
+                                transitionDuration={1000}
+                                containerclassName="carousel-container"
+                                removeArrowOnDeviceType={["tablet", "mobile"]}
+                                dotListclassName="custom-dot-list-style"
+                                itemclassName="carousel-item-padding-40-px"
+                            >
+                                {images &&
+                                    images.map((ele) => (
+                                        <div>
+                                            <div className="car__holder flex my-3 flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                                <img
+                                                    src={
+                                                        ele?.images
+                                                            ?.image_largeUrl
+                                                    }
+                                                    alt="Hatchback "
+                                                />
+                                                <div className="text-center text-xs pt-3 ">
+                                                    <p
+                                                        className="font-semibold primary-color "
+                                                        style={{
+                                                            height: "50px",
+                                                        }}
+                                                    >
+                                                        {ele?.vehicleName
+                                                            ? ele?.vehicleName
+                                                            : `${
+                                                                  ele?.make +
+                                                                  " " +
+                                                                  "" +
+                                                                  "" +
+                                                                  ele?.model
+                                                              }`}
+                                                    </p>
+                                                    <a
+                                                        href="# "
+                                                        className="primary-red font-bold pt-5 "
+                                                        onClick={() => {
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
+                                                        }}
+                                                    >
+                                                        SEE MORE
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                            </Carousel>
+                        )}
                         <div className="text-center mt-10 ">
                             <button
                                 type="button "
@@ -685,8 +642,8 @@ const Home = ({ getCars, cars }) => {
                             autoPlay={true}
                             autoPlaySpeed={1000}
                             keyBoardControl={true}
-                            customTransition="all .5"
-                            transitionDuration={500}
+                            customTransition="all .8"
+                            transitionDuration={1000}
                             containerclassName="carousel-container"
                             removeArrowOnDeviceType={["tablet", "mobile"]}
                             dotListclassName="custom-dot-list-style"

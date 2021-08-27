@@ -159,9 +159,7 @@ section {
     cursor: pointer;
 }
 
-.active {
-    display: block !important;
-}
+
 
 .changeStyle {
     border-left: 2px solid #0C74D4;
@@ -198,12 +196,15 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 100%;
     }
+
     section {
         width: 100%;
     }
+
     .modal {
         padding: 180px 0px;
     }
@@ -213,12 +214,15 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 100%;
     }
+
     section {
         width: 100%;
     }
+
     .modal {
         padding: 180px 0px;
     }
@@ -228,9 +232,11 @@ td:not(:last-child) {
     .container-main {
         width: 100%;
     }
+
     aside {
         width: 33.33%;
     }
+
     section {
         width: 100%;
     }

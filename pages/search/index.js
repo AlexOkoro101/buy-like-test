@@ -1,26 +1,57 @@
 import { useState, useEffect } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
+<<<<<<< HEAD
 import { getCars } from "../../redux/actions/carsAction";
 import { useSelector, useDispatch } from "react-redux";
 import SearchFilter from "../../src/components/Layout/SearchFilter";
+=======
+import { searchTerm } from "../../redux/actions/carsAction";
+import { useRouter } from "next/router";
+>>>>>>> 668f2e1e6b09e50827e84f778c155c36ef8a83e4
 
+import { useSelector, useDispatch } from "react-redux";
+import Link from "next/link";
 const Search = (props) => {
     const [grid, setgrid] = useState(true);
+    const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
+<<<<<<< HEAD
 
     const [filter, setfilter] = useState([]);
 
     const searchTerm = useSelector((state) => state.Cars.searchTerm);
+=======
+    const searchTerms = useSelector((state) => state.Cars.cars);
+    const router = useRouter();
+    const dispatch = useDispatch();
+>>>>>>> 668f2e1e6b09e50827e84f778c155c36ef8a83e4
 
     useEffect(() => {
-        if (Object.entries(searchTerm).length !== 0) {
-            setData(searchTerm);
+        if (Object.entries(searchTerms).length > 1) {
+            setData(searchTerms);
+        } else if (isSearching === false) {
+            const data = {
+                make: "",
+                year: "",
+            };
+            dispatch(searchTerm(data));
+            console.log("loop");
         }
-    }, [searchTerm]);
+    }, [searchTerms]);
+
+    const handleSearch = async (e) => {
+        setIsSearching(true);
+        const data = {
+            make: e.target.value,
+            year: "",
+        };
+
+        await dispatch(searchTerm(data));
+        setData(searchTerms);
+    };
 
     const activateList = () => {
-        let datass = props.getCars();
         setgrid(false);
     };
 
@@ -47,13 +78,10 @@ const Search = (props) => {
                                         className="search-result-control-mobile px-3 w-11/12 md:w-full focus:outline-none "
                                         type="text"
                                         placeholder="Search 7685 cars"
+                                        onChange={(event) =>
+                                            handleSearch(event)
+                                        }
                                     />
-                                </div>
-
-                                <div className="ml-auto">
-                                    <select className="select-result-control-mobile font-10 focus:outline-none">
-                                        <option>Sort by: Default</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -88,20 +116,12 @@ const Search = (props) => {
                                     className="search-result-control px-3  focus:outline-none"
                                     type="text"
                                     placeholder="Search 7685 cars"
+                                    onChange={(event) => handleSearch(event)}
                                 />
                             </div>
 
                             {/* <!-- Third section here --> */}
                             <div className="flex">
-                                <div className="lg:block  hidden">
-                                    <label className="font-11 primary-black mr-1 ">
-                                        Sort by:{" "}
-                                    </label>
-                                    <select className="select-result-control font-10 focus:outline-none">
-                                        <option>Default</option>
-                                    </select>
-                                </div>
-
                                 {/* <!-- grid view tab here --> */}
                                 <button
                                     type="button"
@@ -341,14 +361,17 @@ const Search = (props) => {
                                                     </div>
                                                 </div>
                                                 <div className="flex pt-3">
-                                                    <p className=" sec-black text-base">
-                                                        ${" "}
-                                                        {ele?.mmrPrice?.toLocaleString()}
-                                                    </p>
                                                     <div className="ml-auto  self-center">
                                                         <button
                                                             type="button"
                                                             className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                            onClick={() => {
+                                                                router.push({
+                                                                    pathname:
+                                                                        "/search/" +
+                                                                        ele.VIN,
+                                                                });
+                                                            }}
                                                         >
                                                             Place bid
                                                         </button>
@@ -372,14 +395,25 @@ const Search = (props) => {
                                         <div className="car-display-list-holder flex flex-wrap w-full p-4 mb-4">
                                             {/* <!-- image to details here --> */}
                                             <div className="flex flex-wrap">
-                                                <img
-                                                    className="img-fluid"
-                                                    src={
-                                                        ele?.images
-                                                            ?.image_smallUrl
-                                                    }
-                                                    alt=""
-                                                />
+                                                <div
+                                                    style={{
+                                                        width: "300px",
+                                                        height: "280px",
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="img-fluid"
+                                                        src={
+                                                            ele?.images
+                                                                ?.image_largeUrl
+                                                        }
+                                                        alt=""
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "auto",
+                                                        }}
+                                                    />
+                                                </div>
 
                                                 {/* <!-- Details here --> */}
                                                 <div className="lg:ml-3 py-4">
@@ -444,7 +478,8 @@ const Search = (props) => {
                                                             <tr>
                                                                 <td className="py-1.5 pr-20 whitespace-no-wrap">
                                                                     <p className="flex items-center text-xs primary-black">
-                                                                        Exterior
+                                                                        Exterior:{" "}
+                                                                        {""}
                                                                         {""}
                                                                         {
                                                                             ele?.sourceExteriorColor
@@ -478,7 +513,8 @@ const Search = (props) => {
                                                     {/* <!-- others here --> */}
                                                     <div className="flex border-t my-3 py-3">
                                                         <p className="flex items-center font-11 primary-black mr-6">
-                                                            Vehicle Type{""}
+                                                            Vehicle Type: {""}
+                                                            {""}
                                                             {ele?.vehicleType}
                                                         </p>
                                                         <p className="flex items-center font-11 primary-black mr-6">
@@ -492,10 +528,6 @@ const Search = (props) => {
                                                 </div>
                                             </div>
                                             <div className="ml-auto py-4 items-end flex flex-col">
-                                                <p className="primary-black text-base">
-                                                    ${" "}
-                                                    {ele?.mmrPrice?.toLocaleString()}
-                                                </p>
                                                 <div className="relative pt-1.5">
                                                     <img
                                                         src="../../assets/img/vectors/buy.svg"
@@ -513,6 +545,13 @@ const Search = (props) => {
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                        onClick={() => {
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
+                                                        }}
                                                     >
                                                         View Details
                                                     </button>
@@ -529,8 +568,8 @@ const Search = (props) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error, searchTerm } = state.Cars;
-    return { cars, loading, error, searchTerm };
+    const { cars, loading, error } = state.Cars;
+    return { cars, loading, error };
 };
 
-export default connect(mapStateToProps, { getCars })(Search);
+export default connect(mapStateToProps, { searchTerm })(Search);

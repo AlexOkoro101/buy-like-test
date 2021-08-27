@@ -468,6 +468,30 @@ progress::-moz-progress-bar {
     height: 250px
 }
 
+.imgWrap:hover .description {
+    visibility: visible;
+    opacity: 1;
+}
+
+.imgWrap {
+    position: relative;
+    cursor: pointer;
+}
+
+.description {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(175, 175, 175, 0.205);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 9
+}
+
 .star.checked {
     color: #0C74D4;
 }
