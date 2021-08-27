@@ -2,16 +2,112 @@ import Meta from "../../../src/components/Head/Meta";
 import {useRouter} from 'next/router';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from "react";
+import { enviroment } from "../../../src/components/enviroment";
+import { useSelector } from "react-redux";
+import { selectToken } from "../../../redux/reducers/userReducer";
 
 const SignupOptions = () => {
     //redirect
     const router = useRouter();
 
+    const [error, seterror] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
+
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(user.login) {
+           router.push('/search')
+        }
+    }, []);
+
+    const toastError = () => toast.error(`${error ? error : 'Could not login'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+    const toastSuccess = () => toast.success(`${error ? error : 'Login successfull'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+
     //Google Auth
     const googleClientId = "675924797749-6vkjedqseo4ivamu7u2b2o3psb7tvaur.apps.googleusercontent.com";
 
     const onGoogleLoginSuccess = (res) => {
-        console.log("Login Successful", res.profileObj)
+        const googleProfile = {
+            email: res.profileObj.email,
+            fullName: res.profileObj.name,
+            googleId: res.profileObj.googleId
+        }
+        
+        // console.log("Login Successful", res.profileObj)
+        console.log(googleProfile)
+
+        fetch(enviroment.BASE_URL + 'auth/register/google', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify(googleProfile)
+        })
+        .then(res => {
+            console.log(res)
+            if(!res.ok) {
+              setisLoading(false)
+              seterror(res.statusText)
+              toastError()
+              throw Error("Could not sign up")
+            }
+            setisLoading(false)
+            return res.json()
+      
+        })
+        .then(data => {
+              console.log(data)
+              if(data?.error) {
+                  seterror(data?.message)
+                  toastError()
+                } else {
+                    console.log(data)
+                    seterror(data?.message)
+                    toastSuccess()
+                    router.push('/auth/signup/onboarding')
+              }
+            const now = new Date()
+            //save data to local storage
+            const item = {
+              userToken: data.data._token,
+              expiry: now.getTime() + 3600000,
+            }
+            localStorage.setItem('userToken', JSON.stringify(item));
+      
+            //save data to store
+            dispatch(
+              login({
+                token: data.data._token,
+                vehicle: null,
+                loading: false,
+                error: null,
+                success: null,
+              })
+            )
+        })
+        .catch(e => {
+            // seterror(e.message)
+            setisLoading(false)
+            console.log(e.message)
+        })
     }
     const onGoogleFailureSuccess = (res) => {
         console.log("Login Failed", res)
@@ -22,7 +118,72 @@ const SignupOptions = () => {
 
     //Facebook Auth
     const responseFacebook = (res) => {
-        console.log("Facebook login result", res);
+        // toastSuccess()
+        // console.log("Facebook login result", res);
+        // router.push('/auth/signup/onboarding')
+
+        const facebookProfile = {
+            email: res.email,
+            fullName: res.name,
+            facebookId: res.userID
+        }
+        
+        // console.log("Login Successful", res.profileObj)
+        console.log(facebookProfile)
+
+        fetch(enviroment.BASE_URL + 'auth/register/facebook', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify(facebookProfile)
+        })
+        .then(res => {
+            console.log(res)
+            if(!res.ok) {
+              setisLoading(false)
+              seterror(res.statusText)
+              toastError()
+              throw Error("Could not sign up")
+            }
+            setisLoading(false)
+            return res.json()
+      
+        })
+        .then(data => {
+              console.log(data)
+              if(data?.error) {
+                  seterror(data?.message)
+                  toastError()
+                } else {
+                    console.log(data)
+                    seterror(data?.message)
+                    toastSuccess()
+                    router.push('/auth/signup/onboarding')
+              }
+            const now = new Date()
+            //save data to local storage
+            const item = {
+              userToken: data.data._token,
+              expiry: now.getTime() + 3600000,
+            }
+            localStorage.setItem('userToken', JSON.stringify(item));
+      
+            //save data to store
+            dispatch(
+              login({
+                token: data.data._token,
+                vehicle: null,
+                loading: false,
+                error: null,
+                success: null,
+              })
+            )
+        })
+        .catch(e => {
+            toastError()
+            setisLoading(false)
+            console.log(e.message)
+        })
     } 
 
     const facebookClicked = (data) => {

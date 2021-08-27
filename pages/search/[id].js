@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import { selectToken } from "../../redux/reducers/userReducer";
 
 const CarDetails = ({ cars }) => {
     const [carDetail, setDetail] = useState(null);
     const router = useRouter();
     const [offer, setOffer] = useState(true);
+    const user = useSelector(selectToken)
     useEffect(() => {
         if (cars.length > 0) {
             const found = cars.find(
@@ -13,6 +15,7 @@ const CarDetails = ({ cars }) => {
             );
             setDetail(found);
         }
+
     });
     const openForm = (evt, status) => {
         console.log(carDetail);
