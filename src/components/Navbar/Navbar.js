@@ -100,49 +100,45 @@ const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
                             about us
                         </a>
                     </li>
-                    {auth === false ? (
-                        <>
-                            {loggedIn ? (
+                    <>
+                        {loggedIn ? (
+                            <li className="text-xs ml-2">
+                                <button
+                                    onClick={handleLogout}
+                                    type="button"
+                                    className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                                >
+                                    LOGOUT
+                                </button>
+                            </li>
+                        ) : (
+                            <>
                                 <li className="text-xs ml-2">
                                     <button
-                                        onClick={handleLogout}
+                                        onClick={() => {
+                                            router.push("/auth/signup");
+                                        }}
                                         type="button"
                                         className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
                                     >
-                                        LOGOUT
+                                        REGISTER
                                     </button>
                                 </li>
-                            ) : (
-                                <>
-                                    <li className="text-xs ml-2">
-                                        <button
-                                            onClick={() => {
-                                                router.push("/auth/signup");
-                                            }}
-                                            type="button"
-                                            className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
-                                        >
-                                            REGISTER
-                                        </button>
-                                    </li>
 
-                                    <li className="text-xs">
-                                        <button
-                                            onClick={() => {
-                                                router.push("/auth/login");
-                                            }}
-                                            type="button"
-                                            className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
-                                        >
-                                            LOGIN
-                                        </button>
-                                    </li>
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        ""
-                    )}
+                                <li className="text-xs">
+                                    <button
+                                        onClick={() => {
+                                            router.push("/auth/login");
+                                        }}
+                                        type="button"
+                                        className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
+                                    >
+                                        LOGIN
+                                    </button>
+                                </li>
+                            </>
+                        )}
+                    </>
                 </ul>
             </nav>
         </header>
