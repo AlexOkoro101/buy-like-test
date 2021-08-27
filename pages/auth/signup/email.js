@@ -2,12 +2,12 @@ import Meta from "../../../src/components/Head/Meta"
 import 'react-intl-tel-input/dist/main.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enviroment } from "../../../src/components/enviroment";
-import { login } from "../../../redux/reducers/userReducer";
+import { login, selectToken } from "../../../redux/reducers/userReducer";
 import { useRouter } from "next/router";
 import ClipLoader from "react-spinners/ClipLoader";
 import { connect } from 'react-redux';
@@ -19,6 +19,13 @@ const EmailSignup = ({ beginLogin }) => {
 
     const [error, seterror] = useState(null)
     const [isLoading, setisLoading] = useState(false)
+
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(user.login) {
+           router.push('/search')
+        }
+    }, []);
 
     const toastError = () => toast.error(`${error ? error : 'Could not sign up'}`, {
         position: "top-right",

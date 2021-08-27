@@ -8,10 +8,13 @@ import FadeLoader from "react-spinners/FadeLoader";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
+import { Formik, Field, Form } from "formik";
+
 const Search = ({ cars, params, loading }) => {
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [pageIndex, setPageIndex] = useState(1);
+    const [filter, setfilter] = useState([]);
     const [data, setData] = useState(cars);
     const router = useRouter();
     const dispatch = useDispatch();
@@ -21,10 +24,7 @@ const Search = ({ cars, params, loading }) => {
         if (cars.length > 1) {
             setData(cars);
         }
-        if (!user.login) {
-            router.push("/auth/login");
-        }
-    }, [cars, user]);
+    }, [cars]);
 
     const handleSearch = async (e) => {
         setIsSearching(true);
@@ -89,6 +89,7 @@ const Search = ({ cars, params, loading }) => {
                         </div>
 
                         {/* <!-- Filters --> */}
+
                         <div>
                             {/* <!-- MAke and Model Here --> */}
                             <div className="tab border-bt py-4 overflow-hidden ">
@@ -116,6 +117,7 @@ const Search = ({ cars, params, loading }) => {
                                                     type="checkbox"
                                                     value="selectAllMakeAndModel"
                                                     name="selectAllMakeAndModel"
+                                                    // checked={selectAllMakeAndModel}
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
