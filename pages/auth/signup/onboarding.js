@@ -3,7 +3,7 @@ import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,11 @@ const OnBoarding = () => {
     const [isLoading, setisLoading] = useState(false)
 
     const token = useSelector(selectToken);
+    useEffect(() => {
+        if(token.login) {
+           router.push('/search')
+        }
+    }, []);
 
     const toastError = () => toast.error(`${error ? error : 'Could not update account'}`, {
         position: "top-right",
