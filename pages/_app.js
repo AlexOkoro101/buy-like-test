@@ -19,31 +19,32 @@ import { store, persistor } from "../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 
 const MyApp = ({ Component, pageProps }) => {
-    const dispatch = useDispatch();
-    const router = useRouter();
+    // // var Spinner = require('react-spinkit');
+    // const dispatch = useDispatch();
+    // const router = useRouter();
 
-    useEffect(() => {
-        const getToken = localStorage.getItem("userToken");
-        if (!getToken) {
-            return null;
-        }
-        const item = JSON.parse(getToken);
-        const now = new Date();
-        if (now.getTime() > item.expiry) {
-            // If the item is expired, delete the item from storage
-            // and return null
-            window.localStorage.clear();
-            return null;
-        }
-        // return item.value
-        dispatch(
-            login({
-                token: item.userToken,
-            })
-        );
-    }, []);
+    // useEffect(() => {
+    //     const getToken = localStorage.getItem("userToken");
+    //     if (!getToken) {
+    //         return null;
+    //     }
+    //     const item = JSON.parse(getToken);
+    //     const now = new Date();
+    //     if (now.getTime() > item.expiry) {
+    //         // If the item is expired, delete the item from storage
+    //         // and return null
+    //         window.localStorage.clear();
+    //         return null;
+    //     }
+    //     // return item.value
+    //     dispatch(
+    //         login({
+    //             token: item.userToken,
+    //         })
+    //     );
+    // }, []);
 
-    const user = useSelector(selectUser);
+    // const user = useSelector(selectUser);
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
