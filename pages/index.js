@@ -80,25 +80,25 @@ const Home = ({ getCars, cars }) => {
         if (car.length <= 0) {
             getCars();
             async function fetchData() {
+                let url = `https://buylikepoint.us/json.php?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
                 try {
-                    let res = await fetch(
-                        `https://buylikepoint.us/json.php?&apiKey=Switch!2020`,
-                        {
-                            method: "GET",
-                            headers: {},
-                            credentials: "same-origin",
-                        }
-                    )
+                    let res = await fetch(url.trim(), {
+                        method: "GET",
+                        headers: {},
+                        credentials: "same-origin",
+                    })
                         .then(function (response) {
                             return response.text();
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
-                    const dada = JSON.parse(res);
-                    if (dada) {
-                        setCars(dada.data);
-                        setImages(dada.data);
+                    if (res) {
+                        const dada = JSON.parse(res);
+                        if (dada) {
+                            setCars(dada.data);
+                            setImages(dada.data);
+                        }
                     }
                 } catch (error) {
                     console.log(error);

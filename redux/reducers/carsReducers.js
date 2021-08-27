@@ -6,6 +6,9 @@ import {
     SEARCHING,
     SEARCHING_SUCCESS,
     SEARCHING_FAILED,
+    FETCHING,
+    FETCHING_FAILED,
+    FETCHING_SUCCESS,
 } from "../types";
 //
 const initialState = {
@@ -36,13 +39,15 @@ const Cars = (state = initialState, action) => {
                 error: action.payload,
             };
         case SEARCHING:
+        case FETCHING:
             return {
                 ...state,
-                loading: false,
+                loading: true,
                 error: {},
                 params: action.payload,
             };
         case SEARCHING_SUCCESS:
+        case FETCHING_SUCCESS:
             return {
                 ...state,
                 cars: action.payload,
@@ -50,6 +55,7 @@ const Cars = (state = initialState, action) => {
                 error: {},
             };
         case SEARCHING_FAILED:
+        case FETCHING_FAILED:
             return {
                 ...state,
                 cars: {},

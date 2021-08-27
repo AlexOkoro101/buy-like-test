@@ -10,41 +10,12 @@ import App from "../src/components/App";
 
 import { Provider, useDispatch, useSelector } from "react-redux";
 import withRedux from "next-redux-wrapper";
-import { useEffect } from "react";
-import Login from "./auth/login/index";
-import { login, selectUser } from "../redux/features/userSlice";
-import { useRouter } from "next/router";
-
 import { store, persistor } from "../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 
 const MyApp = ({ Component, pageProps }) => {
-    // // var Spinner = require('react-spinkit');
-    // const dispatch = useDispatch();
-    // const router = useRouter();
+   
 
-    // useEffect(() => {
-    //     const getToken = localStorage.getItem("userToken");
-    //     if (!getToken) {
-    //         return null;
-    //     }
-    //     const item = JSON.parse(getToken);
-    //     const now = new Date();
-    //     if (now.getTime() > item.expiry) {
-    //         // If the item is expired, delete the item from storage
-    //         // and return null
-    //         window.localStorage.clear();
-    //         return null;
-    //     }
-    //     // return item.value
-    //     dispatch(
-    //         login({
-    //             token: item.userToken,
-    //         })
-    //     );
-    // }, []);
-
-    // const user = useSelector(selectUser);
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
