@@ -22,7 +22,7 @@ const OnBoarding = () => {
 
     const token = useSelector(selectToken);
 
-    const toastError = () => toast.error(`${error ? error : 'Could not create account'}`, {
+    const toastError = () => toast.error(`${error ? error : 'Could not update account'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -31,7 +31,7 @@ const OnBoarding = () => {
         draggable: true,
         progress: undefined,
     });
-    const toastSuccess = () => toast.success(`${error ? error : 'Account created'}`, {
+    const toastSuccess = () => toast.success(`${error ? error : 'Account updated'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,

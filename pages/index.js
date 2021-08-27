@@ -180,7 +180,7 @@ const Home = ({ getCars, cars }) => {
                                                         ?.image_largeUrl
                                                 }
                                                 alt="Hero-Image "
-                                                class="h-full w-full hero-image"
+                                                className="h-full w-full hero-image"
                                             />
                                         )}
                                     </div>
@@ -281,7 +281,7 @@ const Home = ({ getCars, cars }) => {
                                 <div className="flex  flex-wrap justify-center ">
                                     <div className="flex flex-col ml-1 xl:ml-1 lg:mx-3 pb-5 w-full md:w-52 lg:w-52">
                                         <label
-                                            for="year "
+                                            htmlFor="year "
                                             className="primary-black font-semibold text-sm "
                                         >
                                             Select Make
@@ -293,7 +293,7 @@ const Home = ({ getCars, cars }) => {
                                             {...register("make")}
                                         >
                                             {make.map((x) => (
-                                                <option value={x}>{x}</option>
+                                                <option key={x} value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -328,7 +328,7 @@ const Home = ({ getCars, cars }) => {
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         >
                                             {years.map((x) => (
-                                                <option value={x}>{x}</option>
+                                                <option key={x} value={x}>{x}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -374,7 +374,7 @@ const Home = ({ getCars, cars }) => {
                             >
                                 {images &&
                                     images.map((ele) => (
-                                        <div>
+                                        <div key={ele.VIN}>
                                             <div className="car__holder flex my-3 flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
                                                 <img
                                                     src={
