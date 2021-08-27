@@ -3,22 +3,15 @@ import Meta from './Head/Meta';
 import Footer from './Footer/Footer';
 import { useSelector } from 'react-redux';
 import { selectToken } from '../../redux/reducers/userReducer';
-import Login from '../../pages/auth/login/index';
+import { useRouter } from 'next/router';
 
 const App = ({ children }) => {
   const user = useSelector(selectToken)
+  const router = useRouter();
 
-  if(!user.login && (children.type.WrappedComponent.name === 'Search' || 'CarDetails')) {
-      return (
-        <>
-        <Meta />
-        <Navbar />
-          <Login></Login>
-        <Footer />
-        </>
-      )
-  } else {
-    
+  // if(!user.login) {
+  //     router.push('/auth/login')
+  // } 
     return (
       <>
         <Meta />
@@ -27,8 +20,6 @@ const App = ({ children }) => {
         <Footer />
       </>
     );
-  }
-
 };
 
 export default App;

@@ -10,6 +10,8 @@ import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { Formik, Field, Form } from "formik";
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const Search = ({ cars, params, loading }) => {
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
@@ -89,8 +91,19 @@ const Search = ({ cars, params, loading }) => {
                         </div>
 
                         {/* <!-- Filters --> */}
-
-                        <div>
+                        <Formik
+                            initialValues={{
+                                toggle: false,
+                                filter: [],
+                            }}
+                            onSubmit={async (values) => {
+                                await sleep(500);
+                                console.log(values)
+                                alert(JSON.stringify(values, null, 2));
+                            }}
+                            >
+                         {({ values }) => (   
+                        <Form>
                             {/* <!-- MAke and Model Here --> */}
                             <div className="tab border-bt py-4 overflow-hidden ">
                                 <input
@@ -113,11 +126,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value="selectAllMakeAndModel"
-                                                    name="selectAllMakeAndModel"
-                                                    // checked={selectAllMakeAndModel}
+                                                    name="filter"
+                                                    value="MakeAndModel"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -132,10 +144,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Acura"
-                                                    name="Acura"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -150,10 +162,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Alfa Romeo"
-                                                    name="Alfa Romeo"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -167,10 +179,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Audi"
-                                                    name="Audi"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -184,10 +196,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="BMW"
-                                                    name="BMW"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -270,10 +282,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value="SelectAllBodyType"
-                                                    name="SelectAllBodyType"
+                                                    name="filter"
+                                                    value="BodyTypeSelectAll"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -288,10 +300,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Sedan/Saloon"
-                                                    name="Sedan/Saloon"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -306,10 +318,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="SUV"
-                                                    name="SUV"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -324,10 +336,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Coupe"
-                                                    name="Coupe"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -342,10 +354,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Hatchback"
-                                                    name="Hatchback"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -360,127 +372,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
+                                                    name="filter"
                                                     value="Wagon"
-                                                    name="Wagon"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* <!--Location  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-four"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-four"
-                                >
-                                    Location
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Select All
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="SelectAllLocation"
-                                                    name="SelectAllLocation"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Alaska
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Alaska"
-                                                    name="Alaska"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Alabama
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Alabama"
-                                                    name="Alabama"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Arkansas
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Arkansas"
-                                                    name="Arkansas"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Carlifonia
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Carlifonia"
-                                                    name="Carlifonia"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -632,10 +527,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="white"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -650,10 +545,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="black"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -668,10 +563,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="grey"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -686,10 +581,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="red"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -704,10 +599,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="gold"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -749,10 +644,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="white"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -767,10 +662,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="black"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -785,10 +680,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="grey"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -803,10 +698,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="red"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -821,10 +716,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="gold"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -866,10 +761,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="gasoline"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -884,10 +779,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="diesel"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -902,10 +797,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Gas/Electric Hybrid"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -920,10 +815,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Plug-in Hybrid"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -938,10 +833,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Electric"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -983,10 +878,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Green Light"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1001,10 +896,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Red Light"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1019,10 +914,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Blue Light"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1063,10 +958,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Feb 17"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1081,10 +976,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="March 21"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1126,10 +1021,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Android Auto"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1144,10 +1039,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Apple CarPlay"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1162,10 +1057,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Heated Seats"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1180,10 +1075,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Rear View Camera"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1198,10 +1093,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Remote Start"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1215,10 +1110,10 @@ const Search = ({ cars, params, loading }) => {
                                         </p>
                                         <div className="ml-auto">
                                             <label className="search">
-                                                <input
+                                                <Field
                                                     type="checkbox"
-                                                    value=""
-                                                    name=""
+                                                    name="filter"
+                                                    value="Sunroof or Moonroof"
                                                     className="focus:outline-none search self-center"
                                                 />
                                                 <span className="search"></span>
@@ -1237,7 +1132,13 @@ const Search = ({ cars, params, loading }) => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div className="flex  py-4">
+                                <button id="submitFilter" type="submit">Filter</button>
+
+                            </div>
+                        </Form>
+                        )}
+                        </Formik>
 
                         {/* <!-- Clear all filters here --> */}
                         <div className="flex  py-4">
@@ -1251,6 +1152,7 @@ const Search = ({ cars, params, loading }) => {
                             </div>
                         </div>
                     </div>
+                    
 
                     {/* <!--  Display region here  --> */}
                     <div className="display-holder w-full  lg:w-5/6 ml-2.5">
