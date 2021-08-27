@@ -1,24 +1,47 @@
-import Navbar from './Navbar/Navbar';
-import Meta from './Head/Meta';
-import Footer from './Footer/Footer';
-import { useSelector } from 'react-redux';
-import { selectToken } from '../../redux/reducers/userReducer';
-import { useRouter } from 'next/router';
-
+import Navbar from "./Navbar/Navbar";
+import Meta from "./Head/Meta";
+import Footer from "./Footer/Footer";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 const App = ({ children }) => {
-  const user = useSelector(selectToken)
-  const router = useRouter();
-
-  // if(!user.login) {
-  //     router.push('/auth/login')
-  // } 
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [auth, setAuth] = useState(false);
+    const router = useRouter();
+    let user = localStorage.getItem("userToken");
+    const myFunction = () => {
+        if (router.pathname !== "/") {
+            if (!user) {
+                return router.push("/auth/login");
+            }
+            setLoggedIn(true);
+            let token = JSON.parse(user).userToken;
+            if (router.pathname.includes("auth")) {
+                if (token) {
+                    router.push("/search");
+                }
+            } else {
+                if (!token) {
+                    router.push("/auth/login");
+                }
+            }
+        }
+    };
+    useEffect(() => {
+        if (router.pathname.includes("auth")) {
+            setAuth(true);
+        } else {
+            setAuth(false);
+        }
+        console.log("lll");
+        myFunction();
+    }, [user]);
     return (
-      <>
-        <Meta />
-        <Navbar />
-          {children}
-        <Footer />
-      </>
+        <>
+            <Meta />
+            <Navbar loggedIn={loggedIn} auth={auth} />
+            {children}
+            <Footer />
+        </>
     );
 };
 
