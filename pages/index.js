@@ -76,35 +76,34 @@ const Home = ({ getCars, cars }) => {
         }
     });
     useEffect(() => {
-        console.log(cars);
         if (car.length <= 0) {
             getCars();
-            async function fetchData() {
-                let url = `https://buylikepoint.us/json.php?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
-                try {
-                    let res = await fetch(url.trim(), {
-                        method: "GET",
-                        headers: {},
-                        credentials: "same-origin",
-                    })
-                        .then(function (response) {
-                            return response.text();
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                    if (res) {
-                        const dada = JSON.parse(res);
-                        if (dada) {
-                            setCars(dada.data);
-                            setImages(dada.data);
-                        }
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            fetchData();
+            // async function fetchData() {
+            //     let url = ``;
+            //     try {
+            //         let res = await fetch(url.trim(), {
+            //             method: "GET",
+            //             headers: {},
+            //             credentials: "same-origin",
+            //         })
+            //             .then(function (response) {
+            //                 return response.text();
+            //             })
+            //             .catch(function (error) {
+            //                 console.log(error);
+            //             });
+            //         if (res) {
+            //             const dada = JSON.parse(res);
+            //             if (dada) {
+            //                 setCars(dada.data);
+            //                 setImages(dada.data);
+            //             }
+            //         }
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+            // }
+            // fetchData();
         }
     }, []);
     function execute(event) {
@@ -136,6 +135,18 @@ const Home = ({ getCars, cars }) => {
     const onSubmit = (data) => {
         dispatch(searchTerm(data));
         router.push("/search");
+    };
+    const addImage = (params) => {
+        if (params.images && params.images.length <= 0) {
+            return null;
+        }
+        if (
+            params.images &&
+            params.images.length > 0 &&
+            params.images[0].image_smallUrl
+        ) {
+            return <img src={params.images[0].image_largeUrl} alt="hello" />;
+        }
     };
     //
     //
@@ -177,7 +188,7 @@ const Home = ({ getCars, cars }) => {
                                             <img
                                                 id="one"
                                                 src={
-                                                    images[index]?.images
+                                                    images[index]?.images[0]
                                                         ?.image_largeUrl
                                                 }
                                                 alt="Hero-Image "
@@ -381,13 +392,18 @@ const Home = ({ getCars, cars }) => {
                                     images.map((ele) => (
                                         <div key={ele.VIN}>
                                             <div className="car__holder flex my-3 flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                                <img
-                                                    src={
-                                                        ele?.images
-                                                            ?.image_largeUrl
-                                                    }
-                                                    alt="Hatchback "
-                                                />
+                                                <div
+                                                    className="cursor-pointer"
+                                                    onClick={() => {
+                                                        router.push({
+                                                            pathname:
+                                                                "/search/" +
+                                                                ele.VIN,
+                                                        });
+                                                    }}
+                                                >
+                                                    {addImage(ele)}
+                                                </div>
                                                 <div className="text-center text-xs pt-3 ">
                                                     <p
                                                         className="font-semibold primary-color "

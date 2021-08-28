@@ -38,7 +38,6 @@ const Search = ({ cars, params, loading }) => {
             model: paramValue?.model || "",
             page: pageIndex,
         };
-        dispatch(fetchMore(datas, data));
     }, [cars, paramValue]);
 
     const handleSearch = async (e) => {
@@ -90,7 +89,18 @@ const Search = ({ cars, params, loading }) => {
     const activateGrid = () => {
         setgrid(true);
     };
-
+    const addImage = (params) => {
+        if (params.images && params.images.length <= 0) {
+            return null;
+        }
+        if (
+            params.images &&
+            params.images.length > 0 &&
+            params.images[0].image_smallUrl
+        ) {
+            return <img src={params.images[0].image_largeUrl} alt="hello" />;
+        }
+    };
     return (
         <div>
             <Meta></Meta>
@@ -1503,14 +1513,18 @@ const Search = ({ cars, params, loading }) => {
                                             key={id}
                                             className="car-display-holder p-4 mb-4"
                                         >
-                                            <img
-                                                className="img-fluid"
-                                                src={
-                                                    ele?.images?.image_largeUrl
-                                                }
-                                                className="br-5 "
-                                                alt="Audi A3"
-                                            />
+                                            <div
+                                                className="cursor-pointer"
+                                                onClick={() => {
+                                                    router.push({
+                                                        pathname:
+                                                            "/search/" +
+                                                            ele.VIN,
+                                                    });
+                                                }}
+                                            >
+                                                {addImage(ele)}
+                                            </div>
                                             <div className="mt-3">
                                                 <p className="text-xs primary-black font-medium">
                                                     {ele?.vehicleName
@@ -1599,7 +1613,7 @@ const Search = ({ cars, params, loading }) => {
                                                     <img
                                                         className="img-fluid"
                                                         src={
-                                                            ele?.images
+                                                            ele?.images[0]
                                                                 ?.image_largeUrl
                                                         }
                                                         alt=""
