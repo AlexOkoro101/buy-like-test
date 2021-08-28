@@ -6,10 +6,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../../redux/reducers/userReducer";
 
-const SignupOptions = () => {
+const SignupOptions = ({ beginLogin }) => {
     //redirect
     const router = useRouter();
 
@@ -23,7 +23,7 @@ const SignupOptions = () => {
         }
     }, []);
 
-    const toastError = () => toast.error(`${error ? error : 'Could not login'}`, {
+    const toastError = () => toast.error(error ? `${error}` : "Could not sign up", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -65,9 +65,7 @@ const SignupOptions = () => {
             console.log(res)
             if(!res.ok) {
               setisLoading(false)
-              seterror(res.statusText)
-              toastError()
-              throw Error("Could not sign up")
+            //   toastError()
             }
             setisLoading(false)
             return res.json()
@@ -93,15 +91,10 @@ const SignupOptions = () => {
             localStorage.setItem('userToken', JSON.stringify(item));
       
             //save data to store
-            dispatch(
-              login({
+            beginLogin({
                 token: data.data._token,
-                vehicle: null,
-                loading: false,
-                error: null,
-                success: null,
-              })
-            )
+                login: false,
+            });
         })
         .catch(e => {
             // seterror(e.message)
@@ -141,9 +134,8 @@ const SignupOptions = () => {
             console.log(res)
             if(!res.ok) {
               setisLoading(false)
-              seterror(res.statusText)
-              toastError()
-              throw Error("Could not sign up")
+            //   seterror(res.statusText)
+            //   toastError()
             }
             setisLoading(false)
             return res.json()
@@ -169,18 +161,12 @@ const SignupOptions = () => {
             localStorage.setItem('userToken', JSON.stringify(item));
       
             //save data to store
-            dispatch(
-              login({
+            beginLogin({
                 token: data.data._token,
-                vehicle: null,
-                loading: false,
-                error: null,
-                success: null,
-              })
-            )
+                login: false,
+            });
         })
         .catch(e => {
-            toastError()
             setisLoading(false)
             console.log(e.message)
         })
@@ -194,6 +180,7 @@ const SignupOptions = () => {
         <section className="w-full">
             <Meta />
             <main>
+            <ToastContainer />
                 <div className="signup-bg py-20 ">
                     <div className="form-holder w-11/12 lg:w-3/12 md:w-2/5  mx-auto mt-20 py-12 px-12">
                         <div className="text-center">
@@ -243,4 +230,12 @@ const SignupOptions = () => {
      );
 }
  
-export default SignupOptions;
+export default connect(
+    () => ({}),
+    (dispatch) => ({
+      beginLogin: (payload) => dispatch({
+        type: 'login',
+        payload,
+      })
+    })
+  )(SignupOptions);
