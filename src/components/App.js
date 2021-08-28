@@ -32,9 +32,8 @@ const App = ({ children }) => {
         } else {
             setAuth(false);
         }
-        console.log("lll");
         myFunction();
-    }, [user]);
+    });
     return (
         <>
             <Meta />

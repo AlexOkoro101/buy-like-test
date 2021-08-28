@@ -162,6 +162,7 @@ const Home = ({ getCars, cars }) => {
                                             <img
                                                 id="one"
                                                 src={
+
                                                     images[index]?.images[0]
                                                         ?.image_largeUrl
                                                 }

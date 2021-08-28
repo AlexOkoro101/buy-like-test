@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
-import { searchTerm, fetchMore } from "../../redux/actions/carsAction";
+import {
+    searchTerm,
+    fetchMore,
+    getMakes,
+} from "../../redux/actions/carsAction";
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
 
@@ -9,6 +13,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { Formik, Field, Form } from "formik";
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const Search = ({ cars, params, loading }) => {
     const [grid, setgrid] = useState(true);
@@ -28,18 +34,18 @@ const Search = ({ cars, params, loading }) => {
         }
         return validVehicleYears;
     });
+    const [makes, setmakes] = useState(() => {
+        // dispatch(getMakes());
+    });
+    const [models, setmodels] = useState([]);
     useEffect(() => {
         if (cars.length > 1) {
             setData(cars);
         }
-        const datas = {
-            make: paramValue?.make || "",
-            year: paramValue?.year || "",
-            model: paramValue?.model || "",
-            page: pageIndex,
-        };
-    }, [cars, paramValue]);
-
+    }, [cars]);
+    useEffect(() => {
+        dispatch(getMakes());
+    }, []);
     const handleSearch = async (e) => {
         setIsSearching(true);
         const data = {
@@ -67,6 +73,7 @@ const Search = ({ cars, params, loading }) => {
             model: paramValue.model,
             year: e,
         });
+        console.log(paramValue, "year");
     };
     const handleModel = async (e) => {
         await setParam({
@@ -74,6 +81,7 @@ const Search = ({ cars, params, loading }) => {
             year: paramValue.year,
             model: e,
         });
+        console.log(paramValue, "model");
     };
     const handleMake = async (e) => {
         await setParam({
@@ -81,6 +89,18 @@ const Search = ({ cars, params, loading }) => {
             year: paramValue.year,
             model: paramValue.model,
         });
+        console.log(paramValue, "make");
+
+        let req = await fetch(
+            "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                e,
+            {
+                method: "GET",
+                redirect: "follow",
+            }
+        );
+        let response = await req.json();
+        console.log(response);
     };
     const activateList = () => {
         setgrid(false);
@@ -136,1166 +156,1074 @@ const Search = ({ cars, params, loading }) => {
                         {/* <!-- Filters --> */}
 
                         <div>
-                            {/* <!-- MAke and Model Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-one"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11 pb-1.5"
-                                    htmlFor="tab-single-one"
-                                >
-                                    Make & Model
-                                </label>
-                                <div className="tab-content overflow-hidden ">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Select All
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="selectAllMakeAndModel"
-                                                    name="selectAllMakeAndModel"
-                                                    // checked={selectAllMakeAndModel}
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                            {/* Basic Filters */}
+                            <div>
+                                {/* <!-- Make Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-one"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11 pb-1.5"
+                                        htmlFor="tab-single-one"
+                                    >
+                                        Make
+                                    </label>
+                                    <div className="tab-content overflow-hidden ">
+                                        <div className="flex justify-center py-4">
+                                            <div className="w-full">
+                                                <select
+                                                    className="select-group"
+                                                    onChange={(e) =>
+                                                        handleMake(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                >
+                                                    {/* {makes.map((x) => (
+                                                        <option
+                                                            key={x}
+                                                            value={x}
+                                                        >
+                                                            {x}
+                                                        </option>
+                                                    ))} */}
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Acura
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Acura"
-                                                    name="Acura"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Alfa Romeo
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Alfa Romeo"
-                                                    name="Alfa Romeo"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            Audi
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Audi"
-                                                    name="Audi"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            BMW
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="BMW"
-                                                    name="BMW"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* <!-- Year Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-two"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-two"
-                                >
-                                    Year
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex justify-center py-4">
-                                        <div className="w-full">
-                                            <select
-                                                className="select-group"
-                                                onChange={(e) =>
-                                                    handleYear(e.target.value)
-                                                }
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
                                             >
-                                                {years.map((x) => (
-                                                    <option key={x} value={x}>
-                                                        {x}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                Reset
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
 
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
+                                {/* <!-- Model Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-twenty"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11 pb-1.5"
+                                        htmlFor="tab-single-twenty"
+                                    >
+                                        Model
+                                    </label>
+                                    <div className="tab-content overflow-hidden ">
+                                        <div className="flex justify-center py-4">
+                                            <div className="w-full">
+                                                <select
+                                                    className="select-group"
+                                                    onChange={(e) =>
+                                                        handleModel(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                >
+                                                    {models.map((x) => (
+                                                        <option
+                                                            key={x}
+                                                            value={x}
+                                                        >
+                                                            {x}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* <!-- Year Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-two"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-two"
+                                    >
+                                        Year
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex justify-center py-4">
+                                            <div className="w-full">
+                                                <select
+                                                    className="select-group"
+                                                    onChange={(e) =>
+                                                        handleYear(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                >
+                                                    {years.map((x) => (
+                                                        <option
+                                                            key={x}
+                                                            value={x}
+                                                        >
+                                                            {x}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* <!--Body Type  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-three"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-three"
-                                >
-                                    Body Type
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
+                            {/* Advanced Filters */}
+                            <div className="mt-16">
+                                {/* <!-- Filter icon --> */}
+                                <div className="flex pb-2">
+                                    <div>
+                                        <p className="flex items-center primary-black font-medium font-11">
                                             {" "}
-                                            Select All
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="SelectAllBodyType"
-                                                    name="SelectAllBodyType"
-                                                    className="focus:outline-none search self-center"
+                                            <span className="mr-1">
+                                                <img
+                                                    src="../../assets/img/vectors/filter-icon.svg"
+                                                    alt="filter"
                                                 />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Sedan/Saloon
+                                            </span>{" "}
+                                            Advanced Filters
                                         </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Sedan/Saloon"
-                                                    name="Sedan/Saloon"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
                                     </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            SUV
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="SUV"
-                                                    name="SUV"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Coupe
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Coupe"
-                                                    name="Coupe"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Hatchback
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Hatchback"
-                                                    name="Hatchback"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Wagon
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Wagon"
-                                                    name="Wagon"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
+                                    {/* <div className="ml-auto self-center">
+                                        <span className="cursor-pointer">
+                                            <img
+                                                src="../../assets/img/vectors/close-icon.svg"
+                                                alt="close"
+                                            />
+                                        </span>
+                                    </div> */}
+                                </div>
+                                <div className="flex justify-between">
+                                    {/* FIlter Button */}
+                                    <div className="flex  py-4">
+                                        <button id="submitFilter" type="submit">
+                                            Filter
                                         </button>
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* <!--Location  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-four"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-four"
-                                >
-                                    Location
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Select All
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="SelectAllLocation"
-                                                    name="SelectAllLocation"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Alaska
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Alaska"
-                                                    name="Alaska"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Alabama
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Alabama"
-                                                    name="Alabama"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Arkansas
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Arkansas"
-                                                    name="Arkansas"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Carlifonia
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value="Carlifonia"
-                                                    name="Carlifonia"
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* <!-- Mileage Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-five"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-five"
-                                >
-                                    Mileage
-                                </label>
-                                <div className="tab-content overflow-hidden">
+                                    {/* <!-- Clear all filters here --> */}
                                     <div className="flex  py-4">
                                         <div>
-                                            <label className="font-10 sec-black">
-                                                Max. Mileage
-                                            </label>
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none font-11 primary-blue"
+                                            >
+                                                Clear all filters
+                                            </button>
                                         </div>
-
-                                        <div className="ml-auto">
-                                            <select className="select-group">
-                                                <option>2000</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Transmission  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-six"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-six"
-                                >
-                                    Transmission
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Select All
-                                        </p>
-                                        <div className="ml-auto">
-                                            <input
-                                                type="radio"
-                                                name="SelectAllTransmission"
-                                                value="SelectAllTransmission"
-                                            />
+                                {/* <!--Body Type  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-three"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-three"
+                                    >
+                                        Body Type
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Select All
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="BodyTypeSelectAll"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Automatic
-                                        </p>
-                                        <div className="ml-auto">
-                                            <input
-                                                type="radio"
-                                                name="Automatic"
-                                                value="Automatic"
-                                            />
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Sedan/Saloon
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Sedan/Saloon"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Manual
-                                        </p>
-                                        <div className="ml-auto">
-                                            <input
-                                                type="radio"
-                                                name="Manual"
-                                                value="Manual"
-                                            />
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                SUV
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="SUV"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Coupe
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Coupe"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Hatchback
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Hatchback"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Wagon
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Wagon"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--External Colour  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-seven"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-seven"
-                                >
-                                    External Colour
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            White
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                {/* <!-- Mileage Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-five"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-five"
+                                    >
+                                        Mileage
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex  py-4">
+                                            <div>
+                                                <label className="font-10 sec-black">
+                                                    Max. Mileage
+                                                </label>
+                                            </div>
+
+                                            <div className="ml-auto">
+                                                <select className="select-group">
+                                                    <option>2000</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Black
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Grey
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Red
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Gold
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Internal Colour  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-seven"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-seven"
-                                >
-                                    Internal Colour
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            White
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
+                                {/* <!--Transmission  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-six"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-six"
+                                    >
+                                        Transmission
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Select All
+                                            </p>
+                                            <div className="ml-auto">
                                                 <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
+                                                    type="radio"
+                                                    name="SelectAllTransmission"
+                                                    value="SelectAllTransmission"
                                                 />
-                                                <span className="search"></span>
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Black
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Automatic
+                                            </p>
+                                            <div className="ml-auto">
                                                 <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
+                                                    type="radio"
+                                                    name="Automatic"
+                                                    value="Automatic"
                                                 />
-                                                <span className="search"></span>
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Grey
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Manual
+                                            </p>
+                                            <div className="ml-auto">
                                                 <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
+                                                    type="radio"
+                                                    name="Manual"
+                                                    value="Manual"
                                                 />
-                                                <span className="search"></span>
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Red
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Gold
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Fuel Type  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-eight"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-eight"
-                                >
-                                    Fuel Type
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Gasoline
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                {/* <!--External Colour  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-seven"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-seven"
+                                    >
+                                        External Colour
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                White
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="white"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Diesel
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Black
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="black"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Gas/Electric Hybrid
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Grey
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="grey"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Plug-in Hybrid
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Red
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="red"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Electric
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Gold
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="gold"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Sale Condition  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-nine"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-nine"
-                                >
-                                    Sale Condition
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Green Light
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                {/* <!--Internal Colour  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-seven"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-seven"
+                                    >
+                                        Internal Colour
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                White
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="white"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Red Light
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Black
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="black"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Blue Light
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Grey
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="grey"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Red
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="red"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Gold
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="gold"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Sale Date  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-ten"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-ten"
-                                >
-                                    Sale Date
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            Feb 17
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                {/* <!--Fuel Type  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-eight"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-eight"
+                                    >
+                                        Fuel Type
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Gasoline
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="gasoline"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            March 21
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Diesel
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="diesel"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Gas/Electric Hybrid
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Gas/Electric Hybrid"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Plug-in Hybrid
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Plug-in Hybrid"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Electric
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Electric"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <!--Equipment  Here --> */}
-                            <div className="tab border-bt py-4 overflow-hidden ">
-                                <input
-                                    className="opacity-0 hidden"
-                                    id="tab-single-seven"
-                                    type="radio"
-                                    name="tabs2"
-                                />
-                                <label
-                                    className="block cursor-pointer primary-black font-medium font-11"
-                                    htmlFor="tab-single-seven"
-                                >
-                                    Equipment
-                                </label>
-                                <div className="tab-content overflow-hidden">
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Android Auto
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                {/* <!--Sale Condition  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-nine"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-nine"
+                                    >
+                                        Sale Condition
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Green Light
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Green Light"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Apple CarPlay
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Red Light
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Red Light"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Heated Seats
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Blue Light
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Blue Light"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Rear View Camera
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            {" "}
-                                            Remote Start
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex pt-2">
-                                        <p className="font-11 primary-black">
-                                            Sunroof or Moonroof
-                                        </p>
-                                        <div className="ml-auto">
-                                            <label className="search">
-                                                <input
-                                                    type="checkbox"
-                                                    value=""
-                                                    name=""
-                                                    className="focus:outline-none search self-center"
-                                                />
-                                                <span className="search"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* <!-- Reset button here --> */}
-                                    <div className="text-center py-3">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none primary-red  font-11"
-                                        >
-                                            Reset
-                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* <!-- Clear all filters here --> */}
-                        <div className="flex  py-4">
-                            <div>
-                                <button
-                                    type="button"
-                                    className="focus:outline-none font-11 primary-blue"
-                                >
-                                    Clear all filters
-                                </button>
+                                {/* <!--Sale Date  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-ten"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-ten"
+                                    >
+                                        Sale Date
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                Feb 17
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Feb 17"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                March 21
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="March 21"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* <!--Equipment  Here --> */}
+                                <div className="tab border-bt py-4 overflow-hidden ">
+                                    <input
+                                        className="opacity-0 hidden"
+                                        id="tab-single-seven"
+                                        type="radio"
+                                        name="tabs2"
+                                    />
+                                    <label
+                                        className="block cursor-pointer primary-black font-medium font-11"
+                                        htmlFor="tab-single-seven"
+                                    >
+                                        Equipment
+                                    </label>
+                                    <div className="tab-content overflow-hidden">
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Android Auto
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Android Auto"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Apple CarPlay
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Apple CarPlay"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Heated Seats
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Heated Seats"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Rear View Camera
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Rear View Camera"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                {" "}
+                                                Remote Start
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Remote Start"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex pt-2">
+                                            <p className="font-11 primary-black">
+                                                Sunroof or Moonroof
+                                            </p>
+                                            <div className="ml-auto">
+                                                <label className="search">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filter"
+                                                        value="Sunroof or Moonroof"
+                                                        className="focus:outline-none search self-center"
+                                                    />
+                                                    <span className="search"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* <!-- Reset button here --> */}
+                                        <div className="text-center py-3">
+                                            <button
+                                                type="button"
+                                                className="focus:outline-none primary-red  font-11"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1502,258 +1430,32 @@ const Search = ({ cars, params, loading }) => {
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
-                        {grid && (
-                            <div
-                                className="flex flex-wrap justify-center lg:justify-between display-type"
-                                id="car-grid"
-                            >
-                                {data?.length > 0 &&
-                                    data?.map((ele, id) => (
-                                        <div
-                                            key={id}
-                                            className="car-display-holder p-4 mb-4"
-                                        >
-                                            <div
-                                                className="cursor-pointer"
-                                                onClick={() => {
-                                                    router.push({
-                                                        pathname:
-                                                            "/search/" +
-                                                            ele.VIN,
-                                                    });
-                                                }}
-                                            >
-                                                {addImage(ele)}
-                                            </div>
-                                            <div className="mt-3">
-                                                <p className="text-xs primary-black font-medium">
-                                                    {ele?.vehicleName
-                                                        ? ele?.vehicleName
-                                                        : [
-                                                              ele?.make,
-                                                              ele.model,
-                                                          ].join(" ")}
-                                                </p>
-                                                <p className="sec-black font-11 flex items-center pt-2">
-                                                    {" "}
-                                                    {ele?.year}{" "}
-                                                    <span className="ml-6">
-                                                        205,456 miles
-                                                    </span>
-                                                </p>
-                                                <div className="flex pt-2">
-                                                    <p className="flex items-center sec-black font-10">
-                                                        {" "}
-                                                        <span className="mr-1">
-                                                            <img
-                                                                src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                alt="location"
-                                                            />
-                                                        </span>{" "}
-                                                        {ele?.pickupLocation}
-                                                    </p>
-                                                    <div className="ml-auto flex self-center">
-                                                        <img
-                                                            className="img-fluid"
-                                                            src="../../assets/img/vectors/red-date.svg"
-                                                            alt="date"
-                                                        />
-                                                        <p className="sec-black font-10 ml-1">
-                                                            {" "}
-                                                            {new Date(
-                                                                ele?.auctionEndTime
-                                                            ).toLocaleDateString()}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex pt-3">
-                                                    <div className="ml-auto  self-center">
-                                                        <button
-                                                            type="button"
-                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                            onClick={() => {
-                                                                router.push({
-                                                                    pathname:
-                                                                        "/search/" +
-                                                                        ele.VIN,
-                                                                });
-                                                            }}
-                                                        >
-                                                            Place bid
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                        {loading ? (
+                            <div className="flex justify-center items-center w-full h-80">
+                                <FadeLoader
+                                    color="green"
+                                    width={5}
+                                    radius={2}
+                                    margin={2}
+                                    height={15}
+                                    loading={loading}
+                                />
                             </div>
-                        )}
-
-                        {/* <!-- Car List displays here --> */}
-                        {!grid && (
-                            <div
-                                className="flex flex-wrap display-type justify-between"
-                                id="car-list"
-                            >
-                                {/* <!-- Car 1 --> */}
-                                {data &&
-                                    data?.map((ele, id) => (
-                                        <div
-                                            key={id}
-                                            className="car-display-list-holder flex flex-wrap w-full p-4 mb-4"
-                                        >
-                                            {/* <!-- image to details here --> */}
-                                            <div className="flex flex-wrap">
+                        ) : (
+                            <>
+                                {grid && (
+                                    <div
+                                        className="flex flex-wrap justify-center lg:justify-between display-type"
+                                        id="car-grid"
+                                    >
+                                        {data?.length > 0 &&
+                                            data?.map((ele, id) => (
                                                 <div
-                                                    style={{
-                                                        width: "300px",
-                                                        height: "280px",
-                                                    }}
+                                                    key={id}
+                                                    className="car-display-holder p-4 mb-4"
                                                 >
-                                                    <img
-                                                        className="img-fluid"
-                                                        src={
-                                                            ele?.images[0]
-                                                                ?.image_largeUrl
-                                                        }
-                                                        alt=""
-                                                        style={{
-                                                            width: "100%",
-                                                            height: "auto",
-                                                        }}
-                                                    />
-                                                </div>
-
-                                                {/* <!-- Details here --> */}
-                                                <div className="lg:ml-3 py-4">
-                                                    <p className="text-base primary-black ">
-                                                        {ele?.vehicleName
-                                                            ? ele?.vehicleName
-                                                            : [
-                                                                  ele?.make,
-                                                                  ele.model,
-                                                              ].join(" ")}
-                                                    </p>
-
-                                                    {/* <!-- location to mileage here  --> */}
-                                                    <table className="min-w-full ">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black ">
-                                                                        {" "}
-                                                                        <span className="mr-1">
-                                                                            <img
-                                                                                src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                                alt="beacon"
-                                                                            />
-                                                                        </span>{" "}
-                                                                        {
-                                                                            ele?.pickupLocation
-                                                                        }
-                                                                    </p>
-                                                                </td>
-
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black ">
-                                                                        {" "}
-                                                                        <span className="mr-1">
-                                                                            <img
-                                                                                src="../../assets/img/vectors/speedometer.svg"
-                                                                                alt="beacon"
-                                                                            />
-                                                                        </span>{" "}
-                                                                        205,456
-                                                                        miles
-                                                                    </p>
-                                                                </td>
-
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black">
-                                                                        {" "}
-                                                                        <span className="mr-1">
-                                                                            <img
-                                                                                src="../../assets/img/vectors/red-date.svg"
-                                                                                alt="beacon"
-                                                                            />
-                                                                        </span>
-                                                                        {new Date(
-                                                                            ele?.auctionEndTime
-                                                                        ).toLocaleDateString()}
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black">
-                                                                        Exterior:{" "}
-                                                                        {""}
-                                                                        {""}
-                                                                        {
-                                                                            ele?.sourceExteriorColor
-                                                                        }
-                                                                    </p>
-                                                                </td>
-
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black">
-                                                                        Interior{" "}
-                                                                        {""}
-                                                                        {
-                                                                            ele?.interiorColor
-                                                                        }
-                                                                    </p>
-                                                                </td>
-
-                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                    <p className="flex items-center text-xs primary-black">
-                                                                        VIN:{" "}
-                                                                        {""}
-                                                                        {
-                                                                            ele?.VIN
-                                                                        }
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-
-                                                    {/* <!-- others here --> */}
-                                                    <div className="flex border-t my-3 py-3">
-                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                            Vehicle Type: {""}
-                                                            {""}
-                                                            {ele?.vehicleType}
-                                                        </p>
-                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                            {ele?.exteriorColor}
-                                                        </p>
-                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                            {" "}
-                                                            Fully Loaded
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="ml-auto py-4 items-end flex flex-col">
-                                                <div className="relative pt-1.5">
-                                                    <img
-                                                        src="../../assets/img/vectors/buy.svg"
-                                                        alt="buy"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                                    >
-                                                        BUY NOW
-                                                    </button>
-                                                </div>
-
-                                                <div>
-                                                    <button
-                                                        type="button"
-                                                        className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                    <div
+                                                        className="cursor-pointer"
                                                         onClick={() => {
                                                             router.push({
                                                                 pathname:
@@ -1762,13 +1464,275 @@ const Search = ({ cars, params, loading }) => {
                                                             });
                                                         }}
                                                     >
-                                                        View Details
-                                                    </button>
+                                                        {addImage(ele)}
+                                                    </div>
+                                                    <div className="mt-3">
+                                                        <p className="text-xs primary-black font-medium">
+                                                            {ele?.vehicleName
+                                                                ? ele?.vehicleName
+                                                                : [
+                                                                      ele?.make,
+                                                                      ele.model,
+                                                                  ].join(" ")}
+                                                        </p>
+                                                        <p className="sec-black font-11 flex items-center pt-2">
+                                                            {" "}
+                                                            {ele?.year}{" "}
+                                                            <span className="ml-6">
+                                                                205,456 miles
+                                                            </span>
+                                                        </p>
+                                                        <div className="flex pt-2">
+                                                            <p className="flex items-center sec-black font-10">
+                                                                {" "}
+                                                                <span className="mr-1">
+                                                                    <img
+                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                        alt="location"
+                                                                    />
+                                                                </span>{" "}
+                                                                {
+                                                                    ele?.pickupLocation
+                                                                }
+                                                            </p>
+                                                            <div className="ml-auto flex self-center">
+                                                                <img
+                                                                    className="img-fluid"
+                                                                    src="../../assets/img/vectors/red-date.svg"
+                                                                    alt="date"
+                                                                />
+                                                                <p className="sec-black font-10 ml-1">
+                                                                    {" "}
+                                                                    {new Date(
+                                                                        ele?.auctionEndTime
+                                                                    ).toLocaleDateString()}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex pt-3">
+                                                            <div className="ml-auto  self-center">
+                                                                <button
+                                                                    type="button"
+                                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                    onClick={() => {
+                                                                        router.push(
+                                                                            {
+                                                                                pathname:
+                                                                                    "/search/" +
+                                                                                    ele.VIN,
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Place bid
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
+                                            ))}
+                                    </div>
+                                )}
+                                {/* <!-- Car List displays here --> */}
+                                {!grid && (
+                                    <div
+                                        className="flex flex-wrap display-type justify-between"
+                                        id="car-list"
+                                    >
+                                        {/* <!-- Car 1 --> */}
+                                        {data &&
+                                            data?.map((ele, id) => (
+                                                <div
+                                                    key={id}
+                                                    className="car-display-list-holder flex flex-wrap w-full p-4 mb-4"
+                                                >
+                                                    {/* <!-- image to details here --> */}
+                                                    <div className="flex flex-wrap">
+                                                        <div
+                                                            style={{
+                                                                width: "300px",
+                                                                height: "280px",
+                                                            }}
+                                                        >
+                                                            <img
+                                                                className="img-fluid"
+                                                                src={
+                                                                    ele
+                                                                        ?.images[0]
+                                                                        ?.image_largeUrl
+                                                                }
+                                                                alt=""
+                                                                style={{
+                                                                    width: "100%",
+                                                                    height: "auto",
+                                                                }}
+                                                            />
+                                                        </div>
+
+                                                        {/* <!-- Details here --> */}
+                                                        <div className="lg:ml-3 py-4">
+                                                            <p className="text-base primary-black ">
+                                                                {ele?.vehicleName
+                                                                    ? ele?.vehicleName
+                                                                    : [
+                                                                          ele?.make,
+                                                                          ele.model,
+                                                                      ].join(
+                                                                          " "
+                                                                      )}
+                                                            </p>
+
+                                                            {/* <!-- location to mileage here  --> */}
+                                                            <table className="min-w-full ">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                {" "}
+                                                                                <span className="mr-1">
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                        alt="beacon"
+                                                                                    />
+                                                                                </span>{" "}
+                                                                                {
+                                                                                    ele?.pickupLocation
+                                                                                }
+                                                                            </p>
+                                                                        </td>
+
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                {" "}
+                                                                                <span className="mr-1">
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/speedometer.svg"
+                                                                                        alt="beacon"
+                                                                                    />
+                                                                                </span>{" "}
+                                                                                205,456
+                                                                                miles
+                                                                            </p>
+                                                                        </td>
+
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                {" "}
+                                                                                <span className="mr-1">
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/red-date.svg"
+                                                                                        alt="beacon"
+                                                                                    />
+                                                                                </span>
+                                                                                {new Date(
+                                                                                    ele?.auctionEndTime
+                                                                                ).toLocaleDateString()}
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                Exterior:{" "}
+                                                                                {
+                                                                                    ""
+                                                                                }
+                                                                                {
+                                                                                    ""
+                                                                                }
+                                                                                {
+                                                                                    ele?.sourceExteriorColor
+                                                                                }
+                                                                            </p>
+                                                                        </td>
+
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                Interior{" "}
+                                                                                {
+                                                                                    ""
+                                                                                }
+                                                                                {
+                                                                                    ele?.interiorColor
+                                                                                }
+                                                                            </p>
+                                                                        </td>
+
+                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                VIN:{" "}
+                                                                                {
+                                                                                    ""
+                                                                                }
+                                                                                {
+                                                                                    ele?.VIN
+                                                                                }
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                            {/* <!-- others here --> */}
+                                                            <div className="flex border-t my-3 py-3">
+                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                    Vehicle
+                                                                    Type: {""}
+                                                                    {""}
+                                                                    {
+                                                                        ele?.vehicleType
+                                                                    }
+                                                                </p>
+                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                    {
+                                                                        ele?.exteriorColor
+                                                                    }
+                                                                </p>
+                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                    {" "}
+                                                                    Fully Loaded
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="ml-auto py-4 items-end flex flex-col">
+                                                        <div className="relative pt-1.5">
+                                                            <img
+                                                                src="../../assets/img/vectors/buy.svg"
+                                                                alt="buy"
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                            >
+                                                                BUY NOW
+                                                            </button>
+                                                        </div>
+
+                                                        <div>
+                                                            <button
+                                                                type="button"
+                                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                                onClick={() => {
+                                                                    router.push(
+                                                                        {
+                                                                            pathname:
+                                                                                "/search/" +
+                                                                                ele.VIN,
+                                                                        }
+                                                                    );
+                                                                }}
+                                                            >
+                                                                View Details
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
@@ -1810,4 +1774,6 @@ const mapStateToProps = (state) => {
     return { cars, loading, error, params };
 };
 
-export default connect(mapStateToProps, { searchTerm, fetchMore })(Search);
+export default connect(mapStateToProps, { searchTerm, fetchMore, getMakes })(
+    Search
+);

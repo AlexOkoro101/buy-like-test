@@ -224,3 +224,11 @@ input.search:checked~span:after {
     width: 77px;
     height: 24px;
 }
+#submitFilter {
+    background: rgb(216, 7, 57);
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 15px;
+    font-size: 13px;
+
+}
