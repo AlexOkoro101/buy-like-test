@@ -68,7 +68,7 @@ const Home = ({ getCars, cars }) => {
     const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
     useEffect(() => {
-        if (seconds <= 50) {
+        if (seconds <= 100) {
             setTimeout(() => setSeconds(seconds + 1), 100);
         } else {
             execute("next");
@@ -162,7 +162,6 @@ const Home = ({ getCars, cars }) => {
                                             <img
                                                 id="one"
                                                 src={
-
                                                     images[index]?.images[0]
                                                         ?.image_largeUrl
                                                 }

@@ -9,9 +9,11 @@ import {
     FETCHING,
     FETCHING_FAILED,
     FETCHING_SUCCESS,
+    LOGIN_SUCCESS,
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    LOGIN_FAILED,
 } from "../types";
 //
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
     error: {},
     params: {},
     makes: [],
+    userLoggedIn: false,
 };
 
 const Cars = (state = initialState, action) => {
@@ -30,12 +33,6 @@ const Cars = (state = initialState, action) => {
                 ...state,
                 loading: true,
                 error: {},
-            };
-        case FETCH_SUCCESSFUL:
-            return {
-                ...state,
-                cars: action.payload,
-                loading: false,
             };
         case FETCHING_CARS_FAILED:
         case FETCHING_MAKE_FAILED:
@@ -54,6 +51,7 @@ const Cars = (state = initialState, action) => {
             };
         case SEARCHING_SUCCESS:
         case FETCHING_SUCCESS:
+        case FETCH_SUCCESSFUL:
             return {
                 ...state,
                 cars: action.payload,
@@ -74,6 +72,16 @@ const Cars = (state = initialState, action) => {
                 cars: {},
                 loading: false,
                 error: action.payload,
+            };
+        case LOGIN_SUCCESS:
+            return {
+                ...state,
+                userLoggedIn: true,
+            };
+        case LOGIN_FAILED:
+            return {
+                ...state,
+                userLoggedIn: false,
             };
         default:
             return state;
