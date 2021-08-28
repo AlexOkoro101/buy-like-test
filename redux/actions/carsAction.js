@@ -12,45 +12,40 @@ import {
 } from "../types";
 const api = process.env.cars_api;
 
-export const getCars = () => async (dispatch) => {
+export const getCars = () => (dispatch) => {
     dispatch({
         type: FETCHING_CARS,
     });
-    try {
-        let url = `${api}?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
-        let res = await fetch(url.trim(), {
-            method: "GET",
-            headers: {},
-            credentials: "same-origin",
+
+    let url = `${api}?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    fetch(url.trim(), {
+        method: "GET",
+        headers: {},
+        credentials: "same-origin",
+    })
+        .then(function (response) {
+            return response.text();
         })
-            .then(function (response) {
-                return response.text();
-            })
-            .catch(function (error) {
-                dispatch({
-                    type: FETCHING_CARS_FAILED,
-                    payload: error.message,
-                });
-                console.log(error);
-            });
-        if (typeof res === "object") {
-            if (Object.entries(res).length >= 1) {
-                const dada = JSON.parse(res);
-                if (dada) {
-                    dispatch({
-                        type: FETCH_SUCCESSFUL,
-                        payload: dada.data,
-                    });
+        .then((res) => {
+            if (typeof res === "string") {
+                if (Object.entries(res).length >= 1) {
+                    const dada = JSON.parse(res);
+                    if (dada) {
+                        dispatch({
+                            type: FETCH_SUCCESSFUL,
+                            payload: dada.data,
+                        });
+                    }
                 }
             }
-        }
-    } catch (error) {
-        dispatch({
-            type: FETCHING_CARS_FAILED,
-            payload: error.message,
+        })
+        .catch(function (error) {
+            dispatch({
+                type: FETCHING_CARS_FAILED,
+                payload: error.message,
+            });
+            console.log(error);
         });
-        console.log(error);
-    }
 };
 export const searchTerm = (event) => async (dispatch) => {
     dispatch({

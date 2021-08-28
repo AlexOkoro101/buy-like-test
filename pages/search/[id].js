@@ -7,7 +7,8 @@ const CarDetails = ({ cars }) => {
     const [carDetail, setDetail] = useState(null);
     const router = useRouter();
     const [offer, setOffer] = useState(true);
-    const user = useSelector(selectToken)
+    const [id, setId] = useState(0);
+    const user = useSelector(selectToken);
     useEffect(() => {
         if (cars.length > 0) {
             const found = cars.find(
@@ -15,7 +16,6 @@ const CarDetails = ({ cars }) => {
             );
             setDetail(found);
         }
-
     });
     const openForm = (evt, status) => {
         console.log(carDetail);
@@ -71,86 +71,41 @@ const CarDetails = ({ cars }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full lg:w-3/5">
-                            <div>
+                        <div className="w-full lg:w-3/6 px-5 overflow-hidden">
+                            <div className="px-5">
                                 <img
-                                    src={carDetail?.images?.image_largeUrl}
+                                    src={carDetail?.images[id]?.image_largeUrl}
                                     loading="lazy"
-                                    className="br-5 object-fit"
-                                    width="715"
-                                    height="424"
+                                    className="rounded-xl shadow-md"
                                     alt="Benz"
+                                    style={{ height: "540px", width: "720px" }}
                                 />
                             </div>
-                            <div className="flex  mt-3">
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/1.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/2.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/3.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/4.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/5.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/6.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/7.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
+                            <div className="overflow-scroll w-full px-5">
+                                <div
+                                    className=" flex transition-all justify-between mt-3
+                                "
+                                    style={{ width: "2500px", height: "100px" }}
+                                >
+                                    {carDetail &&
+                                        carDetail?.images.length > 0 &&
+                                        carDetail?.images.map((ele, id) => (
+                                            <div
+                                                key={id}
+                                                onClick={() => setId(id)}
+                                                className="mr-4 w-40 h-full transition-all cursor-pointer transform hover:scale-105"
+                                            >
+                                                <img
+                                                    src={ele?.image_largeUrl}
+                                                    className="rounded-md shadow-sm"
+                                                    style={{
+                                                        height: "98.3px",
+                                                        width: "131.03px",
+                                                    }}
+                                                    alt=""
+                                                />
+                                            </div>
+                                        ))}
                                 </div>
                             </div>
                         </div>
@@ -752,7 +707,10 @@ const CarDetails = ({ cars }) => {
                         </div>
                     </section>
 
-                    <section className="py-4 w-full overview-section">
+                    <section
+                        className="py-4 flex flex-col w-full overview-section"
+                        style={{ justifyContent: "center" }}
+                    >
                         <div className="flex justify-center px-5">
                             <div className="overview-tab relative mr-6 lg:mr-16 active lg:px-4 lg:text-base text-sm font-semibold  primary-black lg:py-0.5">
                                 <p href className="lg:py-1.5 ">
@@ -772,8 +730,8 @@ const CarDetails = ({ cars }) => {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex flex-wrap px-5 justify-center mt-6">
-                            <div>
+                        <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
+                            <div className="w-full md:w-1/3 ">
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
@@ -840,7 +798,7 @@ const CarDetails = ({ cars }) => {
                                 </table>
                             </div>
 
-                            <div className="lg:ml-3">
+                            <div className="w-full md:w-1/3  ">
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
