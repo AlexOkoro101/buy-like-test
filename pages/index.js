@@ -177,8 +177,7 @@ const Home = ({ getCars, cars }) => {
                                             <img
                                                 id="one"
                                                 src={
-                                                    images[index]?.images
-                                                        ?.image_largeUrl
+                                                    images[index]?.images[index]?.image_largeUrl
                                                 }
                                                 alt="Hero-Image "
                                                 className="h-full w-full hero-image"
