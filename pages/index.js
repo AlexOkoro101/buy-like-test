@@ -78,32 +78,6 @@ const Home = ({ getCars, cars }) => {
     useEffect(() => {
         if (car.length <= 0) {
             getCars();
-            // async function fetchData() {
-            //     let url = ``;
-            //     try {
-            //         let res = await fetch(url.trim(), {
-            //             method: "GET",
-            //             headers: {},
-            //             credentials: "same-origin",
-            //         })
-            //             .then(function (response) {
-            //                 return response.text();
-            //             })
-            //             .catch(function (error) {
-            //                 console.log(error);
-            //             });
-            //         if (res) {
-            //             const dada = JSON.parse(res);
-            //             if (dada) {
-            //                 setCars(dada.data);
-            //                 setImages(dada.data);
-            //             }
-            //         }
-            //     } catch (error) {
-            //         console.log(error);
-            //     }
-            // }
-            // fetchData();
         }
     }, []);
     function execute(event) {

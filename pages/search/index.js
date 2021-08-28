@@ -1774,6 +1774,7 @@ const Search = ({ cars, params, loading }) => {
                 </div>
 
                 <div className="items-center flex flex-col justify-center my-5">
+                    {data.length}
                     <h1 className="text-green-600 font-mono text-sm">
                         load more..
                     </h1>
