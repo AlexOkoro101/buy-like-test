@@ -7,7 +7,8 @@ const CarDetails = ({ cars }) => {
     const [carDetail, setDetail] = useState(null);
     const router = useRouter();
     const [offer, setOffer] = useState(true);
-    const user = useSelector(selectToken)
+    const [id, setId] = useState(0);
+    const user = useSelector(selectToken);
     useEffect(() => {
         if (cars.length > 0) {
             const found = cars.find(
@@ -15,7 +16,6 @@ const CarDetails = ({ cars }) => {
             );
             setDetail(found);
         }
-
     });
     const openForm = (evt, status) => {
         console.log(carDetail);
@@ -74,7 +74,7 @@ const CarDetails = ({ cars }) => {
                         <div className="w-full lg:w-3/5">
                             <div>
                                 <img
-                                    src={carDetail?.images?.image_largeUrl}
+                                    src={carDetail?.images[id]?.image_largeUrl}
                                     loading="lazy"
                                     className="br-5 object-fit"
                                     width="715"
@@ -83,75 +83,23 @@ const CarDetails = ({ cars }) => {
                                 />
                             </div>
                             <div className="flex  mt-3">
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/1.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/2.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/3.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/4.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/5.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/6.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
-
-                                <div className="mr-2.5">
-                                    <img
-                                        src="../assets/img/cars/7.png"
-                                        className="br-5"
-                                        width="93"
-                                        height="69"
-                                        alt=""
-                                    />
-                                </div>
+                                {carDetail &&
+                                    carDetail?.images.length > 0 &&
+                                    carDetail?.images.map((ele, id) => (
+                                        <div
+                                            key={id}
+                                            onClick={() => setId(id)}
+                                            className="mr-2.5 cursor-pointer"
+                                        >
+                                            <img
+                                                src={ele?.image_largeUrl}
+                                                className="br-5"
+                                                width="93"
+                                                height="69"
+                                                alt=""
+                                            />
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                         <div className="car-details-holder px-4 pt-4 pb-12">
