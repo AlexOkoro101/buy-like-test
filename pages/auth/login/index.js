@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { connect } from "react-redux";
 import { selectToken } from "../../../redux/reducers/userReducer";
+import { logIn, logOut } from "../../../redux/actions/carsAction";
 
 const LogIn = ({ beginLogin }) => {
     const [error, seterror] = useState(null);
@@ -88,7 +89,9 @@ const LogIn = ({ beginLogin }) => {
                     if (data?.error) {
                         seterror(data?.message);
                         toastError();
+                        dispatch(logOut());
                     } else {
+                        dispatch(logIn());
                         seterror(data?.message);
                         toastSuccess();
                         localStorage.setItem(

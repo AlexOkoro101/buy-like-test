@@ -12,6 +12,8 @@ import {
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    LOGIN_SUCCESS,
+    LOGIN_FAILED,
 } from "../types";
 const api = process.env.cars_api;
 
@@ -179,4 +181,14 @@ export const getMakes = () => (dispatch) => {
             });
             console.log(error);
         });
+};
+export const logIn = () => (dispatch) => {
+    dispatch({
+        type: LOGIN_SUCCESS,
+    });
+};
+export const logOut = () => (dispatch) => {
+    dispatch({
+        type: LOGIN_FAILED,
+    });
 };

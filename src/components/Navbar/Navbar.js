@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../redux/features/userSlice";
 import { selectToken } from "../../../redux/reducers/userReducer";
+import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
-
-const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
+const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const user = useSelector(selectToken);
+    const [token, setToken] = useState(() => localStorage.getItem("userToken"));
 
     const retrieveData = () => {
         const getToken = localStorage.getItem("userToken");
@@ -28,10 +30,7 @@ const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
             token: item.userToken,
         });
     };
-
-    const user = useSelector(selectToken);
-    // console.log(user.login)
-
+    useEffect(() => {}, [userLoggedIn]);
     let dropdown;
 
     function toggleView() {
@@ -44,8 +43,9 @@ const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
     }
 
     const handleLogout = () => {
+        dispatch(logOut());
         window.localStorage.clear();
-        window.location.reload();
+        // window.location.reload();
         beginLogout();
     };
 
@@ -101,7 +101,7 @@ const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
                         </a>
                     </li>
                     <>
-                        {loggedIn ? (
+                        {userLoggedIn ? (
                             <li className="text-xs ml-2">
                                 <button
                                     onClick={handleLogout}
@@ -144,18 +144,19 @@ const Navbar = ({ beginLogin, beginLogout, loggedIn, auth }) => {
         </header>
     );
 };
+const mapStateToProps = (state) => {
+    const { userLoggedIn } = state.Cars;
+    return { userLoggedIn };
+};
 
-export default connect(
-    () => ({}),
-    (dispatch) => ({
-        beginLogin: (payload) =>
-            dispatch({
-                type: "login",
-                payload,
-            }),
-        beginLogout: () =>
-            dispatch({
-                type: "logout",
-            }),
-    })
-)(Navbar);
+export default connect(mapStateToProps, (dispatch) => ({
+    beginLogin: (payload) =>
+        dispatch({
+            type: "login",
+            payload,
+        }),
+    beginLogout: () =>
+        dispatch({
+            type: "logout",
+        }),
+}))(Navbar);
