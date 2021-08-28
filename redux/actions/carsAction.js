@@ -119,9 +119,9 @@ export const fetchMore = (event, prevData) => async (dispatch) => {
             const response = JSON.parse(res);
             if (response) {
                 let newData = response.data.concat(prevData);
-                console.log(prevData);
-                console.log(response);
-                console.log(newData);
+                // console.log(prevData);
+                // console.log(response);
+                // console.log(newData);
                 dispatch({
                     type: FETCHING_SUCCESS,
                     payload: newData,
