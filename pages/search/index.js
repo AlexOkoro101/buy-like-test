@@ -33,6 +33,7 @@ const Search = ({ cars, params, loading }) => {
     const [makes, setmakes] = useState([])
     const [models, setmodels] = useState([])
 
+    //fetch makes
     useEffect(() => {
         const fetchMakes = () => {
             fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&full_results=0', {
@@ -42,6 +43,7 @@ const Search = ({ cars, params, loading }) => {
                 return res.json()
             }).then(data => {
                 console.log(data)
+                setmakes(data)
             }).catch(e => {
                 console.log(e)
             })
@@ -50,30 +52,30 @@ const Search = ({ cars, params, loading }) => {
             fetchMakes
         }
     }, [])
-    
-    // useEffect(() => {
-    //     if (cars.length > 1) {
-    //         setData(cars);
-    //     }
-    //     const datas = {
-    //         make: paramValue?.make || "",
-    //         year: paramValue?.year || "",
-    //         model: paramValue?.model || "",
-    //         page: pageIndex,
-    //     };
-    //     dispatch(fetchMore(datas, data));
-    // }, [cars, paramValue]);
 
-    // const handleSearch = async (e) => {
-    //     setIsSearching(true);
-    //     const data = {
-    //         make: e.target.value,
-    //         year: "",
-    //     };
+    useEffect(() => {
+        if (cars.length > 1) {
+            setData(cars);
+        }
+        const datas = {
+            make: paramValue?.make || "",
+            year: paramValue?.year || "",
+            model: paramValue?.model || "",
+            page: pageIndex,
+        };
+        dispatch(fetchMore(datas, data));
+    }, [cars, paramValue]);
 
-    //     await dispatch(searchTerm(data));
-    //     setData(cars);
-    // };
+    const handleSearch = async (e) => {
+        setIsSearching(true);
+        const data = {
+            make: e.target.value,
+            year: "",
+        };
+
+        await dispatch(searchTerm(data));
+        setData(cars);
+    };
 
     const fetch = () => {
         const datas = {
@@ -105,6 +107,11 @@ const Search = ({ cars, params, loading }) => {
             year: paramValue.year,
             model: paramValue.model,
         });
+        let req = await fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=' + e, {
+            redirect: 'follow'
+        })
+        let response = await req.json()
+        console.log(response)
     };
     const activateList = () => {
         setgrid(false);
