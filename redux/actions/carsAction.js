@@ -147,40 +147,70 @@ export const getMakes = () => (dispatch) => {
         type: FETCHING_MAKE,
     });
 
-    let url = `https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&full_results=0`;
-    fetch(url.trim(), {
+    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&full_results=0", {
         method: "GET",
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
+        redirect: 'follow',
         credentials: "same-origin",
-        // mode: "no-cors",
     })
-        .then(function (response) {
-            console.log(response);
-            return response.text();
-        })
-        .then((res) => {
-            console.log(res, "makes");
-            // if (res) {
-            //     if (Object.entries(res).length >= 1) {
-            //         const dada = JSON.parse(res);
-            //         if (dada) {
-            //             dispatch({
-            //                 type: FETCHING_MAKE_SUCCESS,
-            //                 payload: dada.data,
-            //             });
-            //         }
-            //     }
-            // }
-        })
-        .catch(function (error) {
-            dispatch({
-                type: FETCHING_MAKE_FAILED,
-                payload: error.message,
-            });
-            console.log(error);
+    .then(function (response) {
+        console.log(response);
+        return response.text();
+    }).then(data => {
+        console.log(data)
+         if (data) {
+                if (Object.entries(data).length >= 1) {
+                    const dada = JSON.parse(data);
+                    if (dada) {
+                        dispatch({
+                            type: FETCHING_MAKE_SUCCESS,
+                            payload: dada,
+                        });
+                    }
+                }
+            }
+    })
+    .catch(function (error) {
+        dispatch({
+            type: FETCHING_MAKE_FAILED,
+            payload: error.message,
         });
+        console.log(error);
+    });
+};
+export const getModels = (make) => (dispatch) => {
+    dispatch({
+        type: FETCHING_MODEL,
+    });
+
+    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + make, {
+        method: "GET",
+        redirect: 'follow',
+        credentials: "same-origin",
+    })
+    .then(function (response) {
+        console.log(response);
+        return response.text();
+    }).then(data => {
+        console.log(data)
+         if (data) {
+                if (Object.entries(data).length >= 1) {
+                    const dada = JSON.parse(data);
+                    if (dada) {
+                        dispatch({
+                            type: FETCHING_MODEL_SUCCESS,
+                            payload: dada,
+                        });
+                    }
+                }
+            }
+    })
+    .catch(function (error) {
+        dispatch({
+            type: FETCHING_MODEL_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    });
 };
 export const logIn = () => (dispatch) => {
     dispatch({

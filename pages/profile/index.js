@@ -2,6 +2,8 @@ import { useState } from "react";
 import Meta from "../../src/components/Head/Meta";
 
 const Profile = () => {
+
+    
     // Initial Tab state
     const [profileTab, setprofileTab] = useState(true)
     const [paymentsTab, setpaymentsTab] = useState(false)

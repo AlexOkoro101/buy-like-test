@@ -13,6 +13,9 @@ import {
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    FETCHING_MODEL,
+    FETCHING_MODEL_FAILED,
+    FETCHING_MODEL_SUCCESS,
     LOGIN_FAILED,
 } from "../types";
 //
@@ -22,6 +25,7 @@ const initialState = {
     error: {},
     params: {},
     makes: [],
+    models: [],
     userLoggedIn: false,
 };
 
@@ -29,6 +33,7 @@ const Cars = (state = initialState, action) => {
     switch (action.type) {
         case FETCHING_CARS:
         case FETCHING_MAKE:
+        case FETCHING_MODEL:
             return {
                 ...state,
                 loading: true,
@@ -36,6 +41,7 @@ const Cars = (state = initialState, action) => {
             };
         case FETCHING_CARS_FAILED:
         case FETCHING_MAKE_FAILED:
+        case FETCHING_MODEL_FAILED:
             return {
                 ...state,
                 loading: false,
@@ -62,6 +68,13 @@ const Cars = (state = initialState, action) => {
             return {
                 ...state,
                 makes: action.payload,
+                loading: false,
+                error: {},
+            };
+        case FETCHING_MODEL_SUCCESS:
+            return {
+                ...state,
+                models: action.payload,
                 loading: false,
                 error: {},
             };

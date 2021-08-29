@@ -14,7 +14,7 @@ import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { Formik, Field, Form } from "formik";
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const Search = ({ cars, params, loading }) => {
     const [grid, setgrid] = useState(true);
@@ -43,9 +43,12 @@ const Search = ({ cars, params, loading }) => {
             setData(cars);
         }
     }, [cars]);
+
+    //fetch makes
     useEffect(() => {
         dispatch(getMakes());
     }, []);
+
     const handleSearch = async (e) => {
         setIsSearching(true);
         const data = {
@@ -91,16 +94,7 @@ const Search = ({ cars, params, loading }) => {
         });
         console.log(paramValue, "make");
 
-        let req = await fetch(
-            "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
-                e,
-            {
-                method: "GET",
-                redirect: "follow",
-            }
-        );
-        let response = await req.json();
-        console.log(response);
+        dispatch(getModels(e));
     };
     const activateList = () => {
         setgrid(false);
