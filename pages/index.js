@@ -8,7 +8,7 @@ import { getCars } from "../redux/actions/carsAction";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { searchTerm } from "../redux/actions/carsAction";
+import { searchTerm, carDetail } from "../redux/actions/carsAction";
 
 //
 const Home = ({ getCars, cars }) => {
@@ -94,9 +94,9 @@ const Home = ({ getCars, cars }) => {
                 }
             case "next":
                 if (index < images.length - 1) {
-                    setIndex(index + 2); // increases index by 1
+                    setIndex(index + 1); // increases index by 1
                 }
-                if (index === images.length - 2) {
+                if (index === images.length - 1) {
                     setIndex(0);
                 }
             default:
@@ -125,12 +125,12 @@ const Home = ({ getCars, cars }) => {
     //
     //
     return (
-        <section className="w-full">
+        <section className="w-full bg-white">
             <Meta />
 
             <main className="w-full">
                 {/* Hero section here */}
-                <section className="Hero__section mt-0  w-full bg-gray-700 pt-20  ">
+                <section className="Hero__section mt-0  w-full bg-white pt-20  ">
                     {/* Hero Text here */}
                     <div className="text-center py-10">
                         <h1 className="text-3xl  lg:text-5xl primary-red font-bold hero-text ">
@@ -145,16 +145,18 @@ const Home = ({ getCars, cars }) => {
                         {images.length > 0 && (
                             <div className="flex  mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-5 pb-24 ">
                                 <div
-                                    style={{ width: "350px", height: "280px" }}
-                                    className="rounded-lg shadow-lg overflow-hidden transition-all "
+                                    style={{ height: "400px" }}
+                                    className="rounded-lg shadow-lg lg:w-1/3 overflow-hidden transition-all "
                                     onClick={() => {
-                                        router.push({
-                                            pathname:
-                                                "/search/" + images[index].VIN,
-                                        });
+                                        dispatch(carDetail(images[index])),
+                                            router.push({
+                                                pathname:
+                                                    "/search/" +
+                                                    images[index].VIN,
+                                            });
                                     }}
                                 >
-                                    <div className="imgWrap">
+                                    <div className="imgWrap w-full object-fill h-full">
                                         <p className="description font-bold text-base primary-color">
                                             View Vehicle
                                         </p>
@@ -166,7 +168,7 @@ const Home = ({ getCars, cars }) => {
                                                         ?.image_largeUrl
                                                 }
                                                 alt="Hero-Image "
-                                                className="h-full w-full hero-image"
+                                                className="h-full w-full object-fill hero-image"
                                             />
                                         )}
                                     </div>
@@ -369,11 +371,14 @@ const Home = ({ getCars, cars }) => {
                                                 <div
                                                     className="cursor-pointer"
                                                     onClick={() => {
-                                                        router.push({
-                                                            pathname:
-                                                                "/search/" +
-                                                                ele.VIN,
-                                                        });
+                                                        dispatch(
+                                                            carDetail(ele)
+                                                        ),
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
                                                     }}
                                                 >
                                                     {addImage(ele)}
@@ -399,11 +404,14 @@ const Home = ({ getCars, cars }) => {
                                                         href="# "
                                                         className="primary-red font-bold pt-5 "
                                                         onClick={() => {
-                                                            router.push({
-                                                                pathname:
-                                                                    "/search/" +
-                                                                    ele.VIN,
-                                                            });
+                                                            dispatch(
+                                                                carDetail(ele)
+                                                            ),
+                                                                router.push({
+                                                                    pathname:
+                                                                        "/search/" +
+                                                                        ele.VIN,
+                                                                });
                                                         }}
                                                     >
                                                         SEE MORE

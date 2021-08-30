@@ -3,20 +3,15 @@ import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 
-const CarDetails = ({ cars }) => {
+const CarDetails = ({ carDetails }) => {
     const [carDetail, setDetail] = useState(null);
     const router = useRouter();
     const [offer, setOffer] = useState(true);
     const [id, setId] = useState(0);
     const user = useSelector(selectToken);
     useEffect(() => {
-        if (cars.length > 0) {
-            const found = cars.find(
-                (element) => element.VIN === router.query.id
-            );
-            setDetail(found);
-        }
-    });
+        setDetail(carDetails);
+    }, []);
     const openForm = (evt, status) => {
         console.log("car detail", carDetail);
         if (status !== offer) {
@@ -78,14 +73,17 @@ const CarDetails = ({ cars }) => {
                                     loading="lazy"
                                     className="rounded-xl shadow-md"
                                     alt="Benz"
-                                    style={{ height: "540px", width: "720px" }}
+                                    style={{ height: "500px", width: "700px" }}
                                 />
                             </div>
                             <div className="overflow-scroll w-full px-5">
                                 <div
                                     className=" flex transition-all justify-between mt-3
                                 "
-                                    style={{ width: "2500px", height: "100px" }}
+                                    style={{
+                                        width: "2400px",
+                                        height: "87px",
+                                    }}
                                 >
                                     {carDetail &&
                                         carDetail?.images.length > 0 &&
@@ -93,14 +91,14 @@ const CarDetails = ({ cars }) => {
                                             <div
                                                 key={id}
                                                 onClick={() => setId(id)}
-                                                className="mr-4 w-40 h-full transition-all cursor-pointer transform hover:scale-105"
+                                                className="mr-4  h-full transition-all cursor-pointer transform hover:scale-105"
                                             >
                                                 <img
                                                     src={ele?.image_largeUrl}
                                                     className="rounded-md shadow-sm"
                                                     style={{
-                                                        height: "98.3px",
-                                                        width: "131.03px",
+                                                        height: "60.3px",
+                                                        width: "90.03px",
                                                     }}
                                                     alt=""
                                                 />
@@ -1093,8 +1091,8 @@ const CarDetails = ({ cars }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error } = state.Cars;
-    return { cars, loading, error };
+    const { carDetails } = state.Cars;
+    return { carDetails };
 };
 
 export default connect(mapStateToProps)(CarDetails);
