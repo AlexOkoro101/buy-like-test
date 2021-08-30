@@ -76,7 +76,7 @@ const Search = ({
     };
 
     const fetchPage = (i) => {
-        console.log(maker[0]);
+        // console.log(maker[0]);
 
         const datas = {
             make: paramValue?.make || "",
@@ -1882,6 +1882,7 @@ const Search = ({
     );
 };
 const mapStateToProps = (state) => {
+    console.log(state)
     const { cars, loading, error, params, makes, models } = state.Cars;
     return { cars, loading, error, params, makes, models };
 };
@@ -1892,3 +1893,4 @@ export default connect(mapStateToProps, {
     getMakes,
     getModels,
 })(Search);
+
