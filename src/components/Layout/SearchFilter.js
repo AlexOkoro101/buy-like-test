@@ -1,4 +1,11 @@
+import { useState } from "react";
+
 const SearchFilter = () => {
+    const [filter, setfilter] = useState([]);
+    const MakeSelectAll
+
+
+
     return ( 
         <div className="filter-holder hidden lg:block p-3 w-2/12 overflow-y-scroll">
             {/* <!-- Filter icon --> */}
@@ -52,6 +59,7 @@ const SearchFilter = () => {
                                     <input
                                         type="checkbox"
                                         className="focus:outline-none search self-center"
+                                        checked={}
                                     />
                                     <span className="search"></span>
                                 </label>

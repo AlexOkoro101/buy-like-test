@@ -1,224 +1,240 @@
-// import Meta from "../../../src/components/Head/Meta"
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useEffect, useRef, useState } from "react";
-import { enviroment } from "../../../src/components/enviroment";
 import Meta from "../../../src/components/Head/Meta";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../../redux/features/userSlice";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ClipLoader from "react-spinners/ClipLoader";
-import { connect } from "react-redux";
+import {useRouter} from 'next/router';
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from "react";
+import { enviroment } from "../../../src/components/enviroment";
+import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../../redux/reducers/userReducer";
-import { logIn, logOut } from "../../../redux/actions/carsAction";
 
-const LogIn = ({ beginLogin }) => {
+const LoginOptions = ({ beginLogin }) => {
+    //redirect
+    const router = useRouter();
+
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
 
-    const toastError = () =>
-        toast.error(`${error ? error : "Could not login"}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-    const toastSuccess = () =>
-        toast.success(`${error ? error : "Login Successful"}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
+    const user = useSelector(selectToken)
+    useEffect(() => {
+        if(user.login) {
+           router.push('/search')
+        }
+    }, []);
 
-    //Redirect
-    const router = useRouter();
-
-    //action access
-    const dispatch = useDispatch();
-
-    // let min = 6;
-    const formik = useFormik({
-        initialValues: {
-            email: "",
-            password: "",
-        },
-        validationSchema: Yup.object({
-            email: Yup.string()
-                .email("Invalid email address")
-                .required("Email is required"),
-            password: Yup.string()
-                // .matches(/\w*[a-z]\w*/,  "Password must have a small letter")
-                // .matches(/\w*[A-Z]\w*/,  "Password must have a capital letter")
-                // .matches(/\d/, "Password must have a number")
-                // .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
-                .min(
-                    6,
-                    ({ min }) => `Password must be at least ${min} characters`
-                )
-                .required("Password is required"),
-        }),
-        onSubmit: (values) => {
-            // notify()
-            setisLoading(true);
-            seterror(null);
-            console.log(values);
-
-            fetch(enviroment.BASE_URL + "auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-            })
-                .then((res) => {
-                    if (!res.ok) {
-                        setisLoading(false);
-                        throw Error("Could not login");
-                    }
-                    setisLoading(false);
-                    return res.json();
-                })
-                .then((data) => {
-                    if (data?.error) {
-                        seterror(data?.message);
-                        toastError();
-                        dispatch(logOut());
-                    } else {
-                        dispatch(logIn());
-                        seterror(data?.message);
-                        toastSuccess();
-                        localStorage.setItem(
-                            "userToken",
-                            JSON.stringify(data.data._token)
-                        );
-                        router.push("/search");
-                    }
-                    const now = new Date();
-                    //save data to local storage
-                    const item = {
-                        userToken: data.data._token,
-                        expiry: now.getTime() + 3600000,
-                    };
-                    localStorage.setItem("userToken", JSON.stringify(item));
-
-                    //save data to store
-                    beginLogin({
-                        token: data.data._token,
-                        login: true,
-                    });
-                })
-                .catch((e) => {
-                    // seterror(e.message)
-                    setisLoading(false);
-                    console.log(e.message);
-                });
-        },
+    const toastError = () => toast.error(error ? `${error}` : "Could not sign up", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+    const toastSuccess = () => toast.success(`${error ? error : 'Login successfull'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
     });
 
-    return (
-        <>
-            <section className="w-full">
-                <Meta />
-                <main>
-                    <ToastContainer />
-                    <div className="signup-bg py-20">
-                        <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
-                            <div className="text-center">
-                                <p className="text-sm primary-color font-medium">
-                                    Enter your details to log in
-                                </p>
-                            </div>
+    //Google Auth
+    const googleClientId = "675924797749-6vkjedqseo4ivamu7u2b2o3psb7tvaur.apps.googleusercontent.com";
 
-                            <form
-                                className="mt-8"
-                                onSubmit={formik.handleSubmit}
-                            >
-                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
-                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0">
-                                        <label className="pb-1 sec-black font-10 font-medium">
-                                            Email ddress
-                                        </label>
-                                        <input
-                                            className="login-control focus:outline-none px-2"
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.email}
-                                            placeholder="What is your email address?"
-                                        />
-                                        {formik.touched.email &&
-                                        formik.errors.email ? (
-                                            <div className="input-error">
-                                                {formik.errors.email}
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
-                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
-                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0 ">
-                                        <label className="pb-1 sec-black font-10 font-medium">
-                                            Password
-                                        </label>
-                                        <input
-                                            className="login-control focus:outline-none px-2"
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.password}
-                                            placeholder="What is your password?"
-                                        />
-                                        {formik.touched.password &&
-                                        formik.errors.password ? (
-                                            <div className="input-error">
-                                                {formik.errors.password}
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
+    const onGoogleLoginSuccess = (res) => {
+        const googleProfile = {
+            email: res.profileObj.email,
+            googleId: res.profileObj.googleId
+        }
+        
+        // console.log("Login Successful", res.profileObj)
+        console.log(googleProfile)
 
-                                <div className="text-center pt-3">
-                                    <button
-                                        type="submit"
-                                        className="focus:outline-none primary-btn  text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2"
-                                    >
-                                        {isLoading ? (
-                                            <ClipLoader
-                                                color="#fff"
-                                                size={20}
-                                                loading
-                                            />
-                                        ) : (
-                                            "login"
-                                        )}{" "}
-                                    </button>
-                                </div>
-                            </form>
+        fetch(enviroment.BASE_URL + 'auth/login/google', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify(googleProfile)
+        })
+        .then(res => {
+            console.log(res)
+            if(!res.ok) {
+              setisLoading(false)
+            //   toastError()
+            }
+            setisLoading(false)
+            return res.json()
+      
+        })
+        .then(data => {
+              console.log(data)
+              if(data?.error) {
+                  seterror(data?.message)
+                  toastError()
+                } else {
+                    console.log(data)
+                    seterror(data?.message)
+                    toastSuccess()
+                    router.push('/search')
+              }
+            const now = new Date()
+            //save data to local storage
+            const item = {
+              userToken: data.data._token,
+              expiry: now.getTime() + 3600000,
+            }
+            localStorage.setItem('userToken', JSON.stringify(item));
+      
+            //save data to store
+            beginLogin({
+                token: data.data._token,
+                login: true,
+            });
+        })
+        .catch(e => {
+            // seterror(e.message)
+            setisLoading(false)
+            console.log(e.message)
+        })
+    }
+    const onGoogleFailureSuccess = (res) => {
+        console.log("Login Failed", res)
+    }
+    const onGoogleSignoutSuccess = () => {
+        console.log("Sign out Successful")
+    }
+
+    //Facebook Auth
+    const responseFacebook = (res) => {
+        // toastSuccess()
+        // console.log("Facebook login result", res);
+        // router.push('/auth/signup/onboarding')
+
+        const facebookProfile = {
+            email: res.email,
+            facebookId: res.userID
+        }
+        
+        // console.log("Login Successful", res.profileObj)
+        console.log(facebookProfile)
+
+        fetch(enviroment.BASE_URL + 'auth/login/facebook', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify(facebookProfile)
+        })
+        .then(res => {
+            console.log(res)
+            if(!res.ok) {
+              setisLoading(false)
+            //   seterror(res.statusText)
+            //   toastError()
+            }
+            setisLoading(false)
+            return res.json()
+      
+        })
+        .then(data => {
+              console.log(data)
+              if(data?.error) {
+                  seterror(data?.message)
+                  toastError()
+                } else {
+                    console.log(data)
+                    seterror(data?.message)
+                    toastSuccess()
+                    router.push('/search')
+              }
+            const now = new Date()
+            //save data to local storage
+            const item = {
+              userToken: data.data._token,
+              expiry: now.getTime() + 3600000,
+            }
+            localStorage.setItem('userToken', JSON.stringify(item));
+      
+            //save data to store
+            beginLogin({
+                token: data.data._token,
+                login: true,
+            });
+        })
+        .catch(e => {
+            setisLoading(false)
+            console.log(e.message)
+        })
+    } 
+
+    const facebookClicked = (data) => {
+        console.warn(data)
+    }
+
+    return ( 
+        <section className="w-full">
+            <Meta />
+            <main>
+            <ToastContainer />
+                <div className="signup-bg py-20 ">
+                    <div className="form-holder w-11/12 lg:w-3/12 md:w-2/5  mx-auto mt-20 py-12 px-12">
+                        <div className="text-center">
+                            <p className="text-sm primary-color font-medium">Select an option to log in</p>
+                        </div>
+                        <div className="mt-3 signup-container">
+                            {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
+                                <span className="mr-3">
+                                    <img src="../assets/img/vectors/google-icon.svg" alt="facebook-icon" />
+                                </span> 
+                                Sign up with Google
+                            </button> */}
+                            <GoogleLogin
+                                clientId={googleClientId}
+                                buttonText="Log in with Google"
+                                onSuccess={onGoogleLoginSuccess}
+                                onFailure={onGoogleFailureSuccess}
+                                cookiePolicy={'single_host_origin'}
+                                style={{"border":"1px solid blue", "background-color": "black"}}
+                            ></GoogleLogin>
+                            {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
+                                <span className="mr-3">
+                                    <img src="../assets/img/vectors/facebook-icon-blue.svg" alt="facebook-icon" />
+                                </span>
+                                Sign up with Facebook 
+                            </button> */}
+                            <FacebookLogin
+                                appId="1014302915998441"
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                onClick={facebookClicked}
+                                callback={responseFacebook} 
+                                icon="fa-facebook"
+                                cssClass="facebook-btn"
+                                textButton="Log in with Facebook"
+                            />
+                            <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs" onClick={() => {router.push("/auth/login/email")}}>
+                                <span className="mr-3">
+                                    <img src="../assets/img/vectors/email-icon-red.svg" alt="facebook-icon" /> 
+                                </span> 
+                                Log in with Email
+                            </button>
                         </div>
                     </div>
-                </main>
-            </section>
-        </>
-    );
-};
-
+                </div>
+            </main>
+        </section>
+     );
+}
+ 
 export default connect(
     () => ({}),
     (dispatch) => ({
-        beginLogin: (payload) =>
-            dispatch({
-                type: "login",
-                payload,
-            }),
+      beginLogin: (payload) => dispatch({
+        type: 'login',
+        payload,
+      })
     })
-)(LogIn);
+  )(LoginOptions);

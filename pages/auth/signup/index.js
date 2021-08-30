@@ -215,6 +215,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 callback={responseFacebook} 
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
+                                textButton="Sign up with Facebook"
                             />
                             <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs" onClick={() => {router.push("/auth/signup/email")}}>
                                 <span className="mr-3">

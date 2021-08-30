@@ -12,6 +12,9 @@ import {
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    FETCHING_MODEL,
+    FETCHING_MODEL_FAILED,
+    FETCHING_MODEL_SUCCESS,
     LOGIN_SUCCESS,
     LOGIN_FAILED,
     DETAIL,
@@ -143,25 +146,37 @@ export const getMakes = () => (dispatch) => {
         type: FETCHING_MAKE,
     });
 
-    let url = `https://buylinke.herokuapp.com/vehicle-type/make`;
-    fetch(url.trim(), {
+    fetch("https://buylinke.herokuapp.com/vehicle-type/make", {
         method: "GET",
+        redirect: "follow",
+        credentials: "same-origin",
         headers: {
+            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
         },
-        credentials: "same-origin",
     })
         .then(function (response) {
+            // console.log(response);
             return response.json();
         })
-        .then(async (result) => {
-            let data = result.data.split("(")[1];
-            data = data.split(")")[0];
-            data = JSON.parse(data);
-            dispatch({
-                type: FETCHING_MAKE_SUCCESS,
-                payload: data.Makes,
-            });
+        .then((data) => {
+            // console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    let carMakes = data.data;
+                    let makeSplit = carMakes.split("(")[1];
+                    let anotherSplit = makeSplit.split(")")[0];
+                    let formatMake = JSON.parse(anotherSplit);
+                    // console.log("new makes", formatMake.Makes)
+                    if (formatMake) {
+                        dispatch({
+                            type: FETCHING_MAKE_SUCCESS,
+                            payload: formatMake.Makes,
+                        });
+                    }
+                }
+            }
         })
         .catch(function (error) {
             dispatch({
@@ -170,6 +185,52 @@ export const getMakes = () => (dispatch) => {
             });
             console.log(error);
         });
+};
+export const getModels = (make) => async (dispatch) => {
+    dispatch({
+        type: FETCHING_MODEL,
+    });
+
+    try {
+        let req = await fetch(
+            "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                `${make}`,
+            {
+                method: "GET",
+                redirect: "follow",
+                credentials: "same-origin",
+            }
+        )
+            .then(function (response) {
+                console.log(response);
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data) {
+                    if (Object.entries(data).length >= 1) {
+                        let carModels = data;
+                        let makeSplit = carModels.split("(")[1];
+                        let anotherSplit = makeSplit.split(")")[0];
+                        let formatModel = JSON.parse(anotherSplit);
+
+                        dispatch({
+                            type: FETCHING_MODEL_SUCCESS,
+                            payload: formatModel.Models,
+                        });
+                    }
+                }
+            })
+            .catch(function (error) {
+                dispatch({
+                    type: FETCHING_MODEL_FAILED,
+                    payload: error.message,
+                });
+                console.log(error);
+            });
+    } catch (error) {
+        console.log(error);
+    }
 };
 export const logIn = () => (dispatch) => {
     dispatch({
