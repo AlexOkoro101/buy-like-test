@@ -188,43 +188,49 @@ export const getMakes = () =>  (dispatch) => {
         console.log(error);
     });
 };
-export const getModels = (make) => (dispatch) => {
+export const getModels = (make) => async (dispatch) => {
     dispatch({
         type: FETCHING_MODEL,
     });
 
-    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + `${make}`, {
-        method: "GET",
-        redirect: 'follow',
-        credentials: "same-origin",
-    })
-    .then(function (response) {
-        console.log(response);
-        return response.text();
-    }).then(data => {
-        // console.log(data)
-         if (data) {
-                if (Object.entries(data).length >= 1) {
-                    let carModels = data;
-                    let makeSplit = carModels.split('(')[1];
-                    let anotherSplit = makeSplit.split(')')[0];
-                    let formatModel = JSON.parse(anotherSplit);
-                   
-                        dispatch({
-                            type: FETCHING_MODEL_SUCCESS,
-                            payload: formatModel.Models,
-                        });
-                    
+    try {
+        let req = await fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + `${make}`, {
+            method: "GET",
+            redirect: 'follow',
+            credentials: "same-origin",
+        })
+        .then(function (response) {
+            console.log(response);
+            return response.text();
+        }).then(data => {
+            console.log(data)
+             if (data) {
+                    if (Object.entries(data).length >= 1) {
+                        let carModels = data;
+                        let makeSplit = carModels.split('(')[1];
+                        let anotherSplit = makeSplit.split(')')[0];
+                        let formatModel = JSON.parse(anotherSplit);
+                       
+                            dispatch({
+                                type: FETCHING_MODEL_SUCCESS,
+                                payload: formatModel.Models,
+                            });
+                        
+                    }
                 }
-            }
-    })
-    .catch(function (error) {
-        dispatch({
-            type: FETCHING_MODEL_FAILED,
-            payload: error.message,
+        })
+        .catch(function (error) {
+            dispatch({
+                type: FETCHING_MODEL_FAILED,
+                payload: error.message,
+            });
+            console.log(error);
         });
-        console.log(error);
-    });
+
+    } catch(error) {
+        console.log(error)
+    }
+
 };
 export const logIn = () => (dispatch) => {
     dispatch({
