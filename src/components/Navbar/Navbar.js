@@ -49,6 +49,11 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         beginLogout();
     };
 
+    const [navDropdown, setnavDropdown] = useState(false)
+    const toggleDropdown = () => {
+        setnavDropdown(!navDropdown)
+    }
+
     return (
         <header className="">
             <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-3 lg:px-16">
@@ -102,15 +107,33 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                     </li>
                     <>
                         {userLoggedIn ? (
-                            <li className="text-xs ml-2">
-                                <button
-                                    onClick={handleLogout}
-                                    type="button"
-                                    className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
-                                >
-                                    LOGOUT
-                                </button>
-                            </li>
+                            <>
+                            
+                            <div className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown">
+                                <span onClick={toggleDropdown}>
+                                    <button className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none " 
+                                    type="button" ariaHaspopup="true" ariaExpanded="true" ariaControls="headlessui-menu-items-117">
+                                        <span>My Account</span>
+                                        <svg className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="#D80739"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                </span>
+                                <div className={!navDropdown ? "opacity-0 invisible" : " opacity-100 visible" + " dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10"}>
+                                    <div className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none font-10" aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
+                                        <div className="px-4 py-3">         
+                                            <p className="leading-5 uppercase">Hello, </p>
+                                            <p className="leading-5 text-gray-900 truncate uppercase">tom@example.com</p>
+                                        </div>
+                                        <div className="py-1">
+                                            <a href="#" tabIndex="0" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase"  role="menuitem" >My Transactions</a>
+                                            <a href="#" tabIndex="2" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase" role="menuitem" >Bid Tracker</a>
+                                            <a href="#" tabIndex="2" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase" role="menuitem" >Settings</a>
+                                        </div>
+                                        <div className="py-1">
+                                            <a href="#" tabIndex="3" className="flex justify-between w-full px-4 py-2 leading-5 text-left text-red-700 uppercase"  role="menuitem" >Log out</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
                         ) : (
                             <>
                                 <li className="text-xs ml-2">
