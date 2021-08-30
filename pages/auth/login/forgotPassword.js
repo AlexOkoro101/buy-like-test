@@ -15,7 +15,7 @@ import { selectToken } from "../../../redux/reducers/userReducer";
 import { logIn, logOut } from "../../../redux/actions/carsAction";
 import Link from "next/link";
 
-const LogIn = ({ beginLogin }) => {
+const ForgotPassword = ({ beginLogin }) => {
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
 
@@ -50,22 +50,11 @@ const LogIn = ({ beginLogin }) => {
     const formik = useFormik({
         initialValues: {
             email: "",
-            password: "",
         },
         validationSchema: Yup.object({
             email: Yup.string()
                 .email("Invalid email address")
                 .required("Email is required"),
-            password: Yup.string()
-                // .matches(/\w*[a-z]\w*/,  "Password must have a small letter")
-                // .matches(/\w*[A-Z]\w*/,  "Password must have a capital letter")
-                // .matches(/\d/, "Password must have a number")
-                // .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
-                .min(
-                    6,
-                    ({ min }) => `Password must be at least ${min} characters`
-                )
-                .required("Password is required"),
         }),
         onSubmit: (values) => {
             // notify()
@@ -73,7 +62,7 @@ const LogIn = ({ beginLogin }) => {
             seterror(null);
             console.log(values);
 
-            fetch(enviroment.BASE_URL + "auth/login", {
+            fetch(enviroment.BASE_URL + "/auth/password/forgot", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
@@ -133,7 +122,7 @@ const LogIn = ({ beginLogin }) => {
                         <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
                             <div className="text-center">
                                 <p className="text-sm primary-color font-medium">
-                                    Enter your details to log in
+                                    Enter the email address associated with the account
                                 </p>
                             </div>
 
@@ -164,34 +153,11 @@ const LogIn = ({ beginLogin }) => {
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
-                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0 ">
-                                        <label className="pb-1 sec-black font-10 font-medium">
-                                            Password
-                                        </label>
-                                        <input
-                                            className="login-control focus:outline-none px-2"
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.password}
-                                            placeholder="What is your password?"
-                                        />
-                                        {formik.touched.password &&
-                                        formik.errors.password ? (
-                                            <div className="input-error">
-                                                {formik.errors.password}
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
 
                                 <div className="text-center pt-3">
                                     <button
                                         type="submit"
-                                        className="focus:outline-none primary-btn  text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2"
+                                        className="focus:outline-none primary-btn text-white font-9 font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2"
                                     >
                                         {isLoading ? (
                                             <ClipLoader
@@ -200,14 +166,11 @@ const LogIn = ({ beginLogin }) => {
                                                 loading
                                             />
                                         ) : (
-                                            "login"
+                                            "Submit"
                                         )}{" "}
                                     </button>
                                 </div>
                             </form>
-                            <div className="text-center text-xs mt-10 text-blue-500">
-                                <Link href='/auth/login/forgotPassword'>Forgot Password</Link>
-                            </div>
                         </div>
                     </div>
                 </main>
@@ -225,4 +188,4 @@ export default connect(
                 payload,
             }),
     })
-)(LogIn);
+)(ForgotPassword);
