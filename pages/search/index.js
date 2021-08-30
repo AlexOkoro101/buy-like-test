@@ -5,6 +5,7 @@ import {
     searchTerm,
     fetchMore,
     getMakes,
+    getModels
 } from "../../redux/actions/carsAction";
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
@@ -14,9 +15,10 @@ import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { Formik, Field, Form } from "formik";
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const Search = ({ cars, params, loading }) => {
+const Search = ({ cars, params, loading, getMakes, makes, getModels, models}) => {
+    // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [pageIndex, setPageIndex] = useState(1);
@@ -34,18 +36,26 @@ const Search = ({ cars, params, loading }) => {
         }
         return validVehicleYears;
     });
-    const [makes, setmakes] = useState(() => {
-        // dispatch(getMakes());
-    });
-    const [models, setmodels] = useState([]);
+    const [carMakes, setcarMakes] = useState([]);
+    const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (cars.length > 1) {
             setData(cars);
         }
     }, [cars]);
+
+    //fetch makes
     useEffect(() => {
-        dispatch(getMakes());
+        if(carMakes.length <= 0) {
+            getMakes();
+        }
+        if(makes.length) {
+            setcarMakes(makes)
+            // console.log("makes", makes)
+        }
     }, []);
+
+
     const handleSearch = async (e) => {
         setIsSearching(true);
         const data = {
@@ -84,6 +94,7 @@ const Search = ({ cars, params, loading }) => {
         console.log(paramValue, "model");
     };
     const handleMake = async (e) => {
+        console.log(e)
         await setParam({
             make: e,
             year: paramValue.year,
@@ -91,16 +102,13 @@ const Search = ({ cars, params, loading }) => {
         });
         console.log(paramValue, "make");
 
-        let req = await fetch(
-            "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
-                e,
-            {
-                method: "GET",
-                redirect: "follow",
-            }
-        );
-        let response = await req.json();
-        console.log(response);
+        
+        
+        getModels(e);
+        if(models.length) {
+            setcarModels(models)
+            console.log("models", models)
+        }
     };
     const activateList = () => {
         setgrid(false);
@@ -183,14 +191,15 @@ const Search = ({ cars, params, loading }) => {
                                                         )
                                                     }
                                                 >
-                                                    {/* {makes.map((x) => (
+                                                    <option value="">select make</option>
+                                                    {carMakes?.map((x) => (
                                                         <option
-                                                            key={x}
-                                                            value={x}
+                                                            key={x?.make_id}
+                                                            value={x?.make_display}
                                                         >
-                                                            {x}
+                                                            {x?.make_display}
                                                         </option>
-                                                    ))} */}
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
@@ -232,12 +241,13 @@ const Search = ({ cars, params, loading }) => {
                                                         )
                                                     }
                                                 >
-                                                    {models.map((x) => (
+                                                    <option value="">select model</option>
+                                                    {carModels.map((x) => (
                                                         <option
-                                                            key={x}
-                                                            value={x}
+                                                            key={x?.model_name}
+                                                            value={x?.model_name}
                                                         >
-                                                            {x}
+                                                            {x?.model_name}
                                                         </option>
                                                     ))}
                                                 </select>
@@ -1770,10 +1780,10 @@ const Search = ({ cars, params, loading }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error, params } = state.Cars;
-    return { cars, loading, error, params };
+    const { cars, loading, error, params, makes, models } = state.Cars;
+    return { cars, loading, error, params, makes, models };
 };
 
-export default connect(mapStateToProps, { searchTerm, fetchMore, getMakes })(
+export default connect(mapStateToProps, { searchTerm, fetchMore, getMakes, getModels})(
     Search
 );

@@ -12,6 +12,9 @@ import {
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    FETCHING_MODEL,
+    FETCHING_MODEL_FAILED,
+    FETCHING_MODEL_SUCCESS,
     LOGIN_SUCCESS,
     LOGIN_FAILED,
 } from "../types";
@@ -141,46 +144,93 @@ export const fetchMore = (event, prevData) => async (dispatch) => {
         console.log(error);
     }
 };
-export const getMakes = () => (dispatch) => {
-    console.log("gvhjkl");
+export const getMakes = () =>  (dispatch) => {
     dispatch({
         type: FETCHING_MAKE,
     });
 
-    let url = `https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&full_results=0`;
-    fetch(url.trim(), {
+    fetch("https://buylinke.herokuapp.com/vehicle-type/make", {
         method: "GET",
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
+        redirect: 'follow',
         credentials: "same-origin",
-        // mode: "no-cors",
+        headers: {
+            'Content-Type':'application/json', 
+            'Access-Control-Allow-Origin': '*'
+        }
     })
+    .then(function (response) {
+        // console.log(response);
+        return response.json();
+    }).then(data => {
+        // console.log(data)
+         if (data) {
+            //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    let carMakes = data.data;
+                    let makeSplit = carMakes.split('(')[1];
+                    let anotherSplit = makeSplit.split(')')[0];
+                    let formatMake = JSON.parse(anotherSplit);
+                    // console.log("new makes", formatMake.Makes)
+                    if (formatMake) {
+                        dispatch({
+                            type: FETCHING_MAKE_SUCCESS,
+                            payload: formatMake.Makes,
+                        });
+                    }
+                }
+            }
+    })
+    .catch(function (error) {
+        dispatch({
+            type: FETCHING_MAKE_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    });
+};
+export const getModels = (make) => async (dispatch) => {
+    dispatch({
+        type: FETCHING_MODEL,
+    });
+
+    try {
+        let req = await fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + `${make}`, {
+            method: "GET",
+            redirect: 'follow',
+            credentials: "same-origin",
+        })
         .then(function (response) {
             console.log(response);
             return response.text();
-        })
-        .then((res) => {
-            console.log(res, "makes");
-            // if (res) {
-            //     if (Object.entries(res).length >= 1) {
-            //         const dada = JSON.parse(res);
-            //         if (dada) {
-            //             dispatch({
-            //                 type: FETCHING_MAKE_SUCCESS,
-            //                 payload: dada.data,
-            //             });
-            //         }
-            //     }
-            // }
+        }).then(data => {
+            console.log(data)
+             if (data) {
+                    if (Object.entries(data).length >= 1) {
+                        let carModels = data;
+                        let makeSplit = carModels.split('(')[1];
+                        let anotherSplit = makeSplit.split(')')[0];
+                        let formatModel = JSON.parse(anotherSplit);
+                       
+                            dispatch({
+                                type: FETCHING_MODEL_SUCCESS,
+                                payload: formatModel.Models,
+                            });
+                        
+                    }
+                }
         })
         .catch(function (error) {
             dispatch({
-                type: FETCHING_MAKE_FAILED,
+                type: FETCHING_MODEL_FAILED,
                 payload: error.message,
             });
             console.log(error);
         });
+
+    } catch(error) {
+        console.log(error)
+    }
+
 };
 export const logIn = () => (dispatch) => {
     dispatch({

@@ -18,7 +18,7 @@ const CarDetails = ({ cars }) => {
         }
     });
     const openForm = (evt, status) => {
-        console.log(carDetail);
+        console.log("car detail", carDetail);
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -739,7 +739,7 @@ const CarDetails = ({ cars }) => {
                                                 Vehicle Name
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.vehicleName}
+                                            {carDetail?.make} {""} {carDetail?.model}
                                             </td>
                                             <td></td>
                                         </tr>
