@@ -14,6 +14,7 @@ import {
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
     LOGIN_FAILED,
+    DETAIL,
 } from "../types";
 //
 const initialState = {
@@ -21,8 +22,9 @@ const initialState = {
     loading: false,
     error: {},
     params: {},
-    makes: [],
+    maker: [],
     userLoggedIn: false,
+    carDetails: {},
 };
 
 const Cars = (state = initialState, action) => {
@@ -61,7 +63,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_MAKE_SUCCESS:
             return {
                 ...state,
-                makes: action.payload,
+                maker: action.payload,
                 loading: false,
                 error: {},
             };
@@ -82,6 +84,11 @@ const Cars = (state = initialState, action) => {
             return {
                 ...state,
                 userLoggedIn: false,
+            };
+        case DETAIL:
+            return {
+                ...state,
+                carDetails: action.payload,
             };
         default:
             return state;
