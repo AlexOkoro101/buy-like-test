@@ -12,6 +12,9 @@ import {
     FETCHING_MAKE,
     FETCHING_MAKE_FAILED,
     FETCHING_MAKE_SUCCESS,
+    FETCHING_MODEL,
+    FETCHING_MODEL_FAILED,
+    FETCHING_MODEL_SUCCESS,
     LOGIN_SUCCESS,
     LOGIN_FAILED,
 } from "../types";
@@ -141,29 +144,37 @@ export const fetchMore = (event, prevData) => async (dispatch) => {
         console.log(error);
     }
 };
-export const getMakes = () => (dispatch) => {
-    console.log("gvhjkl");
+export const getMakes = () =>  (dispatch) => {
     dispatch({
         type: FETCHING_MAKE,
     });
 
-    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&full_results=0", {
+    fetch("https://buylinke.herokuapp.com/vehicle-type/make", {
         method: "GET",
         redirect: 'follow',
         credentials: "same-origin",
+        headers: {
+            'Content-Type':'application/json', 
+            'Access-Control-Allow-Origin': '*'
+        }
     })
     .then(function (response) {
-        console.log(response);
-        return response.text();
+        // console.log(response);
+        return response.json();
     }).then(data => {
-        console.log(data)
+        // console.log(data)
          if (data) {
+            //  console.log(data.data)
                 if (Object.entries(data).length >= 1) {
-                    const dada = JSON.parse(data);
-                    if (dada) {
+                    let carMakes = data.data;
+                    let makeSplit = carMakes.split('(')[1];
+                    let anotherSplit = makeSplit.split(')')[0];
+                    let formatMake = JSON.parse(anotherSplit);
+                    // console.log("new makes", formatMake.Makes)
+                    if (formatMake) {
                         dispatch({
                             type: FETCHING_MAKE_SUCCESS,
-                            payload: dada,
+                            payload: formatMake.Makes,
                         });
                     }
                 }
@@ -182,7 +193,7 @@ export const getModels = (make) => (dispatch) => {
         type: FETCHING_MODEL,
     });
 
-    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + make, {
+    fetch("https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" + `${make}`, {
         method: "GET",
         redirect: 'follow',
         credentials: "same-origin",
@@ -191,16 +202,19 @@ export const getModels = (make) => (dispatch) => {
         console.log(response);
         return response.text();
     }).then(data => {
-        console.log(data)
+        // console.log(data)
          if (data) {
                 if (Object.entries(data).length >= 1) {
-                    const dada = JSON.parse(data);
-                    if (dada) {
+                    let carModels = data;
+                    let makeSplit = carModels.split('(')[1];
+                    let anotherSplit = makeSplit.split(')')[0];
+                    let formatModel = JSON.parse(anotherSplit);
+                   
                         dispatch({
                             type: FETCHING_MODEL_SUCCESS,
-                            payload: dada,
+                            payload: formatModel.Models,
                         });
-                    }
+                    
                 }
             }
     })
