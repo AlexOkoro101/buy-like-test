@@ -14,6 +14,7 @@ const SignupOptions = ({ beginLogin }) => {
     const router = useRouter();
 
     const [error, seterror] = useState(null);
+    const [message, setmessage] = useState(null);
     const [isLoading, setisLoading] = useState(false);
 
     const user = useSelector(selectToken)
@@ -32,7 +33,7 @@ const SignupOptions = ({ beginLogin }) => {
         draggable: true,
         progress: undefined,
     });
-    const toastSuccess = () => toast.success(`${error ? error : 'Login successfull'}`, {
+    const toastSuccess = () => toast.success(`${message ? message : 'Sign up successfull'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -78,7 +79,7 @@ const SignupOptions = ({ beginLogin }) => {
                   toastError()
                 } else {
                     console.log(data)
-                    seterror(data?.message)
+                    setmessage(data?.message)
                     toastSuccess()
                     router.push('/auth/signup/onboarding')
               }
@@ -215,6 +216,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 callback={responseFacebook} 
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
+                                textButton="Sign up with Facebook"
                             />
                             <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs" onClick={() => {router.push("/auth/signup/email")}}>
                                 <span className="mr-3">

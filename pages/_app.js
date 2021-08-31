@@ -6,6 +6,7 @@ import "../styles/user-profile.css";
 import "../styles/search-results.css";
 import "../styles/ft-status-page.css";
 import "../styles/telInput.css";
+import "../styles/tailwind.css";
 import App from "../src/components/App";
 
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -14,8 +15,6 @@ import { store, persistor } from "../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 
 const MyApp = ({ Component, pageProps }) => {
-   
-
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>

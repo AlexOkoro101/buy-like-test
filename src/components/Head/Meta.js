@@ -11,11 +11,6 @@ const Meta = ({ title, keywords, description }) => {
             <meta charSet="utf-8" />
             <link rel="icon" href="../../public/favicon.ico" />
 
-            <link
-                rel="stylesheet"
-                href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
-            ></link>
-
             {/* Fontawesome here */}
             <link
                 rel="stylesheet"
