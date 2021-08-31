@@ -76,10 +76,10 @@ const Home = ({ getCars, cars }) => {
         }
     });
     useEffect(() => {
-        if (car.length <= 0) {
+        if (cars.length <= 0) {
             getCars();
         }
-    }, []);
+    }, [cars]);
     function execute(event) {
         let heroTimeline = anime.timeline({
             autoplay: true,

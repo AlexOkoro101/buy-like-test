@@ -27,6 +27,7 @@ const initialState = {
     params: {},
     makes: [],
     models: [],
+    modeled: {},
     userLoggedIn: false,
     carDetails: {},
 };
@@ -73,13 +74,7 @@ const Cars = (state = initialState, action) => {
                 loading: false,
                 error: {},
             };
-        case FETCHING_MODEL_SUCCESS:
-            return {
-                ...state,
-                models: action.payload,
-                loading: false,
-                error: {},
-            };
+
         case SEARCHING_FAILED:
         case FETCHING_FAILED:
             return {
