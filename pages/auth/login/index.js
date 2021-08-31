@@ -14,6 +14,7 @@ const LoginOptions = ({ beginLogin }) => {
     const router = useRouter();
 
     const [error, seterror] = useState(null);
+    const [message, setmessage] = useState(null);
     const [isLoading, setisLoading] = useState(false);
 
     const user = useSelector(selectToken)
@@ -23,7 +24,7 @@ const LoginOptions = ({ beginLogin }) => {
         }
     }, []);
 
-    const toastError = () => toast.error(error ? `${error}` : "Could not sign up", {
+    const toastError = () => toast.error(error ? `${error}` : "Could not log in", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -32,7 +33,7 @@ const LoginOptions = ({ beginLogin }) => {
         draggable: true,
         progress: undefined,
     });
-    const toastSuccess = () => toast.success(`${error ? error : 'Login successfull'}`, {
+    const toastSuccess = () => toast.success(`${message ? message : 'Login successfull'}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -77,7 +78,7 @@ const LoginOptions = ({ beginLogin }) => {
                   toastError()
                 } else {
                     console.log(data)
-                    seterror(data?.message)
+                    setmessage(data?.message)
                     toastSuccess()
                     router.push('/search')
               }

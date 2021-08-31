@@ -69,7 +69,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_MAKE_SUCCESS:
             return {
                 ...state,
-                maker: action.payload,
+                makes: action.payload,
                 loading: false,
                 error: {},
             };
