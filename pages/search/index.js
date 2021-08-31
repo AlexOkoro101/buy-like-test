@@ -60,9 +60,8 @@ const Search = ({
         }
         if (makes.length) {
             setcarMakes(makes);
-            // console.log("makes", makes)
         }
-    }, []);
+    }, [makes]);
 
     const handleSearch = async (e) => {
         setIsSearching(true);
@@ -76,8 +75,6 @@ const Search = ({
     };
 
     const fetchPage = (i) => {
-        console.log(maker[0]);
-
         const datas = {
             make: paramValue?.make || "",
             year: paramValue?.year || "",
@@ -103,19 +100,21 @@ const Search = ({
         console.log(paramValue, "model");
     };
     const handleMake = async (e) => {
-        console.log(e);
-        await setParam({
-            make: e,
-            year: paramValue.year,
-            model: paramValue.model,
-        });
-        console.log(paramValue, "make");
+        let data = makes.find(
+            (ele) => ele.make_display.toLowerCase() === e.toLowerCase()
+        );
+        // await setParam({
+        //     make: e,
+        //     year: paramValue.year,
+        //     model: paramValue.model,
+        // });
+        // console.log(paramValue, "make");
 
-        getModels(e);
-        if (models.length) {
-            setcarModels(models);
-            console.log("models", models);
-        }
+        getModels(data.make_id);
+        // if (models.length) {
+        //     setcarModels(models);
+        //     console.log("models", models);
+        // }
     };
     const activateList = () => {
         setgrid(false);
@@ -274,16 +273,19 @@ const Search = ({
                                                     <option value="">
                                                         select make
                                                     </option>
-                                                    {carMakes?.map((x) => (
-                                                        <option
-                                                            key={x?.make_id}
-                                                            value={
-                                                                x?.make_display
-                                                            }
-                                                        >
-                                                            {x?.make_display}
-                                                        </option>
-                                                    ))}
+                                                    {carMakes &&
+                                                        carMakes?.map((x) => (
+                                                            <option
+                                                                key={x?.make_id}
+                                                                value={
+                                                                    x?.make_display
+                                                                }
+                                                            >
+                                                                {
+                                                                    x?.make_display
+                                                                }
+                                                            </option>
+                                                        ))}
                                                 </select>
                                             </div>
                                         </div>
