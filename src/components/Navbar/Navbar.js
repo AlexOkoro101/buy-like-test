@@ -162,7 +162,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                             router.push("/auth/login");
                                         }}
                                         type="button"
-                                        className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center text-white px-4 sign"
+                                        className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center px-4 sign"
                                     >
                                         LOGIN
                                     </button>

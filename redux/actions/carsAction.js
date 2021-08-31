@@ -213,6 +213,7 @@ export const getModels = (make) => async (dispatch) => {
                         let makeSplit = carModels.split("(")[1];
                         let anotherSplit = makeSplit.split(")")[0];
                         let formatModel = JSON.parse(anotherSplit);
+                        console.log(formatModel)
 
                         dispatch({
                             type: FETCHING_MODEL_SUCCESS,

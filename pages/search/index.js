@@ -75,6 +75,8 @@ const Search = ({
     };
 
     const fetchPage = (i) => {
+        // console.log(maker[0]);
+
         const datas = {
             make: paramValue?.make || "",
             year: paramValue?.year || "",
@@ -1884,6 +1886,7 @@ const Search = ({
     );
 };
 const mapStateToProps = (state) => {
+    console.log(state);
     const { cars, loading, error, params, makes, models } = state.Cars;
     return { cars, loading, error, params, makes, models };
 };
