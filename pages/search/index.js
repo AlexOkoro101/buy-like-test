@@ -248,21 +248,30 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
         fetchPage(pageIndex);
     };
-    const handleFilter = (info) => {
-        function search() {
-            return data.filter(
-                (obj) =>
-                    obj?.exteriorColor?.toLowerCase() ==
-                    info.externalColor[0].toLowerCase()
-            );
+    const handleFilter = async (info) => {
+        function buildFilter(filter) {
+            let query = {};
+            for (let keys in filter) {
+                if (filter[keys]) {
+                    query[keys] = filter[keys];
+                }
+            }
+            return query;
         }
-        var result = search();
-        // console.log(body);
-        // console.log(transmission);
-        // console.log(fuel);
-        // console.log(external);
-        console.log(result);
-        console.log(info);
+        function filterData(arr, query) {
+            const filteredData = arr.filter((item) => {
+                for (let key in query) {
+                    if (query[key].toLowerCase() !== item[key].toLowerCase()) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            return filteredData;
+        }
+        const query = buildFilter(info);
+        const result = filterData(data, query);
+        setData(result);
     };
     const activateGrid = () => {
         setgrid(true);
@@ -304,7 +313,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             alt="filter"
                                         />
                                     </span>{" "}
-                                    Filters
+                                    Search
                                 </p>
                             </div>
                             <div className="ml-auto self-center">
@@ -544,7 +553,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
+                                                            type="radio"
                                                             name="filter"
                                                             value="Sedan/Saloon"
                                                             className="focus:outline-none search self-center"
@@ -565,7 +574,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
+                                                            type="radio"
                                                             name="filter"
                                                             value="SUV"
                                                             {...register(
@@ -586,7 +595,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
+                                                            type="radio"
                                                             name="filter"
                                                             value="Coupe"
                                                             {...register(
@@ -607,7 +616,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
+                                                            type="radio"
                                                             name="filter"
                                                             value="Hatchback"
                                                             {...register(
@@ -628,7 +637,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
+                                                            type="radio"
                                                             name="filter"
                                                             value="Wagon"
                                                             {...register(
@@ -763,11 +772,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="white"
                                                             value="white"
                                                             {...register(
-                                                                "externalColor"
+                                                                "exteriorColor"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -784,11 +793,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="black"
                                                             value="black"
                                                             {...register(
-                                                                "externalColor"
+                                                                "exteriorColor"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -805,11 +814,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
-                                                            value="grey"
+                                                            type="radio"
+                                                            name="gray"
+                                                            value="gray"
                                                             {...register(
-                                                                "externalColor"
+                                                                "exteriorColor"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -826,11 +835,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="red"
                                                             value="red"
                                                             {...register(
-                                                                "externalColor"
+                                                                "exteriorColor"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -847,11 +856,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="gold"
                                                             value="gold"
                                                             {...register(
-                                                                "externalColor"
+                                                                "exteriorColor"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -890,11 +899,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="gasoline"
                                                             value="gasoline"
                                                             {...register(
-                                                                "fuelType"
+                                                                "sourceEngineFuelType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -911,11 +920,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="diesel"
                                                             value="diesel"
                                                             {...register(
-                                                                "fuelType"
+                                                                "sourceEngineFuelType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -932,11 +941,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="gas"
                                                             value="Gas/Electric Hybrid"
                                                             {...register(
-                                                                "fuelType"
+                                                                "sourceEngineFuelType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -953,11 +962,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="plug"
                                                             value="Plug-in Hybrid"
                                                             {...register(
-                                                                "fuelType"
+                                                                "sourceEngineFuelType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -974,11 +983,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 <div className="ml-auto">
                                                     <label className="search">
                                                         <input
-                                                            type="checkbox"
-                                                            name="filter"
+                                                            type="radio"
+                                                            name="Electric"
                                                             value="Electric"
                                                             {...register(
-                                                                "fuelType"
+                                                                "sourceEngineFuelType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
