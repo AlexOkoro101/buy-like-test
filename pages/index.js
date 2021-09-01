@@ -78,9 +78,7 @@ const Home = ({ getCars, cars, makes }) => {
         }
     });
     useEffect(() => {
-        if (carMakes.length <= 0) {
-            getMakes();
-        }
+        getMakes();
         if (makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
