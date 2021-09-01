@@ -72,6 +72,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         window.localStorage.clear();
         beginLogout();
         setnavDropdown(false)
+        settoken(null)
     };
 
     const toggleDropdown = () => {
