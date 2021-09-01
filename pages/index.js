@@ -54,7 +54,7 @@ const Home = ({ getCars, cars, makes }) => {
 
     const [car, setCars] = useState([]);
     const [images, setImages] = useState(cars);
-    const [carMakes, setcarMakes] = useState([]);
+    const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
 
     const [years, setYears] = useState(() => {
@@ -77,15 +77,14 @@ const Home = ({ getCars, cars, makes }) => {
             setSeconds(0);
         }
     });
-    useEffect(() => {
-        getMakes();
-        setcarMakes(makes);
-        getVehicleModels(makes[0].make_display);
-    }, [cars]);
+
     useEffect(() => {
         if (cars.length <= 0) {
             getCars();
             getMakes();
+        }
+        if (makes) {
+            getVehicleModels(makes[0].make_display);
         }
     }, [cars]);
     const handleMake = (e) => {
