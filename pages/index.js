@@ -79,14 +79,13 @@ const Home = ({ getCars, cars, makes }) => {
     });
     useEffect(() => {
         getMakes();
-        if (makes.length) {
-            setcarMakes(makes);
-            getVehicleModels(makes[0].make_display);
-        }
-    }, [makes]);
+        setcarMakes(makes);
+        getVehicleModels(makes[0].make_display);
+    }, [cars]);
     useEffect(() => {
         if (cars.length <= 0) {
             getCars();
+            getMakes();
         }
     }, [cars]);
     const handleMake = (e) => {
