@@ -45,13 +45,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        if (cars.length > 1) {
-            setData(cars);
-        }
-        if (cars.length === 0) {
-            fetchPage(pageIndex);
-        }
-    }, [cars]);
+        fetchPage(pageIndex);
+    }, []);
     useEffect(() => {
         if (carMakes.length <= 0) {
             getMakes();
@@ -85,8 +80,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const fetchPage = (i) => {
         const datas = {
             make: paramValue?.make || "",
-            year: paramValue?.year || "",
             model: paramValue?.model || "",
+            year: paramValue?.year || "",
             page: i,
         };
         dispatch(fetchMore(datas));
@@ -98,8 +93,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         const datas = {
             make: paramValue?.make || "",
-            year: e,
             model: paramValue?.model || "",
+            year: e,
             page: 1,
         };
         dispatch(fetchMore(datas));
@@ -112,8 +107,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         const datas = {
             make: paramValue?.make || "",
-            year: paramValue?.year || "",
             model: e,
+            year: paramValue?.year || "",
             page: 1,
         };
         dispatch(fetchMore(datas));
@@ -125,8 +120,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         );
         const datas = {
             make: e,
-            year: paramValue?.year || "",
             model: paramValue?.model || "",
+            year: paramValue?.year || "",
             page: 1,
         };
         setParam((prev) => ({
