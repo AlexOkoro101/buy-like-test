@@ -114,9 +114,7 @@ export const fetchMore = (event) => async (dispatch) => {
     });
     try {
         let res = await fetch(
-            `${api}?year=${event.year}&make=${event.make}&model=${""}&page=${
-                event.page
-            }&apiKey=Switch!2020`,
+            `${api}?year=${event.year}&make=${event.make}&model=${event.model}&page=${event.page}&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
