@@ -353,17 +353,17 @@ const Home = ({ getCars, cars, makes }) => {
                                             Select Model
                                         </label>
                                         <select
-                                            {...register("model")}
                                             name=" "
                                             id="model "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                            {...register("model")}
                                         >
                                             <option value="" selected disabled>
                                                 Select
                                             </option>
-                                            {carModels.map((x) => (
+                                            {carModels.map((x, id) => (
                                                 <option
-                                                    key={x?.model_name}
+                                                    key={id}
                                                     value={x?.model_name}
                                                 >
                                                     {x?.model_name}
