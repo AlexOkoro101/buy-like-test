@@ -16,6 +16,9 @@ import {
     FETCHING_MODEL,
     FETCHING_MODEL_FAILED,
     FETCHING_MODEL_SUCCESS,
+    FETCHING_COLLECTION,
+    FETCHING_COLLECTION_FAILED,
+    FETCHING_COLLECTION_SUCCESS,
     LOGIN_FAILED,
     DETAIL,
 } from "../types";
@@ -27,6 +30,7 @@ const initialState = {
     params: {},
     makes: [],
     models: [],
+    collection: [],
     modeled: {},
     userLoggedIn: false,
     carDetails: {},
@@ -37,6 +41,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_CARS:
         case FETCHING_MAKE:
         case FETCHING_MODEL:
+        case FETCHING_COLLECTION:
             return {
                 ...state,
                 loading: true,
@@ -45,6 +50,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_CARS_FAILED:
         case FETCHING_MAKE_FAILED:
         case FETCHING_MODEL_FAILED:
+        case FETCHING_COLLECTION_FAILED:
             return {
                 ...state,
                 loading: false,
@@ -74,6 +80,20 @@ const Cars = (state = initialState, action) => {
                 loading: false,
                 error: {},
             };
+        case FETCHING_MODEL_SUCCESS:
+            return {
+                ...state,
+                models: action.payload,
+                loading: false,
+                error: {},
+            };
+        case FETCHING_COLLECTION_SUCCESS:
+            return {
+                ...state,
+                collection: action.payload,
+                loading: false,
+                error: {},
+            };    
 
         case SEARCHING_FAILED:
         case FETCHING_FAILED:

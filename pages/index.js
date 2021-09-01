@@ -401,7 +401,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         </div>
                     </section>
                     {/*  */}
-                    <section className="pb-16 px-2 w-full lg:px-20 ">
+                    {/* <section className="pb-16 px-2 w-full lg:px-20 ">
                         <div className="mt-20 mb-12">
                             <hr className="orange-underline w-20 m-auto pb-4 " />
                             <h5 className="font-semibold primary-color text-center text-xl ">
@@ -493,6 +493,68 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 SEE ALL VEHICLES
                             </button>
                         </div>
+                    </section> */}
+                    {/* <!-- search a Category section here --> */}
+                    <section className="w-full pb-16 px-2 lg:px-20 ">
+                        <div className="mt-20 ">
+                            <hr className="orange-underline w-20 m-auto pb-4 " />
+                            <h5 className="font-semibold primary-color text-center text-xl "> SEARCH A CATEGORY </h5>
+                        </div>
+
+                        <div
+                            className="flex flex-wrap justify-center lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
+                            {/* <!-- Hatchback here --> */}
+                            <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                <img src="./assets/img/hatchback.svg " alt="Hatchback " />
+                                <div className="text-center text-xs pt-3 ">
+                                    <p className="font-semibold primary-color ">Hatchbacks</p>
+                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                </div>
+                            </div>
+
+                            {/* <!-- Sedans here --> */}
+                            <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                <img src="./assets/img/sedans.svg " alt="Sedans " />
+                                <div className="text-center text-xs pt-4 ">
+                                    <p className="font-semibold primary-color ">Sedans</p>
+                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                </div>
+                            </div>
+
+                            {/* <!-- Vans here --> */}
+                            <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                <img src="./assets/img/van.svg " alt="Van " />
+                                <div className="text-center text-xs pt-3 ">
+                                    <p className="font-semibold primary-color ">Vans</p>
+                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                </div>
+                            </div>
+
+                            {/* <!-- SUVs here --> */}
+                            <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                <img src="./assets/img/suv.svg " alt="SUVs " />
+                                <div className="text-center text-xs pt-3 ">
+                                    <p className="font-semibold primary-color ">SUVs</p>
+                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                </div>
+                            </div>
+
+                            {/* <!-- Wagons here --> */}
+                            <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                                <img src="./assets/img/wagon.svg " alt="Wagon " />
+                                <div className="text-center text-xs pt-2 ">
+                                    <p className="font-semibold primary-color ">Wagons</p>
+                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* <!-- Button here --> */}
+                        <div className="text-center mt-10 ">
+                            <button type="button " className="estimate__btn focus:outline-none font-semibold px-4 ">SEE ALL
+                                VECHICLES</button>
+                        </div>
+
                     </section>
                     {/*  */}
                     <section
