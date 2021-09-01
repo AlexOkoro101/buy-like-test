@@ -8,6 +8,11 @@ import {
     carDetail,
     getModels,
 } from "../../redux/actions/carsAction";
+import {
+    FETCHING_MODEL,
+    FETCHING_MODEL_FAILED,
+    FETCHING_MODEL_SUCCESS,
+} from "../../redux/types";
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
 
@@ -18,15 +23,7 @@ import { Formik, Field, Form } from "formik";
 
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const Search = ({
-    cars,
-    params,
-    loading,
-    getMakes,
-    makes,
-    getModels,
-    models,
-}) => {
+const Search = ({ cars, params, loading, getMakes, makes }) => {
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
@@ -50,72 +47,131 @@ const Search = ({
     useEffect(() => {
         if (cars.length > 1) {
             setData(cars);
+        } else if (cars === null) {
+            console.log(cars, "1");
+            fetchPage(pageIndex);
+        } else {
+            console.log(cars, "2");
+            setData(cars);
         }
     }, [cars]);
-
-    //fetch makes
     useEffect(() => {
         if (carMakes.length <= 0) {
             getMakes();
         }
         if (makes.length) {
             setcarMakes(makes);
-            // console.log("makes", makes)
+            getVehicleModels(makes[0].make_display);
         }
-    }, []);
+    }, [makes]);
+    useEffect(() => {
+        let data = paramValue;
+        for (var f in data) {
+            if (data[f] === "") {
+                delete data[f];
+                setParam({ ...data });
+            }
+        }
+        getVehicleModels(paramValue.make);
+    }, [paramValue, params]);
 
-    const handleSearch = async (e) => {
-        setIsSearching(true);
-        const data = {
-            make: e.target.value,
-            year: "",
-        };
+    // const handleSearch = async (e) => {
+    //     setIsSearching(true);
+    //     const data = {
+    //         make: e.target.value,
+    //         year: "",
+    //     };
 
-        await dispatch(searchTerm(data));
-        setData(cars);
-    };
+    //     await dispatch(searchTerm(data));
+    //     setData(cars);
+    // };
 
     const fetchPage = (i) => {
-        // console.log(maker[0]);
-
         const datas = {
             make: paramValue?.make || "",
-            year: paramValue?.year || "",
             model: paramValue?.model || "",
+            year: paramValue?.year || "",
             page: i,
         };
         dispatch(fetchMore(datas));
     };
-    const handleYear = async (e) => {
-        await setParam({
-            make: paramValue.make,
-            model: paramValue.model,
+    const handleYear = (e) => {
+        setParam((prev) => ({
+            ...prev,
             year: e,
-        });
-        console.log(paramValue, "year");
+        }));
+        const datas = {
+            make: paramValue?.make || "",
+            model: paramValue?.model || "",
+            year: e,
+            page: 1,
+        };
+        dispatch(fetchMore(datas));
+        setPageIndex(1);
     };
-    const handleModel = async (e) => {
-        console.log("model value", e)
-        await setParam({
-            make: paramValue.make,
-            year: paramValue.year,
-            model: e,
-        });
-        console.log(paramValue, "model");
-    };
-    const handleMake = async (e) => {
-        console.log(e);
-        await setParam({
-            make: e,
-            year: paramValue.year,
-            model: paramValue.model,
-        });
-        console.log(paramValue, "make");
 
-        getModels(e);
-        if (models.length) {
-            setcarModels(models);
-            console.log("models", models);
+    const handleModel = (e) => {
+        setParam((prev) => ({
+            ...prev,
+            model: e,
+        }));
+        const datas = {
+            make: paramValue?.make || "",
+            model: e,
+            year: paramValue?.year || "",
+            page: 1,
+        };
+        console.log(datas, "da");
+        setPageIndex(1);
+        dispatch(fetchMore(datas));
+    };
+    const handleMake = (e) => {
+        let data = makes.find(
+            (ele) => ele.make_display.toLowerCase() === e.toLowerCase()
+        );
+        const datas = {
+            make: e,
+            model: paramValue?.model || "",
+            year: paramValue?.year || "",
+            page: 1,
+        };
+        setParam((prev) => ({
+            ...prev,
+            make: e,
+        }));
+        setPageIndex(1);
+        getVehicleModels(data.make_id);
+        dispatch(fetchMore(datas));
+    };
+    const getVehicleModels = (make) => {
+        try {
+            fetch(
+                "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                    `${make}`,
+                {
+                    method: "GET",
+                }
+            )
+                .then(function (response) {
+                    return response.text();
+                })
+                .then((data) => {
+                    if (data) {
+                        if (Object.entries(data).length >= 1) {
+                            let carModels = data;
+                            let makeSplit = carModels.split("(")[1];
+                            let anotherSplit = makeSplit.split(")")[0];
+                            let formatModel = JSON.parse(anotherSplit);
+                            let datas = [...formatModel.Models];
+                            setcarModels([...datas]);
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
         }
     };
     const activateList = () => {
@@ -123,7 +179,8 @@ const Search = ({
     };
 
     function Paginate() {
-        let maxPages = 10;
+        let validDatas = data.filter((item) => item.vehicleName !== "");
+        let maxPages = validDatas.length > 20 ? validDatas.length : 1;
         let items = [];
         let leftSide = pageIndex - 2;
         if (leftSide <= 0) leftSide = 1;
@@ -275,16 +332,21 @@ const Search = ({
                                                     <option value="">
                                                         select make
                                                     </option>
-                                                    {carMakes?.map((x) => (
-                                                        <option
-                                                            key={x?.make_id}
-                                                            value={
-                                                                x?.make_display
-                                                            }
-                                                        >
-                                                            {x?.make_display}
-                                                        </option>
-                                                    ))}
+                                                    {carMakes &&
+                                                        carMakes?.map(
+                                                            (x, id) => (
+                                                                <option
+                                                                    key={id}
+                                                                    value={
+                                                                        x?.make_display
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        x?.make_display
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
                                                 </select>
                                             </div>
                                         </div>
@@ -1521,7 +1583,7 @@ const Search = ({
                                         key={id}
                                         className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
                                     >
-                                        {ele?.toUpperCase()}
+                                        {ele && ele}
                                         <span className="ml-1.5">
                                             {" "}
                                             <img
@@ -1536,317 +1598,39 @@ const Search = ({
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
-                        {loading ? (
-                            <div className="flex justify-center items-center w-full h-80">
-                                <FadeLoader
-                                    color="green"
-                                    width={5}
-                                    radius={2}
-                                    margin={2}
-                                    height={15}
-                                    loading={loading}
-                                />
-                            </div>
-                        ) : (
+                        {data && data.length >= 1 ? (
                             <>
-                                {grid && (
-                                    <div
-                                        className="flex flex-wrap justify-center lg:justify-between display-type"
-                                        id="car-grid"
-                                    >
-                                        {data?.length > 0 &&
-                                            data?.map(
-                                                (ele, id) =>
-                                                    ele.vehicleName && (
-                                                        <div
-                                                            key={id}
-                                                            className="car-display-holder flex flex-col justify-between p-4 mb-4"
-                                                            style={{
-                                                                height: "380px",
-                                                            }}
-                                                        >
-                                                            <div
-                                                                className="cursor-pointer"
-                                                                onClick={() => {
-                                                                    dispatch(
-                                                                        carDetail(
-                                                                            ele
-                                                                        )
-                                                                    ),
-                                                                        router.push(
-                                                                            {
-                                                                                pathname:
-                                                                                    "/search/" +
-                                                                                    ele.VIN,
-                                                                            }
-                                                                        );
-                                                                }}
-                                                                style={{
-                                                                    width: "273px",
-                                                                    height: "204px",
-                                                                }}
-                                                            >
-                                                                {addImage(ele)}
-                                                            </div>
-                                                            <div className="mt-3">
-                                                                <p className="text-xs primary-black font-medium">
-                                                                    {ele?.vehicleName
-                                                                        ? ele?.vehicleName
-                                                                        : [
-                                                                              ele?.make,
-                                                                              ele.model,
-                                                                          ].join(
-                                                                              " "
-                                                                          )}
-                                                                </p>
-                                                                <p className="sec-black font-11 flex items-center pt-2">
-                                                                    {" "}
-                                                                    {
-                                                                        ele?.year
-                                                                    }{" "}
-                                                                    <span className="ml-6">
-                                                                        205,456
-                                                                        miles
-                                                                    </span>
-                                                                </p>
-                                                                <div className="flex pt-2">
-                                                                    <p className="flex items-center sec-black font-10">
-                                                                        {" "}
-                                                                        <span className="mr-1">
-                                                                            <img
-                                                                                src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                                alt="location"
-                                                                            />
-                                                                        </span>{" "}
-                                                                        {
-                                                                            ele?.pickupLocation
-                                                                        }
-                                                                    </p>
-                                                                    <div className="ml-auto flex self-center">
-                                                                        <img
-                                                                            className="img-fluid"
-                                                                            src="../../assets/img/vectors/red-date.svg"
-                                                                            alt="date"
-                                                                        />
-                                                                        <p className="sec-black font-10 ml-1">
-                                                                            {" "}
-                                                                            {new Date(
-                                                                                ele?.auctionEndTime
-                                                                            ).toLocaleDateString()}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex pt-3">
-                                                                    <div className="ml-auto  self-center">
-                                                                        <button
-                                                                            type="button"
-                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                            onClick={() => {
-                                                                                dispatch(
-                                                                                    carDetail(
-                                                                                        ele
-                                                                                    )
-                                                                                ),
-                                                                                    router.push(
-                                                                                        {
-                                                                                            pathname:
-                                                                                                "/search/" +
-                                                                                                ele.VIN,
-                                                                                        }
-                                                                                    );
-                                                                            }}
-                                                                        >
-                                                                            Place
-                                                                            bid
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                            )}
+                                {loading ? (
+                                    <div className="flex justify-center items-center w-full h-80">
+                                        <FadeLoader
+                                            color="green"
+                                            width={5}
+                                            radius={2}
+                                            margin={2}
+                                            height={15}
+                                            loading={loading}
+                                        />
                                     </div>
-                                )}
-                                {/* <!-- Car List displays here --> */}
-                                {!grid && (
-                                    <div
-                                        className="flex flex-wrap display-type justify-between"
-                                        id="car-list"
-                                    >
-                                        {/* <!-- Car 1 --> */}
-                                        {data &&
-                                            data?.map(
-                                                (ele, id) =>
-                                                    ele.vehicleName && (
-                                                        <div
-                                                            key={id}
-                                                            className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
-                                                        >
-                                                            {/* <!-- image to details here --> */}
-                                                            <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
-                                                                <div className="1/2">
-                                                                    <img
-                                                                        className="img-fluid"
-                                                                        src={
-                                                                            ele
-                                                                                ?.images[0]
-                                                                                ?.image_largeUrl
-                                                                        }
-                                                                        alt=""
-                                                                        style={{
-                                                                            width: "340px",
-                                                                            height: "250px",
-                                                                        }}
-                                                                    />
-                                                                </div>
-
-                                                                {/* <!-- Details here --> */}
-                                                                <div className="w-1/2 py-4">
-                                                                    <p className="text-base primary-black ">
-                                                                        {ele?.vehicleName
-                                                                            ? ele?.vehicleName
-                                                                            : [
-                                                                                  ele?.make,
-                                                                                  ele.model,
-                                                                              ].join(
-                                                                                  " "
-                                                                              )}
-                                                                    </p>
-
-                                                                    {/* <!-- location to mileage here  --> */}
-                                                                    <table className="min-w-full ">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black ">
-                                                                                        {" "}
-                                                                                        <span className="mr-1">
-                                                                                            <img
-                                                                                                src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                                                alt="beacon"
-                                                                                            />
-                                                                                        </span>{" "}
-                                                                                        {
-                                                                                            ele?.pickupLocation
-                                                                                        }
-                                                                                    </p>
-                                                                                </td>
-
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black ">
-                                                                                        {" "}
-                                                                                        <span className="mr-1">
-                                                                                            <img
-                                                                                                src="../../assets/img/vectors/speedometer.svg"
-                                                                                                alt="beacon"
-                                                                                            />
-                                                                                        </span>{" "}
-                                                                                        205,456
-                                                                                        miles
-                                                                                    </p>
-                                                                                </td>
-
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black">
-                                                                                        {" "}
-                                                                                        <span className="mr-1">
-                                                                                            <img
-                                                                                                src="../../assets/img/vectors/red-date.svg"
-                                                                                                alt="beacon"
-                                                                                            />
-                                                                                        </span>
-                                                                                        {new Date(
-                                                                                            ele?.auctionEndTime
-                                                                                        ).toLocaleDateString()}
-                                                                                    </p>
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black">
-                                                                                        Exterior:{" "}
-                                                                                        {
-                                                                                            ""
-                                                                                        }
-                                                                                        {
-                                                                                            ""
-                                                                                        }
-                                                                                        {
-                                                                                            ele?.sourceExteriorColor
-                                                                                        }
-                                                                                    </p>
-                                                                                </td>
-
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black">
-                                                                                        Interior{" "}
-                                                                                        {
-                                                                                            ""
-                                                                                        }
-                                                                                        {
-                                                                                            ele?.interiorColor
-                                                                                        }
-                                                                                    </p>
-                                                                                </td>
-
-                                                                                <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                    <p className="flex items-center text-xs primary-black">
-                                                                                        VIN:{" "}
-                                                                                        {
-                                                                                            ""
-                                                                                        }
-                                                                                        {
-                                                                                            ele?.VIN
-                                                                                        }
-                                                                                    </p>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-
-                                                                    {/* <!-- others here --> */}
-                                                                    <div className="flex border-t my-3 py-3">
-                                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                                            Vehicle
-                                                                            Type:{" "}
-                                                                            {""}
-                                                                            {""}
-                                                                            {
-                                                                                ele?.vehicleType
-                                                                            }
-                                                                        </p>
-                                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                                            {
-                                                                                ele?.exteriorColor
-                                                                            }
-                                                                        </p>
-                                                                        <p className="flex items-center font-11 primary-black mr-6">
-                                                                            {" "}
-                                                                            Fully
-                                                                            Loaded
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="w-1/5 py-4 items-end flex flex-col">
-                                                                <div className="relative pt-1.5">
-                                                                    <img
-                                                                        src="../../assets/img/vectors/buy.svg"
-                                                                        alt="buy"
-                                                                    />
-                                                                    <button
-                                                                        type="button"
-                                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                                                    >
-                                                                        BUY NOW
-                                                                    </button>
-                                                                </div>
-
-                                                                <div>
-                                                                    <button
-                                                                        type="button"
-                                                                        className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                ) : (
+                                    <>
+                                        {grid && (
+                                            <div
+                                                className="flex flex-wrap justify-center lg:justify-between display-type"
+                                                id="car-grid"
+                                            >
+                                                {data?.length > 0 &&
+                                                    data?.map(
+                                                        (ele, id) =>
+                                                            ele.vehicleName && (
+                                                                <div
+                                                                    key={id}
+                                                                    className="car-display-holder flex flex-col justify-between p-4 mb-4"
+                                                                    style={{
+                                                                        height: "380px",
+                                                                    }}
+                                                                >
+                                                                    <div
+                                                                        className="cursor-pointer"
                                                                         onClick={() => {
                                                                             dispatch(
                                                                                 carDetail(
@@ -1861,26 +1645,325 @@ const Search = ({
                                                                                     }
                                                                                 );
                                                                         }}
+                                                                        style={{
+                                                                            width: "273px",
+                                                                            height: "204px",
+                                                                        }}
                                                                     >
-                                                                        View
-                                                                        Details
-                                                                    </button>
+                                                                        {addImage(
+                                                                            ele
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="mt-3">
+                                                                        <p className="text-xs primary-black font-medium">
+                                                                            {ele?.vehicleName
+                                                                                ? ele?.vehicleName
+                                                                                : [
+                                                                                      ele?.make,
+                                                                                      ele.model,
+                                                                                  ].join(
+                                                                                      " "
+                                                                                  )}
+                                                                        </p>
+                                                                        <p className="sec-black font-11 flex items-center pt-2">
+                                                                            {" "}
+                                                                            {
+                                                                                ele?.year
+                                                                            }{" "}
+                                                                            <span className="ml-6">
+                                                                                205,456
+                                                                                miles
+                                                                            </span>
+                                                                        </p>
+                                                                        <div className="flex pt-2">
+                                                                            <p className="flex items-center sec-black font-10">
+                                                                                {" "}
+                                                                                <span className="mr-1">
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                        alt="location"
+                                                                                    />
+                                                                                </span>{" "}
+                                                                                {
+                                                                                    ele?.pickupLocation
+                                                                                }
+                                                                            </p>
+                                                                            <div className="ml-auto flex self-center">
+                                                                                <img
+                                                                                    className="img-fluid"
+                                                                                    src="../../assets/img/vectors/red-date.svg"
+                                                                                    alt="date"
+                                                                                />
+                                                                                <p className="sec-black font-10 ml-1">
+                                                                                    {" "}
+                                                                                    {new Date(
+                                                                                        ele?.auctionEndTime
+                                                                                    ).toLocaleDateString()}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex pt-3">
+                                                                            <div className="ml-auto  self-center">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
+                                                                                >
+                                                                                    Place
+                                                                                    bid
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                            )}
-                                    </div>
+                                                            )
+                                                    )}
+                                            </div>
+                                        )}
+                                        {/* <!-- Car List displays here --> */}
+                                        {!grid && (
+                                            <div
+                                                className="flex flex-wrap display-type justify-between"
+                                                id="car-list"
+                                            >
+                                                {/* <!-- Car 1 --> */}
+                                                {data &&
+                                                    data?.map(
+                                                        (ele, id) =>
+                                                            ele.vehicleName && (
+                                                                <div
+                                                                    key={id}
+                                                                    className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
+                                                                >
+                                                                    {/* <!-- image to details here --> */}
+                                                                    <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
+                                                                        <div className="1/2">
+                                                                            <img
+                                                                                className="img-fluid"
+                                                                                src={
+                                                                                    ele
+                                                                                        ?.images[0]
+                                                                                        ?.image_largeUrl
+                                                                                }
+                                                                                alt=""
+                                                                                style={{
+                                                                                    width: "340px",
+                                                                                    height: "250px",
+                                                                                }}
+                                                                            />
+                                                                        </div>
+
+                                                                        {/* <!-- Details here --> */}
+                                                                        <div className="w-1/2 py-4">
+                                                                            <p className="text-base primary-black ">
+                                                                                {ele?.vehicleName
+                                                                                    ? ele?.vehicleName
+                                                                                    : [
+                                                                                          ele?.make,
+                                                                                          ele.model,
+                                                                                      ].join(
+                                                                                          " "
+                                                                                      )}
+                                                                            </p>
+
+                                                                            {/* <!-- location to mileage here  --> */}
+                                                                            <table className="min-w-full ">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                                {" "}
+                                                                                                <span className="mr-1">
+                                                                                                    <img
+                                                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                                        alt="beacon"
+                                                                                                    />
+                                                                                                </span>{" "}
+                                                                                                {
+                                                                                                    ele?.pickupLocation
+                                                                                                }
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                                {" "}
+                                                                                                <span className="mr-1">
+                                                                                                    <img
+                                                                                                        src="../../assets/img/vectors/speedometer.svg"
+                                                                                                        alt="beacon"
+                                                                                                    />
+                                                                                                </span>{" "}
+                                                                                                205,456
+                                                                                                miles
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                                {" "}
+                                                                                                <span className="mr-1">
+                                                                                                    <img
+                                                                                                        src="../../assets/img/vectors/red-date.svg"
+                                                                                                        alt="beacon"
+                                                                                                    />
+                                                                                                </span>
+                                                                                                {new Date(
+                                                                                                    ele?.auctionEndTime
+                                                                                                ).toLocaleDateString()}
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                                Exterior:{" "}
+                                                                                                {
+                                                                                                    ""
+                                                                                                }
+                                                                                                {
+                                                                                                    ""
+                                                                                                }
+                                                                                                {
+                                                                                                    ele?.sourceExteriorColor
+                                                                                                }
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                                Interior{" "}
+                                                                                                {
+                                                                                                    ""
+                                                                                                }
+                                                                                                {
+                                                                                                    ele?.interiorColor
+                                                                                                }
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                                VIN:{" "}
+                                                                                                {
+                                                                                                    ""
+                                                                                                }
+                                                                                                {
+                                                                                                    ele?.VIN
+                                                                                                }
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+
+                                                                            {/* <!-- others here --> */}
+                                                                            <div className="flex border-t my-3 py-3">
+                                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                                    Vehicle
+                                                                                    Type:{" "}
+                                                                                    {
+                                                                                        ""
+                                                                                    }
+                                                                                    {
+                                                                                        ""
+                                                                                    }
+                                                                                    {
+                                                                                        ele?.vehicleType
+                                                                                    }
+                                                                                </p>
+                                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                                    {
+                                                                                        ele?.exteriorColor
+                                                                                    }
+                                                                                </p>
+                                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                                    {" "}
+                                                                                    Fully
+                                                                                    Loaded
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="w-1/5 py-4 items-end flex flex-col">
+                                                                        <div className="relative pt-1.5">
+                                                                            <img
+                                                                                src="../../assets/img/vectors/buy.svg"
+                                                                                alt="buy"
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                                            >
+                                                                                BUY
+                                                                                NOW
+                                                                            </button>
+                                                                        </div>
+
+                                                                        <div>
+                                                                            <button
+                                                                                type="button"
+                                                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
+                                                                                onClick={() => {
+                                                                                    dispatch(
+                                                                                        carDetail(
+                                                                                            ele
+                                                                                        )
+                                                                                    ),
+                                                                                        router.push(
+                                                                                            {
+                                                                                                pathname:
+                                                                                                    "/search/" +
+                                                                                                    ele.VIN,
+                                                                                            }
+                                                                                        );
+                                                                                }}
+                                                                            >
+                                                                                View
+                                                                                Details
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                    )}
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </>
-                        )}
-                        <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-between my-5">
-                            <div className="text-gray-600">
-                                {pageIndex * data.length - 19} -{" "}
-                                {pageIndex * data.length}
+                        ) : (
+                            <div className="w-full flex items center justify-center py-40">
+                                <h1>No Vehicle matches this parameters</h1>
                             </div>
-                            {Paginate()}
-                        </div>
+                        )}
+                        {data && data.length >= 1 && (
+                            <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-between my-5">
+                                <div>
+                                    {data && data.length >= 20 && (
+                                        <div className="text-gray-600">
+                                            {pageIndex * data.length - 19} -{" "}
+                                            {pageIndex * data.length}
+                                        </div>
+                                    )}
+                                </div>
+                                {Paginate()}
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>
@@ -1888,15 +1971,12 @@ const Search = ({
     );
 };
 const mapStateToProps = (state) => {
-    console.log(state)
-    const { cars, loading, error, params, makes, models } = state.Cars;
-    return { cars, loading, error, params, makes, models };
+    const { cars, loading, error, params, makes } = state.Cars;
+    return { cars, loading, error, params, makes };
 };
 
 export default connect(mapStateToProps, {
     searchTerm,
     fetchMore,
     getMakes,
-    getModels,
 })(Search);
-
