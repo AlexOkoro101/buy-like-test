@@ -1,29 +1,84 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import { enviroment } from "../../src/components/enviroment";
 import Meta from "../../src/components/Head/Meta"
 
-const CurrentBids = () => {
+const BidTracker = () => {
+    const [carCollection, setcarCollection] = useState([])
+
+    useEffect(() => {
+        const fetchCarCollection = () => {
+            console.log("run funtion")
+            fetch(enviroment.BASE_URL + 'collections', {
+                method: "GET",
+                redirect: "follow",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            })
+                .then(function (response) {
+                    console.log(response);
+                    return response.text();
+                })
+                .then((data) => {
+                    // console.log(data)
+                    if (data) {
+                        //  console.log(data.data)
+                        if (Object.entries(data).length >= 1) {
+                            const formatCollection = JSON.parse(data);
+                            // console.log("new collection", formatCollection?.data)
+                            setcarCollection(formatCollection?.data)
+                            // console.log(carCollection)
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        fetchCarCollection()
+        return () => {
+            fetchCarCollection
+        }
+    }, [])
+
     return ( 
         <div>
             <Meta></Meta>
             <main className="mb-20">
+            {carCollection?.length ? (
                 <div className="blue-div px-20 mt-20 py-3 flex justify-between">
-                <div className="flex">
-                    <div>
-                    <h4 className="text-sm font-medium blue-text">My first bid collection</h4>
-                    <h6 className="text-xs font-normal blue-text">6 cars selected</h6>
-                    </div>
-                    <div className="flex py-2 ml-3">
-                    <img src="../assets/img/cars/AudiA3.png" alt="benz" className="tiny-car-card" />
-                    <img src="../assets/img/cars/fordescape.png" alt="benz" className="tiny-car-card" />
-                    <img src="../assets/img/cars/Toyota2.png" alt="benz" className="tiny-car-card" />
-                    <img src="../assets/img/cars/Rav42.png" alt="benz" className="tiny-car-card" />
-                    <img src="../assets/img/cars/highlander2.png" alt="benz" className="tiny-car-card" />
-                    </div>
+                {carCollection?.map((myCollection) => (
+                    <>
+                        <div key={myCollection._id} className="flex">
+                            <div>
+                            <h4 className="text-sm font-medium blue-text">{myCollection.name}</h4>
+                            <h6 className="text-xs font-normal blue-text">{myCollection.vehicles.length} cars selected</h6>
+                            </div>
+                            <div className="flex py-2 ml-3">
+                            {/* <img src="../assets/img/cars/AudiA3.png" alt="benz" className="tiny-car-card" />
+                            <img src="../assets/img/cars/fordescape.png" alt="benz" className="tiny-car-card" />
+                            <img src="../assets/img/cars/Toyota2.png" alt="benz" className="tiny-car-card" />
+                            <img src="../assets/img/cars/Rav42.png" alt="benz" className="tiny-car-card" />
+                            <img src="../assets/img/cars/highlander2.png" alt="benz" className="tiny-car-card" /> */}
+                            </div>
+                        </div>
+                        <div className="flex flex-col mx-auxo items-end">
+                            {/* <h4 className="text-base font-normal gray-text">$15,000 - $30,500</h4> */}
+                            {/* <h6 className="text-xs font-normal light-gray-text">$1000 deposit paid</h6> */}
+                        </div>
+
+                    </>
+                ))}
                 </div>
-                <div className="flex flex-col mx-auxo items-end">
-                    <h4 className="text-base font-normal gray-text">$15,000 - $30,500</h4>
-                    <h6 className="text-xs font-normal light-gray-text">$1000 deposit paid</h6>
+
+            ) : (
+                <div className="blue-div px-20 mt-20 py-3 flex justify-between">
+                    <p>No collection to display for now</p>
                 </div>
-                </div>
+            )}
 
                 <div className="flex font-11 mt-10">
                 <div className="side-card mx-20 px-5 py-5 space-y-4">
@@ -222,4 +277,4 @@ const CurrentBids = () => {
      );
 }
  
-export default CurrentBids;
+export default BidTracker;

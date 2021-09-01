@@ -1,4 +1,5 @@
 import axios from "axios";
+import { enviroment } from "../../src/components/enviroment";
 import {
     FETCHING_CARS,
     FETCH_SUCCESSFUL,
@@ -18,6 +19,9 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAILED,
     DETAIL,
+    FETCHING_COLLECTION,
+    FETCHING_COLLECTION_SUCCESS,
+    FETCHING_COLLECTION_FAILED,
 } from "../types";
 const api = process.env.cars_api;
 
@@ -233,6 +237,50 @@ export const getModels = (make) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const getCollection = () => (dispatch) => {
+    dispatch({
+        type: FETCHING_COLLECTION,
+    });
+
+    fetch(enviroment.BASE_URL + 'collections', {
+        method: "GET",
+        redirect: "follow",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
+    })
+        .then(function (response) {
+            console.log(response);
+            return response.text();
+        })
+        .then((data) => {
+            // console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    const formatCollection = JSON.parse(data);
+                    // console.log("new collection", formatCollection.data)
+                    if (formatCollection) {
+                        dispatch({
+                            type: FETCHING_COLLECTION_SUCCESS,
+                            payload: formatCollection.data,
+                        });
+                    }
+                }
+            }
+        })
+        .catch(function (error) {
+            dispatch({
+                type: FETCHING_COLLECTION_FAILED,
+                payload: error.message,
+            });
+            console.log(error);
+        });
+};
+
 export const logIn = () => (dispatch) => {
     dispatch({
         type: LOGIN_SUCCESS,
