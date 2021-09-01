@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { searchTerm, carDetail, getMakes } from "../redux/actions/carsAction";
 
 //
-const Home = ({ getCars, cars, makes }) => {
+const Home = ({ getCars, cars, makes, getMakes }) => {
     //
     const responsive = {
         superLargeDesktop: {
@@ -83,7 +83,8 @@ const Home = ({ getCars, cars, makes }) => {
             getCars();
             getMakes();
         }
-        if (makes) {
+        if (makes.length) {
+            setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
     }, [cars]);
@@ -1113,4 +1114,4 @@ const mapStateToProps = (state) => {
     return { cars, loading, error, makes };
 };
 
-export default connect(mapStateToProps, { getCars })(Home);
+export default connect(mapStateToProps, { getCars, getMakes })(Home);
