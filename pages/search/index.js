@@ -45,13 +45,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        if (cars.length > 1) {
-            setData(cars);
-        }
-        if (cars.length === 0) {
-            fetchPage(pageIndex);
-        }
-    }, [cars]);
+        fetchPage(pageIndex);
+    }, []);
     useEffect(() => {
         if (carMakes.length <= 0) {
             getMakes();
