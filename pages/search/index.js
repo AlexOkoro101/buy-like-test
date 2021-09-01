@@ -109,6 +109,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         dispatch(fetchMore(datas));
         setPageIndex(1);
     };
+
     const handleModel = (e) => {
         setParam((prev) => ({
             ...prev,
@@ -379,28 +380,33 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <div className="tab-content overflow-hidden ">
                                         <div className="flex justify-center py-4">
                                             <div className="w-full">
-                                                <select
-                                                    className="select-group"
-                                                    onChange={(e) =>
-                                                        handleModel(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="">
-                                                        select model
-                                                    </option>
-                                                    {carModels.map((x) => (
-                                                        <option
-                                                            key={x?.model_name}
-                                                            value={
-                                                                x?.model_name
-                                                            }
-                                                        >
-                                                            {x?.model_name}
+                                                {carModels?.length ? (
+                                                    <select
+                                                        className="select-group"
+                                                        onChange={(e) =>
+                                                            handleModel(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    >
+                                                        <option value="">
+                                                            select model
                                                         </option>
-                                                    ))}
-                                                </select>
+                                                        {carModels?.map((x) => (
+                                                            <option
+                                                                key={x?.model_name}
+                                                                value={
+                                                                    x?.model_name
+                                                                }
+                                                            >
+                                                                {x?.model_name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                ) : (
+                                                    <p className="text-xs text-red-700">No data available</p>
+                                                )}
                                             </div>
                                         </div>
 

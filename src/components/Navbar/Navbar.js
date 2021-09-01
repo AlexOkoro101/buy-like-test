@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../redux/features/userSlice";
 import { selectToken } from "../../../redux/reducers/userReducer";
@@ -8,13 +8,20 @@ import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
 
 const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
+    const navRef = useRef(null);
+
     const dispatch = useDispatch();
     const router = useRouter();
     const user = useSelector(selectToken);
     const [token, settoken] = useState(null);
+    const [userNmae, setuserName] = useState(null);
     let dropdown;
+
+
+
+    //Get Data from Local Storage
     const retrieveData = () => {
-        const userActive = localStorage.getItem("userToken");
+        const userActive = localStorage.getItem("user");
         // console.log(userActive)
         if (!userActive) {
             settoken(null)
@@ -28,17 +35,24 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
             window.localStorage.clear();
             return null;
         }
-        settoken(item.userToken)
+        settoken(item?.userToken)
+        setuserName(item?.userName)
         // return item.value
         beginLogin({
             token: item.userToken,
         });
-    };        
+    };  
+    
+    //Get Data from local Storage
     useEffect(() => {
         retrieveData()
         return retrieveData;
     }, [router.pathname, token]);
 
+
+
+
+    //Navbar State
     function toggleView() {
         const menu = document.querySelector("#menu");
         if (menu.classList.contains("hidden")) {
@@ -48,6 +62,10 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         }
     }
 
+
+
+
+    // Dropdown functionality
     const [navDropdown, setnavDropdown] = useState(false)
     const handleLogout = () => {
         dispatch(logOut());
@@ -60,7 +78,26 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         setnavDropdown(!navDropdown)
     }
 
-    console.log(token)
+
+    //close drop down
+    function closeDropdown(ref) {
+        useEffect(() => {
+            function handleClickOutside(event) {
+                if (ref.current && !ref.current.contains(event.target)) {
+                    // alert(navDropdown)
+                        setnavDropdown(false)
+                }
+            }
+    
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    }
+    closeDropdown(navRef);
 
     return (
         <header className="">
@@ -116,31 +153,46 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                     <>
                         {token ? (
                             <>
+                            <div className=" ml-2 relative inline-block">
+                                <button type="button"
+                                    className=""
+                                >
+                                    <img src="../../../assets/img/notif.png" alt="" />
+                                </button>
+                            </div>
                             
                             <div className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown">
                                 <span onClick={toggleDropdown}>
                                     <button className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none " 
                                     type="button" aria-haspopup="true" aria-expanded="true" aria-controls="headlessui-menu-items-117">
+                                        <img src="../../../assets/img/usericon.png" alt="" className="bg-gray-200 rounded-full mr-2" />
                                         <span>My Account</span>
                                         <svg className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="#D80739"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                     </button>
                                 </span>
-                                <div className={!navDropdown ? "opacity-0 invisible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10" : " opacity-100 visible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10"}>
+                                <div ref={navRef} className={!navDropdown ? "opacity-0 invisible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10" : " opacity-100 visible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10"}>
                                     <div className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none font-10" aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
                                         <div className="px-4 py-3">         
                                             <p className="leading-5 uppercase">Hello, </p>
-                                            <p className="leading-5 text-gray-900 truncate uppercase">tom@example.com</p>
+                                            <p className="leading-5 text-gray-900 truncate uppercase">{userNmae}</p>
                                         </div>
                                         <div className="py-1">
-                                            <a href="#" tabIndex="0" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase"  role="menuitem" >My Transactions</a>
-                                            <a href="#" tabIndex="2" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase" role="menuitem" >Bid Tracker</a>
-                                            <a href="#" tabIndex="2" className="text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase" role="menuitem" >Settings</a>
+                                            <Link href="/profile/transactions" tabIndex="0"   role="menuitem" >
+                                                <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">My Transactions</span>
+                                            </Link>
+                                            <Link href="/profile/bid-tracker" tabIndex="1" role="menuitem" >
+                                                <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">Bid Tracker</span>
+                                            </Link>
+                                            <Link href="/profile" tabIndex="2" role="menuitem" >
+                                                <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">Settings</span>
+                                            </Link>
                                         </div>
                                         <div className="py-1">
-                                            <a onClick={handleLogout} href="#" tabIndex="3" className="flex justify-between w-full px-4 py-2 leading-5 text-left text-red-700 uppercase"  role="menuitem" >Log out</a></div>
+                                            <a onClick={handleLogout} href="#" tabIndex="3" className="flex justify-between w-full px-4 py-2 leading-5 text-left text-red-700 uppercase"  role="menuitem" >Log out</a>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </>
                         ) : (
                             <>

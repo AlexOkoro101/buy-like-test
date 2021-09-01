@@ -1,6 +1,6 @@
 import Meta from "../../src/components/Head/Meta"
 
-const CurrentBids3 = () => {
+const Transactions = () => {
     return ( 
         <div>
             <Meta></Meta>
@@ -135,4 +135,4 @@ const CurrentBids3 = () => {
      );
 }
  
-export default CurrentBids3;
+export default Transactions;

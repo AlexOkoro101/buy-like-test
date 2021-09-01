@@ -9,7 +9,7 @@ import { logIn, logOut } from "../../redux/actions/carsAction";
 const App = ({ children }) => {
     const dispatch = useDispatch();
     const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState(() => localStorage.getItem("userToken"));
+    const [user, setUser] = useState(() => localStorage.getItem("user"));
     const [auth, setAuth] = useState(false);
     const router = useRouter();
     const myFunction = () => {

@@ -95,25 +95,16 @@ const LogIn = ({ beginLogin }) => {
                         dispatch(logIn());
                         seterror(data?.message);
                         toastSuccess();
-                        localStorage.setItem(
-                            "userToken",
-                            JSON.stringify(data.data._token)
-                        );
+                        const now = new Date();
+                        const item = {
+                            userToken: data.data._token,
+                            userName: data.data.user.profile.firstName,
+                            expiry: now.getTime() + 3600000,
+                        };
+                        localStorage.setItem("user", JSON.stringify(item));
+    
                         router.push("/search");
                     }
-                    const now = new Date();
-                    //save data to local storage
-                    const item = {
-                        userToken: data.data._token,
-                        expiry: now.getTime() + 3600000,
-                    };
-                    localStorage.setItem("userToken", JSON.stringify(item));
-
-                    //save data to store
-                    beginLogin({
-                        token: data.data._token,
-                        login: true,
-                    });
                 })
                 .catch((e) => {
                     // seterror(e.message)

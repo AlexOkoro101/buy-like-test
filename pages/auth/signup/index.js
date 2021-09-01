@@ -81,21 +81,15 @@ const SignupOptions = ({ beginLogin }) => {
                     console.log(data)
                     setmessage(data?.message)
                     toastSuccess()
+                    const now = new Date();
+                    const item = {
+                        userToken: data.data._token,
+                        userName: data.data.user.profile.firstName,
+                        expiry: now.getTime() + 3600000,
+                    };
+                    localStorage.setItem("user", JSON.stringify(item));
                     router.push('/auth/signup/onboarding')
               }
-            const now = new Date()
-            //save data to local storage
-            const item = {
-              userToken: data.data._token,
-              expiry: now.getTime() + 3600000,
-            }
-            localStorage.setItem('userToken', JSON.stringify(item));
-      
-            //save data to store
-            beginLogin({
-                token: data.data._token,
-                login: false,
-            });
         })
         .catch(e => {
             // seterror(e.message)
@@ -149,23 +143,17 @@ const SignupOptions = ({ beginLogin }) => {
                   toastError()
                 } else {
                     console.log(data)
-                    seterror(data?.message)
+                    setmessage(data?.message)
                     toastSuccess()
+                    const now = new Date();
+                    const item = {
+                        userToken: data.data._token,
+                        userName: data.data.user.profile.firstName,
+                        expiry: now.getTime() + 3600000,
+                    };
+                    localStorage.setItem("user", JSON.stringify(item));
                     router.push('/auth/signup/onboarding')
               }
-            const now = new Date()
-            //save data to local storage
-            const item = {
-              userToken: data.data._token,
-              expiry: now.getTime() + 3600000,
-            }
-            localStorage.setItem('userToken', JSON.stringify(item));
-      
-            //save data to store
-            beginLogin({
-                token: data.data._token,
-                login: false,
-            });
         })
         .catch(e => {
             setisLoading(false)
