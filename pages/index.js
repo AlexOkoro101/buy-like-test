@@ -8,10 +8,10 @@ import { getCars } from "../redux/actions/carsAction";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { searchTerm, carDetail } from "../redux/actions/carsAction";
+import { searchTerm, carDetail, getMakes } from "../redux/actions/carsAction";
 
 //
-const Home = ({ getCars, cars }) => {
+const Home = ({ getCars, cars, makes }) => {
     //
     const responsive = {
         superLargeDesktop: {
@@ -54,7 +54,9 @@ const Home = ({ getCars, cars }) => {
 
     const [car, setCars] = useState([]);
     const [images, setImages] = useState(cars);
-    const [make, setMake] = useState(["toyota", "honda", "accord"]);
+    const [carMakes, setcarMakes] = useState([]);
+    const [carModels, setcarModels] = useState([]);
+
     const [years, setYears] = useState(() => {
         let year = 2000;
         const currentYear = new Date().getFullYear();
@@ -76,10 +78,56 @@ const Home = ({ getCars, cars }) => {
         }
     });
     useEffect(() => {
+        if (carMakes.length <= 0) {
+            getMakes();
+        }
+        if (makes.length) {
+            setcarMakes(makes);
+            getVehicleModels(makes[0].make_display);
+        }
+    }, [makes]);
+    useEffect(() => {
         if (cars.length <= 0) {
             getCars();
         }
     }, [cars]);
+    const handleMake = (e) => {
+        let data = makes.find(
+            (ele) => ele.make_display.toLowerCase() === e.toLowerCase()
+        );
+        getVehicleModels(data.make_id);
+    };
+    const getVehicleModels = (make) => {
+        try {
+            fetch(
+                "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                    `${make}`,
+                {
+                    method: "GET",
+                }
+            )
+                .then(function (response) {
+                    return response.text();
+                })
+                .then((data) => {
+                    if (data) {
+                        if (Object.entries(data).length >= 1) {
+                            let carModels = data;
+                            let makeSplit = carModels.split("(")[1];
+                            let anotherSplit = makeSplit.split(")")[0];
+                            let formatModel = JSON.parse(anotherSplit);
+                            let datas = [...formatModel.Models];
+                            setcarModels([...datas]);
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
     function execute(event) {
         let heroTimeline = anime.timeline({
             autoplay: true,
@@ -279,12 +327,22 @@ const Home = ({ getCars, cars }) => {
                                             id="year "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                             {...register("make")}
+                                            onChange={(e) =>
+                                                handleMake(e.target.value)
+                                            }
                                         >
-                                            {make.map((x) => (
-                                                <option key={x} value={x}>
-                                                    {x}
-                                                </option>
-                                            ))}
+                                            <option value="" selected disabled>
+                                                Select
+                                            </option>
+                                            {carMakes &&
+                                                carMakes?.map((x, id) => (
+                                                    <option
+                                                        key={id}
+                                                        value={x?.make_display}
+                                                    >
+                                                        {x?.make_display}
+                                                    </option>
+                                                ))}
                                         </select>
                                     </div>
                                     <div className="flex flex-col mx-3 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
@@ -300,12 +358,17 @@ const Home = ({ getCars, cars }) => {
                                             id="model "
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         >
-                                            <option value="evoque">
-                                                Evoque
+                                            <option value="" selected disabled>
+                                                Select
                                             </option>
-                                            <option value="evoque">
-                                                Evoque
-                                            </option>
+                                            {carModels.map((x) => (
+                                                <option
+                                                    key={x?.model_name}
+                                                    value={x?.model_name}
+                                                >
+                                                    {x?.model_name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
@@ -1050,8 +1113,8 @@ const Home = ({ getCars, cars }) => {
 };
 
 const mapStateToProps = (state) => {
-    const { cars, loading, error } = state.Cars;
-    return { cars, loading, error };
+    const { cars, loading, error, makes } = state.Cars;
+    return { cars, loading, error, makes };
 };
 
 export default connect(mapStateToProps, { getCars })(Home);
