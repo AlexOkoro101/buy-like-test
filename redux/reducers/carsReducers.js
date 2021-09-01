@@ -31,6 +31,7 @@ const initialState = {
     makes: [],
     models: [],
     collection: [],
+    modeled: {},
     userLoggedIn: false,
     carDetails: {},
 };
@@ -93,6 +94,7 @@ const Cars = (state = initialState, action) => {
                 loading: false,
                 error: {},
             };    
+
         case SEARCHING_FAILED:
         case FETCHING_FAILED:
             return {
