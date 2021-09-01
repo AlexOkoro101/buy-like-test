@@ -83,6 +83,9 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             getCars();
             getMakes();
         }
+        if (cars.length) {
+            setImages(cars);
+        }
         if (makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
