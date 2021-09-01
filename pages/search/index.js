@@ -61,6 +61,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
         if (makes.length) {
             setcarMakes(makes);
+            getVehicleModels(makes[0].make_display);
         }
     }, [makes]);
     useEffect(() => {
@@ -72,7 +73,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
         }
         getVehicleModels(paramValue.make);
-    }, [paramValue]);
+    }, [paramValue, params]);
 
     // const handleSearch = async (e) => {
     //     setIsSearching(true);
@@ -119,8 +120,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
-        dispatch(fetchMore(datas));
+        console.log(datas, "da");
         setPageIndex(1);
+        dispatch(fetchMore(datas));
     };
     const handleMake = (e) => {
         let data = makes.find(
