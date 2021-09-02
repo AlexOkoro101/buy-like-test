@@ -52,10 +52,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, [cars]);
     useEffect(() => {
-        if (carMakes.length <= 0) {
+        if (carMakes && carMakes.length <= 0) {
             getMakes();
         }
-        if (makes) {
+        if (makes[0]) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
