@@ -53,7 +53,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     };
 
     const [car, setCars] = useState([]);
-    const [images, setImages] = useState(cars);
+    const [images, setImages] = useState(cars.data);
     const [fetchModel, setmodel] = useState(false);
     const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
@@ -80,12 +80,12 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     });
 
     useEffect(() => {
-        if (cars.length <= 0) {
+        if (cars && cars?.data?.length <= 0) {
             getCars();
             getMakes();
         }
-        if (cars.length) {
-            setImages(cars);
+        if (cars && cars.data.length) {
+            setImages(cars.data);
         }
         if (makes.length) {
             setcarMakes(makes);
@@ -102,26 +102,24 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         setmodel(true);
         try {
             fetch(
-                "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                "https://buylinke.herokuapp.com/vehicle-type/model?model=" +
                     `${make}`,
                 {
-                    method: "GET",
+                    method: "POST",
                 }
             )
                 .then(function (response) {
-                    return response.text();
+                    return response.json();
                 })
                 .then((data) => {
                     setmodel(false);
                     if (data) {
-                        if (Object.entries(data).length >= 1) {
-                            let carModels = data;
-                            let makeSplit = carModels.split("(")[1];
-                            let anotherSplit = makeSplit.split(")")[0];
-                            let formatModel = JSON.parse(anotherSplit);
-                            let datas = [...formatModel.Models];
-                            setcarModels([...datas]);
-                        }
+                        let carModels = data;
+                        let makeSplit = carModels.data.split("(")[1];
+                        let anotherSplit = makeSplit.split(")")[0];
+                        let formatModel = JSON.parse(anotherSplit);
+                        let datas = [...formatModel.Models];
+                        setcarModels([...datas]);
                     }
                 })
                 .catch(function (error) {

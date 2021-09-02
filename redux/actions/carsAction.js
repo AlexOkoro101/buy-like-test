@@ -47,7 +47,7 @@ export const getCars = () => (dispatch) => {
                     if (dada) {
                         dispatch({
                             type: FETCH_SUCCESSFUL,
-                            payload: dada.data,
+                            payload: dada,
                         });
                     }
                 }
@@ -94,7 +94,7 @@ export const searchTerm = (event) => async (dispatch) => {
             if (dada) {
                 dispatch({
                     type: SEARCHING_SUCCESS,
-                    payload: dada.data,
+                    payload: dada,
                 });
             }
         }
@@ -107,7 +107,6 @@ export const searchTerm = (event) => async (dispatch) => {
     }
 };
 export const fetchMore = (event) => async (dispatch) => {
-    console.log("calling");
     dispatch({
         type: FETCHING,
         payload: {
@@ -140,7 +139,7 @@ export const fetchMore = (event) => async (dispatch) => {
             if (response) {
                 dispatch({
                     type: SEARCHING_SUCCESS,
-                    payload: response.data,
+                    payload: response,
                 });
             }
         }
@@ -194,13 +193,12 @@ export const getMakes = () => (dispatch) => {
         });
 };
 
-
 export const getCollection = () => (dispatch) => {
     dispatch({
         type: FETCHING_COLLECTION,
     });
 
-    fetch(enviroment.BASE_URL + 'collections', {
+    fetch(enviroment.BASE_URL + "collections", {
         method: "GET",
         redirect: "follow",
         credentials: "same-origin",
@@ -237,7 +235,6 @@ export const getCollection = () => (dispatch) => {
             console.log(error);
         });
 };
-
 
 export const logIn = () => (dispatch) => {
     dispatch({

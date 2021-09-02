@@ -6,13 +6,8 @@ import {
     fetchMore,
     getMakes,
     carDetail,
-    getModels,
 } from "../../redux/actions/carsAction";
-import {
-    FETCHING_MODEL,
-    FETCHING_MODEL_FAILED,
-    FETCHING_MODEL_SUCCESS,
-} from "../../redux/types";
+
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
@@ -20,19 +15,19 @@ import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
-import { Formik, Field, Form } from "formik";
 
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
 
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [pageIndex, setPageIndex] = useState(1);
     const [filter, setfilter] = useState([]);
-    const [data, setData] = useState(cars);
+    const [data, setData] = useState(cars.data);
+    const [total, setTotal] = useState(cars.total);
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
@@ -48,14 +43,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        if (cars.length > 1) {
-            setData(cars);
-        } else if (cars === null) {
-            console.log(cars, "1");
+        if (cars && cars?.data?.length > 1) {
+            setData(cars.data);
+        } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
         } else {
-            console.log(cars, "2");
-            setData(cars);
+            setData(cars.data);
         }
     }, [cars]);
     useEffect(() => {
@@ -124,7 +117,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
-        console.log(datas, "da");
         setPageIndex(1);
         dispatch(fetchMore(datas));
     };
@@ -149,26 +141,22 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const getVehicleModels = (make) => {
         try {
             fetch(
-                "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                "https://buylinke.herokuapp.com/vehicle-type/model?model=" +
                     `${make}`,
                 {
-                    method: "GET",
+                    method: "POST",
                 }
             )
                 .then(function (response) {
-                    return response.text();
+                    return response.json();
                 })
                 .then((data) => {
-                    if (data) {
-                        if (Object.entries(data).length >= 1) {
-                            let carModels = data;
-                            let makeSplit = carModels.split("(")[1];
-                            let anotherSplit = makeSplit.split(")")[0];
-                            let formatModel = JSON.parse(anotherSplit);
-                            let datas = [...formatModel.Models];
-                            setcarModels([...datas]);
-                        }
-                    }
+                    let carModels = data;
+                    let makeSplit = carModels.data.split("(")[1];
+                    let anotherSplit = makeSplit.split(")")[0];
+                    let formatModel = JSON.parse(anotherSplit);
+                    let datas = [...formatModel.Models];
+                    setcarModels([...datas]);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -182,8 +170,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     function Paginate() {
-        let validDatas = data.filter((item) => item.vehicleName !== "");
-        let maxPages = validDatas.length > 20 ? validDatas.length : 1;
+        let num = parseInt(cars.total) / 20;
+        let maxPages = Math.round(num);
         let items = [];
         let leftSide = pageIndex - 2;
         if (leftSide <= 0) leftSide = 1;
@@ -270,8 +258,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             return filteredData;
         }
         const query = buildFilter(info);
-        const result = filterData(data, query);
+        const result = filterData(cars.data, query);
         setData(result);
+    };
+    const clearForm = () => {
+        reset();
+        fetchPage(pageIndex);
     };
     const activateGrid = () => {
         setgrid(true);
@@ -519,6 +511,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <button
                                                 type="button"
                                                 className="focus:outline-none font-11 primary-blue"
+                                                onClick={() => clearForm()}
                                             >
                                                 Clear all filters
                                             </button>
