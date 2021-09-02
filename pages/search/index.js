@@ -43,7 +43,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        if (cars && cars.data !== null || cars.data !== undefined ) {
+        if ((cars && cars.data !== null) || cars.data !== undefined) {
             setData(cars.data);
         } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
@@ -55,7 +55,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         if (carMakes.length <= 0) {
             getMakes();
         }
-        if (makes.length) {
+        if (makes) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
