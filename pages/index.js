@@ -87,7 +87,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         if ((cars && cars.data !== null) || cars.data !== undefined) {
             setImages(cars.data);
         }
-        if (makes || makes !== null || makes !== undefined) {
+        if (makes[0]) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
