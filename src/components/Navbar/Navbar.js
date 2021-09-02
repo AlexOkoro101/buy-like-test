@@ -102,7 +102,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
 
     return (
         <header className="">
-            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-3 lg:px-16">
+            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-2 lg:px-16">
                 <div className="flex flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
                     <Link href="/">
                         {/* <span className="font-semibold text-xs ">BUY LIKE DEALERS</span> */}
@@ -110,7 +110,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                             src="../../../assets/img/Logo.svg"
                             alt="Logo"
                             style={{ cursor: "pointer" }}
-                            className="w-48"
                         />
                     </Link>
                 </div>
@@ -122,7 +121,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                 />
                 <label
                     onClick={toggleView}
-                    className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none"
+                    className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none" htmlFor="menu-btn"
                 >
                     <span className="navicon bg-grey-darkest flex items-center relative"></span>
                 </label>
@@ -130,7 +129,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                 <ul
                     id="menu"
                     className={
-                        "hidden md:flex menu border-b md:border-none text-xs justify-end items-center list-reset m-0 w-full md:w-auto " +
+                        "hidden md:flex menu border-b md:border-none justify-end items-center list-reset m-0 w-full md:w-auto " +
                         (dropdown ? "block" : "")
                     }
                 >
