@@ -87,7 +87,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         if ((cars && cars.data !== null) || cars.data !== undefined) {
             setImages(cars.data);
         }
-        if (makes.length) {
+        if (makes || makes !== null || makes !== undefined) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
@@ -160,18 +160,18 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         dispatch(searchTerm(data));
         router.push("/search");
     };
-    const addImage = (params) => {
-        if (params.images && params.images.length <= 0) {
-            return null;
-        }
-        if (
-            params.images &&
-            params.images.length > 0 &&
-            params.images[0].image_smallUrl
-        ) {
-            return <img src={params.images[0].image_largeUrl} alt="hello" />;
-        }
-    };
+    // const addImage = (params) => {
+    //     if (params.images && params.images.length <= 0) {
+    //         return null;
+    //     }
+    //     if (
+    //         params.images &&
+    //         params.images.length > 0 &&
+    //         params.images[0].image_smallUrl
+    //     ) {
+    //         return <img src={params.images[0].image_largeUrl} alt="hello" />;
+    //     }
+    // };
     //
     //
     return (
@@ -192,7 +192,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     </div>
                     {/* Hero Image here */}
                     <div style={{ minHeight: "280px" }}>
-                        {images.length > 0 && (
+                        {images && images.length > 0 && (
                             <div className="flex  mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-5 pb-24 ">
                                 <div
                                     style={{ height: "400px" }}
