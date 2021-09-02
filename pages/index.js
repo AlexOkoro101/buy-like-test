@@ -221,6 +221,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
     const [car, setCars] = useState([]);
     const [images, setImages] = useState(cars);
+    const [fetchModel, setmodel] = useState(false);
     const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
 
@@ -257,6 +258,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         getVehicleModels(data.make_id);
     };
     const getVehicleModels = (make) => {
+        setmodel(true);
         try {
             fetch(
                 "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
@@ -269,6 +271,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     return response.text();
                 })
                 .then((data) => {
+                    setmodel(false);
                     if (data) {
                         if (Object.entries(data).length >= 1) {
                             let carModels = data;
@@ -281,6 +284,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     }
                 })
                 .catch(function (error) {
+                    setmodel(false);
                     console.log(error);
                 });
         } catch (error) {
@@ -438,24 +442,44 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         >
                                             Select Model
                                         </label>
-                                        <select
-                                            name=" "
-                                            id="model "
-                                            className="form__control px-1.5 w-full font-13 focus:outline-none "
-                                            {...register("model")}
-                                        >
-                                            <option value="" selected disabled>
-                                                Select
-                                            </option>
-                                            {carModels.map((x, id) => (
+                                        {fetchModel === true ? (
+                                            <select
+                                                name=" "
+                                                id="model "
+                                                className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                            >
                                                 <option
-                                                    key={id}
-                                                    value={x?.model_name}
+                                                    value=""
+                                                    selected
+                                                    disabled
                                                 >
-                                                    {x?.model_name}
+                                                    Fetching model
                                                 </option>
-                                            ))}
-                                        </select>
+                                            </select>
+                                        ) : (
+                                            <select
+                                                name=" "
+                                                id="model "
+                                                className="form__control px-1.5 w-full font-13 focus:outline-none "
+                                                {...register("model")}
+                                            >
+                                                <option
+                                                    value=""
+                                                    selected
+                                                    disabled
+                                                >
+                                                    Select
+                                                </option>
+                                                {carModels.map((x, id) => (
+                                                    <option
+                                                        key={id}
+                                                        value={x?.model_name}
+                                                    >
+                                                        {x?.model_name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col ml-1 xl:ml-1 pb-5 w-full md:w-52 lg:w-52">
@@ -584,26 +608,48 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     <section className="w-full pb-16 px-2 lg:px-20 ">
                         <div className="mt-20 ">
                             <hr className="orange-underline w-20 m-auto pb-4 " />
-                            <h5 className="font-semibold primary-color text-center text-xl "> SEARCH A CATEGORY </h5>
+                            <h5 className="font-semibold primary-color text-center text-xl ">
+                                {" "}
+                                SEARCH A CATEGORY{" "}
+                            </h5>
                         </div>
 
-                        <div
-                            className="flex flex-wrap justify-center lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
+                        <div className="flex flex-wrap justify-center lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
                             {/* <!-- Hatchback here --> */}
                             <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img src="./assets/img/hatchback.svg " alt="Hatchback " />
+                                <img
+                                    src="./assets/img/hatchback.svg "
+                                    alt="Hatchback "
+                                />
                                 <div className="text-center text-xs pt-3 ">
-                                    <p className="font-semibold primary-color ">Hatchbacks</p>
-                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                    <p className="font-semibold primary-color ">
+                                        Hatchbacks
+                                    </p>
+                                    <a
+                                        href="# "
+                                        className="primary-red font-bold pt-2 "
+                                    >
+                                        SEE MORE
+                                    </a>
                                 </div>
                             </div>
 
                             {/* <!-- Sedans here --> */}
                             <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img src="./assets/img/sedans.svg " alt="Sedans " />
+                                <img
+                                    src="./assets/img/sedans.svg "
+                                    alt="Sedans "
+                                />
                                 <div className="text-center text-xs pt-4 ">
-                                    <p className="font-semibold primary-color ">Sedans</p>
-                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                    <p className="font-semibold primary-color ">
+                                        Sedans
+                                    </p>
+                                    <a
+                                        href="# "
+                                        className="primary-red font-bold pt-2 "
+                                    >
+                                        SEE MORE
+                                    </a>
                                 </div>
                             </div>
 
@@ -611,8 +657,15 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                             <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
                                 <img src="./assets/img/van.svg " alt="Van " />
                                 <div className="text-center text-xs pt-3 ">
-                                    <p className="font-semibold primary-color ">Vans</p>
-                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                    <p className="font-semibold primary-color ">
+                                        Vans
+                                    </p>
+                                    <a
+                                        href="# "
+                                        className="primary-red font-bold pt-2 "
+                                    >
+                                        SEE MORE
+                                    </a>
                                 </div>
                             </div>
 
@@ -620,27 +673,47 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                             <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
                                 <img src="./assets/img/suv.svg " alt="SUVs " />
                                 <div className="text-center text-xs pt-3 ">
-                                    <p className="font-semibold primary-color ">SUVs</p>
-                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                    <p className="font-semibold primary-color ">
+                                        SUVs
+                                    </p>
+                                    <a
+                                        href="# "
+                                        className="primary-red font-bold pt-2 "
+                                    >
+                                        SEE MORE
+                                    </a>
                                 </div>
                             </div>
 
                             {/* <!-- Wagons here --> */}
                             <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
-                                <img src="./assets/img/wagon.svg " alt="Wagon " />
+                                <img
+                                    src="./assets/img/wagon.svg "
+                                    alt="Wagon "
+                                />
                                 <div className="text-center text-xs pt-2 ">
-                                    <p className="font-semibold primary-color ">Wagons</p>
-                                    <a href="# " className="primary-red font-bold pt-2 ">SEE MORE</a>
+                                    <p className="font-semibold primary-color ">
+                                        Wagons
+                                    </p>
+                                    <a
+                                        href="# "
+                                        className="primary-red font-bold pt-2 "
+                                    >
+                                        SEE MORE
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
                         {/* <!-- Button here --> */}
                         <div className="text-center mt-10 ">
-                            <button type="button " className="estimate__btn focus:outline-none font-semibold px-4 ">SEE ALL
-                                VECHICLES</button>
+                            <button
+                                type="button "
+                                className="estimate__btn focus:outline-none font-semibold px-4 "
+                            >
+                                SEE ALL VECHICLES
+                            </button>
                         </div>
-
                     </section>
                     {/*  */}
                     <section
