@@ -80,11 +80,11 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     });
 
     useEffect(() => {
-        if (cars && cars?.data?.length <= 0) {
+        if ((cars && cars.data === null) || cars.data === undefined) {
             getCars();
             getMakes();
         }
-        if (cars && cars.data.length) {
+        if ((cars && cars.data !== null) || cars.data !== undefined) {
             setImages(cars.data);
         }
         if (makes.length) {
