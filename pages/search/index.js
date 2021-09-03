@@ -200,6 +200,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 await setPageIndex(pageIndex + 1);
             }
             fetchPage(pageIndex);
+            window.scrollTo({ top: 0, behavior: "smooth" });
         };
 
         const prevPage = async () => {
@@ -207,6 +208,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 await setPageIndex(pageIndex - 1);
             }
             fetchPage(pageIndex);
+            window.scrollTo({ top: 0, behavior: "smooth" });
         };
 
         const paginationRender = (
@@ -1555,15 +1557,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
                         )}
                         {data && data.length >= 1 && (
-                            <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-between my-5">
-                                <div>
-                                    {data && data.length >= 20 && (
-                                        <div className="text-gray-600">
-                                            {pageIndex * data.length - 19} -{" "}
-                                            {pageIndex * data.length}
-                                        </div>
-                                    )}
-                                </div>
+                            <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
                                 {Paginate()}
                             </div>
                         )}
