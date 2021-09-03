@@ -2,18 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
-
-const CarDetails = ({ carDetails }) => {
-    const [carDetail, setDetail] = useState(null);
+import { useDispatch } from "react-redux";
+import { carDetail } from "../../redux/actions/carsAction";
+const CarDetails = ({ carDetails, cars }) => {
+    const [cardD, setDetail] = useState(null);
+    const dispatch = useDispatch();
     const router = useRouter();
     const [offer, setOffer] = useState(true);
+    const [data, setData] = useState();
     const [id, setId] = useState(0);
     const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
-    }, []);
+        let array = [];
+        cars.data.map((ele) => {
+            if (ele.vehicleName !== "") {
+                array.push(ele);
+            }
+        });
+        const size = 4;
+        const items = array.slice(0, size);
+        console.log(items);
+        setData(items);
+    }, [carDetails]);
     const openForm = (evt, status) => {
-        console.log("car detail", carDetail);
+        console.log("car detail", cardD);
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -34,14 +47,32 @@ const CarDetails = ({ carDetails }) => {
             evt.currentTarget.className += " active";
         }
     };
+    const addImage = (params) => {
+        if (params.images && params.images.length <= 0) {
+            return null;
+        }
+        if (
+            params.images &&
+            params.images.length > 0 &&
+            params.images[0].image_smallUrl
+        ) {
+            return (
+                <img
+                    src={params.images[0].image_largeUrl}
+                    alt="hello"
+                    className="w-full h-full"
+                />
+            );
+        }
+    };
 
-    if (!carDetail) {
+    if (!cardD) {
         // reRender();
         return <div className="App">Loading...</div>;
     }
     return (
         <div>
-            {carDetail && (
+            {cardD && (
                 <>
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
@@ -56,7 +87,7 @@ const CarDetails = ({ carDetails }) => {
                                     </p>
                                     <p className="font-11 ml-2 primary-gray font-medium">
                                         VIN: {""}
-                                        {carDetail?.VIN}
+                                        {cardD?.VIN}
                                     </p>
                                 </div>
                                 <div className="ml-auto">
@@ -69,7 +100,7 @@ const CarDetails = ({ carDetails }) => {
                         <div className="w-full lg:w-3/6 px-5 overflow-hidden">
                             <div className="px-5">
                                 <img
-                                    src={carDetail?.images[id]?.image_largeUrl}
+                                    src={cardD?.images[id]?.image_largeUrl}
                                     loading="lazy"
                                     className="rounded-xl shadow-md"
                                     alt="Benz"
@@ -85,9 +116,9 @@ const CarDetails = ({ carDetails }) => {
                                         height: "87px",
                                     }}
                                 >
-                                    {carDetail &&
-                                        carDetail?.images.length > 0 &&
-                                        carDetail?.images.map((ele, id) => (
+                                    {cardD &&
+                                        cardD?.images.length > 0 &&
+                                        cardD?.images.map((ele, id) => (
                                             <div
                                                 key={id}
                                                 onClick={() => setId(id)}
@@ -110,7 +141,7 @@ const CarDetails = ({ carDetails }) => {
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="details-border-b px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
                                 <p className="text-base font-bold primary-color">
-                                    {`${carDetail?.vehicleName}`}
+                                    {`${cardD?.vehicleName}`}
                                 </p>
 
                                 <div className="flex mt-1.5">
@@ -737,7 +768,8 @@ const CarDetails = ({ carDetails }) => {
                                                 Vehicle Name
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                            {carDetail?.make} {""} {carDetail?.model}
+                                                {cardD?.make} {""}{" "}
+                                                {cardD?.model}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -747,7 +779,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Interior Colour
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.sourceInteriorColor}
+                                                {cardD?.sourceInteriorColor}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -757,7 +789,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Seller Name
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.sourceSellerName}
+                                                {cardD?.sourceSellerName}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -767,7 +799,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Mileage
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.mileage}
+                                                {cardD?.mileage}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -777,7 +809,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Tranbaseission
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.tranbaseission ||
+                                                {cardD?.tranbaseission ||
                                                     "Not Specified"}
                                             </td>
                                             <td></td>
@@ -788,7 +820,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Drive train
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.driveTrain}
+                                                {cardD?.driveTrain}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -804,7 +836,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Company Name
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.companyName}
+                                                {cardD?.companyName}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -814,7 +846,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Make
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.make}
+                                                {cardD?.make}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -824,7 +856,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Model
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.model}
+                                                {cardD?.model}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -834,7 +866,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Pickup Location
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.pickupLocation}
+                                                {cardD?.pickupLocation}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -844,9 +876,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Engine Type
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 lg:pr-32">
-                                                {
-                                                    carDetail?.sourceEngineFuelType
-                                                }
+                                                {cardD?.sourceEngineFuelType}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -856,7 +886,7 @@ const CarDetails = ({ carDetails }) => {
                                                 Exterior Color
                                             </td>
                                             <td className="text-base sec-black font-normal py-2 pr-32">
-                                                {carDetail?.sourceExteriorColor}
+                                                {cardD?.sourceExteriorColor}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -881,201 +911,113 @@ const CarDetails = ({ carDetails }) => {
                                 SIMILAR VEHICLES
                             </h4>
                         </div>
-
-                        <div className="flex justify-center flex-wrap mt-4">
-                            <div className=" similar-cars-holder p-3 mr-4 mb-5 lg:mb-0">
-                                <img
-                                    className="br-5"
-                                    src="../assets/img/cars/tacoma.png"
-                                    alt="Tacoma"
-                                />
-                                <p className="pt-2 primary-black font-medium text-sm"></p>
-                                <div className="flex pt-2">
-                                    <p className="flex items-center sec-black font-10">
-                                        {" "}
-                                        <span className="mr-1">
-                                            <img
-                                                src="../assets/img/vectors/red-location-beacon.svg"
-                                                alt="location"
-                                            />
-                                        </span>{" "}
-                                        Houston, Texas
-                                    </p>
-                                    <div className="ml-auto flex self-center">
-                                        <img
-                                            className="img-fluid"
-                                            src="../assets/img/vectors/red-date.svg"
-                                            alt="date"
-                                        />
-                                        <p className="sec-black font-10 ml-1">
-                                            {" "}
-                                            Feb 22, 2020
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex font-11 primary-gray pt-1">
-                                    <p>2020</p>
-                                    <p className="ml-3.5">205,456 miles</p>
-                                </div>
-                                <div className="flex pt-2">
-                                    <p className=" sec-black text-base">
-                                        $30,500
-                                    </p>
-                                    <div className="ml-auto  self-center">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                        >
-                                            Place bid
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className=" similar-cars-holder p-3 mr-4 mb-5 lg:mb-0">
-                                <img
-                                    className="br-5"
-                                    src="../assets/img/cars/highlander2.png"
-                                    alt="Tacoma"
-                                />
-                                <p className="pt-2 primary-black font-medium text-sm"></p>
-                                <div className="flex pt-2">
-                                    <p className="flex items-center sec-black font-10">
-                                        {" "}
-                                        <span className="mr-1">
-                                            <img
-                                                src="../assets/img/vectors/red-location-beacon.svg"
-                                                alt="location"
-                                            />
-                                        </span>{" "}
-                                        Houston, Texas
-                                    </p>
-                                    <div className="ml-auto flex self-center">
-                                        <img
-                                            className="img-fluid"
-                                            src="../assets/img/vectors/red-date.svg"
-                                            alt="date"
-                                        />
-                                        <p className="sec-black font-10 ml-1">
-                                            {" "}
-                                            Feb 22, 2020
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex font-11 primary-gray pt-1">
-                                    <p>2020</p>
-                                    <p className="ml-3.5">205,456 miles</p>
-                                </div>
-                                <div className="flex pt-2">
-                                    <p className=" sec-black text-base">
-                                        $30,500
-                                    </p>
-                                    <div className="ml-auto  self-center">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                        >
-                                            Place bid
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className=" similar-cars-holder p-3 mr-4 mb-5 lg:mb-0">
-                                <img
-                                    className="br-5"
-                                    src="../assets/img/cars/Rav 4.png"
-                                    alt="Tacoma"
-                                />
-                                <p className="pt-2 primary-black font-medium text-sm"></p>
-                                <div className="flex pt-2">
-                                    <p className="flex items-center sec-black font-10">
-                                        {" "}
-                                        <span className="mr-1">
-                                            <img
-                                                src="../assets/img/vectors/red-location-beacon.svg"
-                                                alt="location"
-                                            />
-                                        </span>{" "}
-                                        Houston, Texas
-                                    </p>
-                                    <div className="ml-auto flex self-center">
-                                        <img
-                                            className="img-fluid"
-                                            src="../assets/img/vectors/red-date.svg"
-                                            alt="date"
-                                        />
-                                        <p className="sec-black font-10 ml-1">
-                                            {" "}
-                                            Feb 22, 2020
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex font-11 primary-gray pt-1">
-                                    <p>2020</p>
-                                    <p className="ml-3.5">205,456 miles</p>
-                                </div>
-                                <div className="flex pt-2">
-                                    <p className=" sec-black text-base">
-                                        $30,500
-                                    </p>
-                                    <div className="ml-auto  self-center">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                        >
-                                            Buy Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className=" similar-cars-holder p-3 mr-4 mb-5 lg:mb-0">
-                                <img
-                                    className="br-5"
-                                    src="../assets/img/cars/tacoma.png"
-                                    alt="Tacoma"
-                                />
-                                <p className="pt-2 primary-black font-medium text-sm"></p>
-                                <div className="flex pt-2">
-                                    <p className="flex items-center sec-black font-10">
-                                        {" "}
-                                        <span className="mr-1">
-                                            <img
-                                                src="../assets/img/vectors/red-location-beacon.svg"
-                                                alt="location"
-                                            />
-                                        </span>{" "}
-                                        Houston, Texas
-                                    </p>
-                                    <div className="ml-auto flex self-center">
-                                        <img
-                                            className="img-fluid"
-                                            src="../assets/img/vectors/red-date.svg"
-                                            alt="date"
-                                        />
-                                        <p className="sec-black font-10 ml-1">
-                                            {" "}
-                                            Feb 22, 2020
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex font-11 primary-gray pt-1">
-                                    <p>2020</p>
-                                    <p className="ml-3.5">205,456 miles</p>
-                                </div>
-                                <div className="flex pt-2">
-                                    <p className=" sec-black text-base">
-                                        $30,500
-                                    </p>
-                                    <div className="ml-auto  self-center">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                        >
-                                            Place bid
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div
+                            className="flex flex-wrap justify-center lg:justify-center display-type"
+                            id="car-grid"
+                        >
+                            {data?.length > 0 &&
+                                data?.map(
+                                    (ele, id) =>
+                                        ele.vehicleName && (
+                                            <div
+                                                key={id}
+                                                className="car-display-holder mx-2 flex flex-col justify-between p-4 mb-4"
+                                                style={{
+                                                    height: "380px",
+                                                }}
+                                            >
+                                                <div
+                                                    className="cursor-pointer"
+                                                    onClick={() => {
+                                                        dispatch(
+                                                            carDetail(ele)
+                                                        ),
+                                                            router.push({
+                                                                pathname:
+                                                                    "/search/" +
+                                                                    ele.VIN,
+                                                            });
+                                                    }}
+                                                    style={{
+                                                        width: "273px",
+                                                        height: "204px",
+                                                    }}
+                                                >
+                                                    {addImage(ele)}
+                                                </div>
+                                                <div className="mt-3">
+                                                    <p className="text-xs primary-black font-medium">
+                                                        {ele?.vehicleName
+                                                            ? ele?.vehicleName
+                                                            : [
+                                                                  ele?.make,
+                                                                  ele.model,
+                                                              ].join(" ")}
+                                                    </p>
+                                                    <p className="sec-black font-11 flex items-center pt-2">
+                                                        {" "}
+                                                        {ele?.year}{" "}
+                                                        <span className="ml-6">
+                                                            205,456 miles
+                                                        </span>
+                                                    </p>
+                                                    <div className="flex pt-2">
+                                                        <p className="flex items-center sec-black font-10">
+                                                            {" "}
+                                                            <span className="mr-1">
+                                                                <img
+                                                                    src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                    alt="location"
+                                                                />
+                                                            </span>{" "}
+                                                            {
+                                                                ele?.pickupLocation
+                                                            }
+                                                        </p>
+                                                        <div className="ml-auto flex self-center">
+                                                            <img
+                                                                className="img-fluid"
+                                                                src="../../assets/img/vectors/red-date.svg"
+                                                                alt="date"
+                                                            />
+                                                            <p className="sec-black font-10 ml-1">
+                                                                {" "}
+                                                                {new Date(
+                                                                    ele?.auctionEndTime
+                                                                ).toLocaleDateString()}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex pt-3">
+                                                        <div className="ml-auto  self-center">
+                                                            <button
+                                                                type="button"
+                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                onClick={() => {
+                                                                    dispatch(
+                                                                        carDetail(
+                                                                            ele
+                                                                        )
+                                                                    ),
+                                                                        router.push(
+                                                                            {
+                                                                                pathname:
+                                                                                    "/search/" +
+                                                                                    ele.VIN,
+                                                                            }
+                                                                        );
+                                                                }}
+                                                            >
+                                                                Place bid
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                )}
                         </div>
+
                         <div className="text-center my-5">
                             <a
                                 href="#"
@@ -1091,8 +1033,8 @@ const CarDetails = ({ carDetails }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { carDetails } = state.Cars;
-    return { carDetails };
+    const { carDetails, cars } = state.Cars;
+    return { carDetails, cars };
 };
 
 export default connect(mapStateToProps)(CarDetails);
