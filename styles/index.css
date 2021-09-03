@@ -23,16 +23,25 @@
     --primary-blue: #0C74D4;
 }
 
+.works__section {
+    background-image: url('../public/assets/img/how-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 
 /* General Styles here */
 
 html {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif !important;
     overflow-x: hidden;
 }
 
 body {
     overflow-x: hidden;
+}
+
+.font-10 {
+    font-size: 0.625rem;
 }
 
 .font-11 {
@@ -45,10 +54,6 @@ body {
 
 .font-6 {
     font-size: 0.375rem;
-}
-
-.font-10 {
-    font-size: 0.625rem;
 }
 
 .font-9 {
@@ -326,7 +331,6 @@ progress::-moz-progress-bar {
     font-size: 0.813rem;
 }
 
-
 /* MEDIA QUERIES HERE */
 
 @media (max-width: 575.98px) {}
@@ -360,7 +364,7 @@ progress::-moz-progress-bar {
 }
 
 .line-60 {
-    line-height: 55px
+    line-height: 55px !important;
 }
 
 .purple__ellipse {
@@ -458,17 +462,50 @@ progress::-moz-progress-bar {
 
 /* How it works section styles here */
 
-.works__section {
+/* .works__section {
     background: #E6F7FA;
     background-repeat: no-repeat;
     background-size: cover;
-}
+} */
 
 .works__holder {
     background: #FFFFFF;
     box-shadow: 0px 0px 10px 5px rgba(73, 165, 198, 0.05);
     border-radius: 10px;
     width: 270px;
+}
+
+/* Car features styles here */
+
+.white__bg {
+    background-color: white;
+    position: relative;
+    min-height: auto;
+}
+
+.white__bg::before {
+    content: "";
+    position: absolute;
+    clip-path: polygon(27% 0, 100% 0%, 100% 100%, 0% 100%);
+    height: 100%;
+    width: 60%;
+    right: 0px;
+}
+
+.bg-red::before {
+    background-color: #D80739;
+}
+
+.bg-green::before {
+    background-color: green;
+}
+
+.bg-blue::before {
+    background-color: blue;
+}
+
+.bg-odo::before {
+    background-color: #3D4852;
 }
 
 
@@ -549,23 +586,6 @@ progress::-moz-progress-bar {
 @media (min-width: 992px) and (max-width: 1199.98px) {}
 
 
-/* Car features styles here */
-
-.white__bg {
-    background-color: white;
-    position: relative;
-    min-height: auto;
-}
-
-.white__bg::before {
-    content: "";
-    background-color: #D80739;
-    position: absolute;
-    clipPath: polygon(27% 0, 100% 0%, 100% 100%, 0% 100%);
-    height: 100%;
-    width: 60%;
-    right: 0px;
-}
 
 .feature__holder {
     background: white;

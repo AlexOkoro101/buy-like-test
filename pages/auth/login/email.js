@@ -92,7 +92,6 @@ const LogIn = ({ beginLogin }) => {
                         toastError();
                         dispatch(logOut());
                     } else {
-                        dispatch(logIn());
                         seterror(data?.message);
                         toastSuccess();
                         const now = new Date();
@@ -102,9 +101,16 @@ const LogIn = ({ beginLogin }) => {
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));
-    
+                        
                         router.push("/search");
+                        dispatch(logIn());
+                        
                     }
+                    //save data to store
+                    beginLogin({
+                        token: data.data._token,
+                        login: true,
+                    });
                 })
                 .catch((e) => {
                     // seterror(e.message)

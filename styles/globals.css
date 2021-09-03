@@ -365,7 +365,11 @@ progress::-moz-progress-bar {
 .footer-border {
     border-top: 1px solid white;
 }
-
+.works__section {
+    background-image: url('../public/assets/img/how-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 
 footer {
     background: var(--red);
