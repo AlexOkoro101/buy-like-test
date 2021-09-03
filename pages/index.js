@@ -220,7 +220,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
 
     const [car, setCars] = useState([]);
-    const [images, setImages] = useState(cars);
+    const [images, setImages] = useState(cars.data);
     const [fetchModel, setmodel] = useState(false);
     const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
@@ -239,14 +239,14 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (cars.length <= 0) {
+        if ((cars && cars.data === null) || cars.data === undefined) {
             getCars();
             getMakes();
         }
-        if (cars.length) {
-            setImages(cars);
+        if ((cars && cars.data !== null) || cars.data !== undefined) {
+            setImages(cars.data);
         }
-        if (makes.length) {
+        if (makes[0]) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
         }
@@ -261,26 +261,24 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         setmodel(true);
         try {
             fetch(
-                "https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=" +
+                "https://buylinke.herokuapp.com/vehicle-type/model?model=" +
                     `${make}`,
                 {
-                    method: "GET",
+                    method: "POST",
                 }
             )
                 .then(function (response) {
-                    return response.text();
+                    return response.json();
                 })
                 .then((data) => {
                     setmodel(false);
                     if (data) {
-                        if (Object.entries(data).length >= 1) {
-                            let carModels = data;
-                            let makeSplit = carModels.split("(")[1];
-                            let anotherSplit = makeSplit.split(")")[0];
-                            let formatModel = JSON.parse(anotherSplit);
-                            let datas = [...formatModel.Models];
-                            setcarModels([...datas]);
-                        }
+                        let carModels = data;
+                        let makeSplit = carModels.data.split("(")[1];
+                        let anotherSplit = makeSplit.split(")")[0];
+                        let formatModel = JSON.parse(anotherSplit);
+                        let datas = [...formatModel.Models];
+                        setcarModels([...datas]);
                     }
                 })
                 .catch(function (error) {
@@ -300,18 +298,18 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         dispatch(searchTerm(data));
         router.push("/search");
     };
-    const addImage = (params) => {
-        if (params.images && params.images.length <= 0) {
-            return null;
-        }
-        if (
-            params.images &&
-            params.images.length > 0 &&
-            params.images[0].image_smallUrl
-        ) {
-            return <img src={params.images[0].image_largeUrl} alt="hello" />;
-        }
-    };
+    // const addImage = (params) => {
+    //     if (params.images && params.images.length <= 0) {
+    //         return null;
+    //     }
+    //     if (
+    //         params.images &&
+    //         params.images.length > 0 &&
+    //         params.images[0].image_smallUrl
+    //     ) {
+    //         return <img src={params.images[0].image_largeUrl} alt="hello" />;
+    //     }
+    // };
     //
     //
     return (
@@ -343,6 +341,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                             {/* Progress bar here */}
                             <div className=" w-1/2 ">
                             <progress value={10} max={100} />
+
                             </div>
                             {/* Controller here */}
                             <div className="ml-auto hero-btns">
