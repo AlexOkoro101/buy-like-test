@@ -24,7 +24,7 @@
 }
 
 .works__section {
-    background-image: url('../public/assets/img/how-bg.png');
+    background: #E6F7FA;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -520,8 +520,17 @@ progress::-moz-progress-bar {
     background: #FFFFFF;
     box-shadow: 0px 0px 5px 1px rgba(0, 58, 78, 0.1);
     border-radius: 10px;
+    width: 100% !important;
+    height: 298px;
+    margin: auto;
+}
+.slick-slide > div {
     width: 90%;
-    height: 250px
+    margin: auto;
+}
+.slick-next:before, .slick-prev:before {
+    color: #000 !important;
+    font-size: 30px !important;
 }
 
 .imgWrap:hover .description {

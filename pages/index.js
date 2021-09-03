@@ -10,11 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm, carDetail, getMakes } from "../redux/actions/carsAction";
-import styled, { keyframes } from 'styled-components';
-import { slideInLeft, slideInRight, slideInUp } from 'react-animations';
-const SlideInLeftAnimation = keyframes`${slideInLeft}`;
-const SlideInRightAnimation = keyframes`${slideInRight}`;
-const SlideInUpAnimation = keyframes`${slideInUp}`;
+
 
 //
 const Home = ({ getCars, cars, makes, getMakes }) => {
@@ -731,15 +727,11 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     className="purple__ellipse mt-5 lg:mt-0 "
                                     id="filteredwaypoint"
                                 >
-                                    <SlideInLeftDiv>
-                                        <img
-                                            src="./assets/img/tesla.svg "
-                                            className="pt-7 tesla"
-                                            
-                                            alt="Tesla "
-                                        />
-
-                                    </SlideInLeftDiv>
+                                    <img
+                                        src="./assets/img/tesla.svg "
+                                        className="pt-7 tesla"
+                                        alt="Tesla "
+                                    />
                                 </div>
                                 <div className=" w-full md:w-1/2 xl:w-2/5 ">
                                     <div>
@@ -756,12 +748,10 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 </div>
                             </div>
                             <div className=" absolute bottom-0 right-0 hidden lg:block ">
-                                <SlideInRightDiv>
-                                    <img
-                                        src="./assets/img/vectors/oval-red.svg "
-                                        alt="oval "
-                                    />
-                                </SlideInRightDiv>
+                                <img
+                                    src="./assets/img/vectors/oval-red.svg "
+                                    alt="oval "
+                                />
                             </div>
                         </div>
                     </section>
@@ -785,14 +775,11 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 </p>
                             </div>
                             <div className="red__ellipse mt-5 lg:mt-0 ">
-                                <SlideInRightDiv>
-                                    <img
-                                        src="./assets/img/audi.svg "
-                                        className="pt-10 "
-                                        alt="Audi "
-                                    />
-
-                                </SlideInRightDiv>
+                                <img
+                                    src="./assets/img/audi.svg "
+                                    className="pt-10 "
+                                    alt="Audi "
+                                />
                             </div>
                         </div>
                     </section>
@@ -801,25 +788,21 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         <div className="relative lg:pr-20 ">
                             <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-32 ">
                                 <div className="relative " id="easyBuywaypoint">
-                                    <SlideInLeftDiv>
-                                        <img
-                                            src="./assets/img/land-rover.svg "
-                                            alt="Land Rover "
-                                            className="lg:pt-5 md:pt-10 pt-12 rover"
-                                        />
-                                    </SlideInLeftDiv>
-                                        <img
-                                            src="./assets/img/vectors/Subtract.svg "
-                                            alt="anchor "
-                                            className="subtract absolute "
-                                        />
-
-                                        <img
-                                            src="./assets/img/vectors/sold.svg "
-                                            alt="sold "
-                                            className="sold absolute "
-                                        />
-
+                                    <img
+                                        src="./assets/img/land-rover.svg "
+                                        alt="Land Rover "
+                                        className="lg:pt-5 md:pt-10 pt-12 rover"
+                                    />
+                                    <img
+                                        src="./assets/img/vectors/Subtract.svg "
+                                        alt="anchor "
+                                        className="subtract absolute "
+                                    />
+                                    <img
+                                        src="./assets/img/vectors/sold.svg "
+                                        alt="sold "
+                                        className="sold absolute "
+                                    />
                                 </div>
                                 <div className=" w-full md:w-1/2 xl:w-2/5 lg:px-0 px-7 ">
                                     <div>
@@ -966,26 +949,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { getCars, getMakes })(Home);
-
-const SlideInLeftDiv = styled.div`
-  animation: infinite 5s ${SlideInLeftAnimation};
-`;
-const SlideInRightDiv = styled.div`
-  animation: infinite 5s ${SlideInRightAnimation};
-`;
-const SlideInUpDiv = styled.div`
-  animation: infinite 5s ${SlideInUpAnimation};
-`;
-
-const SlideInUpDiv2 = styled.div`
-  animation: infinite 5s ${SlideInUpAnimation};
-  position: absolute;
-  left: 215px;
-  top: 10px;
-  z-index: -1;
-
-  @media (min-width: 768px) and (max-width: 991.98px) {
-      left: 165px;
-      top: 10px;
-  }
-`;
