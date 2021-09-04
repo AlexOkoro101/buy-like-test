@@ -170,6 +170,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     function Paginate() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         let num = parseInt(cars.total) / 20;
         let maxPages = Math.round(num);
         let items = [];
@@ -200,7 +201,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 await setPageIndex(pageIndex + 1);
             }
             fetchPage(pageIndex);
-            window.scrollTo({ top: 0, behavior: "smooth" });
         };
 
         const prevPage = async () => {
@@ -208,7 +208,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 await setPageIndex(pageIndex - 1);
             }
             fetchPage(pageIndex);
-            window.scrollTo({ top: 0, behavior: "smooth" });
         };
 
         const paginationRender = (

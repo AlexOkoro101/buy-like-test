@@ -11,7 +11,9 @@ const CarDetails = ({ carDetails, cars }) => {
     const router = useRouter();
     const [offer, setOffer] = useState(true);
     const [data, setData] = useState();
+    const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
+
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     const [terms, setterms] = useState(true)
@@ -139,6 +141,11 @@ const CarDetails = ({ carDetails, cars }) => {
         return retrieveData;
     }, [router.pathname, token]);
 
+
+    const [page, setPage] = useState(0);
+    const [limit, setLimit] = useState(5);
+    const [count, setCount] = useState(0);
+    const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
         let array = [];
@@ -151,7 +158,8 @@ const CarDetails = ({ carDetails, cars }) => {
         const items = array.slice(0, size);
         console.log(items);
         setData(items);
-    }, [carDetails]);
+        displaySmall();
+    }, [carDetails, cardD]);
     const openForm = (evt, status) => {
         console.log("car detail", cardD);
         if (status !== offer) {
@@ -191,6 +199,26 @@ const CarDetails = ({ carDetails, cars }) => {
                 />
             );
         }
+    };
+
+    function displaySmall() {
+        let data = cardD?.images.length;
+        let count = cardD?.images.length - 5;
+        setCount(count);
+        if (data > 6) {
+            let data = cardD?.images.slice(page, 5);
+            setimageD(data);
+        } else {
+            let data = cardD?.images;
+            setimageD(data);
+        }
+    }
+    const prevPage = async () => {
+        let data = cardD.images.slice(page + 5, limit + 5);
+        setimageD(data);
+        setPage(page + 5);
+        setLimit(limit + 5);
+        setCount(count - 5);
     };
 
     if (!cardD) {
@@ -239,18 +267,20 @@ const CarDetails = ({ carDetails, cars }) => {
                                     style={{ height: "500px", width: "700px" }}
                                 />
                             </div>
-                            <div className="overflow-auto w-full px-5">
+
+
+                            <div className="overflow-scroll w-full px-5">
+
                                 <div
                                     className=" flex transition-all mt-3
                                 "
                                     style={{
-                                        width: "2400px",
+                                        width: "100%",
                                         height: "87px",
                                     }}
                                 >
-                                    {cardD &&
-                                        cardD?.images.length > 0 &&
-                                        cardD?.images.map((ele, id) => (
+                                    {imageD &&
+                                        imageD.map((ele, id) => (
                                             <div
                                                 key={id}
                                                 onClick={() => setId(id)}
@@ -267,6 +297,28 @@ const CarDetails = ({ carDetails, cars }) => {
                                                 />
                                             </div>
                                         ))}
+                                    {count >= 5 ? (
+                                        <div
+                                            className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
+                                            style={{
+                                                height: "60.3px",
+                                                width: "90.03px",
+                                                backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
+                                                backgroundSize: "cover",
+                                            }}
+                                        >
+                                            <div
+                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 right-0 bottom-0 bg-black
+                        bg-opacity-40 text-white flex items-center justify-center
+                        "
+                                                onClick={() => prevPage(page)}
+                                            >
+                                                load {count} more
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        ""
+                                    )}
                                 </div>
                             </div>
                         </div>
