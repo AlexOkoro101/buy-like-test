@@ -132,10 +132,13 @@ const BidTracker = () => {
                             </div>
                             </>
                         ))}
-                        <div>
+                        <div className="flex justify-between">
                             <Link href="/search">
                                 <p className="start-bid"> Start a new bid</p>
                             </Link>
+                            
+                            <p onClick={() => {console.log('testing')}} className="start-bid"> Add Collection</p>
+                            
                         </div>
                        
                     </div>
