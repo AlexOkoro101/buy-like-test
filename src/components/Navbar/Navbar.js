@@ -79,6 +79,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                 if (ref.current && !ref.current.contains(event.target)) {
                     // alert(navDropdown)
                     setnavDropdown(false);
+                } else {
+                    setnavDropdown(true);
                 }
             }
 
@@ -154,8 +156,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                     </button>
                                 </div>
 
-                                <div className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown">
-                                    <span onClick={toggleDropdown}>
+                                <div className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
+                                    <span>
                                         <button
                                             className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none "
                                             type="button"

@@ -471,7 +471,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
                             </div>
 
-                            {/* Advanced Filters */}
+                            {/* Filters */}
                             <form
                                 onSubmit={handleSubmit(handleFilter)}
                                 className="mt-16"
@@ -487,7 +487,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     alt="filter"
                                                 />
                                             </span>{" "}
-                                            Advanced Filters
+                                            Filters
                                         </p>
                                     </div>
                                     {/* <div className="ml-auto self-center">
@@ -1317,14 +1317,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             carDetail(
                                                                                                 ele
                                                                                             )
-                                                                                        ),
-                                                                                            router.push(
-                                                                                                {
-                                                                                                    pathname:
-                                                                                                        "/search/" +
-                                                                                                        ele.VIN,
-                                                                                                }
-                                                                                            );
+                                                                                        )
+                                                                                            // router.push(
+                                                                                            //     {
+                                                                                            //         pathname:
+                                                                                            //             "/search/" +
+                                                                                            //             ele.VIN,
+                                                                                            //     }
+                                                                                            // );
                                                                                     }}
                                                                                 >
                                                                                     Place

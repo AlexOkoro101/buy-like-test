@@ -15,6 +15,100 @@ const CarDetails = ({ carDetails, cars }) => {
     const [userNmae, setuserName] = useState(null);
 
 
+
+
+
+
+    const [vin, setvin] = useState('')
+    const [link, setlink] = useState('')
+    const [name, setname] = useState('')
+    const [site, setsite] = useState('')
+    const [price, setprice] = useState('')
+    const [year, setyear] = useState('')
+    const [exteriorColor, setexteriorColor] = useState('')
+    const [vehicleType, setvehicleType] = useState('')
+    const [interiorColor, setinteriorColor] = useState('')
+    const [transmission, settransmission] = useState('')
+    const [odometer, setodometer] = useState('')
+    const [driveTrain, setdriveTrain] = useState('')
+    const [doors, setdoors] = useState('')
+    const [model, setmodel] = useState('')
+    const [make, setmake] = useState('')
+    const [equipment, setequipment] = useState('')
+    const [engineType, setengineType] = useState('')
+    const [interiorType, setinteriorType] = useState('')
+    const [bodyStyle, setbodyStyle] = useState('')
+    const [fuelType, setfuelType] = useState('')
+    const [passengerCapacity, setpassengerCapacity] = useState('')
+    const [sellerCity, setsellerCity] = useState('')
+    const [description, setdescription] = useState('')
+    const [zip, setzip] = useState('')
+    const [titleImage, settitleImage] = useState('')
+    const [bidAmount, setbidAmount] = useState('')
+    const [owner, setowner] = useState('')
+    const [collection, setcollection] = useState('')
+    const [facilitationLocation, setfacilitationLocation] = useState('')
+    const [vehicleLocation, setvehicleLocation] = useState('')
+    const [images, setimages] = useState('')
+
+
+
+    const bidObject = 
+
+    {
+        vin:"1C6RR7PMXGS359814",
+        link:"https://members.manheim.com/",
+        name:"2013 Hyundai Sonata 4dr Sdn 2.4L Auto Limited",
+        site:"https://members.manheim.com/",
+        price:"11000",
+        year:"2020",
+        exterior_color:"Black",
+        vehicle_type:"",
+        interior_color:"Gray",
+        transmission:"24/35 MPG",
+        odometer:"46029",
+        driveTrain:"2 Wheel Drive",
+        doors:"4",
+        Model:"Sonata",
+        make:"",
+        equipment:"",
+        EngineType:"",
+        interior_type:"",
+        body_style:"",
+        fuel_type:"",
+        passengerCapacity:"",
+        sellerCity:"",
+        description:"",
+        Zip:"23234",
+        tilteImage:"",
+        bidAmount:"",
+        owner:"5f9ca1ffb60b8837f4eb31c6",
+        collection:"612ccfeeac78e30b1e228a4e",
+        facilitationLocation:"Richmond Auto Auction",
+        Vehicle_location:"",
+        images:"jsfkvfs"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -101,6 +195,11 @@ const CarDetails = ({ carDetails, cars }) => {
         // reRender();
         return <div className="App">Loading...</div>;
     }
+
+
+                
+      
+       
     return (
         <div>
             {cardD && (
