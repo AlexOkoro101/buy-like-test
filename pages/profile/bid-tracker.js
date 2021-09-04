@@ -137,7 +137,7 @@ const BidTracker = () => {
                                 <p className="start-bid"> Start a new bid</p>
                             </Link>
                             
-                            <p onClick={() => {console.log('Creating collection')}} className="start-bid"> Add Collection</p>
+                            <p onClick={() => {console.log('testing')}} className="start-bid"> Add Collection</p>
                             
                         </div>
                        
