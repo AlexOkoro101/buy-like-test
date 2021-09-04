@@ -2,13 +2,14 @@ import Slider from 'react-slick';
 
 const Testimonials = () => {
     const settings = {
+        drag: true,
         dots: true,
-        infinite: false,
+        infinite: true,
         speed: 500,
         slidesToShow: 3,
         slidesToScroll: 3,
         initialSlide: 0,
-        arrows: false,
+        arrows: true,
         autoplaySpeed: 3000,
         autoplay: true,
         responsive: [
@@ -51,7 +52,7 @@ const Testimonials = () => {
         <div className="splide__track ">
           <div className="splide__list">
             <Slider {...settings}>
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
@@ -73,7 +74,7 @@ const Testimonials = () => {
                   Lagos, Nigeria{' '}
                 </p>
               </div>
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
@@ -95,7 +96,7 @@ const Testimonials = () => {
                   Lagos, Nigeria{' '}
                 </p>
               </div>
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
@@ -117,7 +118,7 @@ const Testimonials = () => {
                   Lagos, Nigeria{' '}
                 </p>
               </div>
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
@@ -139,7 +140,7 @@ const Testimonials = () => {
                   Lagos, Nigeria{' '}
                 </p>
               </div>{' '}
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
@@ -161,7 +162,7 @@ const Testimonials = () => {
                   Lagos, Nigeria{' '}
                 </p>
               </div>
-              <div className=" splide__slide testimonial__holder p-8 ">
+              <div className=" testimonial__holder p-8 ">
                 <p className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw

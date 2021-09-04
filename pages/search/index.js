@@ -470,7 +470,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
                             </div>
 
-                            {/* Advanced Filters */}
+                            {/* Filters */}
                             <form
                                 onSubmit={handleSubmit(handleFilter)}
                                 className="mt-16"
@@ -486,7 +486,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     alt="filter"
                                                 />
                                             </span>{" "}
-                                            Advanced Filters
+                                            Filters
                                         </p>
                                     </div>
                                     {/* <div className="ml-auto self-center">
@@ -1207,11 +1207,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {loading ? (
                                     <div className="flex justify-center items-center w-full h-80">
                                         <FadeLoader
-                                            color="green"
+                                            color="#BFC1C6"
                                             width={5}
                                             radius={2}
                                             margin={2}
-                                            height={15}
+                                            height={5}
                                             loading={loading}
                                         />
                                     </div>

@@ -33,14 +33,14 @@ border: 1px solid rgba(31, 42, 83, 0.25);
     opacity: 0.75    
 }
  .phone-number{
-    background: url(./../img/vectors/nigeria-flag.svg) no-repeat left;
+    background: url("../public/assets/img/vectors/nigeria-flag.svg") no-repeat left;
     -webkit-appearance: none;
     background-position-x: calc(0% + 5px);
     
 }
 
 .info-select {
-    background: url(./../img/vectors/arrow-down2.svg) no-repeat right #fff;
+    background: url("../public/assets/img/vectors/arrow-down2.svg") no-repeat right #fff;
     -webkit-appearance: none;
     background-position-x: calc(100% - 5px);
     border: 1px solid rgba(35, 41, 65, 0.25);
@@ -78,7 +78,7 @@ border: 1px solid rgba(31, 42, 83, 0.25);
 }
 
 .card-select, .city-select {
-    background: url(./../img/vectors/arrow-down2.svg) no-repeat right #fff;
+    background: url("../public/assets/img/vectors/arrow-down2.svg") no-repeat right #fff;
     -webkit-appearance: none;
     background-position-x: calc(100% - 5px);
     height: 30px;
@@ -88,7 +88,7 @@ border: 1px solid rgba(31, 42, 83, 0.25);
     opacity: 0.75;
 }
 .deposit-text{
-    background: url(../img/vectors/copy-icon.svg) no-repeat right #fff ;
+    background: url("../public/assets/img/vectors/copy-icon.svg") no-repeat right #fff ;
     border: 1px solid rgba(31, 42, 83, 0.5);
     border-radius: 3px;
     font-size: 0.563rem;
