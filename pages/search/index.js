@@ -184,7 +184,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     key={number}
                     className={
                         number === pageIndex
-                            ? "round-effect active"
+                            ? "round-effect active1"
                             : "round-effect"
                     }
                     onClick={() => {
