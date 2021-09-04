@@ -4,6 +4,7 @@ import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
 import { carDetail } from "../../redux/actions/carsAction";
+import Link from "next/link";
 const CarDetails = ({ carDetails, cars }) => {
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const CarDetails = ({ carDetails, cars }) => {
     const [id, setId] = useState(0);
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
+    const [terms, setterms] = useState(true)
 
 
 
@@ -636,6 +638,8 @@ const CarDetails = ({ carDetails, cars }) => {
                                         <input
                                             type="checkbox"
                                             className="focus:outline-none detail self-center"
+                                            checked={terms}
+                                            onChange={(e) => {setterms(!terms)}}
                                         />
                                         <span className="detail"></span>
                                     </label>
@@ -651,23 +655,31 @@ const CarDetails = ({ carDetails, cars }) => {
                             <div className="flex justify-center">
                                     {
                                         token ? (
-                                            <button
+                                            <Link
+                                                href="/make-deposit"
                                                 type="button"
-                                                className="focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                
                                             >
-                                                Make Deposit
-                                            </button>
+                                            <button className={`cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` + (!terms && `opacity-50 cursor-not-allowed`)} disabled={!terms}>Make Deposit</button>
+                                                
+                                            </Link>
                                         )
 
                                         :
 
                                         (
-                                            <button
-                                                type="button"
-                                                className="focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+
+                                            <Link
+                                                href="/auth/login"
                                             >
-                                                LOGIN OR SIGN UP TO PROCEED
-                                            </button>
+                                                <button
+                                                    type="button"
+                                                    className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                >
+                                                    LOGIN OR SIGN UP TO PROCEED
+                                                </button>
+
+                                            </Link>
 
                                         )
                                     }

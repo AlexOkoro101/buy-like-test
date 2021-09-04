@@ -1208,7 +1208,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {loading ? (
                                     <div className="flex justify-center items-center w-full h-80">
                                         <FadeLoader
-                                            color="#d80739"
+                                            color="#BFC1C6"
                                             width={5}
                                             radius={2}
                                             margin={2}
@@ -1317,14 +1317,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             carDetail(
                                                                                                 ele
                                                                                             )
-                                                                                        )
-                                                                                            // router.push(
-                                                                                            //     {
-                                                                                            //         pathname:
-                                                                                            //             "/search/" +
-                                                                                            //             ele.VIN,
-                                                                                            //     }
-                                                                                            // );
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
                                                                                     }}
                                                                                 >
                                                                                     Place

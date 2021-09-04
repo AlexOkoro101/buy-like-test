@@ -5,6 +5,7 @@ import "../styles/onboarding.css";
 import "../styles/user-profile.css";
 import "../styles/search-results.css";
 import "../styles/ft-status-page.css";
+import "../styles/transaction-page.css";
 import "../styles/telInput.css";
 import "../styles/tailwind.css";
 import App from "../src/components/App";
