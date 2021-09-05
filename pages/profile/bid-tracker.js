@@ -3,19 +3,109 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { enviroment } from "../../src/components/enviroment";
 import Meta from "../../src/components/Head/Meta";
+import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BidTracker = () => {
+    const [id, setId] = useState(null);
     const [carCollection, setcarCollection] = useState([]);
     const [collectionDropdown, setcollectionDropdown] = useState(false);
     const collectionRef = useRef(null);
+    const [showModal, setshowModal] = useState(false)
+    const [isLoading, setisLoading] = useState(false)
+    const [error, seterror] = useState(null)
+    const [message, setmessage] = useState(null)
+    const newCollection = useRef()
+
+
+    const toastError = () =>
+        toast.error(`${error ? error : "Could not create"}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const toastSuccess = () =>
+        toast.success(`${message ? message : "Created successfully"}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    
 
     const toggleCollectionDropdown = () => {
         setcollectionDropdown(!collectionDropdown);
     };
 
     useEffect(() => {
+        const getUserId = () => {
+            const userActive = localStorage.getItem("user");
+            // console.log(userActive)
+            if (!userActive) {
+                setId(null);
+                return null;
+            }
+            const item = JSON.parse(userActive);
+            setId(item?.userId)
+            
+        }
+        getUserId()
+        
+    }, [])
+
+
+    const addCollection = (e) => {
+        e.preventDefault()
+
+
+        if(!newCollection.current.value) {
+            return;
+        } else {
+            seterror(null)
+            setisLoading(true)
+
+            const collectionObject = {
+                owner: `${id}`,
+                name: `${newCollection.current.value}`
+            }
+            console.log(collectionObject)
+            fetch(enviroment.BASE_URL + "collections", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(collectionObject),
+                redirect: 'follow'
+            })
+            .then(response => {
+                setisLoading(false)
+                console.log(response)
+                if (!response.ok) {
+                    toastError()
+                    throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    setshowModal(false)
+                }
+            })
+            .catch(error => {
+                seterror(error)
+                console.log('error', error)
+            });
+        }
+    }
+
+    useEffect(() => {
         const fetchCarCollection = () => {
-            console.log("run funtion");
             fetch(enviroment.BASE_URL + "collections", {
                 method: "GET",
                 redirect: "follow",
@@ -51,10 +141,13 @@ const BidTracker = () => {
         };
     }, []);
 
+   
+
     return (
         <div>
             <Meta></Meta>
             <main className="mb-20">
+            <ToastContainer />
                 {carCollection?.length ? (
                     <div className="blue-div px-20 mt-16 py-3 flex justify-between items-center">
                         <>
@@ -143,7 +236,7 @@ const BidTracker = () => {
                         id="headlessui-menu-items-117"
                         role="menu"
                     >
-                        {carCollection?.map((collection) => (
+                        {carCollection?.slice(0, 5).map((collection) => (
                             <>
                                 <div
                                     key={collection?._id}
@@ -203,14 +296,15 @@ const BidTracker = () => {
                                 </div>
                             </>
                         ))}
-                        <div className="flex justify-between">
+                        <div className="px-20 py-3 flex justify-between items-center">
                             <Link href="/search">
                                 <p className="start-bid"> Start a new bid</p>
                             </Link>
 
                             <p
                                 onClick={() => {
-                                    console.log("testing");
+                                    setcollectionDropdown(false)
+                                    setshowModal(true)
                                 }}
                                 className="start-bid"
                             >
@@ -513,6 +607,46 @@ const BidTracker = () => {
                     </section>
                 </div>
             </main>
+            {/* <!-- The Modal --> */}
+            {
+                showModal && (
+
+                <div id="myModal" className="modal">
+                    {/* <!-- Modal content --> */}
+                    <div className="modal-content relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                        <span onClick={() => {setshowModal(false)}} className="close absolute right-5 top-1 text-4xl text-gray-500">&times;</span>
+                        {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
+                        <form onSubmit={addCollection} className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
+                            <div className="col-span-6 mb-2">
+                                <label className="block pb-1.5 font-10 primary-black" htmlFor="card_number"> Collection Name </label>
+                                <input ref={newCollection} id="card_number" className="profile-control focus:outline-none p-2 w-full" type="text"
+                                    placeholder="Enter your collection name" />
+                            </div>
+                            
+                            <div className="col-span-6 place-self-center mt-4">
+                                <button
+
+                                    className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8">
+                                    {isLoading ? (
+                                        <ClipLoader
+                                            color="#fff"
+                                            size={20}
+                                            loading
+                                        />
+                                    ) : (
+                                        <>
+                                        ADD
+                                    COLLECTION
+                                    </>
+                                    )}
+                                    </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                )
+            }
+            {/* <!-- end of modal --> */}
         </div>
     );
 };

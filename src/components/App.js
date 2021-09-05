@@ -9,29 +9,40 @@ import { logIn, logOut } from "../../redux/actions/carsAction";
 const App = ({ children }) => {
     const dispatch = useDispatch();
     const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState(() => localStorage.getItem("user"));
     const [auth, setAuth] = useState(false);
     const router = useRouter();
     const myFunction = () => {
-        if (router.pathname !== "/") {
-            if (!user) {
+        const user = localStorage.getItem("user");
+        let token = JSON.parse(user)?.userToken;
+        if (router.pathname !== "/" && !router.pathname.includes("auth")) {
+            if (!token) {
                 dispatch(logOut());
                 return router.push("/auth/login");
             }
+
+
             setLoggedIn(true);
-            let token = JSON.parse(user).userToken;
-            if (router.pathname.includes("auth")) {
-                if (token) {
-                    dispatch(logIn());
-                    router.push("/search");
-                }
-            } else {
-                if (!token) {
-                    dispatch(logOut());
-                    router.push("/auth/login");
-                }
+
+            // if (router.pathname.includes("auth")) {
+            //     if (token) {
+            //         dispatch(logIn());
+            //         return router.push("/search");
+            //     }
+            // // } else {
+            // //     if (!token) {
+            // //         dispatch(logOut());
+            // //         router.push("/auth/login");
+            // //     }
+            // }
+        }
+        if (router.pathname.includes("auth")) {
+            console.log("includes")
+            if (token) {
+                dispatch(logIn());
+                return router.push("/search");
             }
         }
+
     };
     useEffect(() => {
         myFunction();
@@ -40,7 +51,7 @@ const App = ({ children }) => {
         } else {
             setAuth(false);
         }
-    }, []);
+    }, [router.pathname]);
     return (
         <>
             <Meta />
