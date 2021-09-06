@@ -7,7 +7,7 @@ import {
     getMakes,
     carDetail,
 } from "../../redux/actions/carsAction";
-
+import Select from "react-select";
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [paramValue, setParam] = useState(params);
     const [pageIndex, setPageIndex] = useState(1);
     const [filter, setfilter] = useState([]);
+    const [options, setoptions] = useState([]);
     const [data, setData] = useState(cars.data);
     const [total, setTotal] = useState(cars.total);
     const router = useRouter();
@@ -71,16 +72,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         getVehicleModels(paramValue.make);
     }, [paramValue, params]);
 
-    // const handleSearch = async (e) => {
-    //     setIsSearching(true);
-    //     const data = {
-    //         make: e.target.value,
-    //         year: "",
-    //     };
+    const handleSearch = async (e) => {
+        const data = {
+            VIN: e.target.value,
+        };
 
-    //     await dispatch(searchTerm(data));
-    //     setData(cars);
-    // };
+        await dispatch(searchTerm(data));
+        setData(cars);
+    };
 
     const fetchPage = (i) => {
         const datas = {
@@ -287,12 +286,56 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             );
         }
     };
+    const handleChange = (newValue) => {
+        if (newValue && newValue.data) {
+            dispatch(carDetail(newValue.data));
+            router.push({
+                pathname: "/search/" + newValue.value,
+            });
+        }
+    };
+    const handleInputChange = (inputValue) => {
+        if (inputValue !== "") {
+            try {
+                fetch(
+                    `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
+                    {
+                        method: "GET",
+                        headers: {},
+                        credentials: "same-origin",
+                    }
+                )
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (res) {
+                        const dada = JSON.parse(res);
+                        if (dada) {
+                            dada.data.map((ele) => {
+                                setoptions([
+                                    {
+                                        value: ele.VIN,
+                                        label: ele.VIN,
+                                        data: ele,
+                                    },
+                                ]);
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
     return (
         <div>
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex main h-full   pb-12 pt-24 px-5 lg:px-16">
+                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-16">
                     {/* <!-- filter tab here --> */}
                     <div className="filter-holder hidden  h-full lg:block p-3 w-2/12">
                         {/* <!-- Filter icon --> */}
@@ -999,25 +1042,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     </div>
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full relative  lg:w-5/6 ml-2.5">
+                    <div className="display-holder w-full relative  lg:w-5/6 ">
                         {/* <!-- Filter and search for mobile here --> */}
-                        {/* <div className="mb-3 block lg:hidden ">
-                            <div className="flex">
-                                <div className="relative">
-                                    <input
-                                        className="search-result-control-mobile px-3 w-11/12 md:w-full focus:outline-none "
+                        <div className="mb-3 px-3 block lg:hidden ">
+                            <div className="w-full">
+                                <div className="w-full">
+                                    <Select
+                                        className="w-full cursor-pointer focus:outline-none"
                                         type="text"
                                         placeholder="Search 7685 cars"
-                                        onChange={(event) =>
-                                            handleSearch(event)
-                                        }
+                                        isClearable
+                                        onChange={handleChange}
+                                        onInputChange={handleInputChange}
+                                        options={options}
                                     />
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between lg:px-3">
+                        <div className="search-results-holder flex items-center justify-between px-3">
                             {/* <!-- first section here --> */}
                             <div>
                                 <button
@@ -1041,14 +1085,17 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Second section here --> */}
-                            {/* <div className="hidden lg:block ">
-                                <input
-                                    className="search-result-control px-3  focus:outline-none"
+                            <div className="hidden lg:block ">
+                                <Select
+                                    className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
                                     placeholder="Search 7685 cars"
-                                    onChange={(event) => handleSearch(event)}
+                                    isClearable={false}
+                                    onChange={handleChange}
+                                    onInputChange={handleInputChange}
+                                    options={options}
                                 />
-                            </div> */}
+                            </div>
 
                             {/* <!-- Third section here --> */}
                             <div className="flex">

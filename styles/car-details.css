@@ -304,10 +304,14 @@ input.detail:checked~span:after {
     .bids-dropdown-holder {
         left: 18px;
     }
+
+
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
     .bids-dropdown-holder {
         left: 18px;
     }
+
+
 }
