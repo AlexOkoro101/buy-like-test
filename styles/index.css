@@ -1,17 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
 .react-multi-carousel-list {
     overflow: initial !important;
 }
+
 .react-multi-carousel-dot-list {
-    bottom: -28% !important; 
+    bottom: -28% !important;
 }
+
 .react-multi-carousel-dot button {
     border: none !important;
     background: #C2EEFD !important;
 }
-.react-multi-carousel-dot--active button{
+
+.react-multi-carousel-dot--active button {
     background-color: #2482D8 !important;
 }
+
 :root {
     --primary-color: #1F2A53;
     --red: #D80739;
@@ -194,11 +199,11 @@ a {
     } */
 
     .dropdown:focus-within .dropdown-menu {
-        opacity:1;
+        opacity: 1;
         transform: translate(0) scale(1);
         visibility: visible;
         display: block;
-      }
+    }
 
     .menu-btn:checked~.menu-icon .navicon {
         background: transparent;
@@ -524,11 +529,14 @@ progress::-moz-progress-bar {
     height: 298px;
     margin: auto;
 }
-.slick-slide > div {
+
+.slick-slide>div {
     width: 90%;
     margin: auto;
 }
-.slick-next:before, .slick-prev:before {
+
+.slick-next:before,
+.slick-prev:before {
     color: #000 !important;
     font-size: 30px !important;
 }
@@ -780,10 +788,23 @@ footer {
     top: -16px;
     transition: 0.3s;
 }
+
 .start-bid {
     color: #0C74D4;
     font-size: 14px;
     font-weight: 500;
     margin: 20px 5px 20px 80px;
     cursor: pointer;
+}
+
+/* 
+ */
+.largeImage {
+    height: 500px !important
+}
+
+@media (max-width:900px) {
+    .largeImage {
+        height: 200px !important;
+    }
 }

@@ -16,102 +16,73 @@ const CarDetails = ({ carDetails, cars }) => {
 
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
-    const [terms, setterms] = useState(true)
+    const [terms, setterms] = useState(true);
 
+    const [vin, setvin] = useState("");
+    const [link, setlink] = useState("");
+    const [name, setname] = useState("");
+    const [site, setsite] = useState("");
+    const [price, setprice] = useState("");
+    const [year, setyear] = useState("");
+    const [exteriorColor, setexteriorColor] = useState("");
+    const [vehicleType, setvehicleType] = useState("");
+    const [interiorColor, setinteriorColor] = useState("");
+    const [transmission, settransmission] = useState("");
+    const [odometer, setodometer] = useState("");
+    const [driveTrain, setdriveTrain] = useState("");
+    const [doors, setdoors] = useState("");
+    const [model, setmodel] = useState("");
+    const [make, setmake] = useState("");
+    const [equipment, setequipment] = useState("");
+    const [engineType, setengineType] = useState("");
+    const [interiorType, setinteriorType] = useState("");
+    const [bodyStyle, setbodyStyle] = useState("");
+    const [fuelType, setfuelType] = useState("");
+    const [passengerCapacity, setpassengerCapacity] = useState("");
+    const [sellerCity, setsellerCity] = useState("");
+    const [description, setdescription] = useState("");
+    const [zip, setzip] = useState("");
+    const [titleImage, settitleImage] = useState("");
+    const [bidAmount, setbidAmount] = useState("");
+    const [owner, setowner] = useState("");
+    const [collection, setcollection] = useState("");
+    const [facilitationLocation, setfacilitationLocation] = useState("");
+    const [vehicleLocation, setvehicleLocation] = useState("");
+    const [images, setimages] = useState("");
 
-
-
-
-
-    const [vin, setvin] = useState('')
-    const [link, setlink] = useState('')
-    const [name, setname] = useState('')
-    const [site, setsite] = useState('')
-    const [price, setprice] = useState('')
-    const [year, setyear] = useState('')
-    const [exteriorColor, setexteriorColor] = useState('')
-    const [vehicleType, setvehicleType] = useState('')
-    const [interiorColor, setinteriorColor] = useState('')
-    const [transmission, settransmission] = useState('')
-    const [odometer, setodometer] = useState('')
-    const [driveTrain, setdriveTrain] = useState('')
-    const [doors, setdoors] = useState('')
-    const [model, setmodel] = useState('')
-    const [make, setmake] = useState('')
-    const [equipment, setequipment] = useState('')
-    const [engineType, setengineType] = useState('')
-    const [interiorType, setinteriorType] = useState('')
-    const [bodyStyle, setbodyStyle] = useState('')
-    const [fuelType, setfuelType] = useState('')
-    const [passengerCapacity, setpassengerCapacity] = useState('')
-    const [sellerCity, setsellerCity] = useState('')
-    const [description, setdescription] = useState('')
-    const [zip, setzip] = useState('')
-    const [titleImage, settitleImage] = useState('')
-    const [bidAmount, setbidAmount] = useState('')
-    const [owner, setowner] = useState('')
-    const [collection, setcollection] = useState('')
-    const [facilitationLocation, setfacilitationLocation] = useState('')
-    const [vehicleLocation, setvehicleLocation] = useState('')
-    const [images, setimages] = useState('')
-
-
-
-    const bidObject = 
-
-    {
-        vin:"1C6RR7PMXGS359814",
-        link:"https://members.manheim.com/",
-        name:"2013 Hyundai Sonata 4dr Sdn 2.4L Auto Limited",
-        site:"https://members.manheim.com/",
-        price:"11000",
-        year:"2020",
-        exterior_color:"Black",
-        vehicle_type:"",
-        interior_color:"Gray",
-        transmission:"24/35 MPG",
-        odometer:"46029",
-        driveTrain:"2 Wheel Drive",
-        doors:"4",
-        Model:"Sonata",
-        make:"",
-        equipment:"",
-        EngineType:"",
-        interior_type:"",
-        body_style:"",
-        fuel_type:"",
-        passengerCapacity:"",
-        sellerCity:"",
-        description:"",
-        Zip:"23234",
-        tilteImage:"",
-        bidAmount:"",
-        owner:"5f9ca1ffb60b8837f4eb31c6",
-        collection:"612ccfeeac78e30b1e228a4e",
-        facilitationLocation:"Richmond Auto Auction",
-        Vehicle_location:"",
-        images:"jsfkvfs"
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    const bidObject = {
+        vin: "1C6RR7PMXGS359814",
+        link: "https://members.manheim.com/",
+        name: "2013 Hyundai Sonata 4dr Sdn 2.4L Auto Limited",
+        site: "https://members.manheim.com/",
+        price: "11000",
+        year: "2020",
+        exterior_color: "Black",
+        vehicle_type: "",
+        interior_color: "Gray",
+        transmission: "24/35 MPG",
+        odometer: "46029",
+        driveTrain: "2 Wheel Drive",
+        doors: "4",
+        Model: "Sonata",
+        make: "",
+        equipment: "",
+        EngineType: "",
+        interior_type: "",
+        body_style: "",
+        fuel_type: "",
+        passengerCapacity: "",
+        sellerCity: "",
+        description: "",
+        Zip: "23234",
+        tilteImage: "",
+        bidAmount: "",
+        owner: "5f9ca1ffb60b8837f4eb31c6",
+        collection: "612ccfeeac78e30b1e228a4e",
+        facilitationLocation: "Richmond Auto Auction",
+        Vehicle_location: "",
+        images: "jsfkvfs",
+    };
 
     //Get Data from Local Storage
     const retrieveData = () => {
@@ -132,7 +103,6 @@ const CarDetails = ({ carDetails, cars }) => {
         settoken(item?.userToken);
         setuserName(item?.userName);
         // return item.value
-        
     };
 
     //Get Data from local Storage
@@ -141,22 +111,22 @@ const CarDetails = ({ carDetails, cars }) => {
         return retrieveData;
     }, [router.pathname, token]);
 
-
     const [page, setPage] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
     const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
         let array = [];
-        cars.data.map((ele) => {
-            if (ele.vehicleName !== "") {
-                array.push(ele);
-            }
-        });
+        if (cars) {
+            cars.data.map((ele) => {
+                if (ele.vehicleName !== "") {
+                    array.push(ele);
+                }
+            });
+        }
         const size = 4;
         const items = array.slice(0, size);
-        console.log(items);
         setData(items);
         displaySmall();
     }, [carDetails, cardD]);
@@ -203,10 +173,16 @@ const CarDetails = ({ carDetails, cars }) => {
 
     function displaySmall() {
         let data = cardD?.images.length;
-        let count = cardD?.images.length - 5;
+        var size;
+        if (window.innerWidth <= 760) {
+            size = 3;
+        } else {
+            size = 5;
+        }
+        let count = cardD?.images.length - size;
         setCount(count);
-        if (data > 6) {
-            let data = cardD?.images.slice(page, 5);
+        if (data > window.innerWidth <= 760 ? 3 : 5) {
+            let data = cardD?.images.slice(page, size);
             setimageD(data);
         } else {
             let data = cardD?.images;
@@ -214,22 +190,46 @@ const CarDetails = ({ carDetails, cars }) => {
         }
     }
     const prevPage = async () => {
-        let data = cardD.images.slice(page + 5, limit + 5);
+        var size;
+        if (window.innerWidth <= 760) {
+            size = 3;
+        } else {
+            size = 5;
+        }
+        let data = cardD.images.slice(page - size, limit - size);
         setimageD(data);
-        setPage(page + 5);
-        setLimit(limit + 5);
-        setCount(count - 5);
+        setPage(page - size);
+        setLimit(limit - size);
+        setCount(count + size);
     };
-
+    const nextPage = async () => {
+        var size;
+        if (window.innerWidth <= 760) {
+            size = 3;
+        } else {
+            size = 5;
+        }
+        let data = cardD.images.slice(page + size, limit + size);
+        setimageD(data);
+        setPage(page + size);
+        setLimit(limit + size);
+        setCount(count - size);
+    };
+    const displayLargeimage = () => {
+        return (
+            <img
+                src={cardD.images[id].image_largeUrl}
+                loading="lazy"
+                className="rounded-xl w-full largeImage sm:h-32 shadow-md"
+                alt="Benz"
+            />
+        );
+    };
     if (!cardD) {
         // reRender();
         return <div className="App">Loading...</div>;
     }
 
-
-                
-      
-       
     return (
         <div>
             {cardD && (
@@ -257,20 +257,10 @@ const CarDetails = ({ carDetails, cars }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full lg:w-3/6 px-5 overflow-hidden">
-                            <div className="px-5">
-                                <img
-                                    src={cardD?.images[id]?.image_largeUrl}
-                                    loading="lazy"
-                                    className="rounded-xl shadow-md"
-                                    alt="Benz"
-                                    style={{ height: "500px", width: "700px" }}
-                                />
-                            </div>
+                        <div className="w-full lg:w-3/6 md:px-5 overflow-hidden">
+                            <div className="md:px-5">{displayLargeimage()}</div>
 
-
-                            <div className="overflow-scroll w-full px-5">
-
+                            <div className="overflow-scroll w-full md:px-5">
                                 <div
                                     className=" flex transition-all mt-3
                                 "
@@ -279,11 +269,30 @@ const CarDetails = ({ carDetails, cars }) => {
                                         height: "87px",
                                     }}
                                 >
+                                    {page >=
+                                    (window.innerWidth <= 760 ? 3 : 5) ? (
+                                        <div
+                                            className=" flex mr-2 md:mr-4 animate-pulse items-center text-xs font-mono justify-center  "
+                                            style={{
+                                                width: "25px",
+                                                height: "60.03px",
+                                            }}
+                                        >
+                                            <div
+                                                onClick={() => prevPage(page)}
+                                                className="cursor-pointer"
+                                            >
+                                                <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        ""
+                                    )}
                                     {imageD &&
                                         imageD.map((ele, id) => (
                                             <div
                                                 key={id}
-                                                onClick={() => setId(id)}
+                                                onClick={() => setId(page + id)}
                                                 className="mr-3 h-full transition-all cursor-pointer transform hover:scale-105"
                                             >
                                                 <img
@@ -297,7 +306,9 @@ const CarDetails = ({ carDetails, cars }) => {
                                                 />
                                             </div>
                                         ))}
-                                    {count >= 5 ? (
+                                    {imageD &&
+                                    imageD.length >=
+                                        (window.innerWidth <= 760 ? 3 : 5) ? (
                                         <div
                                             className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
@@ -308,10 +319,11 @@ const CarDetails = ({ carDetails, cars }) => {
                                             }}
                                         >
                                             <div
-                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 right-0 bottom-0 bg-black
+                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
                         bg-opacity-40 text-white flex items-center justify-center
                         "
-                                                onClick={() => prevPage(page)}
+                                                style={{ fontSize: "10px" }}
+                                                onClick={() => nextPage(page)}
                                             >
                                                 load {count} more
                                             </div>
@@ -691,7 +703,9 @@ const CarDetails = ({ carDetails, cars }) => {
                                             type="checkbox"
                                             className="focus:outline-none detail self-center"
                                             checked={terms}
-                                            onChange={(e) => {setterms(!terms)}}
+                                            onChange={(e) => {
+                                                setterms(!terms);
+                                            }}
                                         />
                                         <span className="detail"></span>
                                     </label>
@@ -705,37 +719,29 @@ const CarDetails = ({ carDetails, cars }) => {
                                 </div>
                             </div>
                             <div className="flex justify-center">
-                                    {
-                                        token ? (
-                                            <Link
-                                                href="/make-deposit"
-                                                type="button"
-                                                
-                                            >
-                                            <button className={`cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` + (!terms && `opacity-50 cursor-not-allowed`)} disabled={!terms}>Make Deposit</button>
-                                                
-                                            </Link>
-                                        )
-
-                                        :
-
-                                        (
-
-                                            <Link
-                                                href="/auth/login"
-                                            >
-                                                <button
-                                                    type="button"
-                                                    className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                                                >
-                                                    LOGIN OR SIGN UP TO PROCEED
-                                                </button>
-
-                                            </Link>
-
-                                        )
-                                    }
-
+                                {token ? (
+                                    <Link href="/make-deposit" type="button">
+                                        <button
+                                            className={
+                                                `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                (!terms &&
+                                                    `opacity-50 cursor-not-allowed`)
+                                            }
+                                            disabled={!terms}
+                                        >
+                                            Make Deposit
+                                        </button>
+                                    </Link>
+                                ) : (
+                                    <Link href="/auth/login">
+                                        <button
+                                            type="button"
+                                            className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                        >
+                                            LOGIN OR SIGN UP TO PROCEED
+                                        </button>
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </section>
@@ -952,22 +958,18 @@ const CarDetails = ({ carDetails, cars }) => {
                         style={{ justifyContent: "center" }}
                     >
                         <div className="flex justify-center px-5">
-                            <div className="overview-tab relative mr-6 lg:mr-16 active lg:px-4 lg:text-base text-sm font-semibold  primary-black lg:py-0.5">
-                                <p href className="lg:py-1.5 ">
-                                    OVERVIEW
-                                </p>
+                            <div className="overview-tab relative mr-6 lg:mr-16 active lg:px-4 lg:text-base text-xs font-semibold  primary-black lg:py-0.5">
+                                <p className="lg:py-1.5 ">OVERVIEW</p>
                             </div>
 
-                            <div className="overview-tab relative mr-6 lg:mr-16 lg:px-4 lg:text-base text-sm font-semibold  primary-black lg:py-0.5">
-                                <p href className="lg:py-1.5">
+                            <div className="overview-tab text-xs relative mr-6 lg:mr-16 lg:px-4 lg:text-base  font-semibold  primary-black lg:py-0.5">
+                                <p className="lg:py-1.5">
                                     EQUIPMENT AND OPTIONS
                                 </p>
                             </div>
 
-                            <div className="overview-tab relative mr-2 lg:mr-16 lg:px-4 lg:text-base text-sm font-semibold  primary-black lg:py-0.5">
-                                <p href className="lg:py-1.5">
-                                    AUCTION INFO
-                                </p>
+                            <div className="overview-tab text-xs relative mr-2 lg:mr-16 lg:px-4 lg:text-base font-semibold  primary-black lg:py-0.5">
+                                <p className="lg:py-1.5">AUCTION INFO</p>
                             </div>
                         </div>
                         <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
@@ -975,10 +977,10 @@ const CarDetails = ({ carDetails, cars }) => {
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Vehicle Name
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.make} {""}{" "}
                                                 {cardD?.model}
                                             </td>
@@ -986,40 +988,40 @@ const CarDetails = ({ carDetails, cars }) => {
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Interior Colour
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.sourceInteriorColor}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Seller Name
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.sourceSellerName}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Mileage
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.mileage}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Tranbaseission
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.tranbaseission ||
                                                     "Not Specified"}
                                             </td>
@@ -1027,10 +1029,10 @@ const CarDetails = ({ carDetails, cars }) => {
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Drive train
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.driveTrain}
                                             </td>
                                             <td></td>
@@ -1043,60 +1045,60 @@ const CarDetails = ({ carDetails, cars }) => {
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Company Name
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.companyName}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Make
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.make}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Model
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.model}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Pickup Location
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.pickupLocation}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Engine Type
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 lg:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
                                                 {cardD?.sourceEngineFuelType}
                                             </td>
                                             <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Exterior Color
                                             </td>
-                                            <td className="text-base sec-black font-normal py-2 pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
                                                 {cardD?.sourceExteriorColor}
                                             </td>
                                             <td></td>
