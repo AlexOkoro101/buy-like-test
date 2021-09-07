@@ -84,6 +84,7 @@ const LoginOptions = ({ beginLogin }) => {
                     //save data to local storage
                     const item = {
                         userToken: data.data._token,
+                        userId: data.data.user._id,
                         userName: data.data.user.profile.firstName,
                         expiry: now.getTime() + 3600000,
                     };
@@ -152,6 +153,7 @@ const LoginOptions = ({ beginLogin }) => {
                     const now = new Date();
                     const item = {
                         userToken: data.data._token,
+                        userId: data.data.user._id,
                         userName: data.data.user.profile.firstName,
                         expiry: now.getTime() + 3600000,
                     };
