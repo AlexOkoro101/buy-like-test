@@ -128,7 +128,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             // })
             setcollection(carCollection);
         }
-    }, [userId]);
+    }, [userId, message]);
 
 
     const [page, setPage] = useState(0);
@@ -347,6 +347,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                     setmessage(response.statusText)
                     toastSuccess();
                     router.push('/search')
+                    dispatch(getCollection(userId))
                 }
             })
             .catch(error => {
@@ -597,7 +598,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                                         <td className="sec-black font-11 font-semibold w-28  ">
                                                             {" "}
                                                             <label>
-                                                                Click to edit
+                                                                Add amount to bid
                                                             </label>{" "}
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import  {getCollection}  from "../../../redux/actions/carsAction";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
@@ -24,7 +24,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
     const [editCollectionId, seteditCollectionId] = useState(null)
     const newCollection = useRef()
     const newCollectionName = useRef()
-    
+    const dispatch = useDispatch()
     const router = useRouter()
 
 
@@ -124,7 +124,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
         if (collection.length) {
             setcarCollection(collection);
         }
-    }, [id]);
+    }, [id, message]);
 
    const deleteCollection = (collectionId) => {
         setisLoading(true)
@@ -185,6 +185,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
             } else {
                 setmessage(response.statusText)
                 toastSuccess();
+                dispatch(getCollection(id))
                 router.push('/profile/my-collection')
             }
         })
