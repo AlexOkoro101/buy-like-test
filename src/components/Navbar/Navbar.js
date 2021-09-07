@@ -217,8 +217,17 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                                     </span>
                                                 </Link>
                                                 <Link
-                                                    href="/profile/bid-tracker"
+                                                    href="/profile/my-collection"
                                                     tabIndex="1"
+                                                    role="menuitem"
+                                                >
+                                                    <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">
+                                                        My Collection
+                                                    </span>
+                                                </Link>
+                                                <Link
+                                                    href="/profile/bid-tracker"
+                                                    tabIndex="2"
                                                     role="menuitem"
                                                 >
                                                     <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">
@@ -227,7 +236,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                                 </Link>
                                                 <Link
                                                     href="/profile"
-                                                    tabIndex="2"
+                                                    tabIndex="3"
                                                     role="menuitem"
                                                 >
                                                     <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">
