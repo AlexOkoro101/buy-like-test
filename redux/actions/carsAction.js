@@ -62,7 +62,6 @@ export const getCars = () => (dispatch) => {
         });
 };
 export const searchTerm = (event) => async (dispatch) => {
-    console.log("calling2");
     console.log(event);
     dispatch({
         type: SEARCHING,
@@ -70,9 +69,9 @@ export const searchTerm = (event) => async (dispatch) => {
     });
     try {
         let res = await fetch(
-            `${api}?year=${event.year}&make=${event.make}&model=${
-                event.model
-            }&price=${""}&page=1&apiKey=Switch!2020`,
+            `${api}?year=${""}&make=${""}&model=${""}&vin=${
+                event.VIN
+            }&page=1&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
