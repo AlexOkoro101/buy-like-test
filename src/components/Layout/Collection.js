@@ -169,7 +169,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
 
         
         fetch(enviroment.BASE_URL + "collections/" + editCollectionId, {
-            method: 'GET',
+            method: 'PUT',
             headers: {
                 "Content-Type": "application/json"
             },
