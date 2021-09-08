@@ -139,7 +139,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         setDetail(carDetails);
         setvin(carDetails.VIN)
         setname(carDetails.vehicleName)
-        setprice(carDetails.buyNowPrice)
+        setprice(carDetails.mmrPrice)
         setyear(carDetails.year)
         setexteriorColor(carDetails.exteriorColor)
         setvehicleType(carDetails.vehicleType)

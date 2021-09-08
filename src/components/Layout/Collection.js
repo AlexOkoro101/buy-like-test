@@ -120,11 +120,11 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
         if (!collection.length) {
             getCollection(id);
         }
-        // console.log("collection", collection)
+        console.log("collection", collection)
         if (collection.length) {
             setcarCollection(collection);
         }
-    }, [id, message]);
+    }, [id, isLoading]);
 
    const deleteCollection = (collectionId) => {
         setisLoading(true)
@@ -183,10 +183,16 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                 toastError()
                 throw Error("Could not edit collection")
             } else {
-                setmessage(response.statusText)
-                toastSuccess();
-                dispatch(getCollection(id))
-                router.push('/profile/my-collection')
+                try {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    router.push('/profile/my-collection')
+                    setshowEditCollectionModal(false)
+                    getCollection(id)
+
+                } catch(e) {
+                    console.log("edit error", e)
+                }
             }
         })
         .catch(error => {

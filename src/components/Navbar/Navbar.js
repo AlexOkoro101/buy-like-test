@@ -76,19 +76,23 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     function closeDropdown(ref) {
         useEffect(() => {
             function handleClickOutside(event) {
+                if (event.target.matches('#data-dropdown-toggle, #data-dropdown-toggle *')) {
+                    return;
+                }
                 if (ref.current && !ref.current.contains(event.target)) {
                     // alert(navDropdown)
                     setnavDropdown(false);
                 } else {
                     setnavDropdown(true);
                 }
+
             }
 
             // Bind the event listener
-            document.addEventListener("mousedown", handleClickOutside);
+            window.addEventListener("mousedown", handleClickOutside);
             return () => {
                 // Unbind the event listener on clean up
-                document.removeEventListener("mousedown", handleClickOutside);
+                window.removeEventListener("mousedown", handleClickOutside);
             };
         }, [ref]);
     }
@@ -156,7 +160,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                     </button>
                                 </div>
 
-                                <div className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
+                                <div id="data-dropdown-toggle" className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
                                     <span>
                                         <button
                                             className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none "
@@ -223,15 +227,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                                 >
                                                     <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">
                                                         My Collection
-                                                    </span>
-                                                </Link>
-                                                <Link
-                                                    href="/profile/bid-tracker"
-                                                    tabIndex="2"
-                                                    role="menuitem"
-                                                >
-                                                    <span className="cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 leading-5 text-left uppercase">
-                                                        Bid Tracker
                                                     </span>
                                                 </Link>
                                                 <Link
