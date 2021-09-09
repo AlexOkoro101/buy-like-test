@@ -1,11 +1,8 @@
-import Meta from "../../src/components/Head/Meta";
-import Collection from "../../src/components/Layout/Collection";
+import Meta from "../../../src/components/Head/Meta";
+import Collection from "../../../src/components/Layout/Collection";
 
-const BidTracker = () => {
-
-
-
-   
+const CollectionDetails = () => {
+    
     return (
         <div>
             <Meta></Meta>
@@ -309,4 +306,4 @@ const BidTracker = () => {
     );
 };
 
-export default BidTracker;
+export default CollectionDetails;

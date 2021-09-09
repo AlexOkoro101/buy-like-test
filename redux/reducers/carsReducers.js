@@ -30,7 +30,7 @@ const initialState = {
     params: {},
     makes: [],
     models: [],
-    collection: [],
+    carCollection: [],
     modeled: {},
     userLoggedIn: false,
     carDetails: {},
@@ -90,7 +90,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_COLLECTION_SUCCESS:
             return {
                 ...state,
-                collection: action.payload,
+                carCollection: action.payload,
                 loading: false,
                 error: {},
             };    

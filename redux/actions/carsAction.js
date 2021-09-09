@@ -192,12 +192,13 @@ export const getMakes = () => (dispatch) => {
         });
 };
 
-export const getCollection = () => (dispatch) => {
+export const getCollection = (id) => (dispatch) => {
     dispatch({
         type: FETCHING_COLLECTION,
     });
 
-    fetch(enviroment.BASE_URL + "collections", {
+
+    fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
         method: "GET",
         redirect: "follow",
         credentials: "same-origin",
@@ -217,12 +218,12 @@ export const getCollection = () => (dispatch) => {
                 if (Object.entries(data).length >= 1) {
                     const formatCollection = JSON.parse(data);
                     // console.log("new collection", formatCollection.data)
-                    if (formatCollection) {
-                        dispatch({
-                            type: FETCHING_COLLECTION_SUCCESS,
-                            payload: formatCollection.data,
-                        });
-                    }
+                    
+                    dispatch({
+                        type: FETCHING_COLLECTION_SUCCESS,
+                        payload: formatCollection.data,
+                    });
+                    
                 }
             }
         })
