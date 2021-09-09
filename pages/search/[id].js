@@ -319,7 +319,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 Zip:zip,
                 bidAmount:bidAmount,
                 owner:userId,
-                collection:selectedCollectionId,
+                collection:getAvailableCollection(),
                 facilitationLocation:facilitationLocation,
                 Vehicle_location:vehicleLocation,
             }
@@ -342,12 +342,12 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 console.log(response)
                 if (!response.ok) {
                     toastError()
-                    throw Error("Could not create collection")
+                    // throw Error("Could not create collection")
                 } else {
                     setmessage(response.statusText)
                     toastSuccess();
                     router.push('/search')
-                    dispatch(getCollection(userId))
+                    // dispatch(getCollection(userId))
                 }
             })
             .catch(error => {
@@ -380,17 +380,19 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 
                 let filterCollection = null;
                 
-                for (let index = 0; index < replaceCollections?.length; index++) {
+                for (let index = 0; index < replaceCollections.length; index++) {
                     const currentCollection = replaceCollections[index];
                     console.log("current collection",currentCollection )
                 
-                    if (currentCollection?.vehicles?.length < 10) {
-                    filterCollection = currentCollection?._id;
-                    setselectedCollectionId(filterCollection)
-                    console.log("Selected id is", selectedCollectionId)
+                    if (currentCollection.vehicles.length < 10) {
+                    filterCollection = currentCollection._id;
+                    // setselectedCollectionId(filterCollection)
+                    // console.log("Selected id is", selectedCollectionId)
                     break;
                     }
                 }
+
+                console.log('id:' + filterCollection);
                 
                 return filterCollection;
             }
@@ -415,11 +417,11 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                     setisLoading(false)
                     console.log(response)
                     if (!response.ok) {
-                        toastError()
-                        throw Error("Could not create collection")
+                        // toastError()
+                        // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText)
-                        toastSuccess();
+                        // toastSuccess();
                     }
                 })
                 .catch(error => {
