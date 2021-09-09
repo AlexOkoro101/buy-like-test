@@ -3,9 +3,35 @@ import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { carDetail } from "../../redux/actions/carsAction";
+import { carDetail, getCollection } from "../../redux/actions/carsAction";
 import Link from "next/link";
-const CarDetails = ({ carDetails, cars }) => {
+import { enviroment } from "../../src/components/enviroment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ClipLoader from "react-spinners/ClipLoader";
+
+const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
+    const toastError = () =>
+        toast.error(`${error ? error : "Could not perform operation"}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const toastSuccess = () =>
+        toast.success(`${message ? message : "Success"}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -16,12 +42,15 @@ const CarDetails = ({ carDetails, cars }) => {
 
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
+    const [userId, setuserId] = useState(null);
     const [terms, setterms] = useState(true);
 
+    const [error, seterror] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
+    const [message, setmessage] = useState(false);
+
     const [vin, setvin] = useState("");
-    const [link, setlink] = useState("");
     const [name, setname] = useState("");
-    const [site, setsite] = useState("");
     const [price, setprice] = useState("");
     const [year, setyear] = useState("");
     const [exteriorColor, setexteriorColor] = useState("");
@@ -33,56 +62,14 @@ const CarDetails = ({ carDetails, cars }) => {
     const [doors, setdoors] = useState("");
     const [model, setmodel] = useState("");
     const [make, setmake] = useState("");
-    const [equipment, setequipment] = useState("");
-    const [engineType, setengineType] = useState("");
-    const [interiorType, setinteriorType] = useState("");
     const [bodyStyle, setbodyStyle] = useState("");
-    const [fuelType, setfuelType] = useState("");
-    const [passengerCapacity, setpassengerCapacity] = useState("");
-    const [sellerCity, setsellerCity] = useState("");
-    const [description, setdescription] = useState("");
     const [zip, setzip] = useState("");
-    const [titleImage, settitleImage] = useState("");
     const [bidAmount, setbidAmount] = useState("");
-    const [owner, setowner] = useState("");
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
-    const [images, setimages] = useState("");
 
-    const bidObject = {
-        vin: "1C6RR7PMXGS359814",
-        link: "https://members.manheim.com/",
-        name: "2013 Hyundai Sonata 4dr Sdn 2.4L Auto Limited",
-        site: "https://members.manheim.com/",
-        price: "11000",
-        year: "2020",
-        exterior_color: "Black",
-        vehicle_type: "",
-        interior_color: "Gray",
-        transmission: "24/35 MPG",
-        odometer: "46029",
-        driveTrain: "2 Wheel Drive",
-        doors: "4",
-        Model: "Sonata",
-        make: "",
-        equipment: "",
-        EngineType: "",
-        interior_type: "",
-        body_style: "",
-        fuel_type: "",
-        passengerCapacity: "",
-        sellerCity: "",
-        description: "",
-        Zip: "23234",
-        tilteImage: "",
-        bidAmount: "",
-        owner: "5f9ca1ffb60b8837f4eb31c6",
-        collection: "612ccfeeac78e30b1e228a4e",
-        facilitationLocation: "Richmond Auto Auction",
-        Vehicle_location: "",
-        images: "jsfkvfs",
-    };
+    const [selectedCollectionId, setselectedCollectionId] = useState(null);
 
     //Get Data from Local Storage
     const retrieveData = () => {
@@ -102,6 +89,7 @@ const CarDetails = ({ carDetails, cars }) => {
         }
         settoken(item?.userToken);
         setuserName(item?.userName);
+        setuserId(item?.userId);
         // return item.value
     };
 
@@ -111,6 +99,19 @@ const CarDetails = ({ carDetails, cars }) => {
         return retrieveData;
     }, [router.pathname, token]);
 
+    useEffect(() => {
+        if (!carCollection?.length) {
+            getCollection(userId);
+        }
+        console.log("collection", collection);
+        if (carCollection?.length) {
+            // carCollection.map(saved => {
+            //     console.log(saved._id)
+            // })
+            setcollection(carCollection);
+        }
+    }, [userId]);
+
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
@@ -118,6 +119,25 @@ const CarDetails = ({ carDetails, cars }) => {
     const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
+        setvin(carDetails.VIN);
+        setname(carDetails.vehicleName);
+        setprice(carDetails.buyNowPrice);
+        setyear(carDetails.year);
+        setexteriorColor(carDetails.exteriorColor);
+        setvehicleType(carDetails.vehicleType);
+        setinteriorColor(carDetails.interiorColor);
+        settransmission(carDetails.transmission);
+        setodometer(carDetails.odometer);
+        setdriveTrain(carDetails.driveTrain);
+        setdoors(carDetails.doors);
+        setmodel(carDetails.model);
+        setmake(carDetails.make);
+        setbodyStyle(carDetails.bodyType);
+        setzip(carDetails.locationFullZipcode);
+        setbidAmount(carDetails.buyNowPrice);
+        setfacilitationLocation(carDetails.facilitationLocation);
+        setvehicleLocation(carDetails.pickupLocation);
+
         let array = [];
         if (cars) {
             cars.data.map((ele) => {
@@ -128,6 +148,7 @@ const CarDetails = ({ carDetails, cars }) => {
         }
         const size = 4;
         const items = array.slice(0, size);
+        // console.log(items);
         setData(items);
         getRate();
         displaySmall();
@@ -253,8 +274,153 @@ const CarDetails = ({ carDetails, cars }) => {
         return <div className="App">Loading...</div>;
     }
 
+    //Random collection name
+    function makeCollectionName(length) {
+        var result = "";
+        var characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
+    }
+
+    const placeBid = () => {
+        function addCar() {
+            seterror(null);
+            setisLoading(true);
+
+            const bidObject = {
+                vin: vin,
+                link: "https://members.manheim.com/",
+                name: name,
+                site: "https://members.manheim.com/",
+                price: price,
+                year: year,
+                exterior_color: exteriorColor,
+                vehicle_type: vehicleType,
+                interior_color: interiorColor,
+                transmission: transmission,
+                odometer: odometer,
+                driveTrain: driveTrain,
+                doors: doors,
+                Model: model,
+                make: make,
+                body_style: bodyStyle,
+                Zip: zip,
+                bidAmount: bidAmount,
+                owner: userId,
+                collection: selectedCollectionId,
+                facilitationLocation: facilitationLocation,
+                Vehicle_location: vehicleLocation,
+            };
+            console.log(bidObject);
+
+            //Add car to collection
+            fetch(enviroment.BASE_URL + "bids/add-bid", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bidObject),
+                redirect: "follow",
+            })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                    }
+                })
+                .catch((error) => {
+                    seterror(error);
+                    console.log("error", error);
+                });
+        }
+
+        function placeItem() {
+            let availableCollection = getAvailableCollection();
+
+            if (!availableCollection) {
+                availableCollection = createCollection();
+            }
+
+            addCar();
+        }
+
+        function getCollections() {
+            console.log("get collection", collection);
+            return collection || [];
+        }
+
+        function getAvailableCollection() {
+            // Replace getCollections
+            const replaceCollections = getCollections();
+
+            let filterCollection = null;
+
+            for (let index = 0; index < replaceCollections?.length; index++) {
+                const currentCollection = replaceCollections[index];
+                console.log("current collection", currentCollection);
+
+                if (currentCollection?.vehicles?.length < 10) {
+                    filterCollection = currentCollection?._id;
+                    setselectedCollectionId(filterCollection);
+                    console.log("Selected id is", selectedCollectionId);
+                    break;
+                }
+            }
+
+            return filterCollection;
+        }
+
+        function createCollection() {
+            let randomName = makeCollectionName(7);
+
+            const collectionObject = {
+                owner: `${userId}`,
+                name: `${randomName}`,
+            };
+            console.log(collectionObject);
+            fetch(enviroment.BASE_URL + "collections", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(collectionObject),
+                redirect: "follow",
+            })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                    }
+                })
+                .catch((error) => {
+                    seterror(error);
+                    console.log("error", error);
+                });
+            // return new Collection();
+        }
+        placeItem();
+    };
+
     return (
         <div>
+            <ToastContainer />
             {cardD && (
                 <>
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
@@ -422,10 +588,22 @@ const CarDetails = ({ carDetails, cars }) => {
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
+                                                                value={
+                                                                    bidAmount
+                                                                }
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
                                                                 placeholder="$8,000"
+                                                                value={
+                                                                    bidAmount
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setbidAmount(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                }
                                                             />
                                                         </td>
                                                     </tr>
@@ -748,18 +926,25 @@ const CarDetails = ({ carDetails, cars }) => {
                             </div>
                             <div className="flex justify-center">
                                 {token ? (
-                                    <Link href="/make-deposit" type="button">
-                                        <button
-                                            className={
-                                                `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                (!terms &&
-                                                    `opacity-50 cursor-not-allowed`)
-                                            }
-                                            disabled={!terms}
-                                        >
-                                            Make Deposit
-                                        </button>
-                                    </Link>
+                                    <button
+                                        onClick={placeBid}
+                                        className={
+                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                            (!terms &&
+                                                `opacity-50 cursor-not-allowed`)
+                                        }
+                                        disabled={!terms}
+                                    >
+                                        {isLoading ? (
+                                            <ClipLoader
+                                                color="#fff"
+                                                size={20}
+                                                loading
+                                            />
+                                        ) : (
+                                            "Place Bid"
+                                        )}{" "}
+                                    </button>
                                 ) : (
                                     <Link href="/auth/login">
                                         <button
@@ -1274,8 +1459,8 @@ const CarDetails = ({ carDetails, cars }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { carDetails, cars } = state.Cars;
-    return { carDetails, cars };
+    const { carDetails, cars, carCollection } = state.Cars;
+    return { carDetails, cars, carCollection };
 };
 
-export default connect(mapStateToProps)(CarDetails);
+export default connect(mapStateToProps, { getCollection })(CarDetails);
