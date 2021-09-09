@@ -1,0 +1,202 @@
+Hero Image here
+                    <div style={{ minHeight: "280px" }}>
+                        {images.length > 0 && (
+                            <div className="flex  mb-24 flex-wrap w-full justify-center  2xl:justify-center lg:flex-nowrap md:flex-nowrap mt-5 pb-24 ">
+                                <div
+                                    style={{ height: "400px" }}
+                                    className="rounded-lg shadow-lg lg:w-1/3 overflow-hidden transition-all "
+                                    onClick={() => {
+                                        dispatch(carDetail(images[index])),
+                                            router.push({
+                                                pathname:
+                                                    "/search/" +
+                                                    images[index].VIN,
+                                            });
+                                    }}
+                                >
+                                    <div className="imgWrap w-full object-fill h-full">
+                                        <p className="description font-bold text-base primary-color">
+                                            View Vehicle
+                                        </p>
+                                        {images && (
+                                            <img
+                                                id="one"
+                                                src={
+                                                    images[index]?.images[0]
+                                                        ?.image_largeUrl
+                                                }
+                                                alt="Hero-Image "
+                                                className="h-full w-full object-fill hero-image"
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                                <div
+                                    className="hero__holder flex text-left flex-col items-start justify-center  p-4 mt-3 mx-2 lg:ml-10 "
+                                    style={{ height: "250px" }}
+                                >
+                                    <div className="flex transition-all">
+                                        {/* Progress bar here */}
+                                        <div className="transition-all w-1/2 ">
+                                            <progress
+                                                className="transition-all"
+                                                value={seconds}
+                                                max={100}
+                                            />
+                                        </div>
+                                        {/* Controller here */}
+                                        <div className="ml-auto hero-btns">
+                                            <button
+                                                type="button "
+                                                className=" hero__btn focus:outline-none py-2 px-2.5 mx-3 "
+                                                id="prev-btn"
+                                                onClick={() => execute("prev")}
+                                            >
+                                                <img
+                                                    src="./assets/img/vectors/left-arrow.svg "
+                                                    alt="arrow "
+                                                />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className=" hero__btn focus:outline-none py-2 px-2.5"
+                                                id="next-btn"
+                                                onClick={() => execute("next")}
+                                            >
+                                                <img
+                                                    src="./assets/img/vectors/right-arrow.svg "
+                                                    alt="arrow "
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {/* Car details here */}
+                                    {images && (
+                                        <div className="primary-color text-left car-details-div text-base mt-1 ">
+                                            <p
+                                                className="font-bold text-left "
+                                                id="car__name"
+                                            >
+                                                {images[index]?.vehicleName
+                                                    ? images[index]?.vehicleName
+                                                    : `${
+                                                          images[index]?.make +
+                                                          " " +
+                                                          "" +
+                                                          "" +
+                                                          images[index]?.model
+                                                      }`}
+                                            </p>
+                                            <p
+                                                className="font-normal"
+                                                id="car__year"
+                                            >
+                                                2019
+                                            </p>
+                                        </div>
+                                    )}
+                                    {/* Price & milage details here */}
+                                    <div className="primary-color flex mt-3 price-mileage-div ">
+                                        <div className="primary-color ">
+                                            <h5 className="font-medium mileage ">
+                                                2,124 mi
+                                            </h5>
+                                            <p className="font-bold range ">
+                                                RANGE
+                                            </p>
+                                        </div>
+                                        {/* dividing line here */}
+                                        <div className="vl mx-3 " />
+                                        {/* Price here */}
+                                        <div>
+                                            <h3 className="primary-red font-extrabold car__price">
+                                                $111,900
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div className="flx splide justify-beween pt-12 ">
+                            <div className="splide__track ">
+                                <div className="splide__list">
+
+                                    {/* <!-- Actual Testimonials here --> */}
+                                    <div className=" splide__slide testimonial__holder p-8">
+                                        <p className="primary-color text-base font-normal ">The car is exactly what I saw in the
+                                            picture. The staff were good listeners and professional. The car is exactly what I saw
+                                            in the picture.</p>
+
+                                        {/* <!-- Star ratings here --> */}
+                                        <div className="star__rating flex pt-4 pb-2 ">
+                                            <span className="fa fa-star star checked "></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star  ml-1"></span>
+                                        </div>
+
+                                        <p className="font-bold text-base primary-color py-2 "> Dare Thomas </p>
+                                        <p className="text-sm font-normal testinonial__location ">Lagos, Nigeria </p>
+                                    </div>
+
+                                    <div className=" splide__slide testimonial__holder  p-8 ">
+                                        <p className="primary-color text-base font-normal ">The car is exactly what I saw in the
+                                            picture. The staff were good listeners and professional. The car is exactly what I saw
+                                            in the picture.</p>
+
+                                        {/* <!-- Star ratings here --> */}
+                                        <div className="star__rating flex pt-4 pb-2 ">
+                                            <span className="fa fa-star star checked "></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star  ml-1"></span>
+                                        </div>
+                                        <p className="font-bold text-base primary-color py-2 "> Dare Thomas </p>
+                                        <p className="text-sm font-normal testinonial__location ">Lagos, Nigeria </p>
+                                    </div>
+
+                                    <div className=" splide__slide testimonial__holder p-8 ">
+                                        <p className="primary-color text-base font-normal ">The car is exactly what I saw in the
+                                            picture. The staff were good listeners and professional. The car is exactly what I saw
+                                            in the picture.</p>
+
+                                        {/* <!-- Star ratings here --> */}
+                                        <div className="star__rating flex pt-4 pb-2 ">
+                                            <span className="fa fa-star star checked "></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star checked ml-1"></span>
+                                            <span className="fa fa-star star  ml-1"></span>
+                                        </div>
+                                        <p className="font-bold text-base primary-color py-2 "> Dare Thomas </p>
+                                        <p className="text-sm font-normal testinonial__location ">Lagos, Nigeria </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
