@@ -114,6 +114,7 @@ const CarDetails = ({ carDetails, cars }) => {
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
+    const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
@@ -128,10 +129,10 @@ const CarDetails = ({ carDetails, cars }) => {
         const size = 4;
         const items = array.slice(0, size);
         setData(items);
+        getRate();
         displaySmall();
     }, [carDetails, cardD]);
     const openForm = (evt, status) => {
-        console.log("car detail", cardD);
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -225,6 +226,28 @@ const CarDetails = ({ carDetails, cars }) => {
             />
         );
     };
+
+    const getRate = () => {
+        let key = "a57db18c0b5cc8ad31a650a1e456712f";
+        try {
+            fetch("http://data.fixer.io/api/latest?access_key=" + `${key}`, {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    setNaira(data.rates.NGN);
+                    console.log(cardD);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     if (!cardD) {
         // reRender();
         return <div className="App">Loading...</div>;
@@ -237,7 +260,7 @@ const CarDetails = ({ carDetails, cars }) => {
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
-                                2015 MERCEDES-BENZ GLK-CLASS GLK350
+                                {cardD.vehicleName}
                             </p>
 
                             <div className="flex mt-1.5">
@@ -252,7 +275,7 @@ const CarDetails = ({ carDetails, cars }) => {
                                 </div>
                                 <div className="ml-auto">
                                     <p className="primary-color text-base font-extrabold">
-                                        $19,500
+                                        {}
                                     </p>
                                 </div>
                             </div>
@@ -346,12 +369,17 @@ const CarDetails = ({ carDetails, cars }) => {
                                             2,124 mi
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
-                                            VIN: SJTKPOLVAX123
+                                            VIN: {cardD.VIN}
                                         </p>
                                     </div>
                                     <div className="ml-auto">
                                         <p className="primary-color text-base font-extrabold">
-                                            $19,500
+                                            &#8358;
+                                            {""}
+                                            {(
+                                                parseFloat(cardD.mmrPrice) *
+                                                naira
+                                            ).toLocaleString()}
                                         </p>
                                     </div>
                                 </div>
