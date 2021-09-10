@@ -117,14 +117,35 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
     }
 
     useEffect(() => {
-        if (!collection.length) {
-            getCollection(id);
-        }
-        // console.log("collection", collection)
-        if (collection.length) {
-            setcarCollection(collection);
-            console.log("cars collection", carCollection)
-        }
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+        .then(function (response) {
+            console.log(response);
+            return response.text();
+        })
+        .then((data) => {
+            // console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    const formatCollection = JSON.parse(data);
+                    console.log("new collection", formatCollection.data)
+                    setcarCollection(formatCollection.data);
+                    
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+       
     }, [id, isLoading]);
 
    const deleteCollection = (collectionId) => {

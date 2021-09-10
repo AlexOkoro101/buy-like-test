@@ -62,6 +62,7 @@ const CollectionDetails = () => {
                     const formatCollection = JSON.parse(result);
                     // console.log("formated", formatCollection.error)
                     setcollection(formatCollection)
+                    console.log("formatted", collection)
                 }
             }
         })
@@ -162,11 +163,16 @@ const CollectionDetails = () => {
 
                             <h4 className="font-medium gray-text">
                                 You will be directed to make the rest of the payment
-                                after a bid is won for you.
+                                after a bid is won for you. 
                             </h4>
                         </div>
 
                         <section className="grid gap-y-4 mx-auto mb-10 mr-20">
+                            {Collection?.data?.vehicles.length <= 0 && (
+                                <div>
+                                    No cars to show
+                                </div>
+                            )}
                             {collection?.data?.vehicles?.map((vehicle) => (
                                 <div key={vehicle._id} className="bid-card flex py-3 px-3">
                                     <img

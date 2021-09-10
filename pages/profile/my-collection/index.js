@@ -28,7 +28,7 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });
+    });
     const toastSuccess = () =>
         toast.success(`${message ? message : "Created successfully"}`, {
             position: "top-right",
@@ -38,76 +38,98 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });
+    });
 
-        useEffect(() => {
-            const getUserId = () => {
-                const userActive = localStorage.getItem("user");
-                // console.log(userActive)
-                if (!userActive) {
-                    setId(null);
-                    return null;
-                }
-                const item = JSON.parse(userActive);
-                setId(item?.userId)
-                console.log("user id", id)
-                
+    useEffect(() => {
+        const getUserId = () => {
+            const userActive = localStorage.getItem("user");
+            // console.log(userActive)
+            if (!userActive) {
+                setId(null);
+                return null;
             }
-            getUserId()
+            const item = JSON.parse(userActive);
+            setId(item?.userId)
+            console.log("user id", id)
             
-        }, [id])
-
-        const addCollection = (e) => {
-            e.preventDefault()
-    
-    
-            if(!newCollection.current.value) {
-                return;
-            } else {
-                seterror(null)
-                setisLoading(true)
-    
-                const collectionObject = {
-                    owner: `${id}`,
-                    name: `${newCollection.current.value}`
-                }
-                console.log(collectionObject)
-                fetch(enviroment.BASE_URL + "collections", {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(collectionObject),
-                    redirect: 'follow'
-                })
-                .then(response => {
-                    setisLoading(false)
-                    console.log(response)
-                    if (!response.ok) {
-                        toastError()
-                        throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText)
-                        toastSuccess();
-                        setshowModal(false)
-                    }
-                })
-                .catch(error => {
-                    seterror(error)
-                    console.log('error', error)
-                });
-            }
         }
-    
-        useEffect(() => {
-            if (!collection.length) {
-                getCollection(id);
+        getUserId()
+        
+    }, [id])
+
+    const addCollection = (e) => {
+        e.preventDefault()
+
+
+        if(!newCollection.current.value) {
+            return;
+        } else {
+            seterror(null)
+            setisLoading(true)
+
+            const collectionObject = {
+                owner: `${id}`,
+                name: `${newCollection.current.value}`
             }
-            // console.log("collection", collection)
-            if (collection.length) {
-                setcarCollection(collection);
-            }
-        }, [id]);
+            console.log(collectionObject)
+            fetch(enviroment.BASE_URL + "collections", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(collectionObject),
+                redirect: 'follow'
+            })
+            .then(response => {
+                setisLoading(false)
+                console.log(response)
+                if (!response.ok) {
+                    toastError()
+                    throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    setshowModal(false)
+                }
+            })
+            .catch(error => {
+                seterror(error)
+                console.log('error', error)
+            });
+        }
+    }
+
+    useEffect(() => {
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+            .then(function (response) {
+                console.log(response);
+                return response.text();
+            })
+            .then((data) => {
+                // console.log(data)
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatCollection = JSON.parse(data);
+                        // console.log("new collection", formatCollection.data)
+                        
+                        setcarCollection(formatCollection.data);
+                        
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [id, isLoading]);
     
 
     return ( 

@@ -198,7 +198,7 @@ export const getCollection = (id) => (dispatch) => {
     });
 
 
-    fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
+    fetch(enviroment.BASE_URL + "collections/collections/" + `${id}`, {
         method: "GET",
         redirect: "follow",
         credentials: "same-origin",

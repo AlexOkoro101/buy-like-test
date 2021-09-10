@@ -98,14 +98,34 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }, [router.pathname, token]);
 
     useEffect(() => {
-        if (!carCollection?.length) {
-            getCollection(userId);
-        }
-        if (carCollection?.length) {
-            
-            setcollection(carCollection);
-            // console.log("gotten collection", collection)
-        }
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${userId}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+            .then(function (response) {
+                console.log(response);
+                return response.text();
+            })
+            .then((data) => {
+                // console.log(data)
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatCollection = JSON.parse(data);
+                        // console.log("new collection", formatCollection.data)
+                        setcollection(formatCollection.data);
+                        
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }, [userId, message]);
 
     const [page, setPage] = useState(0);
@@ -297,7 +317,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
 
     const placeBid = () => {
 
-        function addCar() {
+        async function addCar() {
             seterror(null)
             setisLoading(true)
 
@@ -321,7 +341,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 Zip:zip,
                 bidAmount:bidAmount,
                 owner:userId,
-                collection: placeItem(), 
+                collection: await placeItem(), 
                 facilitationLocation:facilitationLocation,
                 Vehicle_location:vehicleLocation,
                 images:carImages
@@ -368,11 +388,11 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             });
         }
 
-        function placeItem() {
+        async function placeItem() {
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
-                availableCollection = createCollection();
+                availableCollection = await createCollection();
             }
 
             return availableCollection;
@@ -406,15 +426,16 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             return filterCollection;
         }
 
-        function createCollection() {
+        async function createCollection() {
             let randomName = makeCollectionName(7);
 
             const collectionObject = {
                 owner: `${userId}`,
                 name: `${randomName}`,
             };
+            let newCollection;
             console.log(collectionObject);
-            fetch(enviroment.BASE_URL + "collections", {
+            await fetch(enviroment.BASE_URL + "collections", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -424,20 +445,25 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             })
             .then((response) => {
                 setisLoading(false);
-                // console.log(response);
+                console.log(response);
                 if (!response.ok) {
                     // toastError()
                     // throw Error("Could not create collection")
                 } else {
                     setmessage(response.statusText)
+                    return response.json();
                     // toastSuccess();
                 }
+            })
+            .then((data) => {
+                newCollection = data.data._id;
+                console.log(data)
             })
             .catch((error) => {
                 seterror(error);
                 console.log("error", error);
             });
-            // return new Collection();
+            return newCollection;
         }
         
         addCar();
