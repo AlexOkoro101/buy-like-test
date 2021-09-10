@@ -144,31 +144,14 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
                                                 </h6>
                                             </div>
                                             <div className="flex py-2">
-                                                <img
-                                                    src="../assets/img/cars/AudiA3.png"
-                                                    alt="benz"
-                                                    className="tiny-car-card"
-                                                />
-                                                <img
-                                                    src="../assets/img/cars/fordescape.png"
-                                                    alt="benz"
-                                                    className="tiny-car-card"
-                                                />
-                                                <img
-                                                    src="../assets/img/cars/Toyota2.png"
-                                                    alt="benz"
-                                                    className="tiny-car-card"
-                                                />
-                                                <img
-                                                    src="../assets/img/cars/Rav42.png"
-                                                    alt="benz"
-                                                    className="tiny-car-card"
-                                                />
-                                                <img
-                                                    src="../assets/img/cars/highlander2.png"
-                                                    alt="benz"
-                                                    className="tiny-car-card"
-                                                />
+                                                    {collection?.images?.map((image) => (
+                                                        <img
+                                                            src={image.image_smallUrl}
+                                                            alt="car"
+                                                            className="tiny-car-card"
+                                                        />
+
+                                                    ))}
                                             </div>
                                         </div>
                                         <div className="flex flex-col mx-auxo items-end">

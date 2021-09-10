@@ -120,9 +120,10 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
         if (!collection.length) {
             getCollection(id);
         }
-        console.log("collection", collection)
+        // console.log("collection", collection)
         if (collection.length) {
             setcarCollection(collection);
+            console.log("cars collection", carCollection)
         }
     }, [id, isLoading]);
 
@@ -223,31 +224,14 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                     </h6>
                                 </div>
                                 <div className="flex py-2 ml-3">
-                                    <img
-                                        src="../assets/img/cars/AudiA3.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/fordescape.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/Toyota2.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/Rav42.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/highlander2.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
+                                    {carCollection[0]?.images?.map((image) => (
+                                        <img
+                                            src={image.image_smallUrl}
+                                            alt={"car"}
+                                            className="tiny-car-card"
+                                        />
+
+                                    ))}
                                 </div>
                             </div>
                             <div className="flex flex-col mx-auxo items-end">
@@ -263,8 +247,8 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                     <img
                                         src={
                                             !collectionDropdown
-                                                ? "../assets/img/dropdown.png"
-                                                : "../assets/img/Polygon.png"
+                                                ? "../../assets/img/dropdown.png"
+                                                : "../../assets/img/Polygon.png"
                                         }
                                         alt="dropdown"
                                         className="cursor-pointer"
@@ -315,33 +299,6 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                                             }{" "}
                                                             cars selected
                                                         </h6>
-                                                    </div>
-                                                    <div className="flex py-2 ml-3">
-                                                        <img
-                                                            src="../assets/img/cars/AudiA3.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/fordescape.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/Toyota2.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/Rav42.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/highlander2.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col mx-auxo items-end">

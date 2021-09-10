@@ -10,13 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 
-
-
-
 const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
-
-
-
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -48,51 +42,38 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
 
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
-    const [userId, setuserId] = useState(null)
-    const [terms, setterms] = useState(true)
+    const [userId, setuserId] = useState(null);
+    const [terms, setterms] = useState(true);
 
-    const [error, seterror] = useState(null)
-    const [isLoading, setisLoading] = useState(false)
-    const [message, setmessage] = useState(false)
+    const [error, seterror] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
+    const [message, setmessage] = useState(false);
 
-
-
-
-
-
-    const [vin, setvin] = useState('')
-    const [name, setname] = useState('')
-    const [price, setprice] = useState('')
-    const [year, setyear] = useState('')
-    const [exteriorColor, setexteriorColor] = useState('')
-    const [vehicleType, setvehicleType] = useState('')
-    const [interiorColor, setinteriorColor] = useState('')
-    const [transmission, settransmission] = useState('')
-    const [odometer, setodometer] = useState('')
-    const [driveTrain, setdriveTrain] = useState('')
-    const [doors, setdoors] = useState('')
-    const [model, setmodel] = useState('')
-    const [make, setmake] = useState('')
-    const [bodyStyle, setbodyStyle] = useState('')
-    const [zip, setzip] = useState('')
-    const [bidAmount, setbidAmount] = useState('')
-    const [collection, setcollection] = useState('')
-    const [facilitationLocation, setfacilitationLocation] = useState('')
-    const [vehicleLocation, setvehicleLocation] = useState('')
-
-    const [selectedCollectionId, setselectedCollectionId] = useState(null)
-
-   
-
-
-
-
+    const [vin, setvin] = useState("");
+    const [name, setname] = useState("");
+    const [price, setprice] = useState("");
+    const [year, setyear] = useState("");
+    const [exteriorColor, setexteriorColor] = useState("");
+    const [vehicleType, setvehicleType] = useState("");
+    const [interiorColor, setinteriorColor] = useState("");
+    const [transmission, settransmission] = useState("");
+    const [odometer, setodometer] = useState("");
+    const [driveTrain, setdriveTrain] = useState("");
+    const [doors, setdoors] = useState("");
+    const [model, setmodel] = useState("");
+    const [make, setmake] = useState("");
+    const [bodyStyle, setbodyStyle] = useState("");
+    const [zip, setzip] = useState("");
+    const [bidAmount, setbidAmount] = useState("");
+    const [collection, setcollection] = useState("");
+    const [facilitationLocation, setfacilitationLocation] = useState("");
+    const [vehicleLocation, setvehicleLocation] = useState("");
+    const [carImages, setcarImages] = useState([])
 
 
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
-        // console.log(userActive)
         if (!userActive) {
             settoken(null);
             return null;
@@ -108,7 +89,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-        // return item.value
     };
 
     //Get Data from local Storage
@@ -121,22 +101,21 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         if (!carCollection?.length) {
             getCollection(userId);
         }
-        console.log("collection", collection)
         if (carCollection?.length) {
-            // carCollection.map(saved => {
-            //     console.log(saved._id)
-            // })
+            
             setcollection(carCollection);
+            // console.log("gotten collection", collection)
         }
     }, [userId, message]);
-
 
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
+    const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
     useEffect(() => {
         setDetail(carDetails);
+        console.log("car details", cardD)
         setvin(carDetails.VIN)
         setname(carDetails.vehicleName)
         setprice(carDetails.mmrPrice)
@@ -155,6 +134,8 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         setbidAmount(carDetails.buyNowPrice)
         setfacilitationLocation(carDetails.facilitationLocation)
         setvehicleLocation(carDetails.pickupLocation)
+        setcarImages(carDetails.images)
+
 
 
 
@@ -176,10 +157,10 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         const items = array.slice(0, size);
         // console.log(items);
         setData(items);
+        getRate();
         displaySmall();
     }, [carDetails, cardD]);
     const openForm = (evt, status) => {
-        console.log("car deet", cardD);
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -273,28 +254,49 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             />
         );
     };
+
+    const getRate = () => {
+        let key = "a57db18c0b5cc8ad31a650a1e456712f";
+        try {
+            fetch("http://data.fixer.io/api/latest?access_key=" + `${key}`, {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    setNaira(data.rates.NGN);
+                    console.log(cardD);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     if (!cardD) {
         // reRender();
         return <div className="App">Loading...</div>;
     }
 
-
     //Random collection name
     function makeCollectionName(length) {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = "";
+        var characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         var charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-          result += characters.charAt(Math.floor(Math.random() * 
-     charactersLength));
-       }
-       return result;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
     }
 
-
-   
-
     const placeBid = () => {
+
         function addCar() {
             seterror(null)
             setisLoading(true)
@@ -319,27 +321,25 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 Zip:zip,
                 bidAmount:bidAmount,
                 owner:userId,
-                collection:getAvailableCollection(),
+                collection: placeItem(), 
                 facilitationLocation:facilitationLocation,
                 Vehicle_location:vehicleLocation,
+                images:carImages
             }
-            console.log(bidObject)
+            console.log("bid object", bidObject)
 
-
-
-            
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
                 redirect: 'follow'
             })
             .then(response => {
                 setisLoading(false)
-                console.log(response)
+                // console.log(response)
                 if (!response.ok) {
                     toastError()
                     // throw Error("Could not create collection")
@@ -350,105 +350,108 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                     // dispatch(getCollection(userId))
                 }
             })
-            .catch(error => {
-                seterror(error)
-                console.log('error', error)
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    toastError();
+                    throw Error("Could not create collection");
+                } else {
+                    setmessage(response.statusText);
+                    toastSuccess();
+                    router.push("/search");
+                }
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
             });
-
         }
 
-        
-        
         function placeItem() {
             let availableCollection = getAvailableCollection();
-            
+
             if (!availableCollection) {
                 availableCollection = createCollection();
             }
-            
-            addCar();
-            }
-            
-            function getCollections() {
-                console.log("get collection", collection)
-                return collection || [];
-            }
-            
-            function getAvailableCollection() {
-                // Replace getCollections
-                const replaceCollections = getCollections();
-                
-                let filterCollection = null;
-                
-                for (let index = 0; index < replaceCollections.length; index++) {
-                    const currentCollection = replaceCollections[index];
-                    console.log("current collection",currentCollection )
-                
-                    if (currentCollection.vehicles.length < 10) {
-                    filterCollection = currentCollection._id;
-                    // setselectedCollectionId(filterCollection)
-                    // console.log("Selected id is", selectedCollectionId)
-                    break;
-                    }
-                }
 
-                console.log('id:' + filterCollection);
-                
-                return filterCollection;
-            }
-            
-            function createCollection() {
-                let randomName = makeCollectionName(7)
-            
-                const collectionObject = {
-                    owner: `${userId}`,
-                    name: `${randomName}`
-                }
-                console.log(collectionObject)
-                fetch(enviroment.BASE_URL + "collections", {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(collectionObject),
-                    redirect: 'follow'
-                })
-                .then(response => {
-                    setisLoading(false)
-                    console.log(response)
-                    if (!response.ok) {
-                        // toastError()
-                        // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText)
-                        // toastSuccess();
-                    }
-                })
-                .catch(error => {
-                    seterror(error)
-                    console.log('error', error)
-                });
-                // return new Collection();
-                
-            
+            return availableCollection;
+
         }
-        placeItem()
-    }
-          
+            
+        function getCollections() {
+            // console.log("get collection", collection)
+            return collection || [];
+        }
+            
+        function getAvailableCollection() {
+            // Replace getCollections
+            const replaceCollections = getCollections();
+            
+            let filterCollection = null;
+            
+            for (let index = 0; index < replaceCollections.length; index++) {
+                const currentCollection = replaceCollections[index];
+                console.log("current collection",currentCollection )
+            
+                if (currentCollection.vehicles.length < 10) {
+                    filterCollection = currentCollection._id;
+                    // console.log(filterCollection)
+                    
+                    break;
+                }
+            }
 
+            
+            return filterCollection;
+        }
 
-                
-      
-       
+        function createCollection() {
+            let randomName = makeCollectionName(7);
+
+            const collectionObject = {
+                owner: `${userId}`,
+                name: `${randomName}`,
+            };
+            console.log(collectionObject);
+            fetch(enviroment.BASE_URL + "collections", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(collectionObject),
+                redirect: "follow",
+            })
+            .then((response) => {
+                setisLoading(false);
+                // console.log(response);
+                if (!response.ok) {
+                    // toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    // toastSuccess();
+                }
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
+            // return new Collection();
+        }
+        
+        addCar();
+    };
+
     return (
         <div>
-        <ToastContainer />
+            <ToastContainer />
             {cardD && (
                 <>
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
-                                2015 MERCEDES-BENZ GLK-CLASS GLK350
+                                {cardD.vehicleName}
                             </p>
 
                             <div className="flex mt-1.5">
@@ -463,7 +466,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                 </div>
                                 <div className="ml-auto">
                                     <p className="primary-color text-base font-extrabold">
-                                        $19,500
+                                        {}
                                     </p>
                                 </div>
                             </div>
@@ -557,12 +560,17 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                             2,124 mi
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
-                                            VIN: SJTKPOLVAX123
+                                            VIN: {cardD.VIN}
                                         </p>
                                     </div>
                                     <div className="ml-auto">
                                         <p className="primary-color text-base font-extrabold">
-                                            $19,500
+                                            &#8358;
+                                            {""}
+                                            {(
+                                                parseFloat(cardD.mmrPrice) *
+                                                naira
+                                            ).toLocaleString()}
                                         </p>
                                     </div>
                                 </div>
@@ -605,12 +613,22 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
-                                                                value={bidAmount}
+                                                                value={
+                                                                    bidAmount
+                                                                }
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
-                                                                placeholder="$8,000"                                                                value={bidAmount}
-                                                                onChange={(e) => setbidAmount(e.target.value)}
+                                                                placeholder="$8,000"
+                                                                value={
+                                                                    bidAmount
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setbidAmount(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                }
                                                             />
                                                         </td>
                                                     </tr>
@@ -932,40 +950,36 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                 </div>
                             </div>
                             <div className="flex justify-center">
-                                    {
-                                        token ? (
-                                            <button onClick={placeBid} className={`cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` + (!terms && `opacity-50 cursor-not-allowed`)} disabled={!terms}>
-                                                {isLoading ? (
-                                                <ClipLoader
-                                                    color="#fff"
-                                                    size={20}
-                                                    loading
-                                                />
-                                                ) : (
-                                                    "Place Bid"
-                                                )}{" "}
-                                            </button>
-                                        )
-
-                                        :
-
-                                        (
-
-                                            <Link
-                                                href="/auth/login"
-                                            >
-                                                <button
-                                                    type="button"
-                                                    className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                                                >
-                                                    LOGIN OR SIGN UP TO PROCEED
-                                                </button>
-
-                                            </Link>
-
-                                        )
-                                    }
-
+                                {token ? (
+                                    <button
+                                        onClick={placeBid}
+                                        className={
+                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                            (!terms &&
+                                                `opacity-50 cursor-not-allowed`)
+                                        }
+                                        disabled={!terms}
+                                    >
+                                        {isLoading ? (
+                                            <ClipLoader
+                                                color="#fff"
+                                                size={20}
+                                                loading
+                                            />
+                                        ) : (
+                                            "Place Bid"
+                                        )}{" "}
+                                    </button>
+                                ) : (
+                                    <Link href="/auth/login">
+                                        <button
+                                            type="button"
+                                            className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                        >
+                                            LOGIN OR SIGN UP TO PROCEED
+                                        </button>
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </section>
@@ -1474,4 +1488,4 @@ const mapStateToProps = (state) => {
     return { carDetails, cars, carCollection };
 };
 
-export default connect(mapStateToProps, {getCollection})(CarDetails);
+export default connect(mapStateToProps, { getCollection })(CarDetails);
