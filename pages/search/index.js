@@ -13,7 +13,6 @@ import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
 
 import { useSelector, useDispatch } from "react-redux";
-import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -44,7 +43,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        console.log(paramValue)
+        console.log(paramValue);
         if (cars && cars.data === [] && paramValue) {
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
@@ -145,6 +144,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     `${make}`,
                 {
                     method: "POST",
+                    credentials: "same-origin",
                 }
             )
                 .then(function (response) {
