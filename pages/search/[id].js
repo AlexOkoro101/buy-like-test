@@ -15,7 +15,13 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 //
 //
-const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
+const CarDetails = ({
+    carDetails,
+    cars,
+    getCollection,
+    carCollection,
+    messager,
+}) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -45,7 +51,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [data, setData] = useState();
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
-    const [percentage, setPercentage] = useState(null);
+    const [percentage, setPercentage] = useState(messager);
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(0);
     const [hours, sethours] = useState(0);
@@ -107,6 +113,8 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
 
     //Get Data from local Storage
     useEffect(() => {
+        console.log(messager);
+
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
@@ -305,8 +313,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     function renderTime({ remainingTime, elapsedTime }) {
-        // console.log(remainingTime );
-        // console.log(elapsedTime );
         if (cardD) {
             let value = Math.round(remainingTime * 10);
             function getDigits(n, arr = []) {
@@ -334,11 +340,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 </div>
             );
         }
-    }
-
-    if (!cardD) {
-        // reRender();
-        return <div className="App">Loading...</div>;
     }
 
     //Random collection name
@@ -501,14 +502,12 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     function startTimer(e) {
-        if (cardD) {
-            let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
-            if (total >= 0) {
-                sethours(hours);
-                setminute(minutes);
-                setseconds(seconds);
-                setdays(days);
-            }
+        let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
+        if (total >= 0) {
+            sethours(hours);
+            setminute(minutes);
+            setseconds(seconds);
+            setdays(days);
         }
     }
 
@@ -523,12 +522,23 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     function getDeadTime() {
         let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date().getTime() + 100;
+        let now = new Date(messager).getTime();
         let distance = now - countDownDate;
         setDistance(distance);
         deadline.setSeconds(deadline.getSeconds() + distance);
         return deadline;
     }
+
+    //
+    //
+    //
+    if (!cardD) {
+        // reRender();
+        return <div className="App">Loading...</div>;
+    }
+    //
+    //
+
     return (
         <div>
             <ToastContainer />
@@ -607,8 +617,9 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                             </div>
                                         ))}
                                     {imageD &&
-                                    imageD.length >
-                                        (window.innerWidth <= 760 ? 3 : 5) ? (
+                                    imageD.length ===
+                                        (window.innerWidth <= 760 ? 3 : 5) &&
+                                    count > 0 ? (
                                         <div
                                             className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
@@ -1572,6 +1583,14 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         </div>
     );
 };
+
+CarDetails.getInitialProps = async (context) => {
+    let data = context.query.ele;
+    return {
+        messager: data,
+    };
+};
+
 const mapStateToProps = (state) => {
     const { carDetails, cars, carCollection } = state.Cars;
     return { carDetails, cars, carCollection };
