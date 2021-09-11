@@ -16,24 +16,15 @@ const App = ({ children }) => {
         let token = JSON.parse(user)?.userToken;
         if (router.pathname !== "/" && !router.pathname.includes("auth")) {
             if (!token) {
+                if (router.pathname === "/search") {
+                    return router.push("/search");
+                }
                 dispatch(logOut());
                 return router.push("/auth/login");
             }
 
-
             setLoggedIn(true);
 
-            // if (router.pathname.includes("auth")) {
-            //     if (token) {
-            //         dispatch(logIn());
-            //         return router.push("/search");
-            //     }
-            // // } else {
-            // //     if (!token) {
-            // //         dispatch(logOut());
-            // //         router.push("/auth/login");
-            // //     }
-            // }
         }
         if (router.pathname.includes("auth")) {
             console.log("includes")
