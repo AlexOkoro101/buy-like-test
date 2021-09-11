@@ -13,6 +13,7 @@ import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
 
 import { useSelector, useDispatch } from "react-redux";
+import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -144,7 +145,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     `${make}`,
                 {
                     method: "POST",
-                    credentials: "same-origin",
                 }
             )
                 .then(function (response) {
@@ -1294,6 +1294,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         pathname:
                                                                                             "/search/" +
                                                                                             ele.VIN,
+                                                                                        query: {
+                                                                                            ele: ele.auctionEndTime,
+                                                                                        },
                                                                                     }
                                                                                 );
                                                                         }}
@@ -1370,6 +1373,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     pathname:
                                                                                                         "/search/" +
                                                                                                         ele.VIN,
+                                                                                                    query: {
+                                                                                                        ele: ele.auctionEndTime,
+                                                                                                    },
                                                                                                 }
                                                                                             );
                                                                                     }}
@@ -1581,6 +1587,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 pathname:
                                                                                                     "/search/" +
                                                                                                     ele.VIN,
+                                                                                                query: {
+                                                                                                    ele: ele.auctionEndTime,
+                                                                                                },
                                                                                             }
                                                                                         );
                                                                                 }}

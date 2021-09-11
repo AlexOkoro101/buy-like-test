@@ -13,40 +13,15 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 //
 //
 
-const renderTime = ({ remainingTime, elapsedTime }) => {
-    // console.log(remainingTime );
-    // console.log(elapsedTime );
-    let value = Math.round(remainingTime * 10);
-    function getDigits(n, arr = []) {
-        arr.push(n % 10);
-
-        if (n < 10) {
-            return arr.reverse();
-        }
-        return getDigits(Math.floor(n / 10), arr);
-    }
-    let data = 123495768;
-    const arr = getDigits(value);
-    let number = arr[0];
-    if (remainingTime === 0) {
-        return (
-            <div className="days font-13 sec-black font-semibold text-red-700">
-                Expired.
-            </div>
-        );
-    }
-    return (
-        <div className="timer">
-            <div className="days font-13 sec-black font-semibold">
-                {number + "" + arr[1]}
-            </div>
-        </div>
-    );
-};
-
 //
 //
-const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
+const CarDetails = ({
+    carDetails,
+    cars,
+    getCollection,
+    carCollection,
+    messager,
+}) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -76,7 +51,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [data, setData] = useState();
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
-    const [percentage, setPercentage] = useState(0);
+    const [percentage, setPercentage] = useState(messager);
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(0);
     const [hours, sethours] = useState(0);
@@ -111,20 +86,12 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
+    const [carImages, setcarImages] = useState([])
 
-    const [selectedCollectionId, setselectedCollectionId] = useState(null);
-
-    //
-    // Timer
-    useEffect(() => {
-        clearTimer(getDeadTime());
-    }, []);
-    //
 
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
-        // console.log(userActive)
         if (!userActive) {
             settoken(null);
             return null;
@@ -140,53 +107,92 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-        // return item.value
     };
 
     //Get Data from local Storage
     useEffect(() => {
+        console.log(messager);
+
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
 
     useEffect(() => {
-        if (!carCollection?.length) {
-            getCollection(userId);
-        }
-        console.log("collection", collection);
-        if (carCollection?.length) {
-            // carCollection.map(saved => {
-            //     console.log(saved._id)
-            // })
-            setcollection(carCollection);
-        }
-    }, [userId]);
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${userId}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+            .then(function (response) {
+                console.log(response);
+                return response.text();
+            })
+            .then((data) => {
+                // console.log(data)
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatCollection = JSON.parse(data);
+                        // console.log("new collection", formatCollection.data)
+                        setcollection(formatCollection.data);
+                        
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [userId, message]);
 
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
     const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
+
+    const getZipLocation = () => {
+        let initialZip = null;
+
+        if(carDetails) {
+            initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
+
+        }
+        console.log("zip", initialZip)
+
+        return initialZip;
+    }
+
     useEffect(() => {
         setDetail(carDetails);
-        setvin(carDetails.VIN);
-        setname(carDetails.vehicleName);
-        setprice(carDetails.buyNowPrice);
-        setyear(carDetails.year);
-        setexteriorColor(carDetails.exteriorColor);
-        setvehicleType(carDetails.vehicleType);
-        setinteriorColor(carDetails.interiorColor);
-        settransmission(carDetails.transmission);
-        setodometer(carDetails.odometer);
-        setdriveTrain(carDetails.driveTrain);
-        setdoors(carDetails.doors);
-        setmodel(carDetails.model);
-        setmake(carDetails.make);
-        setbodyStyle(carDetails.bodyType);
-        setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
-        setfacilitationLocation(carDetails.facilitationLocation);
-        setvehicleLocation(carDetails.pickupLocation);
+        console.log("car details", cardD)
+        setvin(carDetails.VIN)
+        setname(carDetails.vehicleName)
+        setprice(carDetails.mmrPrice)
+        setyear(carDetails.year)
+        setexteriorColor(carDetails.exteriorColor)
+        setvehicleType(carDetails.vehicleType)
+        setinteriorColor(carDetails.interiorColor)
+        settransmission(carDetails.transmission)
+        setodometer(carDetails.odometer)
+        setdriveTrain(carDetails.driveTrain)
+        setdoors(carDetails.doors)
+        setmodel(carDetails.model)
+        setmake(carDetails.make)
+        setbodyStyle(carDetails.bodyType)
+        setzip(carDetails.locationFullZipcode)
+        setbidAmount(carDetails.buyNowPrice)
+        setfacilitationLocation(carDetails.facilitationLocation)
+        setvehicleLocation(carDetails.pickupLocation)
+        setcarImages(carDetails.images)
+        getZipLocation()
+
+
+
+
 
         let array = [];
         if (cars) {
@@ -203,6 +209,36 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         getRate();
         displaySmall();
     }, [carDetails, cardD]);
+
+    const getTrucking = {
+        "packingCode":`${getZipLocation()}`,
+        "packingName":""
+    }
+
+    const fetchTrucking = () => {
+
+        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(getTrucking)
+        })
+        .then((response) => {
+
+            return response.json()
+        })
+        .then((data) => {
+            console.log("trucking", data)
+        })
+    }
+    useEffect(() => {
+        fetchTrucking()
+
+    }, [cardD])
+    useEffect(() => {
+        clearTimer(getDeadTime());
+    }, []);
 
     const openForm = (evt, status) => {
         if (status !== offer) {
@@ -319,9 +355,53 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         }
     };
 
-    if (!cardD) {
-        // reRender();
-        return <div className="App">Loading...</div>;
+    function renderCounter() {
+        if (cardD) {
+            return (
+                <>
+                    <CountdownCircleTimer
+                        isPlaying
+                        duration={distance}
+                        colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                        initialRemainingTime={distance}
+                    >
+                        {renderTime}
+                    </CountdownCircleTimer>
+                </>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    function renderTime({ remainingTime, elapsedTime }) {
+        if (cardD) {
+            let value = Math.round(remainingTime * 10);
+            function getDigits(n, arr = []) {
+                arr.push(n % 10);
+
+                if (n < 10) {
+                    return arr.reverse();
+                }
+                return getDigits(Math.floor(n / 10), arr);
+            }
+            const arr = getDigits(value);
+            let number = arr[0];
+            if (remainingTime === 0) {
+                return (
+                    <div className="days font-13 sec-black font-semibold text-red-700">
+                        Expired.
+                    </div>
+                );
+            }
+            return (
+                <div className="timer">
+                    <div className="days font-13 sec-black font-semibold">
+                        {number + "" + arr[1]}
+                    </div>
+                </div>
+            );
+        }
     }
 
     //Random collection name
@@ -339,35 +419,37 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     const placeBid = () => {
-        function addCar() {
-            seterror(null);
-            setisLoading(true);
 
-            const bidObject = {
-                vin: vin,
-                link: "https://members.manheim.com/",
-                name: name,
-                site: "https://members.manheim.com/",
-                price: price,
-                year: year,
-                exterior_color: exteriorColor,
-                vehicle_type: vehicleType,
-                interior_color: interiorColor,
-                transmission: transmission,
-                odometer: odometer,
-                driveTrain: driveTrain,
-                doors: doors,
-                Model: model,
-                make: make,
-                body_style: bodyStyle,
-                Zip: zip,
-                bidAmount: bidAmount,
-                owner: userId,
-                collection: selectedCollectionId,
-                facilitationLocation: facilitationLocation,
-                Vehicle_location: vehicleLocation,
-            };
-            console.log(bidObject);
+        async function addCar() {
+            seterror(null)
+            setisLoading(true)
+
+            const bidObject =  {
+                vin:vin,
+                link:"https://members.manheim.com/",
+                name:name,
+                site:"https://members.manheim.com/",
+                price:price,
+                year:year,
+                exterior_color:exteriorColor,
+                vehicle_type:vehicleType,
+                interior_color:interiorColor,
+                transmission:transmission,
+                odometer:odometer,
+                driveTrain:driveTrain,
+                doors:doors,
+                Model:model,
+                make:make,
+                body_style:bodyStyle,
+                Zip:zip,
+                bidAmount:bidAmount,
+                owner:userId,
+                collection: await placeItem(), 
+                facilitationLocation:facilitationLocation,
+                Vehicle_location:vehicleLocation,
+                images:carImages
+            }
+            console.log("bid object", bidObject)
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -376,71 +458,87 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: "follow",
+                redirect: 'follow'
             })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
+            .then(response => {
+                setisLoading(false)
+                // console.log(response)
+                if (!response.ok) {
+                    toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    router.push('/search')
+                    // dispatch(getCollection(userId))
+                }
+            })
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    toastError();
+                    throw Error("Could not create collection");
+                } else {
+                    setmessage(response.statusText);
+                    toastSuccess();
+                    router.push("/search");
+                }
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
         }
 
-        function placeItem() {
+        async function placeItem() {
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
-                availableCollection = createCollection();
+                availableCollection = await createCollection();
             }
 
-            addCar();
-        }
+            return availableCollection;
 
+        }
+            
         function getCollections() {
-            console.log("get collection", collection);
+            // console.log("get collection", collection)
             return collection || [];
         }
-
+            
         function getAvailableCollection() {
             // Replace getCollections
             const replaceCollections = getCollections();
-
+            
             let filterCollection = null;
-
-            for (let index = 0; index < replaceCollections?.length; index++) {
+            
+            for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
-                console.log("current collection", currentCollection);
-
-                if (currentCollection?.vehicles?.length < 10) {
-                    filterCollection = currentCollection?._id;
-                    setselectedCollectionId(filterCollection);
-                    console.log("Selected id is", selectedCollectionId);
+                console.log("current collection",currentCollection )
+            
+                if (currentCollection.vehicles.length < 10) {
+                    filterCollection = currentCollection._id;
+                    // console.log(filterCollection)
+                    
                     break;
                 }
             }
 
+            
             return filterCollection;
         }
 
-        function createCollection() {
+        async function createCollection() {
             let randomName = makeCollectionName(7);
 
             const collectionObject = {
                 owner: `${userId}`,
                 name: `${randomName}`,
             };
+            let newCollection;
             console.log(collectionObject);
-            fetch(enviroment.BASE_URL + "collections", {
+            await fetch(enviroment.BASE_URL + "collections", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -448,24 +546,30 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 body: JSON.stringify(collectionObject),
                 redirect: "follow",
             })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                    }
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
-            // return new Collection();
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    // toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    return response.json();
+                    // toastSuccess();
+                }
+            })
+            .then((data) => {
+                newCollection = data.data._id;
+                console.log(data)
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
+            return newCollection;
         }
-        placeItem();
+        
+        addCar();
     };
 
     function getTimeRemaining(e) {
@@ -502,18 +606,29 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     function getDeadTime() {
+        let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date().getTime() + 100;
+        let now = new Date(messager).getTime();
         let distance = now - countDownDate;
         setDistance(distance);
-        let deadline = new Date();
         deadline.setSeconds(deadline.getSeconds() + distance);
         return deadline;
     }
+
+    //
+    //
+    //
+    if (!cardD) {
+        // reRender();
+        return <div className="App">Loading...</div>;
+    }
+    //
+    //
+
     return (
         <div>
             <ToastContainer />
-            {cardD && (
+            {cardD && cardD.auctionEndTime && (
                 <>
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
@@ -588,8 +703,9 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                             </div>
                                         ))}
                                     {imageD &&
-                                    imageD.length >
-                                        (window.innerWidth <= 760 ? 3 : 5) ? (
+                                    imageD.length ===
+                                        (window.innerWidth <= 760 ? 3 : 5) &&
+                                    count > 0 ? (
                                         <div
                                             className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
@@ -678,7 +794,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                                         <td className="sec-black font-11 font-semibold w-28  ">
                                                             {" "}
                                                             <label>
-                                                                Click to edit
+                                                                Add amount to bid
                                                             </label>{" "}
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
@@ -1074,20 +1190,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>
-                                        <CountdownCircleTimer
-                                            isPlaying
-                                            duration={distance}
-                                            colors={[
-                                                ["#004777"],
-                                                ["#F7B801"],
-                                                ["#A30000"],
-                                            ]}
-                                            initialRemainingTime={distance}
-                                        >
-                                            {renderTime}
-                                        </CountdownCircleTimer>
-                                    </div>
+                                    <div>{renderCounter()}</div>
                                     <div className="timer">
                                         <button
                                             type="button"
@@ -1566,6 +1669,14 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         </div>
     );
 };
+
+CarDetails.getInitialProps = async (context) => {
+    let data = context.query.ele;
+    return {
+        messager: data,
+    };
+};
+
 const mapStateToProps = (state) => {
     const { carDetails, cars, carCollection } = state.Cars;
     return { carDetails, cars, carCollection };
