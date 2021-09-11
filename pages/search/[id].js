@@ -133,6 +133,18 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [count, setCount] = useState(0);
     const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
+
+    const getZipLocation = () => {
+        let initialZip = null;
+
+        if(carDetails) {
+            initialZip = `${carDetails.facilitationLocation}`.substring(0, 5);
+
+        }
+
+        return initialZip;
+    }
+
     useEffect(() => {
         setDetail(carDetails);
         console.log("car details", cardD)
@@ -155,11 +167,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         setfacilitationLocation(carDetails.facilitationLocation)
         setvehicleLocation(carDetails.pickupLocation)
         setcarImages(carDetails.images)
-
-
-
-
-
+        getZipLocation()
 
 
 
@@ -180,6 +188,31 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         getRate();
         displaySmall();
     }, [carDetails, cardD]);
+
+    useEffect(() => {
+
+        const getTrucking = {
+            packingCode:getZipLocation(),
+            packingName:""
+        }
+
+
+        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify()
+        })
+        .then((response) => {
+            console.log("trucking response", response)
+            return response.text()
+        })
+        .then((data) => {
+            console.log("trucking", data)
+        })
+    }, [cardD])
+
     const openForm = (evt, status) => {
         if (status !== offer) {
             setOffer(status);
