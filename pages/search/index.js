@@ -44,7 +44,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        console.log(paramValue)
+        console.log(paramValue);
         if (cars && cars.data === [] && paramValue) {
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
@@ -1294,6 +1294,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         pathname:
                                                                                             "/search/" +
                                                                                             ele.VIN,
+                                                                                        query: {
+                                                                                            ele: ele.auctionEndTime,
+                                                                                        },
                                                                                     }
                                                                                 );
                                                                         }}
@@ -1370,6 +1373,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     pathname:
                                                                                                         "/search/" +
                                                                                                         ele.VIN,
+                                                                                                    query: {
+                                                                                                        ele: ele.auctionEndTime,
+                                                                                                    },
                                                                                                 }
                                                                                             );
                                                                                     }}
@@ -1581,6 +1587,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 pathname:
                                                                                                     "/search/" +
                                                                                                     ele.VIN,
+                                                                                                query: {
+                                                                                                    ele: ele.auctionEndTime,
+                                                                                                },
                                                                                             }
                                                                                         );
                                                                                 }}
