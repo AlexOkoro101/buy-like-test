@@ -138,9 +138,10 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         let initialZip = null;
 
         if(carDetails) {
-            initialZip = `${carDetails.facilitationLocation}`.substring(0, 5);
+            initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
 
         }
+        console.log("zip", initialZip)
 
         return initialZip;
     }
@@ -189,28 +190,31 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         displaySmall();
     }, [carDetails, cardD]);
 
-    useEffect(() => {
+    const getTrucking = {
+        "packingCode":`${getZipLocation()}`,
+        "packingName":""
+    }
 
-        const getTrucking = {
-            packingCode:getZipLocation(),
-            packingName:""
-        }
-
+    const fetchTrucking = () => {
 
         fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify()
+            body: JSON.stringify(getTrucking)
         })
         .then((response) => {
-            console.log("trucking response", response)
-            return response.text()
+
+            return response.json()
         })
         .then((data) => {
             console.log("trucking", data)
         })
+    }
+    useEffect(() => {
+        fetchTrucking()
+
     }, [cardD])
 
     const openForm = (evt, status) => {
