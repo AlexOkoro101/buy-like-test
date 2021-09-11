@@ -13,37 +13,6 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 //
 //
 
-const renderTime = ({ remainingTime, elapsedTime }) => {
-    // console.log(remainingTime );
-    // console.log(elapsedTime );
-    let value = Math.round(remainingTime * 10);
-    function getDigits(n, arr = []) {
-        arr.push(n % 10);
-
-        if (n < 10) {
-            return arr.reverse();
-        }
-        return getDigits(Math.floor(n / 10), arr);
-    }
-    let data = 123495768;
-    const arr = getDigits(value);
-    let number = arr[0];
-    if (remainingTime === 0) {
-        return (
-            <div className="days font-13 sec-black font-semibold text-red-700">
-                Expired.
-            </div>
-        );
-    }
-    return (
-        <div className="timer">
-            <div className="days font-13 sec-black font-semibold">
-                {number + "" + arr[1]}
-            </div>
-        </div>
-    );
-};
-
 //
 //
 const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
@@ -76,7 +45,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [data, setData] = useState();
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
-    const [percentage, setPercentage] = useState(0);
+    const [percentage, setPercentage] = useState(null);
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(0);
     const [hours, sethours] = useState(0);
@@ -113,13 +82,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [vehicleLocation, setvehicleLocation] = useState("");
 
     const [selectedCollectionId, setselectedCollectionId] = useState(null);
-
-    //
-    // Timer
-    useEffect(() => {
-        clearTimer(getDeadTime());
-    }, []);
-    //
 
     //Get Data from Local Storage
     const retrieveData = () => {
@@ -203,6 +165,10 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         getRate();
         displaySmall();
     }, [carDetails, cardD]);
+
+    useEffect(() => {
+        clearTimer(getDeadTime());
+    }, []);
 
     const openForm = (evt, status) => {
         if (status !== offer) {
@@ -318,6 +284,57 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             console.log(error);
         }
     };
+
+    function renderCounter() {
+        if (cardD) {
+            return (
+                <>
+                    <CountdownCircleTimer
+                        isPlaying
+                        duration={distance}
+                        colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                        initialRemainingTime={distance}
+                    >
+                        {renderTime}
+                    </CountdownCircleTimer>
+                </>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    function renderTime({ remainingTime, elapsedTime }) {
+        // console.log(remainingTime );
+        // console.log(elapsedTime );
+        if (cardD) {
+            let value = Math.round(remainingTime * 10);
+            function getDigits(n, arr = []) {
+                arr.push(n % 10);
+
+                if (n < 10) {
+                    return arr.reverse();
+                }
+                return getDigits(Math.floor(n / 10), arr);
+            }
+            const arr = getDigits(value);
+            let number = arr[0];
+            if (remainingTime === 0) {
+                return (
+                    <div className="days font-13 sec-black font-semibold text-red-700">
+                        Expired.
+                    </div>
+                );
+            }
+            return (
+                <div className="timer">
+                    <div className="days font-13 sec-black font-semibold">
+                        {number + "" + arr[1]}
+                    </div>
+                </div>
+            );
+        }
+    }
 
     if (!cardD) {
         // reRender();
@@ -484,12 +501,14 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     function startTimer(e) {
-        let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
-        if (total >= 0) {
-            sethours(hours);
-            setminute(minutes);
-            setseconds(seconds);
-            setdays(days);
+        if (cardD) {
+            let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
+            if (total >= 0) {
+                sethours(hours);
+                setminute(minutes);
+                setseconds(seconds);
+                setdays(days);
+            }
         }
     }
 
@@ -502,18 +521,18 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     }
 
     function getDeadTime() {
+        let deadline = new Date();
         let countDownDate = new Date().getTime();
         let now = new Date().getTime() + 100;
         let distance = now - countDownDate;
         setDistance(distance);
-        let deadline = new Date();
         deadline.setSeconds(deadline.getSeconds() + distance);
         return deadline;
     }
     return (
         <div>
             <ToastContainer />
-            {cardD && (
+            {cardD && cardD.auctionEndTime && (
                 <>
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
@@ -1074,20 +1093,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>
-                                        <CountdownCircleTimer
-                                            isPlaying
-                                            duration={distance}
-                                            colors={[
-                                                ["#004777"],
-                                                ["#F7B801"],
-                                                ["#A30000"],
-                                            ]}
-                                            initialRemainingTime={distance}
-                                        >
-                                            {renderTime}
-                                        </CountdownCircleTimer>
-                                    </div>
+                                    <div>{renderCounter()}</div>
                                     <div className="timer">
                                         <button
                                             type="button"
