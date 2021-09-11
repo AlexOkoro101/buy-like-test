@@ -26,6 +26,7 @@ import {
 const api = process.env.cars_api;
 
 export const getCars = () => (dispatch) => {
+    console.log("calling3");
     dispatch({
         type: FETCHING_CARS,
     });
@@ -61,6 +62,7 @@ export const getCars = () => (dispatch) => {
         });
 };
 export const searchTerm = (event) => async (dispatch) => {
+    console.log(event);
     dispatch({
         type: SEARCHING,
         payload: event,
@@ -195,7 +197,8 @@ export const getCollection = (id) => (dispatch) => {
         type: FETCHING_COLLECTION,
     });
 
-    fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
+
+    fetch(enviroment.BASE_URL + "collections/collections/" + `${id}`, {
         method: "GET",
         redirect: "follow",
         credentials: "same-origin",
@@ -205,6 +208,7 @@ export const getCollection = (id) => (dispatch) => {
         },
     })
         .then(function (response) {
+            console.log(response);
             return response.text();
         })
         .then((data) => {
@@ -214,11 +218,12 @@ export const getCollection = (id) => (dispatch) => {
                 if (Object.entries(data).length >= 1) {
                     const formatCollection = JSON.parse(data);
                     // console.log("new collection", formatCollection.data)
-
+                    
                     dispatch({
                         type: FETCHING_COLLECTION_SUCCESS,
                         payload: formatCollection.data,
                     });
+                    
                 }
             }
         })

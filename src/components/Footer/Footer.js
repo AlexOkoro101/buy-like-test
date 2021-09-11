@@ -7,7 +7,7 @@ const Footer = () => {
 
                     <div className="flex items-center pb-4">
                         <span>
-                            <img src="../img/mail.svg" alt="mail-icon" />
+                            <img src="../../img/mail.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="mailto:test@gmail.com"
@@ -19,7 +19,7 @@ const Footer = () => {
 
                     <div className="flex items-center">
                         <span>
-                            <img src="../img/whatsapp.svg" alt="mail-icon" />
+                            <img src="../../img/whatsapp.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -37,7 +37,7 @@ const Footer = () => {
 
                     <div className="flex items-center pb-4">
                         <span>
-                            <img src="../img/face.svg" alt="mail-icon" />
+                            <img src="../../img/face.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -50,7 +50,7 @@ const Footer = () => {
 
                     <div className="flex items-center pb-4">
                         <span>
-                            <img src="../img/twitter.svg" alt="mail-icon" />
+                            <img src="../../img/twitter.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
@@ -63,7 +63,7 @@ const Footer = () => {
 
                     <div className="flex items-center">
                         <span>
-                            <img src="../img/insta.svg" alt="mail-icon" />
+                            <img src="../../img/insta.svg" alt="mail-icon" />
                         </span>
                         <a
                             href="whatsapp.com"
