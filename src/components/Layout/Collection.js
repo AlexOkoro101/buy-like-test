@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import  {getCollection}  from "../../../redux/actions/carsAction";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
@@ -24,7 +24,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
     const [editCollectionId, seteditCollectionId] = useState(null)
     const newCollection = useRef()
     const newCollectionName = useRef()
-    
+    const dispatch = useDispatch()
     const router = useRouter()
 
 
@@ -117,14 +117,36 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
     }
 
     useEffect(() => {
-        if (!collection.length) {
-            getCollection(id);
-        }
-        // console.log("collection", collection)
-        if (collection.length) {
-            setcarCollection(collection);
-        }
-    }, [id]);
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${id}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+        .then(function (response) {
+            console.log(response);
+            return response.text();
+        })
+        .then((data) => {
+            // console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    const formatCollection = JSON.parse(data);
+                    console.log("new collection", formatCollection.data)
+                    setcarCollection(formatCollection.data);
+                    
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+       
+    }, [id, isLoading]);
 
    const deleteCollection = (collectionId) => {
         setisLoading(true)
@@ -169,7 +191,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
 
         
         fetch(enviroment.BASE_URL + "collections/" + editCollectionId, {
-            method: 'GET',
+            method: 'PUT',
             headers: {
                 "Content-Type": "application/json"
             },
@@ -183,9 +205,16 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                 toastError()
                 throw Error("Could not edit collection")
             } else {
-                setmessage(response.statusText)
-                toastSuccess();
-                router.push('/profile/my-collection')
+                try {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    router.push('/profile/my-collection')
+                    setshowEditCollectionModal(false)
+                    getCollection(id)
+
+                } catch(e) {
+                    console.log("edit error", e)
+                }
             }
         })
         .catch(error => {
@@ -216,31 +245,14 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                     </h6>
                                 </div>
                                 <div className="flex py-2 ml-3">
-                                    <img
-                                        src="../assets/img/cars/AudiA3.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/fordescape.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/Toyota2.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/Rav42.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
-                                    <img
-                                        src="../assets/img/cars/highlander2.png"
-                                        alt="benz"
-                                        className="tiny-car-card"
-                                    />
+                                    {carCollection[0]?.images?.map((image) => (
+                                        <img
+                                            src={image.image_smallUrl}
+                                            alt={"car"}
+                                            className="tiny-car-card"
+                                        />
+
+                                    ))}
                                 </div>
                             </div>
                             <div className="flex flex-col mx-auxo items-end">
@@ -256,8 +268,8 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                     <img
                                         src={
                                             !collectionDropdown
-                                                ? "../assets/img/dropdown.png"
-                                                : "../assets/img/Polygon.png"
+                                                ? "../../assets/img/dropdown.png"
+                                                : "../../assets/img/Polygon.png"
                                         }
                                         alt="dropdown"
                                         className="cursor-pointer"
@@ -308,33 +320,6 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                                             }{" "}
                                                             cars selected
                                                         </h6>
-                                                    </div>
-                                                    <div className="flex py-2 ml-3">
-                                                        <img
-                                                            src="../assets/img/cars/AudiA3.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/fordescape.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/Toyota2.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/Rav42.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
-                                                        <img
-                                                            src="../assets/img/cars/highlander2.png"
-                                                            alt="benz"
-                                                            className="tiny-car-card"
-                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col mx-auxo items-end">

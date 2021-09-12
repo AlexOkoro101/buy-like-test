@@ -86,13 +86,12 @@ const CarDetails = ({
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
+    const [carImages, setcarImages] = useState([])
 
-    const [selectedCollectionId, setselectedCollectionId] = useState(null);
 
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
-        // console.log(userActive)
         if (!userActive) {
             settoken(null);
             return null;
@@ -108,7 +107,6 @@ const CarDetails = ({
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-        // return item.value
     };
 
     //Get Data from local Storage
@@ -119,43 +117,81 @@ const CarDetails = ({
     }, [router.pathname, token]);
 
     useEffect(() => {
-        if (!carCollection?.length) {
-            getCollection(userId);
-        }
-        console.log("collection", collection);
-        if (carCollection?.length) {
-            // carCollection.map(saved => {
-            //     console.log(saved._id)
-            // })
-            setcollection(carCollection);
-        }
-    }, [userId]);
+        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${userId}`, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+            .then(function (response) {
+                console.log(response);
+                return response.text();
+            })
+            .then((data) => {
+                // console.log(data)
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatCollection = JSON.parse(data);
+                        // console.log("new collection", formatCollection.data)
+                        setcollection(formatCollection.data);
+                        
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [userId, message]);
 
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
     const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
+
+    const getZipLocation = () => {
+        let initialZip = null;
+
+        if(carDetails) {
+            initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
+
+        }
+        console.log("zip", initialZip)
+
+        return initialZip;
+    }
+
     useEffect(() => {
         setDetail(carDetails);
-        setvin(carDetails.VIN);
-        setname(carDetails.vehicleName);
-        setprice(carDetails.buyNowPrice);
-        setyear(carDetails.year);
-        setexteriorColor(carDetails.exteriorColor);
-        setvehicleType(carDetails.vehicleType);
-        setinteriorColor(carDetails.interiorColor);
-        settransmission(carDetails.transmission);
-        setodometer(carDetails.odometer);
-        setdriveTrain(carDetails.driveTrain);
-        setdoors(carDetails.doors);
-        setmodel(carDetails.model);
-        setmake(carDetails.make);
-        setbodyStyle(carDetails.bodyType);
-        setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
-        setfacilitationLocation(carDetails.facilitationLocation);
-        setvehicleLocation(carDetails.pickupLocation);
+        console.log("car details", cardD)
+        setvin(carDetails.VIN)
+        setname(carDetails.vehicleName)
+        setprice(carDetails.mmrPrice)
+        setyear(carDetails.year)
+        setexteriorColor(carDetails.exteriorColor)
+        setvehicleType(carDetails.vehicleType)
+        setinteriorColor(carDetails.interiorColor)
+        settransmission(carDetails.transmission)
+        setodometer(carDetails.odometer)
+        setdriveTrain(carDetails.driveTrain)
+        setdoors(carDetails.doors)
+        setmodel(carDetails.model)
+        setmake(carDetails.make)
+        setbodyStyle(carDetails.bodyType)
+        setzip(carDetails.locationFullZipcode)
+        setbidAmount(carDetails.buyNowPrice)
+        setfacilitationLocation(carDetails.facilitationLocation)
+        setvehicleLocation(carDetails.pickupLocation)
+        setcarImages(carDetails.images)
+        getZipLocation()
+
+
+
+
 
         let array = [];
         if (cars) {
@@ -173,6 +209,32 @@ const CarDetails = ({
         displaySmall();
     }, [carDetails, cardD]);
 
+    const getTrucking = {
+        "packingCode":`${getZipLocation()}`,
+        "packingName":""
+    }
+
+    const fetchTrucking = () => {
+
+        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(getTrucking)
+        })
+        .then((response) => {
+
+            return response.json()
+        })
+        .then((data) => {
+            console.log("trucking", data)
+        })
+    }
+    useEffect(() => {
+        fetchTrucking()
+
+    }, [cardD])
     useEffect(() => {
         let data = router.query.ele;
         clearTimer(getDeadTime());
@@ -358,35 +420,37 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-        function addCar() {
-            seterror(null);
-            setisLoading(true);
 
-            const bidObject = {
-                vin: vin,
-                link: "https://members.manheim.com/",
-                name: name,
-                site: "https://members.manheim.com/",
-                price: price,
-                year: year,
-                exterior_color: exteriorColor,
-                vehicle_type: vehicleType,
-                interior_color: interiorColor,
-                transmission: transmission,
-                odometer: odometer,
-                driveTrain: driveTrain,
-                doors: doors,
-                Model: model,
-                make: make,
-                body_style: bodyStyle,
-                Zip: zip,
-                bidAmount: bidAmount,
-                owner: userId,
-                collection: selectedCollectionId,
-                facilitationLocation: facilitationLocation,
-                Vehicle_location: vehicleLocation,
-            };
-            console.log(bidObject);
+        async function addCar() {
+            seterror(null)
+            setisLoading(true)
+
+            const bidObject =  {
+                vin:vin,
+                link:"https://members.manheim.com/",
+                name:name,
+                site:"https://members.manheim.com/",
+                price:price,
+                year:year,
+                exterior_color:exteriorColor,
+                vehicle_type:vehicleType,
+                interior_color:interiorColor,
+                transmission:transmission,
+                odometer:odometer,
+                driveTrain:driveTrain,
+                doors:doors,
+                Model:model,
+                make:make,
+                body_style:bodyStyle,
+                Zip:zip,
+                bidAmount:bidAmount,
+                owner:userId,
+                collection: await placeItem(), 
+                facilitationLocation:facilitationLocation,
+                Vehicle_location:vehicleLocation,
+                images:carImages
+            }
+            console.log("bid object", bidObject)
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -395,71 +459,87 @@ const CarDetails = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: "follow",
+                redirect: 'follow'
             })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
+            .then(response => {
+                setisLoading(false)
+                // console.log(response)
+                if (!response.ok) {
+                    toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    toastSuccess();
+                    router.push('/search')
+                    // dispatch(getCollection(userId))
+                }
+            })
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    toastError();
+                    throw Error("Could not create collection");
+                } else {
+                    setmessage(response.statusText);
+                    toastSuccess();
+                    router.push("/search");
+                }
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
         }
 
-        function placeItem() {
+        async function placeItem() {
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
-                availableCollection = createCollection();
+                availableCollection = await createCollection();
             }
 
-            addCar();
-        }
+            return availableCollection;
 
+        }
+            
         function getCollections() {
-            console.log("get collection", collection);
+            // console.log("get collection", collection)
             return collection || [];
         }
-
+            
         function getAvailableCollection() {
             // Replace getCollections
             const replaceCollections = getCollections();
-
+            
             let filterCollection = null;
-
-            for (let index = 0; index < replaceCollections?.length; index++) {
+            
+            for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
-                console.log("current collection", currentCollection);
-
-                if (currentCollection?.vehicles?.length < 10) {
-                    filterCollection = currentCollection?._id;
-                    setselectedCollectionId(filterCollection);
-                    console.log("Selected id is", selectedCollectionId);
+                console.log("current collection",currentCollection )
+            
+                if (currentCollection.vehicles.length < 10) {
+                    filterCollection = currentCollection._id;
+                    // console.log(filterCollection)
+                    
                     break;
                 }
             }
 
+            
             return filterCollection;
         }
 
-        function createCollection() {
+        async function createCollection() {
             let randomName = makeCollectionName(7);
 
             const collectionObject = {
                 owner: `${userId}`,
                 name: `${randomName}`,
             };
+            let newCollection;
             console.log(collectionObject);
-            fetch(enviroment.BASE_URL + "collections", {
+            await fetch(enviroment.BASE_URL + "collections", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -467,24 +547,30 @@ const CarDetails = ({
                 body: JSON.stringify(collectionObject),
                 redirect: "follow",
             })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                    }
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
-            // return new Collection();
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    // toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    return response.json();
+                    // toastSuccess();
+                }
+            })
+            .then((data) => {
+                newCollection = data.data._id;
+                console.log(data)
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
+            return newCollection;
         }
-        placeItem();
+        
+        addCar();
     };
 
     function getTimeRemaining(e) {
@@ -710,7 +796,7 @@ const CarDetails = ({
                                                         <td className="sec-black font-11 font-semibold w-28  ">
                                                             {" "}
                                                             <label>
-                                                                Click to edit
+                                                                Add amount to bid
                                                             </label>{" "}
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
