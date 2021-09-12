@@ -112,7 +112,6 @@ const CarDetails = ({
     //Get Data from local Storage
     useEffect(() => {
         console.log(messager);
-
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
@@ -237,7 +236,9 @@ const CarDetails = ({
 
     }, [cardD])
     useEffect(() => {
+        let data = router.query.ele;
         clearTimer(getDeadTime());
+        setTimeout(() => {}, 1000);
     }, []);
 
     const openForm = (evt, status) => {
@@ -606,9 +607,10 @@ const CarDetails = ({
     }
 
     function getDeadTime() {
+        let data = new Date(router.query.ele).getTime();
         let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date(messager).getTime();
+        let now = new Date().getTime() + 10;
         let distance = now - countDownDate;
         setDistance(distance);
         deadline.setSeconds(deadline.getSeconds() + distance);
