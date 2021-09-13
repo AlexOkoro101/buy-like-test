@@ -10,6 +10,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import getRequestHelper from "./helper";
+import config from  "../../next.config"
+const Url = "https://buylikepoint.us/json.php/view.php"
 //
 //
 
@@ -21,6 +24,8 @@ const CarDetails = ({
     getCollection,
     carCollection,
     messager,
+    res,
+    // const [article, setArticle] =  useState(props.res.data)
 }) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -57,7 +62,8 @@ const CarDetails = ({
     const [hours, sethours] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
-
+    const [car, setCar] =  useState(res)
+    const [rate, setRate] =  useState(res)
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     const [userId, setuserId] = useState(null);
@@ -125,7 +131,7 @@ const CarDetails = ({
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
             },
-        })
+          })
             .then(function (response) {
                 console.log(response);
                 return response.text();
@@ -206,6 +212,7 @@ const CarDetails = ({
         // console.log(items);
         setData(items);
         getRate();
+        getSecondRate()
         displaySmall();
     }, [carDetails, cardD]);
 
@@ -334,6 +341,26 @@ const CarDetails = ({
                 alt="Benz"
             />
         );
+    };
+    const getSecondRate = () => {
+        let key = "a57db18c0b5cc8ad31a650a1e456712f";
+        try {
+            fetch(enviroment.BASE_URL+"rates/613b98b1e28f970016362ae3", {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("data-------rate=--------->res",data)
+                    // setNaira(data.rates.NGN);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const getRate = () => {
@@ -610,7 +637,7 @@ const CarDetails = ({
         let data = new Date(router.query.ele).getTime();
         let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date().getTime() + 10;
+        let now = new Date(car.data[0].auctionEndTime).getTime();
         let distance = now - countDownDate;
         setDistance(distance);
         deadline.setSeconds(deadline.getSeconds() + distance);
@@ -632,6 +659,9 @@ const CarDetails = ({
             <ToastContainer />
             {cardD && cardD.auctionEndTime && (
                 <>
+            {
+                console.log("res====--------id article-=------->",car)
+            }
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
@@ -1192,7 +1222,14 @@ const CarDetails = ({
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
+                                    {
+                                    car.data.length === 0?
+                                    <></>
+                                    :
                                     <div>{renderCounter()}</div>
+                                    }
+                                        
+                                  
                                     <div className="timer">
                                         <button
                                             type="button"
@@ -1200,10 +1237,15 @@ const CarDetails = ({
                                         >
                                             Auction Day
                                         </button>
-
-                                        <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                            TIME LEFT
+                                        {
+                                            car.data.length === 0?
+                                            <></>
+                                            :
+                                            <p className="font-9 font-semibold text-center primary-blue pt-4">
+                                            TIME LEFT   <p>{car.data[0].auctionEndTime} used the data this way</p>
                                         </p>
+                                        }
+                                       
                                         <div className=" flex w-full justify-center mt-3">
                                             <p className="sec-black font-medium font-11">
                                                 {new Date(
@@ -1219,6 +1261,7 @@ const CarDetails = ({
                                                 })}
                                             </p>
                                         </div>
+
                                         <div className="flex mt-1.5 justify-center">
                                             <div className="flex flex-col ml-2">
                                                 <p className="days font-13 sec-black font-semibold ">
@@ -1674,9 +1717,40 @@ const CarDetails = ({
 
 CarDetails.getInitialProps = async (context) => {
     let data = context.query.ele;
-    return {
-        messager: data,
-    };
+  
+
+    let vin = context.query.id;
+    console.log("data--------------->",data,vin)
+    // https://buylikepoint.us/json.php/view.php?vin=SAJWB6BCXH8K43487	&apiKey=Switch!2020&apiKey=Switch!2020
+    try {
+      const res = await getRequestHelper({
+        // url: `${Url}/view.php?vin=SAJWB6BCXH8K43487/&apiKey=Switch!2020&apiKey=Switch!2020`,
+        url: `${Url}?vin=${vin}&apiKey=Switch!2020`,
+      });
+      console.log("rrrrr0--------==============----->",res)
+      if(res.status === false){
+        typeof window !== "undefined"
+        ? Router.push("/search")
+        : ctx.res.writeHead(302, { Location: "/search" }).end();
+      }else{
+        return {
+          res,
+          messager: data,
+        };
+      }
+     
+    } catch (error) {
+      typeof window !== "undefined"
+      ? Router.push("/search")
+      : ctx.res.writeHead(302, { Location: "/search" }).end();
+
+      return;
+    }
+
+
+    // return {
+    //     messager: data,
+    // };
 };
 
 const mapStateToProps = (state) => {
