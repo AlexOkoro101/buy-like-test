@@ -497,8 +497,6 @@ const CarDetails = ({
                 } else {
                     setmessage(response.statusText)
                     toastSuccess();
-                    router.push('/search')
-                    // dispatch(getCollection(userId))
                 }
             })
             .then((response) => {

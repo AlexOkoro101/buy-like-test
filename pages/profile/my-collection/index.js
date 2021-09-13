@@ -119,7 +119,7 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
-                        // console.log("new collection", formatCollection.data)
+                        console.log("new collection", formatCollection.data)
                         
                         setcarCollection(formatCollection.data);
                         
@@ -166,9 +166,10 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
                                                 </h6>
                                             </div>
                                             <div className="flex py-2">
-                                                    {collection?.images?.map((image) => (
+                                                    {collection?.vehicles?.map((vehicle) => (
+
                                                         <img
-                                                            src={image.image_smallUrl}
+                                                            src={vehicle?.images[0]?.image_smallUrl}
                                                             alt="car"
                                                             className="tiny-car-card"
                                                         />
@@ -176,14 +177,14 @@ const MyCollection = ({ loading, getCollection, carCollection:collection }) => {
                                                     ))}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col mx-auxo items-end">
+                                        {/* <div className="flex flex-col mx-auxo items-end">
                                             <h4 className="text-base font-normal gray-text">
                                                 $15,000 - $30,500
                                             </h4>
                                             <h6 className="text-xs font-normal light-gray-text">
                                                 $1000 deposit paid
                                             </h6>
-                                        </div>
+                                        </div> */}
                                     </>
                                 </div>
                             </Link>
