@@ -44,8 +44,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        console.log(paramValue);
-        if (cars && cars.data === [] && paramValue) {
+        if (paramValue && cars.data === []) {
+            console.log("ppp");
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
