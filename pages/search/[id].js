@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -9,8 +9,24 @@ import { enviroment } from "../../src/components/enviroment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import getRequestHelper from "./helper";
+import config from  "../../next.config"
+const Url = "https://buylikepoint.us/json.php/view.php"
+//
+//
 
-const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
+//
+//
+const CarDetails = ({
+    carDetails,
+    cars,
+    getCollection,
+    carCollection,
+    messager,
+    res,
+    // const [article, setArticle] =  useState(props.res.data)
+}) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -31,7 +47,8 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             draggable: true,
             progress: undefined,
         });
-
+    const Ref = useRef(null);
+    const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -39,7 +56,14 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
     const [data, setData] = useState();
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
-
+    const [percentage, setPercentage] = useState(messager);
+    const [days, setdays] = useState(0);
+    const [distance, setDistance] = useState(0);
+    const [hours, sethours] = useState(0);
+    const [minute, setminute] = useState(0);
+    const [seconds, setseconds] = useState(0);
+    const [car, setCar] =  useState(res)
+    const [rate, setRate] =  useState(res)
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     const [userId, setuserId] = useState(null);
@@ -93,6 +117,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
 
     //Get Data from local Storage
     useEffect(() => {
+        console.log(messager);
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
@@ -106,7 +131,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
             },
-        })
+          })
             .then(function (response) {
                 console.log(response);
                 return response.text();
@@ -187,6 +212,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         // console.log(items);
         setData(items);
         getRate();
+        getSecondRate()
         displaySmall();
     }, [carDetails, cardD]);
 
@@ -216,6 +242,11 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         fetchTrucking()
 
     }, [cardD])
+    useEffect(() => {
+        let data = router.query.ele;
+        clearTimer(getDeadTime());
+        setTimeout(() => {}, 1000);
+    }, []);
 
     const openForm = (evt, status) => {
         if (status !== offer) {
@@ -311,6 +342,26 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
             />
         );
     };
+    const getSecondRate = () => {
+        let key = "a57db18c0b5cc8ad31a650a1e456712f";
+        try {
+            fetch(enviroment.BASE_URL+"rates/613b98b1e28f970016362ae3", {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("data-------rate=--------->res",data)
+                    // setNaira(data.rates.NGN);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const getRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
@@ -323,7 +374,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 })
                 .then((data) => {
                     setNaira(data.rates.NGN);
-                    console.log(cardD);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -333,9 +383,53 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         }
     };
 
-    if (!cardD) {
-        // reRender();
-        return <div className="App">Loading...</div>;
+    function renderCounter() {
+        if (cardD) {
+            return (
+                <>
+                    <CountdownCircleTimer
+                        isPlaying
+                        duration={distance}
+                        colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                        initialRemainingTime={distance}
+                    >
+                        {renderTime}
+                    </CountdownCircleTimer>
+                </>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    function renderTime({ remainingTime, elapsedTime }) {
+        if (cardD) {
+            let value = Math.round(remainingTime * 10);
+            function getDigits(n, arr = []) {
+                arr.push(n % 10);
+
+                if (n < 10) {
+                    return arr.reverse();
+                }
+                return getDigits(Math.floor(n / 10), arr);
+            }
+            const arr = getDigits(value);
+            let number = arr[0];
+            if (remainingTime === 0) {
+                return (
+                    <div className="days font-13 sec-black font-semibold text-red-700">
+                        Expired.
+                    </div>
+                );
+            }
+            return (
+                <div className="timer">
+                    <div className="days font-13 sec-black font-semibold">
+                        {number + "" + arr[1]}
+                    </div>
+                </div>
+            );
+        }
     }
 
     //Random collection name
@@ -504,11 +598,68 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         addCar();
     };
 
+    function getTimeRemaining(e) {
+        const total = Date.parse(e) - Date.parse(new Date());
+        const seconds = Math.floor((total / 1000) % 60);
+        const minutes = Math.floor((total / 1000 / 60) % 60);
+        const hours = Math.floor(((total / 1000) * 60 * 60) % 24);
+        let days = Math.floor(total / (1000 * 60 * 60 * 24));
+        return {
+            total,
+            hours,
+            minutes,
+            seconds,
+            days,
+        };
+    }
+
+    function startTimer(e) {
+        let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
+        if (total >= 0) {
+            sethours(hours);
+            setminute(minutes);
+            setseconds(seconds);
+            setdays(days);
+        }
+    }
+
+    function clearTimer(e) {
+        if (Ref.current) clearInterval(Ref.current);
+        const id = setInterval(() => {
+            startTimer(e);
+        }, 1000);
+        Ref.current = id;
+    }
+
+    function getDeadTime() {
+        let data = new Date(router.query.ele).getTime();
+        let deadline = new Date();
+        let countDownDate = new Date().getTime();
+        let now = new Date(car.data[0].auctionEndTime).getTime();
+        let distance = now - countDownDate;
+        setDistance(distance);
+        deadline.setSeconds(deadline.getSeconds() + distance);
+        return deadline;
+    }
+
+    //
+    //
+    //
+    if (!cardD) {
+        // reRender();
+        return <div className="App">Loading...</div>;
+    }
+    //
+    //
+
     return (
         <div>
             <ToastContainer />
-            {cardD && (
+            {cardD && cardD.auctionEndTime && (
                 <>
+            {
+                console.log("res====--------id article-=------->",car)
+            }
                     <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
@@ -545,7 +696,7 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                     }}
                                 >
                                     {page >=
-                                    (window.innerWidth <= 760 ? 3 : 5) ? (
+                                    (window.innerWidth < 760 ? 3 : 5) ? (
                                         <div
                                             className=" flex mr-2 md:mr-4 animate-pulse items-center text-xs font-mono justify-center  "
                                             style={{
@@ -582,8 +733,9 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                             </div>
                                         ))}
                                     {imageD &&
-                                    imageD.length >=
-                                        (window.innerWidth <= 760 ? 3 : 5) ? (
+                                    imageD.length ===
+                                        (window.innerWidth <= 760 ? 3 : 5) &&
+                                    count > 0 ? (
                                         <div
                                             className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
@@ -628,10 +780,13 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                         <p className="primary-color text-base font-extrabold">
                                             &#8358;
                                             {""}
-                                            {(
-                                                parseFloat(cardD.mmrPrice) *
-                                                naira
-                                            ).toLocaleString()}
+                                            {cardD && cardD.mmrPrice
+                                                ? (
+                                                      parseFloat(
+                                                          cardD.mmrPrice
+                                                      ) * naira
+                                                  ).toLocaleString()
+                                                : "No price"}
                                         </p>
                                     </div>
                                 </div>
@@ -1065,21 +1220,14 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <svg width="250" height="250">
-                                        <circle
-                                            r="100"
-                                            cx="125"
-                                            cy="125"
-                                            className="track"
-                                        ></circle>
-                                        <circle
-                                            r="100"
-                                            cx="125"
-                                            cy="125"
-                                            className="progress progress-ring__circle"
-                                        ></circle>
-                                    </svg>
-
+                                    {
+                                    car.data.length === 0?
+                                    <></>
+                                    :
+                                    <div>{renderCounter()}</div>
+                                    }
+                                        
+                                  
                                     <div className="timer">
                                         <button
                                             type="button"
@@ -1087,48 +1235,68 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                                         >
                                             Auction Day
                                         </button>
-                                        <div className=" flex justify-center mt-3">
+                                        {
+                                            car.data.length === 0?
+                                            <></>
+                                            :
+                                            <p className="font-9 font-semibold text-center primary-blue pt-4">
+                                            TIME LEFT   <p>{car.data[0].auctionEndTime} used the data this way</p>
+                                        </p>
+                                        }
+                                       
+                                        <div className=" flex w-full justify-center mt-3">
                                             <p className="sec-black font-medium font-11">
-                                                Feb 4, 2021
+                                                {new Date(
+                                                    carDetails.auctionEndTime
+                                                ).toLocaleDateString()}
                                             </p>
                                             <p className="sec-black font-medium font-11 ml-4">
-                                                9:06 AM
+                                                {new Date(
+                                                    carDetails.auctionEndTime
+                                                ).toLocaleString("en-US", {
+                                                    hour: "numeric",
+                                                    hour12: true,
+                                                })}
                                             </p>
                                         </div>
-                                        <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                            TIME LEFT
-                                        </p>
 
                                         <div className="flex mt-1.5 justify-center">
                                             <div className="flex flex-col ml-2">
-                                                <p className="days font-13 sec-black font-semibold "></p>
+                                                <p className="days font-13 sec-black font-semibold ">
+                                                    {days}
+                                                </p>
                                                 <p className="primary-gray font-6">
                                                     DAYS
                                                 </p>
                                             </div>
 
                                             <div className=" ml-3.5">
-                                                <p className=" font-13 sec-black font-semibold hours"></p>
+                                                <p className=" font-13 sec-black font-semibold hours">
+                                                    {hours}
+                                                </p>
                                                 <p className="primary-gray font-6">
                                                     HOURS
                                                 </p>
                                             </div>
 
                                             <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold minutes"></p>
+                                                <p className="font-13 sec-black font-semibold minutes">
+                                                    {minute}
+                                                </p>
                                                 <p className="primary-gray font-6">
                                                     MINUTES
                                                 </p>
                                             </div>
 
                                             <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold seconds"></p>
+                                                <p className="font-13 sec-black font-semibold seconds">
+                                                    {seconds}
+                                                </p>
                                                 <p className="primary-gray font-6">
                                                     SECONDS
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="days font-13 sec-black font-semibold"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1544,6 +1712,45 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
         </div>
     );
 };
+
+CarDetails.getInitialProps = async (context) => {
+    let data = context.query.ele;
+  
+
+    let vin = context.query.id;
+    console.log("data--------------->",data,vin)
+    // https://buylikepoint.us/json.php/view.php?vin=SAJWB6BCXH8K43487	&apiKey=Switch!2020&apiKey=Switch!2020
+    try {
+      const res = await getRequestHelper({
+        // url: `${Url}/view.php?vin=SAJWB6BCXH8K43487/&apiKey=Switch!2020&apiKey=Switch!2020`,
+        url: `${Url}?vin=${vin}&apiKey=Switch!2020`,
+      });
+      console.log("rrrrr0--------==============----->",res)
+      if(res.status === false){
+        typeof window !== "undefined"
+        ? Router.push("/search")
+        : ctx.res.writeHead(302, { Location: "/search" }).end();
+      }else{
+        return {
+          res,
+          messager: data,
+        };
+      }
+     
+    } catch (error) {
+      typeof window !== "undefined"
+      ? Router.push("/search")
+      : ctx.res.writeHead(302, { Location: "/search" }).end();
+
+      return;
+    }
+
+
+    // return {
+    //     messager: data,
+    // };
+};
+
 const mapStateToProps = (state) => {
     const { carDetails, cars, carCollection } = state.Cars;
     return { carDetails, cars, carCollection };

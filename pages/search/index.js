@@ -44,7 +44,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
-        console.log(paramValue)
+        console.log(paramValue);
         if (cars && cars.data === [] && paramValue) {
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
@@ -1294,6 +1294,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         pathname:
                                                                                             "/search/" +
                                                                                             ele.VIN,
+                                                                                        query: {
+                                                                                            ele: ele.auctionEndTime,
+                                                                                        },
                                                                                     }
                                                                                 );
                                                                         }}
@@ -1356,7 +1359,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         </div>
                                                                         <div className="flex pt-3">
                                                                             <div className="ml-auto  self-center">
-                                                                                <button
+                                                                                {
+                                                                                    console.log("lol=-------=------->",   ele.VIN)
+                                                                                }
+                                                                                   <a
+                                                                                        type="button"
+                                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                        href={"/search/"+ele.VIN}
+                                                                                    >
+                                                                                    Place
+                                                                                    bid
+                                                                                  </a>
+                                                                                {/* <button
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
                                                                                     onClick={() => {
@@ -1370,13 +1384,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     pathname:
                                                                                                         "/search/" +
                                                                                                         ele.VIN,
+                                                                                                    query: {
+                                                                                                        ele: ele.auctionEndTime,
+                                                                                                    },
                                                                                                 }
                                                                                             );
                                                                                     }}
                                                                                 >
                                                                                     Place
                                                                                     bid
-                                                                                </button>
+                                                                                </button> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1581,6 +1598,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 pathname:
                                                                                                     "/search/" +
                                                                                                     ele.VIN,
+                                                                                                query: {
+                                                                                                    ele: ele.auctionEndTime,
+                                                                                                },
                                                                                             }
                                                                                         );
                                                                                 }}
