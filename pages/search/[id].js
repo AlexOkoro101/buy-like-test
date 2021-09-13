@@ -504,6 +504,29 @@ const CarDetails = ({
                     } else {
                         setmessage(response.statusText);
                         toastSuccess();
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    // console.log(response)
+                    if (!response.ok) {
+                        toastError();
+                        // throw Error("Could not create collection")
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
                         router.push("/search");
                         // dispatch(getCollection(userId))
                     }

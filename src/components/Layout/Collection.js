@@ -136,7 +136,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                 //  console.log(data.data)
                 if (Object.entries(data).length >= 1) {
                     const formatCollection = JSON.parse(data);
-                    console.log("new collection", formatCollection.data)
+                    // console.log("new collection", formatCollection.data)
                     setcarCollection(formatCollection.data);
                     
                 }
@@ -255,14 +255,6 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                     ))}
                                 </div>
                             </div>
-                            <div className="flex flex-col mx-auxo items-end">
-                                <h4 className="text-base font-normal gray-text">
-                                    $15,000 - $30,500
-                                </h4>
-                                <h6 className="text-xs font-normal light-gray-text">
-                                    $1000 deposit paid
-                                </h6>
-                            </div>
                             <div className="ml-10 flex items-start -mt-4">
                                 {carCollection?.length > 1 && (
                                     <img
@@ -281,7 +273,7 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                     </div>
                 ) : (
                     <div className="blue-div px-20 mt-20 py-3 flex justify-between">
-                        <p>No collection to display for now</p>
+                        <p>Loading...</p>
                     </div>
                 )}
 
@@ -321,14 +313,6 @@ const Collection = ({ loading, getCollection, carCollection:collection }) => {
                                                             cars selected
                                                         </h6>
                                                     </div>
-                                                </div>
-                                                <div className="flex flex-col mx-auxo items-end">
-                                                    <h4 className="text-base font-normal gray-text">
-                                                        $15,000 - $30,500
-                                                    </h4>
-                                                    <h6 className="text-xs font-normal light-gray-text">
-                                                        $1000 deposit paid
-                                                    </h6>
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <button className="mx-2 text-sm text-blue-400"  onClick={() => editCollection(collection?._id)}>Edit</button>
