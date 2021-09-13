@@ -1359,7 +1359,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         </div>
                                                                         <div className="flex pt-3">
                                                                             <div className="ml-auto  self-center">
-                                                                                <button
+                                                                                {
+                                                                                    console.log("lol=-------=------->",   ele.VIN)
+                                                                                }
+                                                                                   <a
+                                                                                        type="button"
+                                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                        href={"/search/"+ele.VIN}
+                                                                                    >
+                                                                                    Place
+                                                                                    bid
+                                                                                  </a>
+                                                                                {/* <button
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
                                                                                     onClick={() => {
@@ -1382,7 +1393,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 >
                                                                                     Place
                                                                                     bid
-                                                                                </button>
+                                                                                </button> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
