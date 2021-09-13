@@ -403,8 +403,6 @@ const CarDetails = ({ carDetails, cars, getCollection, carCollection }) => {
                 } else {
                     setmessage(response.statusText)
                     toastSuccess();
-                    router.push('/search')
-                    // dispatch(getCollection(userId))
                 }
             })
             .then((response) => {

@@ -33,7 +33,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
     const [years, setYears] = useState(() => {
-        let year = 2000;
+        let year = 2005;
         const currentYear = new Date().getFullYear();
         let validVehicleYears = [];
         while (year <= currentYear) {
