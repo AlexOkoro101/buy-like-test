@@ -290,6 +290,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const handleChange = (newValue) => {
         if (newValue && newValue.data) {
             dispatch(carDetail(newValue.data));
+
             router.push({
                 pathname: "/search/" + newValue.value,
             });
@@ -1281,25 +1282,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         height: "380px",
                                                                     }}
                                                                 >
-                                                                    <div
+                                                                    <a
                                                                         className="cursor-pointer"
                                                                         onClick={() => {
                                                                             dispatch(
                                                                                 carDetail(
                                                                                     ele
                                                                                 )
-                                                                            ),
-                                                                                router.push(
-                                                                                    {
-                                                                                        pathname:
-                                                                                            "/search/" +
-                                                                                            ele.VIN,
-                                                                                        query: {
-                                                                                            ele: ele.auctionEndTime,
-                                                                                        },
-                                                                                    }
-                                                                                );
+                                                                            );
                                                                         }}
+                                                                        href={
+                                                                            "/search/" +
+                                                                            ele.VIN
+                                                                        }
                                                                         style={{
                                                                             width: "273px",
                                                                             height: "204px",
@@ -1308,7 +1303,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         {addImage(
                                                                             ele
                                                                         )}
-                                                                    </div>
+                                                                    </a>
                                                                     <div className="mt-3">
                                                                         <p className="text-xs primary-black font-medium">
                                                                             {ele?.vehicleName
@@ -1359,7 +1354,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         </div>
                                                                         <div className="flex pt-3">
                                                                             <div className="ml-auto  self-center">
-                                                                                <button
+                                                                                <a
+                                                                                    type="button"
+                                                                                    className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                    href={
+                                                                                        "/search/" +
+                                                                                        ele.VIN
+                                                                                    }
+                                                                                >
+                                                                                    Place
+                                                                                    bid
+                                                                                </a>
+                                                                                {/* <button
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
                                                                                     onClick={() => {
@@ -1382,7 +1388,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 >
                                                                                     Place
                                                                                     bid
-                                                                                </button>
+                                                                                </button> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1409,19 +1415,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     {/* <!-- image to details here --> */}
                                                                     <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
                                                                         <div className="1/2">
-                                                                            <img
-                                                                                className="img-fluid"
-                                                                                src={
-                                                                                    ele
-                                                                                        ?.images[0]
-                                                                                        ?.image_largeUrl
+                                                                            <a
+                                                                                href={
+                                                                                    "/search/" +
+                                                                                    ele.VIN
                                                                                 }
-                                                                                alt=""
-                                                                                style={{
-                                                                                    width: "340px",
-                                                                                    height: "250px",
-                                                                                }}
-                                                                            />
+                                                                            >
+                                                                                <img
+                                                                                    className="img-fluid"
+                                                                                    src={
+                                                                                        ele
+                                                                                            ?.images[0]
+                                                                                            ?.image_largeUrl
+                                                                                    }
+                                                                                    alt=""
+                                                                                    style={{
+                                                                                        width: "340px",
+                                                                                        height: "250px",
+                                                                                    }}
+                                                                                />
+                                                                            </a>
                                                                         </div>
 
                                                                         {/* <!-- Details here --> */}
@@ -1559,17 +1572,24 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     </div>
                                                                     <div className="w-1/5 py-4 items-end flex flex-col">
                                                                         <div className="relative pt-1.5">
-                                                                            <img
-                                                                                src="../../assets/img/vectors/buy.svg"
-                                                                                alt="buy"
-                                                                            />
-                                                                            <button
-                                                                                type="button"
-                                                                                className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                                                            >
-                                                                                BUY
-                                                                                NOW
-                                                                            </button>
+                                                                            {ele
+                                                                                .buyNowPrice
+                                                                                .length >
+                                                                                0 && (
+                                                                                <>
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/buy.svg"
+                                                                                        alt="buy"
+                                                                                    />
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                                                    >
+                                                                                        BUY
+                                                                                        NOW
+                                                                                    </button>
+                                                                                </>
+                                                                            )}
                                                                         </div>
 
                                                                         <div>
@@ -1581,21 +1601,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         carDetail(
                                                                                             ele
                                                                                         )
-                                                                                    ),
-                                                                                        router.push(
-                                                                                            {
-                                                                                                pathname:
-                                                                                                    "/search/" +
-                                                                                                    ele.VIN,
-                                                                                                query: {
-                                                                                                    ele: ele.auctionEndTime,
-                                                                                                },
-                                                                                            }
-                                                                                        );
+                                                                                    );
                                                                                 }}
                                                                             >
-                                                                                View
-                                                                                Details
+                                                                                <a
+                                                                                    href={
+                                                                                        "/search/" +
+                                                                                        ele.VIN
+                                                                                    }
+                                                                                >
+                                                                                    View
+                                                                                    Details
+                                                                                </a>
                                                                             </button>
                                                                         </div>
                                                                     </div>
