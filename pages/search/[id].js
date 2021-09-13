@@ -10,6 +10,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import getRequestHelper from "./helper";
+import config from "../../next.config";
+const Url = "https://buylikepoint.us/json.php/view.php";
 //
 //
 
@@ -20,7 +23,8 @@ const CarDetails = ({
     cars,
     getCollection,
     carCollection,
-    messager,
+    res,
+    // const [article, setArticle] =  useState(props.res.data)
 }) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -51,13 +55,14 @@ const CarDetails = ({
     const [data, setData] = useState();
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
-    const [percentage, setPercentage] = useState(messager);
+    const [percentage, setPercentage] = useState();
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(0);
     const [hours, sethours] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
-
+    const [car, setCar] = useState(res);
+    const [rate, setRate] = useState(res);
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     const [userId, setuserId] = useState(null);
@@ -83,11 +88,11 @@ const CarDetails = ({
     const [bodyStyle, setbodyStyle] = useState("");
     const [zip, setzip] = useState("");
     const [bidAmount, setbidAmount] = useState("");
+    const [totalAmount, setTotalAmount] = useState(0);
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
-    const [carImages, setcarImages] = useState([])
-
+    const [carImages, setcarImages] = useState([]);
 
     //Get Data from Local Storage
     const retrieveData = () => {
@@ -111,22 +116,25 @@ const CarDetails = ({
 
     //Get Data from local Storage
     useEffect(() => {
-        console.log(messager);
-
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
 
     useEffect(() => {
-        fetch(enviroment.BASE_URL + "collections/owner/collections/" + `${userId}`, {
-            method: "GET",
-            redirect: "follow",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-            },
-        })
+        fetch(
+            enviroment.BASE_URL +
+                "collections/owner/collections/" +
+                `${userId}`,
+            {
+                method: "GET",
+                redirect: "follow",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }
+        )
             .then(function (response) {
                 console.log(response);
                 return response.text();
@@ -139,7 +147,6 @@ const CarDetails = ({
                         const formatCollection = JSON.parse(data);
                         // console.log("new collection", formatCollection.data)
                         setcollection(formatCollection.data);
-                        
                     }
                 }
             })
@@ -157,42 +164,35 @@ const CarDetails = ({
     const getZipLocation = () => {
         let initialZip = null;
 
-        if(carDetails) {
+        if (carDetails) {
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
-
         }
-        console.log("zip", initialZip)
-
         return initialZip;
-    }
+    };
 
     useEffect(() => {
         setDetail(carDetails);
-        console.log("car details", cardD)
-        setvin(carDetails.VIN)
-        setname(carDetails.vehicleName)
-        setprice(carDetails.mmrPrice)
-        setyear(carDetails.year)
-        setexteriorColor(carDetails.exteriorColor)
-        setvehicleType(carDetails.vehicleType)
-        setinteriorColor(carDetails.interiorColor)
-        settransmission(carDetails.transmission)
-        setodometer(carDetails.odometer)
-        setdriveTrain(carDetails.driveTrain)
-        setdoors(carDetails.doors)
-        setmodel(carDetails.model)
-        setmake(carDetails.make)
-        setbodyStyle(carDetails.bodyType)
-        setzip(carDetails.locationFullZipcode)
-        setbidAmount(carDetails.buyNowPrice)
-        setfacilitationLocation(carDetails.facilitationLocation)
-        setvehicleLocation(carDetails.pickupLocation)
-        setcarImages(carDetails.images)
-        getZipLocation()
-
-
-
-
+        setvin(carDetails.VIN);
+        setname(carDetails.vehicleName);
+        setprice(carDetails.mmrPrice);
+        setyear(carDetails.year);
+        setexteriorColor(carDetails.exteriorColor);
+        setvehicleType(carDetails.vehicleType);
+        setinteriorColor(carDetails.interiorColor);
+        settransmission(carDetails.transmission);
+        setodometer(carDetails.odometer);
+        setdriveTrain(carDetails.driveTrain);
+        setdoors(carDetails.doors);
+        setmodel(carDetails.model);
+        setmake(carDetails.make);
+        setbodyStyle(carDetails.bodyType);
+        setzip(carDetails.locationFullZipcode);
+        setbidAmount(carDetails.buyNowPrice);
+        setTotalAmount(carDetails.mmrPrice);
+        setfacilitationLocation(carDetails.facilitationLocation);
+        setvehicleLocation(carDetails.pickupLocation);
+        setcarImages(carDetails.images);
+        getZipLocation();
 
         let array = [];
         if (cars) {
@@ -207,35 +207,33 @@ const CarDetails = ({
         // console.log(items);
         setData(items);
         getRate();
+        getSecondRate();
         displaySmall();
     }, [carDetails, cardD]);
 
     const getTrucking = {
-        "packingCode":`${getZipLocation()}`,
-        "packingName":""
-    }
+        packingCode: `${getZipLocation()}`,
+        packingName: "",
+    };
 
-    const fetchTrucking = () => {
-
-        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(getTrucking)
-        })
-        .then((response) => {
-
-            return response.json()
-        })
-        .then((data) => {
-            console.log("trucking", data)
-        })
-    }
+    // const fetchTrucking = () => {
+    //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(getTrucking),
+    //     })
+    //         .then((response) => {
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             console.log("trucking", data);
+    //         });
+    // };
     useEffect(() => {
-        fetchTrucking()
-
-    }, [cardD])
+        // fetchTrucking();
+    }, [cardD]);
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -335,6 +333,30 @@ const CarDetails = ({
         );
     };
 
+    //
+    //
+    //
+    const getSecondRate = () => {
+        let key = "a57db18c0b5cc8ad31a650a1e456712f";
+        try {
+            fetch(enviroment.BASE_URL + "rates/613b98b1e28f970016362ae3", {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    // console.log("data-------rate=--------->res", data);
+                    // setNaira(data.rates.NGN);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const getRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
         try {
@@ -345,7 +367,9 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
-                    setNaira(data.rates.NGN);
+                    if (data.success !== false) {
+                        setNaira(data.rates.NGN);
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -376,17 +400,30 @@ const CarDetails = ({
 
     function renderTime({ remainingTime, elapsedTime }) {
         if (cardD) {
-            let value = Math.round(remainingTime * 10);
-            function getDigits(n, arr = []) {
-                arr.push(n % 10);
-
-                if (n < 10) {
-                    return arr.reverse();
+            function getDigits(val) {
+                if (val / 86400 > 1) {
+                    return {
+                        data: (val / 86400) | 0,
+                        label: "days",
+                    };
+                } else if (val / 3600 > 1) {
+                    return {
+                        data: (val / 3600) | 0,
+                        label: "hours",
+                    };
+                } else if (val / 60 > 1) {
+                    return {
+                        data: (val / 60) | 0,
+                        label: "minutes",
+                    };
+                } else {
+                    return {
+                        data: val | 0,
+                        label: "seconds",
+                    };
                 }
-                return getDigits(Math.floor(n / 10), arr);
             }
-            const arr = getDigits(value);
-            let number = arr[0];
+            const arr = getDigits(remainingTime);
             if (remainingTime === 0) {
                 return (
                     <div className="days font-13 sec-black font-semibold text-red-700">
@@ -395,10 +432,9 @@ const CarDetails = ({
                 );
             }
             return (
-                <div className="timer">
-                    <div className="days font-13 sec-black font-semibold">
-                        {number + "" + arr[1]}
-                    </div>
+                <div className="text-center font-13 sec-black items-center font-semibold">
+                    <p>{arr.data}</p>
+                    <p className="text-gray-400 mt-0">{arr.label}</p>
                 </div>
             );
         }
@@ -419,37 +455,36 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-
         async function addCar() {
-            seterror(null)
-            setisLoading(true)
+            seterror(null);
+            setisLoading(true);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                body_style:bodyStyle,
-                Zip:zip,
-                bidAmount:bidAmount,
-                owner:userId,
-                collection: await placeItem(), 
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages
-            }
-            console.log("bid object", bidObject)
+            const bidObject = {
+                vin: vin,
+                link: "https://members.manheim.com/",
+                name: name,
+                site: "https://members.manheim.com/",
+                price: price,
+                year: year,
+                exterior_color: exteriorColor,
+                vehicle_type: vehicleType,
+                interior_color: interiorColor,
+                transmission: transmission,
+                odometer: odometer,
+                driveTrain: driveTrain,
+                doors: doors,
+                Model: model,
+                make: make,
+                body_style: bodyStyle,
+                Zip: zip,
+                bidAmount: bidAmount,
+                owner: userId,
+                collection: await placeItem(),
+                facilitationLocation: facilitationLocation,
+                Vehicle_location: vehicleLocation,
+                images: carImages,
+            };
+            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -458,37 +493,60 @@ const CarDetails = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: 'follow'
+                redirect: "follow",
             })
-            .then(response => {
-                setisLoading(false)
-                // console.log(response)
-                if (!response.ok) {
-                    toastError()
-                    // throw Error("Could not create collection")
-                } else {
-                    setmessage(response.statusText)
-                    toastSuccess();
-                    router.push('/search')
-                    // dispatch(getCollection(userId))
-                }
-            })
-            .then((response) => {
-                setisLoading(false);
-                console.log(response);
-                if (!response.ok) {
-                    toastError();
-                    throw Error("Could not create collection");
-                } else {
-                    setmessage(response.statusText);
-                    toastSuccess();
-                    router.push("/search");
-                }
-            })
-            .catch((error) => {
-                seterror(error);
-                console.log("error", error);
-            });
+                .then((response) => {
+                    setisLoading(false);
+                    // console.log(response)
+                    if (!response.ok) {
+                        toastError();
+                        // throw Error("Could not create collection")
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    // console.log(response)
+                    if (!response.ok) {
+                        toastError();
+                        // throw Error("Could not create collection")
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                        // dispatch(getCollection(userId))
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                    }
+                })
+                .catch((error) => {
+                    seterror(error);
+                    console.log("error", error);
+                });
         }
 
         async function placeItem() {
@@ -499,33 +557,31 @@ const CarDetails = ({
             }
 
             return availableCollection;
-
         }
-            
+
         function getCollections() {
             // console.log("get collection", collection)
             return collection || [];
         }
-            
+
         function getAvailableCollection() {
             // Replace getCollections
             const replaceCollections = getCollections();
-            
+
             let filterCollection = null;
-            
+
             for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
-                console.log("current collection",currentCollection )
-            
+                console.log("current collection", currentCollection);
+
                 if (currentCollection.vehicles.length < 10) {
                     filterCollection = currentCollection._id;
                     // console.log(filterCollection)
-                    
+
                     break;
                 }
             }
 
-            
             return filterCollection;
         }
 
@@ -546,29 +602,29 @@ const CarDetails = ({
                 body: JSON.stringify(collectionObject),
                 redirect: "follow",
             })
-            .then((response) => {
-                setisLoading(false);
-                console.log(response);
-                if (!response.ok) {
-                    // toastError()
-                    // throw Error("Could not create collection")
-                } else {
-                    setmessage(response.statusText)
-                    return response.json();
-                    // toastSuccess();
-                }
-            })
-            .then((data) => {
-                newCollection = data.data._id;
-                console.log(data)
-            })
-            .catch((error) => {
-                seterror(error);
-                console.log("error", error);
-            });
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        // toastError()
+                        // throw Error("Could not create collection")
+                    } else {
+                        setmessage(response.statusText);
+                        return response.json();
+                        // toastSuccess();
+                    }
+                })
+                .then((data) => {
+                    newCollection = data.data._id;
+                    console.log(data);
+                })
+                .catch((error) => {
+                    seterror(error);
+                    console.log("error", error);
+                });
             return newCollection;
         }
-        
+
         addCar();
     };
 
@@ -586,6 +642,36 @@ const CarDetails = ({
             days,
         };
     }
+
+    const setFees = (e, type, value) => {
+        switch (type) {
+            case "truck":
+                if (e.target.checked === true) {
+                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                } else {
+                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            case "ship":
+                if (e.target.checked === true) {
+                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                } else {
+                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            case "clear":
+                if (e.target.checked === true) {
+                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                } else {
+                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            default:
+                break;
+        }
+        console.log(type);
+        console.log(e.target.checked);
+    };
 
     function startTimer(e) {
         let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
@@ -606,9 +692,12 @@ const CarDetails = ({
     }
 
     function getDeadTime() {
+        let data = new Date(carDetails.auctionEndTime).getTime();
         let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date(messager).getTime();
+        let now = new Date().getTime() >= data ? new Date().getTime() : data;
+        console.log(now);
+        console.log(data);
         let distance = now - countDownDate;
         setDistance(distance);
         deadline.setSeconds(deadline.getSeconds() + distance);
@@ -747,31 +836,28 @@ const CarDetails = ({
                                         </p>
                                     </div>
                                     <div className="ml-auto">
-                                        <p className="primary-color text-base font-extrabold">
-                                            &#8358;
-                                            {""}
-                                            {cardD && cardD.mmrPrice
-                                                ? (
-                                                      parseFloat(
-                                                          cardD.mmrPrice
-                                                      ) * naira
-                                                  ).toLocaleString()
-                                                : "No price"}
-                                        </p>
+                                        {cardD.buyNowPrice.length > 2 ? (
+                                            <p className="primary-color text-base font-extrabold">
+                                                BUY NOW @ &#8358;
+                                                {""}
+                                                {cardD.buyNowPrice}
+                                            </p>
+                                        ) : (
+                                            parseFloat(
+                                                cardD.mmrPrice * naira
+                                            ).toLocaleString()
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex mt-4 lg:mt-0">
-                                <div
-                                    className="details-tab  cursor-pointer active px-10 lg:px-16 font-10 font-semibold  primary-black py-0.5 "
-                                    onClick={(e) => openForm(e, true)}
-                                >
+                                <div className="details-tab  cursor-pointer active px-10 w-full text-center font-10 font-semibold  primary-black py-0.5 ">
                                     <p href className="py-1.5">
                                         Offer Amount
                                     </p>
                                 </div>
-
+                                {/* 
                                 <div
                                     className="ml-auto px-14 cursor-pointer lg:px-20 font-10 font-medium details-tab primary-black py-0.5"
                                     onClick={(e) => openForm(e, false)}
@@ -779,7 +865,7 @@ const CarDetails = ({
                                     <p href className="py-1.5">
                                         Budget
                                     </p>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="mt-3">
                                 {offer && (
@@ -794,7 +880,8 @@ const CarDetails = ({
                                                         <td className="sec-black font-11 font-semibold w-28  ">
                                                             {" "}
                                                             <label>
-                                                                Add amount to bid
+                                                                Add amount to
+                                                                bid
                                                             </label>{" "}
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
@@ -881,6 +968,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "truck",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -900,6 +994,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "ship",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -919,6 +1020,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "clear",
+                                                                        2000000
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -940,7 +1048,7 @@ const CarDetails = ({
                                                         Total
                                                     </td>
                                                     <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        N46,000,000
+                                                        N{totalAmount}
                                                     </td>
                                                     <td className="font-10 font-medium primary-blue text-center px-2">
                                                         Change currency
@@ -1191,6 +1299,7 @@ const CarDetails = ({
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
                                     <div>{renderCounter()}</div>
+
                                     <div className="timer">
                                         <button
                                             type="button"
@@ -1198,10 +1307,18 @@ const CarDetails = ({
                                         >
                                             Auction Day
                                         </button>
+                                        {/* {car.data.length === 0 ? (
+                                            <></>
+                                        ) : (
+                                            <p className="font-9 font-semibold text-center primary-blue pt-4">
+                                                TIME LEFT{" "}
+                                                <p>
+                                                    {car.data[0].auctionEndTime}{" "}
+                                                    used the data this way
+                                                </p>
+                                            </p>
+                                        )} */}
 
-                                        <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                            TIME LEFT
-                                        </p>
                                         <div className=" flex w-full justify-center mt-3">
                                             <p className="sec-black font-medium font-11">
                                                 {new Date(
@@ -1217,6 +1334,7 @@ const CarDetails = ({
                                                 })}
                                             </p>
                                         </div>
+
                                         <div className="flex mt-1.5 justify-center">
                                             <div className="flex flex-col ml-2">
                                                 <p className="days font-13 sec-black font-semibold ">
@@ -1257,6 +1375,7 @@ const CarDetails = ({
                                     </div>
                                 </div>
                             </div>
+
                             <div className="flex flex-col self-center mt-14">
                                 <div className="items-center self-center">
                                     <img
@@ -1671,10 +1790,32 @@ const CarDetails = ({
 };
 
 CarDetails.getInitialProps = async (context) => {
-    let data = context.query.ele;
-    return {
-        messager: data,
-    };
+    let vin = context.query.id;
+    console.log("data--------------->", vin);
+    // https://buylikepoint.us/json.php/view.php?vin=SAJWB6BCXH8K43487	&apiKey=Switch!2020&apiKey=Switch!2020
+    // try {
+    //     const res = await getRequestHelper({
+    //         // url: `${Url}/view.php?vin=SAJWB6BCXH8K43487/&apiKey=Switch!2020&apiKey=Switch!2020`,
+    //         url: `${Url}?vin=${vin}&apiKey=Switch!2020`,
+    //     });
+    //     console.log("rrrrr0--------==============----->", res);
+    //     if (res.status === false) {
+    //         typeof window !== "undefined"
+    //             ? Router.push("/search")
+    //             : ctx.res.writeHead(302, { Location: "/search" }).end();
+    //     } else {
+    //         return {
+    //             res,
+    //         };
+    //     }
+    // } catch (error) {
+    //     typeof window !== "undefined"
+    //         ? Router.push("/search")
+    //         : ctx.res.writeHead(302, { Location: "/search" }).end();
+
+    //     return;
+    // }
+    return {};
 };
 
 const mapStateToProps = (state) => {

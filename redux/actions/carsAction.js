@@ -62,16 +62,21 @@ export const getCars = () => (dispatch) => {
         });
 };
 export const searchTerm = (event) => async (dispatch) => {
-    console.log(event);
     dispatch({
         type: SEARCHING,
         payload: event,
     });
+
+    let data = {
+        year: event.year || "",
+        make: event.make || "",
+        model: event.model || "",
+        vin: event.VIN || "",
+    };
+
     try {
         let res = await fetch(
-            `${api}?year=${""}&make=${""}&model=${""}&vin=${
-                event.VIN
-            }&page=1&apiKey=Switch!2020`,
+            `${api}?year=${data.year}&make=${data.make}&model=${data.model}&vin=${data.vin}&page=1&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
@@ -197,7 +202,6 @@ export const getCollection = (id) => (dispatch) => {
         type: FETCHING_COLLECTION,
     });
 
-
     fetch(enviroment.BASE_URL + "collections/collections/" + `${id}`, {
         method: "GET",
         redirect: "follow",
@@ -218,12 +222,11 @@ export const getCollection = (id) => (dispatch) => {
                 if (Object.entries(data).length >= 1) {
                     const formatCollection = JSON.parse(data);
                     // console.log("new collection", formatCollection.data)
-                    
+
                     dispatch({
                         type: FETCHING_COLLECTION_SUCCESS,
                         payload: formatCollection.data,
                     });
-                    
                 }
             }
         })
