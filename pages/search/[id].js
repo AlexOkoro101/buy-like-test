@@ -223,20 +223,39 @@ const CarDetails = ({
 
     const fetchTrucking = () => {
 
-        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+        console.log("data-=-------click---fetchTrucking-->",)
+      const login ={
+         packingCode:"45011",
+         packingName:""
+      }
+         const requestOptions = {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(getTrucking)
-        })
-        .then((response) => {
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(login),
+         };
+        //  fetch("http://localhost:4000/api/ng-trucking", requestOptions)
+         fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", requestOptions)
+         .then(res => res.json())
+         .then((res)=>{
+            console.log("res--------======----fetchTrucking =----->", res)
+               if(res.status === "error"){
+             }
+         })
 
-            return response.json()
-        })
-        .then((data) => {
-            console.log("trucking", data)
-        })
+        // fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(getTrucking)
+        // })
+        // .then((response) => {
+
+        //     return response.json()
+        // })
+        // .then((data) => {
+        //     console.log("trucking", data)
+        // })
     }
     useEffect(() => {
         fetchTrucking()
