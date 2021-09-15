@@ -10,8 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import getRequestHelper from "./helper";
-import config from "../../next.config";
+var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
 //
 //
@@ -59,6 +58,7 @@ const CarDetails = ({
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(0);
     const [hours, sethours] = useState(0);
+    const [amount, setAmount] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
     const [car, setCar] = useState(res);
@@ -136,7 +136,6 @@ const CarDetails = ({
             }
         )
             .then(function (response) {
-                console.log(response);
                 return response.text();
             })
             .then((data) => {
@@ -188,7 +187,6 @@ const CarDetails = ({
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
         setbidAmount(carDetails.buyNowPrice);
-        setTotalAmount(carDetails.mmrPrice);
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -346,8 +344,12 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
-                    // console.log("data-------rate=--------->res", data);
-                    // setNaira(data.rates.NGN);
+                    setNaira(data.data.rate);
+                    setTotalAmount(
+                        parseInt(carDetails.buyNowPrice * data.data.rate)
+                    );
+                    setAmount(carDetails.buyNowPrice * data.data.rate);
+                    setbidAmount(carDetails.buyNowPrice * data.data.rate);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -387,7 +389,6 @@ const CarDetails = ({
                         isPlaying
                         duration={distance}
                         colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
-                        initialRemainingTime={distance}
                     >
                         {renderTime}
                     </CountdownCircleTimer>
@@ -399,42 +400,18 @@ const CarDetails = ({
     }
 
     function renderTime({ remainingTime, elapsedTime }) {
+        let men = moment(carDetails.auctionEndTime).endOf("day").fromNow();
         if (cardD) {
-            function getDigits(val) {
-                if (val / 86400 > 1) {
-                    return {
-                        data: (val / 86400) | 0,
-                        label: "days",
-                    };
-                } else if (val / 3600 > 1) {
-                    return {
-                        data: (val / 3600) | 0,
-                        label: "hours",
-                    };
-                } else if (val / 60 > 1) {
-                    return {
-                        data: (val / 60) | 0,
-                        label: "minutes",
-                    };
-                } else {
-                    return {
-                        data: val | 0,
-                        label: "seconds",
-                    };
-                }
-            }
-            const arr = getDigits(remainingTime);
             if (remainingTime === 0) {
                 return (
                     <div className="days font-13 sec-black font-semibold text-red-700">
-                        Expired.
+                        Expired {men}
                     </div>
                 );
             }
             return (
                 <div className="text-center font-13 sec-black items-center font-semibold">
-                    <p>{arr.data}</p>
-                    <p className="text-gray-400 mt-0">{arr.label}</p>
+                    <p className="text-gray-400 mt-0">{men}</p>
                 </div>
             );
         }
@@ -484,9 +461,6 @@ const CarDetails = ({
                 Vehicle_location: vehicleLocation,
                 images: carImages,
             };
-            console.log("bid object", bidObject);
-
-            //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
                 method: "POST",
                 headers: {
@@ -508,7 +482,6 @@ const CarDetails = ({
                 })
                 .then((response) => {
                     setisLoading(false);
-                    console.log(response);
                     if (!response.ok) {
                         toastError();
                         throw Error("Could not create collection");
@@ -533,7 +506,6 @@ const CarDetails = ({
                 })
                 .then((response) => {
                     setisLoading(false);
-                    console.log(response);
                     if (!response.ok) {
                         toastError();
                         throw Error("Could not create collection");
@@ -572,8 +544,6 @@ const CarDetails = ({
 
             for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
-                console.log("current collection", currentCollection);
-
                 if (currentCollection.vehicles.length < 10) {
                     filterCollection = currentCollection._id;
                     // console.log(filterCollection)
@@ -593,7 +563,6 @@ const CarDetails = ({
                 name: `${randomName}`,
             };
             let newCollection;
-            console.log(collectionObject);
             await fetch(enviroment.BASE_URL + "collections", {
                 method: "POST",
                 headers: {
@@ -604,7 +573,6 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
-                    console.log(response);
                     if (!response.ok) {
                         // toastError()
                         // throw Error("Could not create collection")
@@ -616,7 +584,6 @@ const CarDetails = ({
                 })
                 .then((data) => {
                     newCollection = data.data._id;
-                    console.log(data);
                 })
                 .catch((error) => {
                     seterror(error);
@@ -632,7 +599,7 @@ const CarDetails = ({
         const total = Date.parse(e) - Date.parse(new Date());
         const seconds = Math.floor((total / 1000) % 60);
         const minutes = Math.floor((total / 1000 / 60) % 60);
-        const hours = Math.floor(((total / 1000) * 60 * 60) % 24);
+        const hours = Math.floor((total / 3600) | 0);
         let days = Math.floor(total / (1000 * 60 * 60 * 24));
         return {
             total,
@@ -647,30 +614,40 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
                 }
                 break;
             case "ship":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
                 }
                 break;
             case "clear":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
                 }
                 break;
             default:
                 break;
         }
-        console.log(type);
-        console.log(e.target.checked);
     };
 
     function startTimer(e) {
@@ -693,15 +670,11 @@ const CarDetails = ({
 
     function getDeadTime() {
         let data = new Date(carDetails.auctionEndTime).getTime();
-        let deadline = new Date();
         let countDownDate = new Date().getTime();
         let now = new Date().getTime() >= data ? new Date().getTime() : data;
-        console.log(now);
-        console.log(data);
-        let distance = now - countDownDate;
+        let distance = countDownDate - now;
         setDistance(distance);
-        deadline.setSeconds(deadline.getSeconds() + distance);
-        return deadline;
+        return data;
     }
 
     //
@@ -837,10 +810,10 @@ const CarDetails = ({
                                     </div>
                                     <div className="ml-auto">
                                         {cardD.buyNowPrice.length > 2 ? (
-                                            <p className="primary-color text-base font-extrabold">
+                                            <p className="primary-color text-xs font-medium">
                                                 BUY NOW @ &#8358;
                                                 {""}
-                                                {cardD.buyNowPrice}
+                                                {amount}
                                             </p>
                                         ) : (
                                             parseFloat(
@@ -886,16 +859,11 @@ const CarDetails = ({
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
-                                                                value={
-                                                                    bidAmount
-                                                                }
+                                                                value={bidAmount.toLocaleString()}
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
                                                                 placeholder="$8,000"
-                                                                value={
-                                                                    bidAmount
-                                                                }
                                                                 onChange={(e) =>
                                                                     setbidAmount(
                                                                         e.target
@@ -1048,7 +1016,8 @@ const CarDetails = ({
                                                         Total
                                                     </td>
                                                     <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        N{totalAmount}
+                                                        N
+                                                        {totalAmount.toLocaleString()}
                                                     </td>
                                                     <td className="font-10 font-medium primary-blue text-center px-2">
                                                         Change currency
@@ -1787,35 +1756,6 @@ const CarDetails = ({
             )}
         </div>
     );
-};
-
-CarDetails.getInitialProps = async (context) => {
-    let vin = context.query.id;
-    console.log("data--------------->", vin);
-    // https://buylikepoint.us/json.php/view.php?vin=SAJWB6BCXH8K43487	&apiKey=Switch!2020&apiKey=Switch!2020
-    // try {
-    //     const res = await getRequestHelper({
-    //         // url: `${Url}/view.php?vin=SAJWB6BCXH8K43487/&apiKey=Switch!2020&apiKey=Switch!2020`,
-    //         url: `${Url}?vin=${vin}&apiKey=Switch!2020`,
-    //     });
-    //     console.log("rrrrr0--------==============----->", res);
-    //     if (res.status === false) {
-    //         typeof window !== "undefined"
-    //             ? Router.push("/search")
-    //             : ctx.res.writeHead(302, { Location: "/search" }).end();
-    //     } else {
-    //         return {
-    //             res,
-    //         };
-    //     }
-    // } catch (error) {
-    //     typeof window !== "undefined"
-    //         ? Router.push("/search")
-    //         : ctx.res.writeHead(302, { Location: "/search" }).end();
-
-    //     return;
-    // }
-    return {};
 };
 
 const mapStateToProps = (state) => {

@@ -22,10 +22,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
     useEffect(() => {
         if (isComponentFullyMounted === false) {
-            console.log(window.Waypoint);
             return;
         } else {
-            console.log(window.Waypoint);
             if (typeof window !== "undefined") {
                 // Easy Buy Animation here
                 var easyBuyTimeline = anime.timeline({
@@ -459,9 +457,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             <option value="" selected disabled>
                                                 Select
                                             </option>
-                                            <option value="">
-                                                All
-                                            </option>
+                                            <option value="">All</option>
                                             {carModels.map((x, id) => (
                                                 <option
                                                     key={id}
@@ -483,11 +479,9 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         className="form__control px-1.5 w-full font-13 focus:outline-none "
                                     >
                                         <option value="" selected disabled>
-                                                Select
+                                            Select
                                         </option>
-                                        <option value="">
-                                            All
-                                        </option>
+                                        <option value="">All</option>
                                         {years.map((x) => (
                                             <option key={x} value={x}>
                                                 {x}

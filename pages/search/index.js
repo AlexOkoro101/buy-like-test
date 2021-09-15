@@ -45,7 +45,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
-            console.log("ppp");
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
@@ -1052,7 +1051,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <Select
                                         className="w-full cursor-pointer focus:outline-none"
                                         type="text"
-                                        placeholder="Search 7685 cars"
+                                        placeholder={`Search ${cars.total} cars`}
                                         isClearable
                                         onChange={handleChange}
                                         onInputChange={handleInputChange}
@@ -1091,7 +1090,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <Select
                                     className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder="Search 7685 cars"
+                                    placeholder={`Search ${cars.total} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
                                     onInputChange={handleInputChange}
