@@ -47,6 +47,26 @@ const CarDetails = ({
             draggable: true,
             progress: undefined,
         });
+    const placeBidSuccess = () =>
+        toast.success("Car added to collection", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const placeBidInfo = () =>
+        toast.info("Fetching Car Info", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     const Ref = useRef(null);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
@@ -93,6 +113,8 @@ const CarDetails = ({
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([])
+    // let truckingPrice = null;
+    const [truckingPrice, settruckingPrice] = useState(null)
 
 
     //Get Data from Local Storage
@@ -201,7 +223,7 @@ const CarDetails = ({
 
         let array = [];
         if (cars) {
-            cars.data.map((ele) => {
+            cars.data?.map((ele) => {
                 if (ele.vehicleName !== "") {
                     array.push(ele);
                 }
@@ -236,12 +258,19 @@ const CarDetails = ({
         })
         .then((data) => {
             console.log("trucking", data)
+            settruckingPrice(data.raw[1])
+            console.log("trucking price", truckingPrice)
+
         })
+
     }
     useEffect(() => {
-        fetchTrucking()
+        if(typeof getZipLocation() !== 'undefined') {
+            // console.log("running trucking function...")
+            fetchTrucking()
+        }
 
-    }, [cardD])
+    }, [])
     useEffect(() => {
         let data = router.query.ele;
         clearTimer(getDeadTime());
@@ -289,17 +318,17 @@ const CarDetails = ({
     };
 
     function displaySmall() {
-        let data = cardD?.images.length;
+        let data = cardD?.images?.length;
         var size;
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
             size = 5;
         }
-        let count = cardD?.images.length - size;
+        let count = cardD?.images?.length - size;
         setCount(count);
         if (data > window.innerWidth <= 760 ? 3 : 5) {
-            let data = cardD?.images.slice(page, size);
+            let data = cardD?.images?.slice(page, size);
             setimageD(data);
         } else {
             let data = cardD?.images;
@@ -313,7 +342,7 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page - size, limit - size);
+        let data = cardD?.images?.slice(page - size, limit - size);
         setimageD(data);
         setPage(page - size);
         setLimit(limit - size);
@@ -326,7 +355,7 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page + size, limit + size);
+        let data = cardD?.images?.slice(page + size, limit + size);
         setimageD(data);
         setPage(page + size);
         setLimit(limit + size);
@@ -335,7 +364,7 @@ const CarDetails = ({
     const displayLargeimage = () => {
         return (
             <img
-                src={cardD.images[id].image_largeUrl}
+                src={cardD?.images[id]?.image_largeUrl}
                 loading="lazy"
                 className="rounded-xl w-full largeImage sm:h-32 shadow-md"
                 alt="Benz"
@@ -448,6 +477,10 @@ const CarDetails = ({
 
     const placeBid = () => {
 
+        // if(truckingPrice === null) {
+        //     placeBidInfo()
+        //     return;
+        // }
         async function addCar() {
             seterror(null)
             setisLoading(true)
@@ -468,14 +501,23 @@ const CarDetails = ({
                 doors:doors,
                 Model:model,
                 make:make,
+                equipment:"",
+                EngineType:"",
+                interior_type:"",
                 body_style:bodyStyle,
+                fuel_type:"",
+                passengerCapacity:"",
+                sellerCity:"",
+                description:"",
                 Zip:zip,
                 bidAmount:bidAmount,
                 owner:userId,
                 collection: await placeItem(), 
                 facilitationLocation:facilitationLocation,
                 Vehicle_location:vehicleLocation,
-                images:carImages
+                images:carImages,
+                trucking: truckingPrice || "", 
+                shipping: ""
             }
             console.log("bid object", bidObject)
 
@@ -490,13 +532,13 @@ const CarDetails = ({
             })
             .then(response => {
                 setisLoading(false)
-                // console.log(response)
+                console.log("bid response", response)
                 if (!response.ok) {
                     toastError()
                     // throw Error("Could not create collection")
                 } else {
                     setmessage(response.statusText)
-                    toastSuccess();
+                    placeBidSuccess();
                 }
             })
             .then((response) => {
@@ -518,6 +560,7 @@ const CarDetails = ({
         }
 
         async function placeItem() {
+            
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
@@ -635,8 +678,8 @@ const CarDetails = ({
         let data = new Date(router.query.ele).getTime();
         let deadline = new Date();
         let countDownDate = new Date().getTime();
-        let now = new Date(car.data[0].auctionEndTime).getTime();
-        let distance = now - countDownDate;
+        // let now = new Date(car.data[0].auctionEndTime).getTime();
+        // let distance = now - countDownDate;
         setDistance(distance);
         deadline.setSeconds(deadline.getSeconds() + distance);
         return deadline;
@@ -903,7 +946,8 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {/* ${truckingPrice} */}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         {" "}
@@ -1044,7 +1088,7 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         {" "}

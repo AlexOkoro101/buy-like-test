@@ -1362,14 +1362,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 {
                                                                                     console.log("lol=-------=------->",   ele.VIN)
                                                                                 }
-                                                                                   <a
-                                                                                        type="button"
-                                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                        href={"/search/"+ele.VIN}
-                                                                                    >
+                                                                                <Link href={"/search/"+ele.VIN}>
+                                                                                    <button className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5">
                                                                                     Place
                                                                                     bid
-                                                                                  </a>
+                                                                                    </button>
+                                                                                </Link>
                                                                                 {/* <button
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
