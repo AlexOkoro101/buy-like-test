@@ -111,6 +111,7 @@ export const searchTerm = (event) => async (dispatch) => {
     }
 };
 export const fetchMore = (event) => async (dispatch) => {
+    console.log(event);
     dispatch({
         type: FETCHING,
         payload: {
@@ -254,4 +255,50 @@ export const carDetail = (data) => (dispatch) => {
         type: DETAIL,
         payload: data,
     });
+};
+
+export const filterTabAction = (event, type) => async (dispatch) => {
+    dispatch({
+        type: FETCHING,
+        payload: {
+            make: event.make || "",
+            model: event.model || "",
+            year: event.year || "",
+        },
+    });
+    try {
+        let res = await fetch(
+            `${api}?${type}&year=${event.year}&make=${event.make}&model=${event.model}&page=${event.page}&apiKey=Switch!2020`,
+            {
+                method: "GET",
+                headers: {},
+                credentials: "same-origin",
+            }
+        )
+            .then(function (response) {
+                return response.text();
+            })
+            .catch(function (error) {
+                dispatch({
+                    type: FETCHING_FAILED,
+                    payload: error.message,
+                });
+                console.log(error);
+            });
+        if (res) {
+            const response = JSON.parse(res);
+            if (response) {
+                dispatch({
+                    type: SEARCHING_SUCCESS,
+                    payload: response,
+                });
+            }
+        }
+    } catch (error) {
+        dispatch({
+            type: FETCHING_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    }
 };
