@@ -243,12 +243,14 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             getCars();
             getMakes();
         }
-        if (cars.length) {
+        if (cars.length > 0) {
+            console.log("two");
             setImages(cars);
         }
         if (makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
+            console.log("three");
         }
     }, [cars]);
     const handleMake = (e) => {
