@@ -62,16 +62,21 @@ export const getCars = () => (dispatch) => {
         });
 };
 export const searchTerm = (event) => async (dispatch) => {
-    console.log(event);
     dispatch({
         type: SEARCHING,
         payload: event,
     });
+
+    let data = {
+        year: event.year || "",
+        make: event.make || "",
+        model: event.model || "",
+        vin: event.VIN || "",
+    };
+
     try {
         let res = await fetch(
-            `${api}?year=${""}&make=${""}&model=${""}&vin=${
-                event.VIN
-            }&page=1&apiKey=Switch!2020`,
+            `${api}?year=${data.year}&make=${data.make}&model=${data.model}&vin=${data.vin}&page=1&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
@@ -106,6 +111,7 @@ export const searchTerm = (event) => async (dispatch) => {
     }
 };
 export const fetchMore = (event) => async (dispatch) => {
+    console.log(event);
     dispatch({
         type: FETCHING,
         payload: {
@@ -197,7 +203,6 @@ export const getCollection = (id) => (dispatch) => {
         type: FETCHING_COLLECTION,
     });
 
-
     fetch(enviroment.BASE_URL + "collections/collections/" + `${id}`, {
         method: "GET",
         redirect: "follow",
@@ -218,12 +223,11 @@ export const getCollection = (id) => (dispatch) => {
                 if (Object.entries(data).length >= 1) {
                     const formatCollection = JSON.parse(data);
                     // console.log("new collection", formatCollection.data)
-                    
+
                     dispatch({
                         type: FETCHING_COLLECTION_SUCCESS,
                         payload: formatCollection.data,
                     });
-                    
                 }
             }
         })
@@ -251,4 +255,50 @@ export const carDetail = (data) => (dispatch) => {
         type: DETAIL,
         payload: data,
     });
+};
+
+export const filterTabAction = (event, type) => async (dispatch) => {
+    dispatch({
+        type: FETCHING,
+        payload: {
+            make: event.make || "",
+            model: event.model || "",
+            year: event.year || "",
+        },
+    });
+    try {
+        let res = await fetch(
+            `${api}?${type}&year=${event.year}&make=${event.make}&model=${event.model}&page=${event.page}&apiKey=Switch!2020`,
+            {
+                method: "GET",
+                headers: {},
+                credentials: "same-origin",
+            }
+        )
+            .then(function (response) {
+                return response.text();
+            })
+            .catch(function (error) {
+                dispatch({
+                    type: FETCHING_FAILED,
+                    payload: error.message,
+                });
+                console.log(error);
+            });
+        if (res) {
+            const response = JSON.parse(res);
+            if (response) {
+                dispatch({
+                    type: SEARCHING_SUCCESS,
+                    payload: response,
+                });
+            }
+        }
+    } catch (error) {
+        dispatch({
+            type: FETCHING_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    }
 };

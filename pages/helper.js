@@ -30,7 +30,6 @@ export default async ({
             throw parsedResponse;
         }
 
-        showConsole && console.log(parsedResponse, type);
         successHandler && successHandler(parsedResponse.msg);
         nextAction && nextAction();
         setLoading && setLoading(false);

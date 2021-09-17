@@ -19,21 +19,16 @@ const App = ({ children }) => {
                 if (router.pathname.includes("search")) {
                     return;
                 }
-                dispatch(logOut());
-                return router.push("/auth/login");
             }
 
             setLoggedIn(true);
-
         }
         if (router.pathname.includes("auth")) {
-            console.log("includes")
             if (token) {
                 dispatch(logIn());
-                return router.push("/search");
+                return router.back();
             }
         }
-
     };
     useEffect(() => {
         myFunction();
