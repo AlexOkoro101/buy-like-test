@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import FsLightbox from 'fslightbox-react';
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -68,6 +69,7 @@ const CarDetails = ({
             progress: undefined,
         });
     const Ref = useRef(null);
+    const [toggler, setToggler] = useState(false);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -361,14 +363,31 @@ const CarDetails = ({
         setLimit(limit + size);
         setCount(count - size);
     };
+    const returnLargeimage = () => {
+        const largeImageArray = cardD?.images.map(image => {
+            return image.image_largeUrl
+        })
+
+        return largeImageArray;
+    }
     const displayLargeimage = () => {
         return (
-            <img
-                src={cardD?.images[id]?.image_largeUrl}
-                loading="lazy"
-                className="rounded-xl w-full largeImage sm:h-32 shadow-md"
-                alt="Benz"
-            />
+            <>
+                <FsLightbox
+                    toggler={toggler}
+                    sources={returnLargeimage()}
+                />
+                <img
+                    onClick={() => {
+                        setToggler(!toggler)
+                        console.log("large images", returnLargeimage())
+                        }}
+                    src={cardD?.images[id]?.image_largeUrl}
+                    loading="lazy"
+                    className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
+                    alt="Benz"
+                />
+            </>
         );
     };
     const getSecondRate = () => {
@@ -684,6 +703,7 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds() + distance);
         return deadline;
     }
+    
 
     //
     //
@@ -694,6 +714,9 @@ const CarDetails = ({
     }
     //
     //
+
+
+    
 
     return (
         <div>
