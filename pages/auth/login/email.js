@@ -100,9 +100,10 @@ const LogIn = ({ beginLogin }) => {
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));
-
-                        router.push("/search");
-                        dispatch(logIn());
+                        setTimeout(function () {
+                            router.back();
+                            dispatch(logIn());
+                        }, 1500);
                     }
                     //save data to store
                     beginLogin({
