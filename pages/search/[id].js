@@ -22,8 +22,7 @@ const CarDetails = ({
     cars,
     getCollection,
     carCollection,
-    res,
-    // const [article, setArticle] =  useState(props.res.data)
+    res, // const [article, setArticle] =  useState(props.res.data)
 }) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -56,7 +55,7 @@ const CarDetails = ({
     const [id, setId] = useState(0);
     const [percentage, setPercentage] = useState();
     const [days, setdays] = useState(0);
-    const [distance, setDistance] = useState(0);
+    const [distance, setDistance] = useState();
     const [hours, sethours] = useState(0);
     const [amount, setAmount] = useState(0);
     const [minute, setminute] = useState(0);
@@ -92,9 +91,8 @@ const CarDetails = ({
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
-    const [carImages, setcarImages] = useState([]);
+    const [carImages, setcarImages] = useState([]); //Get Data from Local Storage
 
-    //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
         if (!userActive) {
@@ -112,9 +110,8 @@ const CarDetails = ({
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-    };
+    }; //Get Data from local Storage
 
-    //Get Data from local Storage
     useEffect(() => {
         retrieveData();
         return retrieveData;
@@ -141,10 +138,9 @@ const CarDetails = ({
             .then((data) => {
                 // console.log(data)
                 if (data) {
-                    //  console.log(data.data)
+                    //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
-                        const formatCollection = JSON.parse(data);
-                        // console.log("new collection", formatCollection.data)
+                        const formatCollection = JSON.parse(data); // console.log("new collection", formatCollection.data)
                         setcollection(formatCollection.data);
                     }
                 }
@@ -201,8 +197,7 @@ const CarDetails = ({
             });
         }
         const size = 4;
-        const items = array.slice(0, size);
-        // console.log(items);
+        const items = array.slice(0, size); // console.log(items);
         setData(items);
         getRate();
         getSecondRate();
@@ -212,23 +207,8 @@ const CarDetails = ({
     const getTrucking = {
         packingCode: `${getZipLocation()}`,
         packingName: "",
-    };
+    }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
-    // const fetchTrucking = () => {
-    //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(getTrucking),
-    //     })
-    //         .then((response) => {
-    //             return response.json();
-    //         })
-    //         .then((data) => {
-    //             console.log("trucking", data);
-    //         });
-    // };
     useEffect(() => {
         // fetchTrucking();
     }, [cardD]);
@@ -329,11 +309,8 @@ const CarDetails = ({
                 alt="Benz"
             />
         );
-    };
+    }; // // //
 
-    //
-    //
-    //
     const getSecondRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
         try {
@@ -381,8 +358,8 @@ const CarDetails = ({
         }
     };
 
-    function renderCounter() {
-        if (cardD) {
+    function renderCounter(e) {
+        if (e) {
             return (
                 <>
                     <CountdownCircleTimer
@@ -390,7 +367,11 @@ const CarDetails = ({
                         duration={distance}
                         colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
                     >
-                        {renderTime}
+                        {({ remainingTime }) =>
+                            moment(carDetails.auctionEndTime)
+                                .endOf("seconds")
+                                .fromNow()
+                        }
                     </CountdownCircleTimer>
                 </>
             );
@@ -399,25 +380,6 @@ const CarDetails = ({
         }
     }
 
-    function renderTime({ remainingTime, elapsedTime }) {
-        let men = moment(carDetails.auctionEndTime).endOf("day").fromNow();
-        if (cardD) {
-            if (remainingTime === 0) {
-                return (
-                    <div className="days font-13 sec-black font-semibold text-red-700">
-                        Expired {men}
-                    </div>
-                );
-            }
-            return (
-                <div className="text-center font-13 sec-black items-center font-semibold">
-                    <p className="text-gray-400 mt-0">{men}</p>
-                </div>
-            );
-        }
-    }
-
-    //Random collection name
     function makeCollectionName(length) {
         var result = "";
         var characters =
@@ -470,11 +432,9 @@ const CarDetails = ({
                 redirect: "follow",
             })
                 .then((response) => {
-                    setisLoading(false);
-                    // console.log(response)
+                    setisLoading(false); // console.log(response)
                     if (!response.ok) {
-                        toastError();
-                        // throw Error("Could not create collection")
+                        toastError(); // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText);
                         toastSuccess();
@@ -492,16 +452,13 @@ const CarDetails = ({
                     }
                 })
                 .then((response) => {
-                    setisLoading(false);
-                    // console.log(response)
+                    setisLoading(false); // console.log(response)
                     if (!response.ok) {
-                        toastError();
-                        // throw Error("Could not create collection")
+                        toastError(); // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText);
                         toastSuccess();
-                        router.push("/search");
-                        // dispatch(getCollection(userId))
+                        router.push("/search"); // dispatch(getCollection(userId))
                     }
                 })
                 .then((response) => {
@@ -545,9 +502,7 @@ const CarDetails = ({
             for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
                 if (currentCollection.vehicles.length < 10) {
-                    filterCollection = currentCollection._id;
-                    // console.log(filterCollection)
-
+                    filterCollection = currentCollection._id; // console.log(filterCollection)
                     break;
                 }
             }
@@ -578,8 +533,7 @@ const CarDetails = ({
                         // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText);
-                        return response.json();
-                        // toastSuccess();
+                        return response.json(); // toastSuccess();
                     }
                 })
                 .then((data) => {
@@ -598,8 +552,8 @@ const CarDetails = ({
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
         const seconds = Math.floor((total / 1000) % 60);
-        const minutes = Math.floor((total / 1000 / 60) % 60);
-        const hours = Math.floor((total / 3600) | 0);
+        const minutes = Math.floor((total / (1000 * 60)) % 60);
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
         let days = Math.floor(total / (1000 * 60 * 60 * 24));
         return {
             total,
@@ -672,9 +626,11 @@ const CarDetails = ({
         let data = new Date(carDetails.auctionEndTime).getTime();
         let countDownDate = new Date().getTime();
         let now = new Date().getTime() >= data ? new Date().getTime() : data;
-        let distance = countDownDate - now;
+        let distance = now - countDownDate;
         setDistance(distance);
-        return data;
+        let deadline = new Date(carDetails.auctionEndTime);
+        deadline.setSeconds(deadline.getSeconds());
+        return deadline;
     }
 
     //
@@ -851,11 +807,10 @@ const CarDetails = ({
                                                 <tbody>
                                                     <tr className="">
                                                         <td className="sec-black font-11 font-semibold w-28  ">
-                                                            {" "}
                                                             <label>
                                                                 Add amount to
                                                                 bid
-                                                            </label>{" "}
+                                                            </label>
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
@@ -931,7 +886,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -957,7 +911,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -983,7 +936,6 @@ const CarDetails = ({
                                                         N2,000,000
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1067,7 +1019,7 @@ const CarDetails = ({
                                                         <img
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
-                                                        />{" "}
+                                                        />
                                                     </td>
                                                 </tr>
 
@@ -1094,7 +1046,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1113,7 +1064,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1126,13 +1076,12 @@ const CarDetails = ({
 
                                                 <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Shipping{" "}
+                                                        Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1145,13 +1094,12 @@ const CarDetails = ({
 
                                                 <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Clearing{" "}
+                                                        Clearing
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1168,11 +1116,10 @@ const CarDetails = ({
                                                 <tbody>
                                                     <tr className="">
                                                         <td className="font-10 font-medium sec-gray pr-1">
-                                                            {" "}
                                                             <label>
                                                                 Enter your
                                                                 budget
-                                                            </label>{" "}
+                                                            </label>
                                                         </td>
                                                         <td className="text-sm font-medium sec-gray">
                                                             <input
@@ -1204,11 +1151,10 @@ const CarDetails = ({
                                         <span className="detail"></span>
                                     </label>
                                     <label className="font-11 sec-black ml-1.5">
-                                        {" "}
-                                        I agree with{" "}
+                                        I agree with
                                         <span className="primary-blue">
-                                            terms and conditions{" "}
-                                        </span>{" "}
+                                            terms and conditions
+                                        </span>
                                     </label>
                                 </div>
                             </div>
@@ -1231,7 +1177,7 @@ const CarDetails = ({
                                             />
                                         ) : (
                                             "Place Bid"
-                                        )}{" "}
+                                        )}
                                     </button>
                                 ) : (
                                     <Link href="/auth/login">
@@ -1267,7 +1213,11 @@ const CarDetails = ({
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>{renderCounter()}</div>
+                                    <div>
+                                        {renderCounter(
+                                            carDetails.auctionEndTime
+                                        )}
+                                    </div>
 
                                     <div className="timer">
                                         <button
@@ -1280,9 +1230,9 @@ const CarDetails = ({
                                             <></>
                                         ) : (
                                             <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                                TIME LEFT{" "}
+                                                TIME LEFT
                                                 <p>
-                                                    {car.data[0].auctionEndTime}{" "}
+                                                    {car.data[0].auctionEndTime}
                                                     used the data this way
                                                 </p>
                                             </p>
@@ -1493,7 +1443,7 @@ const CarDetails = ({
                                                 Vehicle Name
                                             </td>
                                             <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make} {""}{" "}
+                                                {cardD?.make} {""}
                                                 {cardD?.model}
                                             </td>
                                             <td></td>
@@ -1680,21 +1630,19 @@ const CarDetails = ({
                                                               ].join(" ")}
                                                     </p>
                                                     <p className="sec-black font-11 flex items-center pt-2">
-                                                        {" "}
-                                                        {ele?.year}{" "}
+                                                        {ele?.year}
                                                         <span className="ml-6">
                                                             205,456 miles
                                                         </span>
                                                     </p>
                                                     <div className="flex pt-2">
                                                         <p className="flex items-center sec-black font-10">
-                                                            {" "}
                                                             <span className="mr-1">
                                                                 <img
                                                                     src="../../assets/img/vectors/red-location-beacon.svg"
                                                                     alt="location"
                                                                 />
-                                                            </span>{" "}
+                                                            </span>
                                                             {
                                                                 ele?.pickupLocation
                                                             }
@@ -1706,7 +1654,6 @@ const CarDetails = ({
                                                                 alt="date"
                                                             />
                                                             <p className="sec-black font-10 ml-1">
-                                                                {" "}
                                                                 {new Date(
                                                                     ele?.auctionEndTime
                                                                 ).toLocaleDateString()}

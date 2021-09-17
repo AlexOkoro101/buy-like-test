@@ -882,7 +882,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </label>
                                                 </div>
                                             </div>
-
                                             <div className="flex pt-2">
                                                 <p className="font-11 primary-black">
                                                     {" "}
@@ -1345,12 +1344,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 carDetail(
                                                                                     ele
                                                                                 )
-                                                                            );
+                                                                            ),
+                                                                                router.push(
+                                                                                    {
+                                                                                        pathname:
+                                                                                            "/search/" +
+                                                                                            ele.VIN,
+                                                                                    }
+                                                                                );
                                                                         }}
-                                                                        href={
-                                                                            "/search/" +
-                                                                            ele.VIN
-                                                                        }
                                                                         style={{
                                                                             width: "273px",
                                                                             height: "204px",
@@ -1413,10 +1415,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 <a
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                    href={
-                                                                                        "/search/" +
-                                                                                        ele.VIN
-                                                                                    }
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
                                                                                 >
                                                                                     Place
                                                                                     bid
@@ -1472,10 +1484,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
                                                                         <div className="1/2">
                                                                             <a
-                                                                                href={
-                                                                                    "/search/" +
-                                                                                    ele.VIN
-                                                                                }
+                                                                                onClick={() => {
+                                                                                    dispatch(
+                                                                                        carDetail(
+                                                                                            ele
+                                                                                        )
+                                                                                    ),
+                                                                                        router.push(
+                                                                                            {
+                                                                                                pathname:
+                                                                                                    "/search/" +
+                                                                                                    ele.VIN,
+                                                                                            }
+                                                                                        );
+                                                                                }}
                                                                             >
                                                                                 <img
                                                                                     className="img-fluid"
@@ -1661,10 +1683,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 }}
                                                                             >
                                                                                 <a
-                                                                                    href={
-                                                                                        "/search/" +
-                                                                                        ele.VIN
-                                                                                    }
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
                                                                                 >
                                                                                     View
                                                                                     Details
