@@ -16,9 +16,8 @@ const App = ({ children }) => {
         let token = JSON.parse(user)?.userToken;
         if (router.pathname !== "/" && !router.pathname.includes("auth")) {
             if (!token) {
-                if (router.pathname === "/search/[id]") {
-                    dispatch(logOut());
-                    router.push("/auth/login");
+                if (router.pathname.includes("search")) {
+                    return;
                 }
             }
 
