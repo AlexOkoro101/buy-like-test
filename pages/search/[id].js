@@ -1442,9 +1442,8 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Vehicle Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make} {""}
-                                                {cardD?.model}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.vehicleName}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1453,7 +1452,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Interior Colour
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceInteriorColor}
                                             </td>
                                             <td></td>
@@ -1463,7 +1462,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Seller Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceSellerName}
                                             </td>
                                             <td></td>
@@ -1473,7 +1472,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Mileage
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.mileage}
                                             </td>
                                             <td></td>
@@ -1481,11 +1480,10 @@ const CarDetails = ({
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Tranbaseission
+                                                year
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.tranbaseission ||
-                                                    "Not Specified"}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.year || "Not Specified"}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1494,7 +1492,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Drive train
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.driveTrain}
                                             </td>
                                             <td></td>
@@ -1507,79 +1505,216 @@ const CarDetails = ({
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
                                                 Company Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.companyName}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Make
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.make}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Model
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.model}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Pickup Location
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.pickupLocation}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Engine Type
+                                                Engine Fuel Type
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
                                                 {cardD?.sourceEngineFuelType}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Exterior Color
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceExteriorColor}
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        {/*
+                         */}
+                        {/*  */}
 
-                        <div className="text-center mt-5">
-                            <a
-                                href="#"
-                                className="primary-blue font-semibold text-sm"
-                            >
-                                Show More Details
-                            </a>
+                        {/*  */}
+                        <div className="relative">
+                            <details>
+                                <div class="content mb-2 w-full h-full">
+                                    <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
+                                        <div className="w-full md:w-1/3 ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Passenger capacity
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.passengerCapacity
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Vehicle type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.vehicleType}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Engine type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sourceEngineType
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Odometer
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.odometer}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Transmission
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.transmission ||
+                                                                "Not Specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Buy now price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.buyNowPrice ||
+                                                                "Not specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div className="w-full md:w-1/3  ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
+                                                            Seller city
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerCity}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller state
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerState}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Facilitation
+                                                            Location
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.facilitationLocation
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller phone
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerPhone}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller rating
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sellerRating
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Bidding price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.mmrPrice}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
+                                    Show More Details
+                                </summary>
+                            </details>
                         </div>
                     </section>
-                    <section className="overview-section w-full py-3 px-7">
+                    <section className="overview-section w-full py-3 mt-5 px-7">
                         <div className="text-center py-3">
                             <hr className="red-underline2 w-20 m-auto pb-4" />
                             <h4 className="font-bold primary-color text-xl ">

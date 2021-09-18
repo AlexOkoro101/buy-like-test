@@ -807,3 +807,26 @@ footer {
         height: 200px !important;
     }
 }
+
+@keyframes details-show {
+    from {
+        margin-bottom: 0%;
+        opacity: 0;
+        transform: translateY(-40%);
+        transition: all 0.3s ease-in-out;
+    }
+}
+
+details summary {
+    z-index: 10;
+    cursor: pointer;
+    position: absolute;
+    bottom: -40px;
+}
+
+details .content {
+    animation: details-show 500ms ease-in-out;
+    z-index: 1;
+    transition: all 1s ease-in-out;
+    overflow: hidden;
+}
