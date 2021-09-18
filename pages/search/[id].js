@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import FsLightbox from 'fslightbox-react';
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -44,7 +45,28 @@ const CarDetails = ({
             draggable: true,
             progress: undefined,
         });
+    const placeBidSuccess = () =>
+        toast.success("Car added to collection", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const placeBidInfo = () =>
+        toast.info("Fetching Car Info", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     const Ref = useRef(null);
+    const [toggler, setToggler] = useState(false);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -91,7 +113,9 @@ const CarDetails = ({
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
-    const [carImages, setcarImages] = useState([]); //Get Data from Local Storage
+    const [carImages, setcarImages] = useState([])
+    // let truckingPrice = null;
+    const [truckingPrice, settruckingPrice] = useState(null)
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -190,7 +214,7 @@ const CarDetails = ({
 
         let array = [];
         if (cars) {
-            cars.data.map((ele) => {
+            cars.data?.map((ele) => {
                 if (ele.vehicleName !== "") {
                     array.push(ele);
                 }
@@ -209,9 +233,34 @@ const CarDetails = ({
         packingName: "",
     }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
+    const fetchTrucking = () => {
+
+        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(getTrucking)
+        })
+        .then((response) => {
+
+            return response.json()
+        })
+        .then((data) => {
+            console.log("trucking", data)
+            settruckingPrice(data.raw[1])
+            console.log("trucking price", truckingPrice)
+
+        })
+
+    }
     useEffect(() => {
-        // fetchTrucking();
-    }, [cardD]);
+        if(typeof getZipLocation() !== 'undefined') {
+            // console.log("running trucking function...")
+            fetchTrucking()
+        }
+
+    }, [])
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -257,17 +306,17 @@ const CarDetails = ({
     };
 
     function displaySmall() {
-        let data = cardD?.images.length;
+        let data = cardD?.images?.length;
         var size;
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
             size = 5;
         }
-        let count = cardD?.images.length - size;
+        let count = cardD?.images?.length - size;
         setCount(count);
         if (data > window.innerWidth <= 760 ? 3 : 5) {
-            let data = cardD?.images.slice(page, size);
+            let data = cardD?.images?.slice(page, size);
             setimageD(data);
         } else {
             let data = cardD?.images;
@@ -281,7 +330,7 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page - size, limit - size);
+        let data = cardD?.images?.slice(page - size, limit - size);
         setimageD(data);
         setPage(page - size);
         setLimit(limit - size);
@@ -294,20 +343,37 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page + size, limit + size);
+        let data = cardD?.images?.slice(page + size, limit + size);
         setimageD(data);
         setPage(page + size);
         setLimit(limit + size);
         setCount(count - size);
     };
+    const returnLargeimage = () => {
+        const largeImageArray = cardD?.images.map(image => {
+            return image.image_largeUrl
+        })
+
+        return largeImageArray;
+    }
     const displayLargeimage = () => {
         return (
-            <img
-                src={cardD.images[id].image_largeUrl}
-                loading="lazy"
-                className="rounded-xl w-full largeImage sm:h-32 shadow-md"
-                alt="Benz"
-            />
+            <>
+                <FsLightbox
+                    toggler={toggler}
+                    sources={returnLargeimage()}
+                />
+                <img
+                    onClick={() => {
+                        setToggler(!toggler)
+                        console.log("large images", returnLargeimage())
+                        }}
+                    src={cardD?.images[id]?.image_largeUrl}
+                    loading="lazy"
+                    className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
+                    alt="Benz"
+                />
+            </>
         );
     }; // // //
 
@@ -394,42 +460,82 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-        async function addCar() {
-            seterror(null);
-            setisLoading(true);
 
-            const bidObject = {
-                vin: vin,
-                link: "https://members.manheim.com/",
-                name: name,
-                site: "https://members.manheim.com/",
-                price: price,
-                year: year,
-                exterior_color: exteriorColor,
-                vehicle_type: vehicleType,
-                interior_color: interiorColor,
-                transmission: transmission,
-                odometer: odometer,
-                driveTrain: driveTrain,
-                doors: doors,
-                Model: model,
-                make: make,
-                body_style: bodyStyle,
-                Zip: zip,
-                bidAmount: bidAmount,
-                owner: userId,
-                collection: await placeItem(),
-                facilitationLocation: facilitationLocation,
-                Vehicle_location: vehicleLocation,
-                images: carImages,
-            };
+        // if(truckingPrice === null) {
+        //     placeBidInfo()
+        //     return;
+        // }
+        async function addCar() {
+            seterror(null)
+            setisLoading(true)
+
+            const bidObject =  {
+                vin:vin,
+                link:"https://members.manheim.com/",
+                name:name,
+                site:"https://members.manheim.com/",
+                price:price,
+                year:year,
+                exterior_color:exteriorColor,
+                vehicle_type:vehicleType,
+                interior_color:interiorColor,
+                transmission:transmission,
+                odometer:odometer,
+                driveTrain:driveTrain,
+                doors:doors,
+                Model:model,
+                make:make,
+                equipment:"",
+                EngineType:"",
+                interior_type:"",
+                body_style:bodyStyle,
+                fuel_type:"",
+                passengerCapacity:"",
+                sellerCity:"",
+                description:"",
+                Zip:zip,
+                bidAmount:bidAmount,
+                owner:userId,
+                collection: await placeItem(), 
+                facilitationLocation:facilitationLocation,
+                Vehicle_location:vehicleLocation,
+                images:carImages,
+                trucking: truckingPrice || "", 
+                shipping: ""
+            }
+            console.log("bid object", bidObject)
+
+            //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: "follow",
+                redirect: 'follow'
+            })
+            .then(response => {
+                setisLoading(false)
+                console.log("bid response", response)
+                if (!response.ok) {
+                    toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText)
+                    placeBidSuccess();
+                }
+            })
+            .then((response) => {
+                setisLoading(false);
+                console.log(response);
+                if (!response.ok) {
+                    toastError();
+                    throw Error("Could not create collection");
+                } else {
+                    setmessage(response.statusText);
+                    toastSuccess();
+                    router.push("/search");
+                }
             })
                 .then((response) => {
                     setisLoading(false); // console.log(response)
@@ -479,6 +585,7 @@ const CarDetails = ({
         }
 
         async function placeItem() {
+            
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
@@ -632,6 +739,7 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
+    
 
     //
     //
@@ -642,6 +750,9 @@ const CarDetails = ({
     }
     //
     //
+
+
+    
 
     return (
         <div>
@@ -883,7 +994,8 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {/* ${truckingPrice} */}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1043,7 +1155,7 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
