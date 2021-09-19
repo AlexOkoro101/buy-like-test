@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import FsLightbox from 'fslightbox-react';
+import FsLightbox from "fslightbox-react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -113,9 +113,9 @@ const CarDetails = ({
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
-    const [carImages, setcarImages] = useState([])
+    const [carImages, setcarImages] = useState([]);
     // let truckingPrice = null;
-    const [truckingPrice, settruckingPrice] = useState(null)
+    const [truckingPrice, settruckingPrice] = useState(null);
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -206,7 +206,7 @@ const CarDetails = ({
         setmake(carDetails.make);
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
+        setbidAmount(carDetails.buyNowPrice ? carDetails.buyNowPrice : 0);
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -234,33 +234,28 @@ const CarDetails = ({
     }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
     const fetchTrucking = () => {
-
-        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
-            method: 'POST',
+        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(getTrucking)
+            body: JSON.stringify(getTrucking),
         })
-        .then((response) => {
-
-            return response.json()
-        })
-        .then((data) => {
-            console.log("trucking", data)
-            settruckingPrice(data.raw[1])
-            console.log("trucking price", truckingPrice)
-
-        })
-
-    }
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("trucking price", truckingPrice);
+            });
+    };
     useEffect(() => {
-        if(typeof getZipLocation() !== 'undefined') {
+        if (typeof getZipLocation() !== "undefined") {
             // console.log("running trucking function...")
-            fetchTrucking()
+            fetchTrucking();
         }
-
-    }, [])
+    }, []);
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -350,24 +345,19 @@ const CarDetails = ({
         setCount(count - size);
     };
     const returnLargeimage = () => {
-        const largeImageArray = cardD?.images.map(image => {
-            return image.image_largeUrl
-        })
-
+        const largeImageArray = cardD.images.map((image) => {
+            return image.image_largeUrl;
+        });
         return largeImageArray;
-    }
+    };
     const displayLargeimage = () => {
         return (
             <>
-                <FsLightbox
-                    toggler={toggler}
-                    sources={returnLargeimage()}
-                />
+                <FsLightbox toggler={toggler} sources={returnLargeimage()} />
                 <img
                     onClick={() => {
-                        setToggler(!toggler)
-                        console.log("large images", returnLargeimage())
-                        }}
+                        setToggler(!toggler);
+                    }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
@@ -391,7 +381,7 @@ const CarDetails = ({
                     setTotalAmount(
                         parseInt(carDetails.buyNowPrice * data.data.rate)
                     );
-                    setAmount(carDetails.buyNowPrice * data.data.rate);
+                    setAmount(carDetails.buyNowPrice);
                     setbidAmount(carDetails.buyNowPrice * data.data.rate);
                 })
                 .catch(function (error) {
@@ -460,50 +450,49 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-
         // if(truckingPrice === null) {
         //     placeBidInfo()
         //     return;
         // }
         async function addCar() {
-            seterror(null)
-            setisLoading(true)
+            seterror(null);
+            setisLoading(true);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                bidAmount:bidAmount,
-                owner:userId,
-                collection: await placeItem(), 
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: truckingPrice || "", 
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
+            const bidObject = {
+                vin: vin,
+                link: "https://members.manheim.com/",
+                name: name,
+                site: "https://members.manheim.com/",
+                price: price,
+                year: year,
+                exterior_color: exteriorColor,
+                vehicle_type: vehicleType,
+                interior_color: interiorColor,
+                transmission: transmission,
+                odometer: odometer,
+                driveTrain: driveTrain,
+                doors: doors,
+                Model: model,
+                make: make,
+                equipment: "",
+                EngineType: "",
+                interior_type: "",
+                body_style: bodyStyle,
+                fuel_type: "",
+                passengerCapacity: "",
+                sellerCity: "",
+                description: "",
+                Zip: zip,
+                bidAmount: bidAmount,
+                owner: userId,
+                collection: await placeItem(),
+                facilitationLocation: facilitationLocation,
+                Vehicle_location: vehicleLocation,
+                images: carImages,
+                trucking: truckingPrice || "",
+                shipping: "",
+            };
+            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -512,31 +501,31 @@ const CarDetails = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: 'follow'
+                redirect: "follow",
             })
-            .then(response => {
-                setisLoading(false)
-                console.log("bid response", response)
-                if (!response.ok) {
-                    toastError()
-                    // throw Error("Could not create collection")
-                } else {
-                    setmessage(response.statusText)
-                    placeBidSuccess();
-                }
-            })
-            .then((response) => {
-                setisLoading(false);
-                console.log(response);
-                if (!response.ok) {
-                    toastError();
-                    throw Error("Could not create collection");
-                } else {
-                    setmessage(response.statusText);
-                    toastSuccess();
-                    router.push("/search");
-                }
-            })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log("bid response", response);
+                    if (!response.ok) {
+                        toastError();
+                        // throw Error("Could not create collection")
+                    } else {
+                        setmessage(response.statusText);
+                        placeBidSuccess();
+                    }
+                })
+                .then((response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    if (!response.ok) {
+                        toastError();
+                        throw Error("Could not create collection");
+                    } else {
+                        setmessage(response.statusText);
+                        toastSuccess();
+                        router.push("/search");
+                    }
+                })
                 .then((response) => {
                     setisLoading(false); // console.log(response)
                     if (!response.ok) {
@@ -585,7 +574,6 @@ const CarDetails = ({
         }
 
         async function placeItem() {
-            
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
@@ -739,7 +727,6 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
-    
 
     //
     //
@@ -750,9 +737,6 @@ const CarDetails = ({
     }
     //
     //
-
-
-    
 
     return (
         <div>
@@ -878,7 +862,7 @@ const CarDetails = ({
                                     <div className="ml-auto">
                                         {cardD.buyNowPrice.length > 2 ? (
                                             <p className="primary-color text-xs font-medium">
-                                                BUY NOW @ &#8358;
+                                                BUY NOW @ &#36;
                                                 {""}
                                                 {amount}
                                             </p>
@@ -994,7 +978,9 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                         {/* ${truckingPrice} */}
                                                     </td>
                                                     <td className="text-right px-2">
@@ -1155,7 +1141,9 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
