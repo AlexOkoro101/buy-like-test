@@ -116,6 +116,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
                 },
+
             }
         )
             .then(function (response) {
@@ -329,6 +330,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                             </button>
                                                         </div>
                                                     </>
+
                                                 </div>
                                             ))}
                                     </>

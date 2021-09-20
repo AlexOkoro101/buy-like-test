@@ -119,6 +119,7 @@ const MyCollection = ({
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
+
                         setcarCollection(formatCollection.data);
                     }
                 }
@@ -181,6 +182,7 @@ const MyCollection = ({
                                                 </div>
                                             </div>
                                             {/* <div className="flex flex-col mx-auxo items-end">
+
                                             <h4 className="text-base font-normal gray-text">
                                                 $15,000 - $30,500
                                             </h4>
@@ -192,6 +194,7 @@ const MyCollection = ({
                                     </div>
                                 </Link>
                             ))}
+
                         </div>
                     </>
                 </div>

@@ -47,6 +47,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
@@ -1352,7 +1353,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             ele.VIN,
                                                                                     }
                                                                                 );
+
                                                                         }}
+                                                                        href={
+                                                                            "/search/" +
+                                                                            ele.VIN
+                                                                        }
                                                                         style={{
                                                                             width: "273px",
                                                                             height: "204px",
@@ -1429,6 +1435,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 }
                                                                                             );
                                                                                     }}
+
                                                                                 >
                                                                                     Place
                                                                                     bid
@@ -1498,6 +1505,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             }
                                                                                         );
                                                                                 }}
+
                                                                             >
                                                                                 <img
                                                                                     className="img-fluid"

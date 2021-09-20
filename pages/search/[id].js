@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 var moment = require("moment");
+
 const Url = "https://buylikepoint.us/json.php/view.php";
 //
 //
@@ -28,6 +29,7 @@ const CarDetails = ({
     getCollection,
     carCollection,
     res, // const [article, setArticle] =  useState(props.res.data)
+
 }) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -190,6 +192,7 @@ const CarDetails = ({
 
         if (carDetails) {
             console.log(carDetails);
+
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -213,6 +216,7 @@ const CarDetails = ({
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
         setbidAmount(carDetails.buyNowPrice ? carDetails.buyNowPrice : 0);
+
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -315,6 +319,7 @@ const CarDetails = ({
             fetchLocalTrucking();
         }
     }, []);
+
 
     useEffect(() => {
         clearTimer(getDeadTime());
@@ -432,6 +437,7 @@ const CarDetails = ({
         );
     };
 
+
     const getSecondRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
         try {
@@ -448,6 +454,7 @@ const CarDetails = ({
                     );
                     setAmount(carDetails.buyNowPrice);
                     setbidAmount(carDetails.buyNowPrice * data.data.rate);
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -501,6 +508,7 @@ const CarDetails = ({
         }
     }
 
+
     function makeCollectionName(length) {
         var result = "";
         var characters =
@@ -543,6 +551,7 @@ const CarDetails = ({
                 passengerCapacity: "",
                 sellerCity: "",
                 description: "",
+
                 Zip: zip,
                 bidAmount: bidAmount,
                 owner: userId,
@@ -552,6 +561,7 @@ const CarDetails = ({
                 images: carImages,
                 trucking: truckingPrice || "",
                 shipping: "",
+
             };
             console.log("bid object", bidObject);
 
@@ -572,6 +582,7 @@ const CarDetails = ({
                     } else {
                         setmessage(response.statusText);
                         placeBidSuccess();
+
                     }
                 })
                 .catch((error) => {
@@ -605,6 +616,7 @@ const CarDetails = ({
                 const currentCollection = replaceCollections[index];
                 if (currentCollection.vehicles.length < 10) {
                     filterCollection = currentCollection._id; // console.log(filterCollection)
+
                     break;
                 }
             }
@@ -630,16 +642,19 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
+
                     if (!response.ok) {
                         // toastError()
                         // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText);
                         return response.json(); // toastSuccess();
+
                     }
                 })
                 .then((data) => {
                     newCollection = data.data._id;
+
                 })
                 .catch((error) => {
                     seterror(error);
@@ -677,6 +692,7 @@ const CarDetails = ({
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
+
                 }
                 break;
             case "ship":
@@ -688,6 +704,7 @@ const CarDetails = ({
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
+
                 }
                 break;
             case "clear":
@@ -699,6 +716,7 @@ const CarDetails = ({
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
+
                 }
                 break;
             default:
@@ -741,6 +759,7 @@ const CarDetails = ({
             shipping: "",
         };
         dispatch(carBuyNow(bidObject));
+
     };
 
     function startTimer(e) {
@@ -765,6 +784,7 @@ const CarDetails = ({
         let data = new Date(carDetails.auctionEndTime).getTime();
         let countDownDate = new Date().getTime();
         let now = new Date().getTime() >= data ? new Date().getTime() : data;
+
         let distance = now - countDownDate;
         setDistance(distance);
         let deadline = new Date(carDetails.auctionEndTime);
@@ -909,6 +929,7 @@ const CarDetails = ({
                                                 BUY NOW @ &#36;
                                                 {""}
                                                 {amount}
+
                                             </p>
                                         ) : (
                                             parseFloat(
@@ -950,6 +971,7 @@ const CarDetails = ({
                                                                 Add amount to
                                                                 bid
                                                             </label>
+
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
@@ -1053,6 +1075,7 @@ const CarDetails = ({
                                                             </td>
                                                         </>
                                                     )}
+
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -1122,6 +1145,7 @@ const CarDetails = ({
                                                     <td className="font-11 sec-black font-bold pr-20 py-2">
                                                         N
                                                         {totalAmount.toLocaleString()}
+
                                                     </td>
                                                     <td className="font-10 font-medium primary-blue text-center px-2">
                                                         Change currency
@@ -1397,6 +1421,7 @@ const CarDetails = ({
                                         )}
                                     </div>
 
+
                                     <div className="timer">
                                         <button
                                             type="button"
@@ -1411,6 +1436,7 @@ const CarDetails = ({
                                                 TIME LEFT
                                                 <p>
                                                     {car.data[0].auctionEndTime}
+
                                                     used the data this way
                                                 </p>
                                             </p>
