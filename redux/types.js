@@ -24,3 +24,6 @@ export const EDIT_COLLECTION_SUCCESS = "EDIT_COLLECTION_SUCCESS";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
 export const DETAIL = "DETAIL";
+export const BUY_NOW = "BUY_NOW";
+export const BUY_NOW_SUCCESS = "BUY_NOW_SUCCESS";
+export const BUY_NOW_FAILED = "BUY_NOW_FAILED";

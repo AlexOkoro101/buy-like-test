@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import FsLightbox from 'fslightbox-react';
+import FsLightbox from "fslightbox-react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { carDetail, getCollection } from "../../redux/actions/carsAction";
+import {
+    carDetail,
+    carBuyNow,
+    getCollection,
+} from "../../redux/actions/carsAction";
 import Link from "next/link";
 import { enviroment } from "../../src/components/enviroment";
 import { ToastContainer, toast } from "react-toastify";
@@ -115,9 +119,9 @@ const CarDetails = ({
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
+
     const [noZipValue, setnoZipValue] = useState(false);
     const [truckingPrice, settruckingPrice] = useState(null)
-
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
         if (!userActive) {
@@ -208,7 +212,7 @@ const CarDetails = ({
         setmake(carDetails.make);
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
+        setbidAmount(carDetails.buyNowPrice ? carDetails.buyNowPrice : 0);
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -236,8 +240,7 @@ const CarDetails = ({
         packingName: "",
     }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
-    
-    const fetchLocalTrucking = () => {
+  const fetchLocalTrucking = () => {
         if(getZipLocation() === "") {
             setnoZipValue(true)
             return;
@@ -277,8 +280,9 @@ const CarDetails = ({
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(getTrucking)
+            body: JSON.stringify(getTrucking),
         })
+
         .then((response) => {
             return response.json()
         })
@@ -319,9 +323,17 @@ const CarDetails = ({
         if(typeof getZipLocation() !== 'undefined') {
             console.log("zip", getZipLocation())
             fetchLocalTrucking()
-        }
 
-    }, [])
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("trucking price", truckingPrice);
+            });
+    };
+
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -411,12 +423,11 @@ const CarDetails = ({
         setCount(count - size);
     };
     const returnLargeimage = () => {
-        const largeImageArray = cardD?.images.map(image => {
-            return image.image_largeUrl
-        })
-
+        const largeImageArray = cardD.images.map((image) => {
+            return image.image_largeUrl;
+        });
         return largeImageArray;
-    }
+    };
     const displayLargeimage = () => {
         return (
             <>
@@ -425,11 +436,11 @@ const CarDetails = ({
                     sources={returnLargeimage()}
                     type="image"
                 />
+
                 <img
                     onClick={() => {
-                        setToggler(!toggler)
-                        console.log("large images", returnLargeimage())
-                        }}
+                        setToggler(!toggler);
+                    }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
@@ -453,7 +464,7 @@ const CarDetails = ({
                     setTotalAmount(
                         parseInt(carDetails.buyNowPrice * data.data.rate)
                     );
-                    setAmount(carDetails.buyNowPrice * data.data.rate);
+                    setAmount(carDetails.buyNowPrice);
                     setbidAmount(carDetails.buyNowPrice * data.data.rate);
                 })
                 .catch(function (error) {
@@ -522,46 +533,45 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-
         async function addCar() {
-            seterror(null)
-            setisLoading(true)
+            seterror(null);
+            setisLoading(true);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                bidAmount:bidAmount,
-                owner:userId,
-                collection: await placeItem(), 
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: truckingPrice || "", 
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
+            const bidObject = {
+                vin: vin,
+                link: "https://members.manheim.com/",
+                name: name,
+                site: "https://members.manheim.com/",
+                price: price,
+                year: year,
+                exterior_color: exteriorColor,
+                vehicle_type: vehicleType,
+                interior_color: interiorColor,
+                transmission: transmission,
+                odometer: odometer,
+                driveTrain: driveTrain,
+                doors: doors,
+                Model: model,
+                make: make,
+                equipment: "",
+                EngineType: "",
+                interior_type: "",
+                body_style: bodyStyle,
+                fuel_type: "",
+                passengerCapacity: "",
+                sellerCity: "",
+                description: "",
+                Zip: zip,
+                bidAmount: bidAmount,
+                owner: userId,
+                collection: await placeItem(),
+                facilitationLocation: facilitationLocation,
+                Vehicle_location: vehicleLocation,
+                images: carImages,
+                trucking: truckingPrice || "",
+                shipping: "",
+            };
+            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -589,7 +599,6 @@ const CarDetails = ({
         }
 
         async function placeItem() {
-            
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
@@ -715,6 +724,43 @@ const CarDetails = ({
         }
     };
 
+    const onBuyNow = () => {
+        const bidObject = {
+            vin: vin,
+            link: "https://members.manheim.com/",
+            name: name,
+            site: "https://members.manheim.com/",
+            price: price,
+            year: year,
+            exterior_color: exteriorColor,
+            vehicle_type: vehicleType,
+            interior_color: interiorColor,
+            transmission: transmission,
+            odometer: odometer,
+            driveTrain: driveTrain,
+            doors: doors,
+            Model: model,
+            make: make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: bodyStyle,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: zip,
+            bidAmount: bidAmount,
+            owner: userId,
+            facilitationLocation: facilitationLocation,
+            Vehicle_location: vehicleLocation,
+            images: carImages,
+            trucking: truckingPrice || "",
+            shipping: "",
+        };
+        dispatch(carBuyNow(bidObject));
+    };
+
     function startTimer(e) {
         let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
         if (total >= 0) {
@@ -743,7 +789,6 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
-    
 
     //
     //
@@ -754,9 +799,6 @@ const CarDetails = ({
     }
     //
     //
-
-
-    
 
     return (
         <div>
@@ -882,7 +924,7 @@ const CarDetails = ({
                                     <div className="ml-auto">
                                         {cardD.buyNowPrice.length > 2 ? (
                                             <p className="primary-color text-xs font-medium">
-                                                BUY NOW @ &#8358;
+                                                BUY NOW @ &#36;
                                                 {""}
                                                 {amount}
                                             </p>
@@ -1026,6 +1068,7 @@ const CarDetails = ({
 
                                                         </>
                                                     )}
+
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -1168,7 +1211,9 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1285,25 +1330,49 @@ const CarDetails = ({
                             </div>
                             <div className="flex justify-center">
                                 {token ? (
-                                    <button
-                                        onClick={placeBid}
-                                        className={
-                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                            (!terms &&
-                                                `opacity-50 cursor-not-allowed`)
-                                        }
-                                        disabled={!terms}
-                                    >
-                                        {isLoading ? (
-                                            <ClipLoader
-                                                color="#fff"
-                                                size={20}
-                                                loading
-                                            />
+                                    <>
+                                        {carDetails.buyNowPrice.length >= 1 ? (
+                                            <button
+                                                onClick={onBuyNow}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Buy Now"
+                                                )}
+                                            </button>
                                         ) : (
-                                            "Place Bid"
+                                            <button
+                                                onClick={placeBid}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Place Bid"
+                                                )}
+                                            </button>
                                         )}
-                                    </button>
+                                    </>
                                 ) : (
                                     <Link href="/auth/login">
                                         <button
@@ -1567,9 +1636,8 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Vehicle Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make} {""}
-                                                {cardD?.model}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.vehicleName}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1578,7 +1646,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Interior Colour
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceInteriorColor}
                                             </td>
                                             <td></td>
@@ -1588,7 +1656,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Seller Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceSellerName}
                                             </td>
                                             <td></td>
@@ -1598,7 +1666,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Mileage
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.mileage}
                                             </td>
                                             <td></td>
@@ -1606,11 +1674,10 @@ const CarDetails = ({
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Tranbaseission
+                                                year
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.tranbaseission ||
-                                                    "Not Specified"}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.year || "Not Specified"}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1619,7 +1686,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Drive train
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.driveTrain}
                                             </td>
                                             <td></td>
@@ -1632,79 +1699,216 @@ const CarDetails = ({
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
                                                 Company Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.companyName}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Make
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.make}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Model
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.model}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Pickup Location
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.pickupLocation}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Engine Type
+                                                Engine Fuel Type
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
                                                 {cardD?.sourceEngineFuelType}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Exterior Color
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceExteriorColor}
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        {/*
+                         */}
+                        {/*  */}
 
-                        <div className="text-center mt-5">
-                            <a
-                                href="#"
-                                className="primary-blue font-semibold text-sm"
-                            >
-                                Show More Details
-                            </a>
+                        {/*  */}
+                        <div className="relative">
+                            <details>
+                                <div class="content mb-2 w-full h-full">
+                                    <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
+                                        <div className="w-full md:w-1/3 ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Passenger capacity
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.passengerCapacity
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Vehicle type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.vehicleType}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Engine type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sourceEngineType
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Odometer
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.odometer}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Transmission
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.transmission ||
+                                                                "Not Specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Buy now price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.buyNowPrice ||
+                                                                "Not specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div className="w-full md:w-1/3  ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
+                                                            Seller city
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerCity}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller state
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerState}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Facilitation
+                                                            Location
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.facilitationLocation
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller phone
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerPhone}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller rating
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sellerRating
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Bidding price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.mmrPrice}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
+                                    Show More Details
+                                </summary>
+                            </details>
                         </div>
                     </section>
-                    <section className="overview-section w-full py-3 px-7">
+                    <section className="overview-section w-full py-3 mt-5 px-7">
                         <div className="text-center py-3">
                             <hr className="red-underline2 w-20 m-auto pb-4" />
                             <h4 className="font-bold primary-color text-xl ">
