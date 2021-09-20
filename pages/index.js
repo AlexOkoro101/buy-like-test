@@ -22,10 +22,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
     useEffect(() => {
         if (isComponentFullyMounted === false) {
-            console.log(window.Waypoint);
             return;
         } else {
-            console.log(window.Waypoint);
             if (typeof window !== "undefined") {
                 // Easy Buy Animation here
                 var easyBuyTimeline = anime.timeline({
@@ -245,12 +243,14 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             getCars();
             getMakes();
         }
-        if (cars.length) {
+        if (cars.length > 0) {
+            console.log("two");
             setImages(cars);
         }
         if (makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
+            console.log("three");
         }
     }, [cars]);
     const handleMake = (e) => {
@@ -291,11 +291,20 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     };
 
     const { register, handleSubmit } = useForm();
+
     const router = useRouter();
+
     const onSubmit = (data) => {
         dispatch(searchTerm(data));
         router.push("/search");
     };
+
+    const onCategory = (data) => {
+        let options = { make: data, model: "", year: "" };
+        dispatch(searchTerm(options));
+        router.push("/search");
+    };
+
     const addImage = (params) => {
         if (params.images && params.images.length <= 0) {
             return null;
@@ -459,9 +468,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             <option value="" selected disabled>
                                                 Select
                                             </option>
-                                            <option value="">
-                                                All
-                                            </option>
+                                            <option value="">All</option>
+
                                             {carModels.map((x, id) => (
                                                 <option
                                                     key={id}
@@ -483,11 +491,10 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         className="form__control px-1.5 w-full font-13 focus:outline-none "
                                     >
                                         <option value="" selected disabled>
-                                                Select
+                                            Select
                                         </option>
-                                        <option value="">
-                                            All
-                                        </option>
+                                        <option value="">All</option>
+
                                         {years.map((x) => (
                                             <option key={x} value={x}>
                                                 {x}
@@ -612,7 +619,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         </h5>
                     </div>
 
-                    <div className="flex flex-wrap justify-center lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
+                    <div className="flex flex-wrap justify-between lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
                         {/* <!-- Hatchback here --> */}
                         <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
                             <img
@@ -624,8 +631,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     Hatchbacks
                                 </p>
                                 <a
-                                    href="# "
-                                    className="primary-red font-bold pt-2 "
+                                    className="primary-red font-bold pt-2 cursor-pointer"
+                                    onClick={() => onCategory("hatchback")}
                                 >
                                     SEE MORE
                                 </a>
@@ -640,8 +647,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     Sedans
                                 </p>
                                 <a
-                                    href="# "
-                                    className="primary-red font-bold pt-2 "
+                                    className="primary-red font-bold pt-2 cursor-pointer"
+                                    onClick={() => onCategory("sedan")}
                                 >
                                     SEE MORE
                                 </a>
@@ -656,8 +663,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     Vans
                                 </p>
                                 <a
-                                    href="# "
-                                    className="primary-red font-bold pt-2 "
+                                    className="primary-red font-bold pt-2 cursor-pointer"
+                                    onClick={() => onCategory("van")}
                                 >
                                     SEE MORE
                                 </a>
@@ -672,8 +679,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     SUVs
                                 </p>
                                 <a
-                                    href="# "
-                                    className="primary-red font-bold pt-2 "
+                                    className="primary-red font-bold pt-2 cursor-pointer"
+                                    onClick={() => onCategory("suv")}
                                 >
                                     SEE MORE
                                 </a>
@@ -688,8 +695,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     Wagons
                                 </p>
                                 <a
-                                    href="# "
-                                    className="primary-red font-bold pt-2 "
+                                    className="primary-red font-bold pt-2 cursor-pointer"
+                                    onClick={() => onCategory("wagon")}
                                 >
                                     SEE MORE
                                 </a>
@@ -702,6 +709,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         <button
                             type="button "
                             className="estimate__btn focus:outline-none font-semibold px-4 "
+                            onClick={() => router.push("/search")}
                         >
                             SEE ALL VECHICLES
                         </button>

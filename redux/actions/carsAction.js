@@ -22,6 +22,9 @@ import {
     FETCHING_COLLECTION,
     FETCHING_COLLECTION_SUCCESS,
     FETCHING_COLLECTION_FAILED,
+    BUY_NOW_SUCCESS,
+    BUY_NOW_FAILED,
+    BUY_NOW,
 } from "../types";
 const api = process.env.cars_api;
 
@@ -111,6 +114,7 @@ export const searchTerm = (event) => async (dispatch) => {
     }
 };
 export const fetchMore = (event) => async (dispatch) => {
+    console.log(event);
     dispatch({
         type: FETCHING,
         payload: {
@@ -254,4 +258,125 @@ export const carDetail = (data) => (dispatch) => {
         type: DETAIL,
         payload: data,
     });
+};
+export const carBuyNow = (data) => async (dispatch) => {
+    dispatch({
+        type: BUY_NOW,
+    });
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        vin: data.vin,
+        link: data.link,
+        name: data.name,
+        site: data.site,
+        price: data.price,
+        year: data.year,
+        exterior_color: data.exterior_color,
+        vehicle_type: data.vehicle_type,
+        interior_color: data.interior_color,
+        transmission: data.transmission,
+        odometer: data.odometer,
+        driveTrain: data.driveTrain,
+        doors: data.doors,
+        Model: data.Model,
+        make: data.make,
+        equipment: data.equipment,
+        EngineType: data.EngineType,
+        interior_type: data.interior_type,
+        body_style: data.body_style,
+        fuel_type: data.fuel_type,
+        passengerCapacity: data.passengerCapacity,
+        sellerCity: data.sellerCity,
+        description: data.description,
+        Zip: data.Zip,
+        tilteImage: "",
+        bidAmount: data.bidAmount,
+        owner: data.owner,
+        facilitationLocation: data.facilitationLocation,
+        Vehicle_location: data.Vehicle_location,
+        images: data.images,
+        trucking: data.trucking,
+        shipping: data.shipping,
+    });
+    try {
+        var requestOptions = {
+            method: "POST",
+            headers: {},
+            body: raw,
+            redirect: "follow",
+        };
+        console.log(requestOptions);
+
+        let res = await fetch(
+            `${enviroment.BASE_URL}bids/buy-now`,
+            requestOptions
+        )
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (res) {
+                console.log(res);
+            })
+            .catch(function (error) {
+                // dispatch({
+                //     type: FETCHING_FAILED,
+                //     payload: error.message,
+                // });
+                console.log(error);
+            });
+    } catch (error) {
+        // dispatch({
+        //     type: FETCHING_FAILED,
+        //     payload: error.message,
+        // });
+        console.log(error);
+    }
+};
+
+export const filterTabAction = (event, type) => async (dispatch) => {
+    dispatch({
+        type: FETCHING,
+        payload: {
+            make: event.make || "",
+            model: event.model || "",
+            year: event.year || "",
+        },
+    });
+    try {
+        let res = await fetch(
+            `${api}?${type}&year=${event.year}&make=${event.make}&model=${event.model}&page=${event.page}&apiKey=Switch!2020`,
+            {
+                method: "GET",
+                headers: {},
+                credentials: "same-origin",
+            }
+        )
+            .then(function (response) {
+                return response.text();
+            })
+            .catch(function (error) {
+                dispatch({
+                    type: FETCHING_FAILED,
+                    payload: error.message,
+                });
+                console.log(error);
+            });
+        if (res) {
+            const response = JSON.parse(res);
+            if (response) {
+                dispatch({
+                    type: SEARCHING_SUCCESS,
+                    payload: response,
+                });
+            }
+        }
+    } catch (error) {
+        dispatch({
+            type: FETCHING_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    }
 };

@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
+import FsLightbox from "fslightbox-react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { carDetail, getCollection } from "../../redux/actions/carsAction";
+import {
+    carDetail,
+    carBuyNow,
+    getCollection,
+} from "../../redux/actions/carsAction";
 import Link from "next/link";
 import { enviroment } from "../../src/components/enviroment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import getRequestHelper from "./helper";
-import config from "../../next.config";
+var moment = require("moment");
+
 const Url = "https://buylikepoint.us/json.php/view.php";
 //
 //
@@ -23,8 +28,8 @@ const CarDetails = ({
     cars,
     getCollection,
     carCollection,
-    res,
-    // const [article, setArticle] =  useState(props.res.data)
+    res, // const [article, setArticle] =  useState(props.res.data)
+
 }) => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -46,7 +51,29 @@ const CarDetails = ({
             draggable: true,
             progress: undefined,
         });
+    const placeBidSuccess = () =>
+        toast.success("Car added to your collection", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const placeBidInfo = () =>
+        toast.info("Bid already placed by you", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     const Ref = useRef(null);
+    const [toggler, setToggler] = useState(false);
+    const [key, setkey] = useState(0);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -57,8 +84,9 @@ const CarDetails = ({
     const [id, setId] = useState(0);
     const [percentage, setPercentage] = useState();
     const [days, setdays] = useState(0);
-    const [distance, setDistance] = useState(0);
+    const [distance, setDistance] = useState();
     const [hours, sethours] = useState(0);
+    const [amount, setAmount] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
     const [car, setCar] = useState(res);
@@ -94,7 +122,8 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
 
-    //Get Data from Local Storage
+    const [noZipValue, setnoZipValue] = useState(false);
+    const [truckingPrice, settruckingPrice] = useState(null);
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
         if (!userActive) {
@@ -112,9 +141,8 @@ const CarDetails = ({
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-    };
+    }; //Get Data from local Storage
 
-    //Get Data from local Storage
     useEffect(() => {
         retrieveData();
         return retrieveData;
@@ -136,16 +164,14 @@ const CarDetails = ({
             }
         )
             .then(function (response) {
-                console.log(response);
                 return response.text();
             })
             .then((data) => {
                 // console.log(data)
                 if (data) {
-                    //  console.log(data.data)
+                    //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
-                        const formatCollection = JSON.parse(data);
-                        // console.log("new collection", formatCollection.data)
+                        const formatCollection = JSON.parse(data); // console.log("new collection", formatCollection.data)
                         setcollection(formatCollection.data);
                     }
                 }
@@ -165,6 +191,8 @@ const CarDetails = ({
         let initialZip = null;
 
         if (carDetails) {
+            console.log(carDetails);
+
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -187,8 +215,8 @@ const CarDetails = ({
         setmake(carDetails.make);
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
-        setTotalAmount(carDetails.mmrPrice);
+        setbidAmount(carDetails.buyNowPrice ? carDetails.buyNowPrice : 0);
+
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -196,44 +224,103 @@ const CarDetails = ({
 
         let array = [];
         if (cars) {
-            cars.data.map((ele) => {
+            cars.data?.map((ele) => {
                 if (ele.vehicleName !== "") {
                     array.push(ele);
                 }
             });
         }
         const size = 4;
-        const items = array.slice(0, size);
-        // console.log(items);
+        const items = array.slice(0, size); // console.log(items);
         setData(items);
         getRate();
         getSecondRate();
         displaySmall();
     }, [carDetails, cardD]);
 
-    const getTrucking = {
-        packingCode: `${getZipLocation()}`,
-        packingName: "",
+    const fetchLocalTrucking = () => {
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
+            return;
+        }
+
+        fetch(enviroment.BASE_URL + "truck/code/" + getZipLocation(), {
+            method: "GET",
+            redirect: "follow",
+        })
+            .then((response) => {
+                console.log("local trucking res", response);
+                return response.json();
+            })
+            .then((data) => {
+                console.log("local trucking", data);
+                if (!data.data) {
+                    fetchScrapperTrucking();
+                } else {
+                    settruckingPrice(data.data.raw[1]);
+                }
+                // console.log("local trucking price", truckingPrice)
+            });
     };
 
-    // const fetchTrucking = () => {
-    //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(getTrucking),
-    //     })
-    //         .then((response) => {
-    //             return response.json();
-    //         })
-    //         .then((data) => {
-    //             console.log("trucking", data);
-    //         });
-    // };
+    const fetchScrapperTrucking = () => {
+        const getTrucking = {
+            packingCode: `${getZipLocation()}`,
+            packingName: "",
+        };
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
+            return;
+        }
+        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(getTrucking),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    createLocalTrucking(data);
+                }
+                console.log("scrapper trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("scrapper trucking price", truckingPrice);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const createLocalTrucking = (data) => {
+        const localTruckingObject = {
+            code: `${getZipLocation()}`,
+            location: "",
+            raw: [`${data.raw[0]}`, `${data.raw[1]}`],
+        };
+
+        fetch(enviroment.BASE_URL + "truck", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(localTruckingObject),
+            redirect: "follow",
+        })
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log("error", error));
+    };
     useEffect(() => {
-        // fetchTrucking();
-    }, [cardD]);
+        if (typeof getZipLocation() !== "undefined") {
+            console.log("zip", getZipLocation());
+            fetchLocalTrucking();
+        }
+    }, []);
+
+
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -279,17 +366,17 @@ const CarDetails = ({
     };
 
     function displaySmall() {
-        let data = cardD?.images.length;
+        let data = cardD?.images?.length;
         var size;
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
             size = 5;
         }
-        let count = cardD?.images.length - size;
+        let count = cardD?.images?.length - size;
         setCount(count);
         if (data > window.innerWidth <= 760 ? 3 : 5) {
-            let data = cardD?.images.slice(page, size);
+            let data = cardD?.images?.slice(page, size);
             setimageD(data);
         } else {
             let data = cardD?.images;
@@ -303,7 +390,7 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page - size, limit - size);
+        let data = cardD?.images?.slice(page - size, limit - size);
         setimageD(data);
         setPage(page - size);
         setLimit(limit - size);
@@ -316,26 +403,41 @@ const CarDetails = ({
         } else {
             size = 5;
         }
-        let data = cardD.images.slice(page + size, limit + size);
+        let data = cardD?.images?.slice(page + size, limit + size);
         setimageD(data);
         setPage(page + size);
         setLimit(limit + size);
         setCount(count - size);
     };
+    const returnLargeimage = () => {
+        const largeImageArray = cardD.images.map((image) => {
+            return image.image_largeUrl;
+        });
+        return largeImageArray;
+    };
     const displayLargeimage = () => {
         return (
-            <img
-                src={cardD.images[id].image_largeUrl}
-                loading="lazy"
-                className="rounded-xl w-full largeImage sm:h-32 shadow-md"
-                alt="Benz"
-            />
+            <>
+                <FsLightbox
+                    toggler={toggler}
+                    sources={returnLargeimage()}
+                    type="image"
+                />
+
+                <img
+                    onClick={() => {
+                        setToggler(!toggler);
+                    }}
+                    src={cardD?.images[id]?.image_largeUrl}
+                    loading="lazy"
+                    className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
+                    alt="Benz"
+                />
+            </>
         );
     };
 
-    //
-    //
-    //
+
     const getSecondRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
         try {
@@ -346,8 +448,13 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
-                    // console.log("data-------rate=--------->res", data);
-                    // setNaira(data.rates.NGN);
+                    setNaira(data.data.rate);
+                    setTotalAmount(
+                        parseInt(carDetails.buyNowPrice * data.data.rate)
+                    );
+                    setAmount(carDetails.buyNowPrice);
+                    setbidAmount(carDetails.buyNowPrice * data.data.rate);
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -379,17 +486,20 @@ const CarDetails = ({
         }
     };
 
-    function renderCounter() {
-        if (cardD) {
+    function renderCounter(e) {
+        if (e) {
             return (
                 <>
                     <CountdownCircleTimer
                         isPlaying
                         duration={distance}
                         colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
-                        initialRemainingTime={distance}
                     >
-                        {renderTime}
+                        {({ remainingTime }) =>
+                            moment(carDetails.auctionEndTime)
+                                .endOf("seconds")
+                                .fromNow()
+                        }
                     </CountdownCircleTimer>
                 </>
             );
@@ -398,49 +508,7 @@ const CarDetails = ({
         }
     }
 
-    function renderTime({ remainingTime, elapsedTime }) {
-        if (cardD) {
-            function getDigits(val) {
-                if (val / 86400 > 1) {
-                    return {
-                        data: (val / 86400) | 0,
-                        label: "days",
-                    };
-                } else if (val / 3600 > 1) {
-                    return {
-                        data: (val / 3600) | 0,
-                        label: "hours",
-                    };
-                } else if (val / 60 > 1) {
-                    return {
-                        data: (val / 60) | 0,
-                        label: "minutes",
-                    };
-                } else {
-                    return {
-                        data: val | 0,
-                        label: "seconds",
-                    };
-                }
-            }
-            const arr = getDigits(remainingTime);
-            if (remainingTime === 0) {
-                return (
-                    <div className="days font-13 sec-black font-semibold text-red-700">
-                        Expired.
-                    </div>
-                );
-            }
-            return (
-                <div className="text-center font-13 sec-black items-center font-semibold">
-                    <p>{arr.data}</p>
-                    <p className="text-gray-400 mt-0">{arr.label}</p>
-                </div>
-            );
-        }
-    }
 
-    //Random collection name
     function makeCollectionName(length) {
         var result = "";
         var characters =
@@ -475,7 +543,15 @@ const CarDetails = ({
                 doors: doors,
                 Model: model,
                 make: make,
+                equipment: "",
+                EngineType: "",
+                interior_type: "",
                 body_style: bodyStyle,
+                fuel_type: "",
+                passengerCapacity: "",
+                sellerCity: "",
+                description: "",
+
                 Zip: zip,
                 bidAmount: bidAmount,
                 owner: userId,
@@ -483,6 +559,9 @@ const CarDetails = ({
                 facilitationLocation: facilitationLocation,
                 Vehicle_location: vehicleLocation,
                 images: carImages,
+                trucking: truckingPrice || "",
+                shipping: "",
+
             };
             console.log("bid object", bidObject);
 
@@ -497,50 +576,13 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
-                    // console.log(response)
+                    console.log("bid response", response);
                     if (!response.ok) {
-                        toastError();
-                        // throw Error("Could not create collection")
+                        placeBidInfo();
                     } else {
                         setmessage(response.statusText);
-                        toastSuccess();
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    // console.log(response)
-                    if (!response.ok) {
-                        toastError();
-                        // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                        // dispatch(getCollection(userId))
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
+                        placeBidSuccess();
+
                     }
                 })
                 .catch((error) => {
@@ -572,11 +614,8 @@ const CarDetails = ({
 
             for (let index = 0; index < replaceCollections.length; index++) {
                 const currentCollection = replaceCollections[index];
-                console.log("current collection", currentCollection);
-
                 if (currentCollection.vehicles.length < 10) {
-                    filterCollection = currentCollection._id;
-                    // console.log(filterCollection)
+                    filterCollection = currentCollection._id; // console.log(filterCollection)
 
                     break;
                 }
@@ -593,7 +632,6 @@ const CarDetails = ({
                 name: `${randomName}`,
             };
             let newCollection;
-            console.log(collectionObject);
             await fetch(enviroment.BASE_URL + "collections", {
                 method: "POST",
                 headers: {
@@ -604,19 +642,19 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
-                    console.log(response);
+
                     if (!response.ok) {
                         // toastError()
                         // throw Error("Could not create collection")
                     } else {
                         setmessage(response.statusText);
-                        return response.json();
-                        // toastSuccess();
+                        return response.json(); // toastSuccess();
+
                     }
                 })
                 .then((data) => {
                     newCollection = data.data._id;
-                    console.log(data);
+
                 })
                 .catch((error) => {
                     seterror(error);
@@ -631,8 +669,8 @@ const CarDetails = ({
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
         const seconds = Math.floor((total / 1000) % 60);
-        const minutes = Math.floor((total / 1000 / 60) % 60);
-        const hours = Math.floor(((total / 1000) * 60 * 60) % 24);
+        const minutes = Math.floor((total / (1000 * 60)) % 60);
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
         let days = Math.floor(total / (1000 * 60 * 60 * 24));
         return {
             total,
@@ -647,30 +685,81 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
+
                 }
                 break;
             case "ship":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
+
                 }
                 break;
             case "clear":
                 if (e.target.checked === true) {
-                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
                 } else {
-                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
+
                 }
                 break;
             default:
                 break;
         }
-        console.log(type);
-        console.log(e.target.checked);
+    };
+
+    const onBuyNow = () => {
+        const bidObject = {
+            vin: vin,
+            link: "https://members.manheim.com/",
+            name: name,
+            site: "https://members.manheim.com/",
+            price: price,
+            year: year,
+            exterior_color: exteriorColor,
+            vehicle_type: vehicleType,
+            interior_color: interiorColor,
+            transmission: transmission,
+            odometer: odometer,
+            driveTrain: driveTrain,
+            doors: doors,
+            Model: model,
+            make: make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: bodyStyle,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: zip,
+            bidAmount: bidAmount,
+            owner: userId,
+            facilitationLocation: facilitationLocation,
+            Vehicle_location: vehicleLocation,
+            images: carImages,
+            trucking: truckingPrice || "",
+            shipping: "",
+        };
+        dispatch(carBuyNow(bidObject));
+
     };
 
     function startTimer(e) {
@@ -693,14 +782,13 @@ const CarDetails = ({
 
     function getDeadTime() {
         let data = new Date(carDetails.auctionEndTime).getTime();
-        let deadline = new Date();
         let countDownDate = new Date().getTime();
         let now = new Date().getTime() >= data ? new Date().getTime() : data;
-        console.log(now);
-        console.log(data);
+
         let distance = now - countDownDate;
         setDistance(distance);
-        deadline.setSeconds(deadline.getSeconds() + distance);
+        let deadline = new Date(carDetails.auctionEndTime);
+        deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
 
@@ -837,10 +925,11 @@ const CarDetails = ({
                                     </div>
                                     <div className="ml-auto">
                                         {cardD.buyNowPrice.length > 2 ? (
-                                            <p className="primary-color text-base font-extrabold">
-                                                BUY NOW @ &#8358;
+                                            <p className="primary-color text-xs font-medium">
+                                                BUY NOW @ &#36;
                                                 {""}
-                                                {cardD.buyNowPrice}
+                                                {amount}
+
                                             </p>
                                         ) : (
                                             parseFloat(
@@ -878,24 +967,19 @@ const CarDetails = ({
                                                 <tbody>
                                                     <tr className="">
                                                         <td className="sec-black font-11 font-semibold w-28  ">
-                                                            {" "}
                                                             <label>
                                                                 Add amount to
                                                                 bid
-                                                            </label>{" "}
+                                                            </label>
+
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
                                                             <input
-                                                                value={
-                                                                    bidAmount
-                                                                }
+                                                                value={bidAmount.toLocaleString()}
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
                                                                 placeholder="$8,000"
-                                                                value={
-                                                                    bidAmount
-                                                                }
                                                                 onChange={(e) =>
                                                                     setbidAmount(
                                                                         e.target
@@ -959,26 +1043,39 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Trucking
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        {" "}
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "truck",
-                                                                        950
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
+
+                                                    {noZipValue ? (
+                                                        <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                            Contact Support
+                                                        </td>
+                                                    ) : (
+                                                        <>
+                                                            <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                                {truckingPrice
+                                                                    ? `${truckingPrice}`
+                                                                    : "Loading..."}
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <label className="detail">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="focus:outline-none detail self-center"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            setFees(
+                                                                                e,
+                                                                                "truck",
+                                                                                950
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span className="detail"></span>
+                                                                </label>
+                                                            </td>
+                                                        </>
+                                                    )}
+
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -989,7 +1086,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1015,7 +1111,6 @@ const CarDetails = ({
                                                         N2,000,000
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1048,7 +1143,9 @@ const CarDetails = ({
                                                         Total
                                                     </td>
                                                     <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        N{totalAmount}
+                                                        N
+                                                        {totalAmount.toLocaleString()}
+
                                                     </td>
                                                     <td className="font-10 font-medium primary-blue text-center px-2">
                                                         Change currency
@@ -1098,7 +1195,7 @@ const CarDetails = ({
                                                         <img
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
-                                                        />{" "}
+                                                        />
                                                     </td>
                                                 </tr>
 
@@ -1122,10 +1219,11 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1144,7 +1242,6 @@ const CarDetails = ({
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1157,13 +1254,12 @@ const CarDetails = ({
 
                                                 <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Shipping{" "}
+                                                        Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1176,13 +1272,12 @@ const CarDetails = ({
 
                                                 <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Clearing{" "}
+                                                        Clearing
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
-                                                        {" "}
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1199,11 +1294,10 @@ const CarDetails = ({
                                                 <tbody>
                                                     <tr className="">
                                                         <td className="font-10 font-medium sec-gray pr-1">
-                                                            {" "}
                                                             <label>
                                                                 Enter your
                                                                 budget
-                                                            </label>{" "}
+                                                            </label>
                                                         </td>
                                                         <td className="text-sm font-medium sec-gray">
                                                             <input
@@ -1235,35 +1329,58 @@ const CarDetails = ({
                                         <span className="detail"></span>
                                     </label>
                                     <label className="font-11 sec-black ml-1.5">
-                                        {" "}
-                                        I agree with{" "}
+                                        I agree with {""}
                                         <span className="primary-blue">
-                                            terms and conditions{" "}
-                                        </span>{" "}
+                                            terms and conditions
+                                        </span>
                                     </label>
                                 </div>
                             </div>
                             <div className="flex justify-center">
                                 {token ? (
-                                    <button
-                                        onClick={placeBid}
-                                        className={
-                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                            (!terms &&
-                                                `opacity-50 cursor-not-allowed`)
-                                        }
-                                        disabled={!terms}
-                                    >
-                                        {isLoading ? (
-                                            <ClipLoader
-                                                color="#fff"
-                                                size={20}
-                                                loading
-                                            />
+                                    <>
+                                        {carDetails.buyNowPrice.length >= 1 ? (
+                                            <button
+                                                onClick={onBuyNow}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Buy Now"
+                                                )}
+                                            </button>
                                         ) : (
-                                            "Place Bid"
-                                        )}{" "}
-                                    </button>
+                                            <button
+                                                onClick={placeBid}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Place Bid"
+                                                )}
+                                            </button>
+                                        )}
+                                    </>
                                 ) : (
                                     <Link href="/auth/login">
                                         <button
@@ -1298,7 +1415,12 @@ const CarDetails = ({
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>{renderCounter()}</div>
+                                    <div>
+                                        {renderCounter(
+                                            carDetails.auctionEndTime
+                                        )}
+                                    </div>
+
 
                                     <div className="timer">
                                         <button
@@ -1311,9 +1433,10 @@ const CarDetails = ({
                                             <></>
                                         ) : (
                                             <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                                TIME LEFT{" "}
+                                                TIME LEFT
                                                 <p>
-                                                    {car.data[0].auctionEndTime}{" "}
+                                                    {car.data[0].auctionEndTime}
+
                                                     used the data this way
                                                 </p>
                                             </p>
@@ -1523,9 +1646,8 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Vehicle Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make} {""}{" "}
-                                                {cardD?.model}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.vehicleName}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1534,7 +1656,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Interior Colour
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceInteriorColor}
                                             </td>
                                             <td></td>
@@ -1544,7 +1666,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Seller Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceSellerName}
                                             </td>
                                             <td></td>
@@ -1554,7 +1676,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Mileage
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.mileage}
                                             </td>
                                             <td></td>
@@ -1562,11 +1684,10 @@ const CarDetails = ({
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Tranbaseission
+                                                year
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.tranbaseission ||
-                                                    "Not Specified"}
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                {cardD?.year || "Not Specified"}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1575,7 +1696,7 @@ const CarDetails = ({
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Drive train
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.driveTrain}
                                             </td>
                                             <td></td>
@@ -1588,79 +1709,216 @@ const CarDetails = ({
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
                                                 Company Name
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.companyName}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Make
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.make}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Model
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.model}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Pickup Location
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.pickupLocation}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Engine Type
+                                                Engine Fuel Type
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
                                                 {cardD?.sourceEngineFuelType}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
                                                 Exterior Color
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
                                                 {cardD?.sourceExteriorColor}
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        {/*
+                         */}
+                        {/*  */}
 
-                        <div className="text-center mt-5">
-                            <a
-                                href="#"
-                                className="primary-blue font-semibold text-sm"
-                            >
-                                Show More Details
-                            </a>
+                        {/*  */}
+                        <div className="relative">
+                            <details>
+                                <div class="content mb-2 w-full h-full">
+                                    <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
+                                        <div className="w-full md:w-1/3 ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Passenger capacity
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.passengerCapacity
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Vehicle type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.vehicleType}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Engine type
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sourceEngineType
+                                                            }
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Odometer
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.odometer}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Transmission
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.transmission ||
+                                                                "Not Specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Buy now price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.buyNowPrice ||
+                                                                "Not specified"}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div className="w-full md:w-1/3  ">
+                                            <table className="min-w-full border-separate overview-table">
+                                                <tbody>
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-full py-3  px-2">
+                                                            Seller city
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerCity}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller state
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerState}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Facilitation
+                                                            Location
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.facilitationLocation
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller phone
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.sellerPhone}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Seller rating
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                            {
+                                                                cardD?.sellerRating
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr className="detail-row mb-2">
+                                                        <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                                            Bidding price
+                                                        </td>
+                                                        <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-8 w-1/2">
+                                                            {cardD?.mmrPrice}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
+                                    Show More Details
+                                </summary>
+                            </details>
                         </div>
                     </section>
-                    <section className="overview-section w-full py-3 px-7">
+                    <section className="overview-section w-full py-3 mt-5 px-7">
                         <div className="text-center py-3">
                             <hr className="red-underline2 w-20 m-auto pb-4" />
                             <h4 className="font-bold primary-color text-xl ">
@@ -1711,21 +1969,19 @@ const CarDetails = ({
                                                               ].join(" ")}
                                                     </p>
                                                     <p className="sec-black font-11 flex items-center pt-2">
-                                                        {" "}
-                                                        {ele?.year}{" "}
+                                                        {ele?.year}
                                                         <span className="ml-6">
                                                             205,456 miles
                                                         </span>
                                                     </p>
                                                     <div className="flex pt-2">
                                                         <p className="flex items-center sec-black font-10">
-                                                            {" "}
                                                             <span className="mr-1">
                                                                 <img
                                                                     src="../../assets/img/vectors/red-location-beacon.svg"
                                                                     alt="location"
                                                                 />
-                                                            </span>{" "}
+                                                            </span>
                                                             {
                                                                 ele?.pickupLocation
                                                             }
@@ -1737,7 +1993,6 @@ const CarDetails = ({
                                                                 alt="date"
                                                             />
                                                             <p className="sec-black font-10 ml-1">
-                                                                {" "}
                                                                 {new Date(
                                                                     ele?.auctionEndTime
                                                                 ).toLocaleDateString()}
@@ -1787,35 +2042,6 @@ const CarDetails = ({
             )}
         </div>
     );
-};
-
-CarDetails.getInitialProps = async (context) => {
-    let vin = context.query.id;
-    console.log("data--------------->", vin);
-    // https://buylikepoint.us/json.php/view.php?vin=SAJWB6BCXH8K43487	&apiKey=Switch!2020&apiKey=Switch!2020
-    // try {
-    //     const res = await getRequestHelper({
-    //         // url: `${Url}/view.php?vin=SAJWB6BCXH8K43487/&apiKey=Switch!2020&apiKey=Switch!2020`,
-    //         url: `${Url}?vin=${vin}&apiKey=Switch!2020`,
-    //     });
-    //     console.log("rrrrr0--------==============----->", res);
-    //     if (res.status === false) {
-    //         typeof window !== "undefined"
-    //             ? Router.push("/search")
-    //             : ctx.res.writeHead(302, { Location: "/search" }).end();
-    //     } else {
-    //         return {
-    //             res,
-    //         };
-    //     }
-    // } catch (error) {
-    //     typeof window !== "undefined"
-    //         ? Router.push("/search")
-    //         : ctx.res.writeHead(302, { Location: "/search" }).end();
-
-    //     return;
-    // }
-    return {};
 };
 
 const mapStateToProps = (state) => {

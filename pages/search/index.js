@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
     searchTerm,
     fetchMore,
+    filterTabAction,
     getMakes,
     carDetail,
 } from "../../redux/actions/carsAction";
@@ -25,6 +26,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [pageIndex, setPageIndex] = useState(1);
+    const [active, setActive] = useState("all");
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
     const [data, setData] = useState(cars.data);
@@ -45,7 +47,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
-            console.log("ppp");
+
             fetchPage(pageIndex);
         } else if (cars.data === null || cars.data === undefined) {
             fetchPage(pageIndex);
@@ -83,13 +85,29 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     const fetchPage = (i) => {
-        const datas = {
-            make: paramValue?.make || "",
-            model: paramValue?.model || "",
-            year: paramValue?.year || "",
-            page: i,
-        };
-        dispatch(fetchMore(datas));
+        if (active === "" || active === "all") {
+            const datas = {
+                make: paramValue?.make || "",
+                model: paramValue?.model || "",
+                year: paramValue?.year || "",
+                page: i,
+            };
+            dispatch(fetchMore(datas));
+        } else {
+            let data =
+                active === "now"
+                    ? "buy_now=1"
+                    : active === "bid"
+                    ? "mmr_price=1"
+                    : "";
+            const datas = {
+                make: paramValue?.make || "",
+                model: paramValue?.model || "",
+                year: paramValue?.year || "",
+                page: i,
+            };
+            dispatch(filterTabAction(datas, data));
+        }
     };
     const handleYear = (e) => {
         setParam((prev) => ({
@@ -296,6 +314,27 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             });
         }
     };
+
+    const filterTab = (event) => {
+        if (event !== active) {
+            setPageIndex(1);
+            setActive(event);
+            let data =
+                event === "now"
+                    ? "buy_now=1"
+                    : event === "bid"
+                    ? "mmr_price=1"
+                    : "";
+            const datas = {
+                make: paramValue?.make || "",
+                model: paramValue?.model || "",
+                year: paramValue?.year || "",
+                page: 1,
+            };
+            dispatch(filterTabAction(datas, data));
+        }
+    };
+
     const handleInputChange = (inputValue) => {
         if (inputValue !== "") {
             try {
@@ -337,7 +376,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-16">
+                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-4">
                     {/* <!-- filter tab here --> */}
                     <div className="filter-holder hidden  h-full lg:block p-3 w-2/12">
                         {/* <!-- Filter icon --> */}
@@ -844,7 +883,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </label>
                                                 </div>
                                             </div>
-
                                             <div className="flex pt-2">
                                                 <p className="font-11 primary-black">
                                                     {" "}
@@ -1044,7 +1082,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     </div>
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full relative  lg:w-5/6 ">
+                    <div className="display-holder w-full relative px-5  lg:w-5/6 ">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden ">
                             <div className="w-full">
@@ -1052,7 +1090,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <Select
                                         className="w-full cursor-pointer focus:outline-none"
                                         type="text"
-                                        placeholder="Search 7685 cars"
+                                        placeholder={`Search ${cars.total} cars`}
                                         isClearable
                                         onChange={handleChange}
                                         onInputChange={handleInputChange}
@@ -1068,19 +1106,37 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             <div>
                                 <button
                                     type="button"
-                                    className="focus:outline-none text-white font-10 primary-btn font-semibold px-3.5 py-1.5"
+                                    className={
+                                        active === "all"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                    }
+                                    value="all"
+                                    onClick={() => filterTab("all")}
                                 >
                                     All Cars
                                 </button>
                                 <button
                                     type="button"
-                                    className="focus:outline-none primary-black font-10 ml-3 font-normal py-1.5"
+                                    className={
+                                        active === "now"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                    }
+                                    value="now"
+                                    onClick={() => filterTab("now")}
                                 >
                                     Buy Now
                                 </button>
                                 <button
                                     type="button"
-                                    className="focus:outline-none primary-black font-10 ml-3 font-normal py-1.5"
+                                    className={
+                                        active === "bid"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                    }
+                                    value="bid"
+                                    onClick={() => filterTab("bid")}
                                 >
                                     Bid Cars
                                 </button>
@@ -1091,7 +1147,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <Select
                                     className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder="Search 7685 cars"
+                                    placeholder={`Search ${cars.total} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
                                     onInputChange={handleInputChange}
@@ -1289,7 +1345,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 carDetail(
                                                                                     ele
                                                                                 )
-                                                                            );
+                                                                            ),
+                                                                                router.push(
+                                                                                    {
+                                                                                        pathname:
+                                                                                            "/search/" +
+                                                                                            ele.VIN,
+                                                                                    }
+                                                                                );
+
                                                                         }}
                                                                         href={
                                                                             "/search/" +
@@ -1357,10 +1421,21 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 <a
                                                                                     type="button"
                                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                    href={
-                                                                                        "/search/" +
-                                                                                        ele.VIN
-                                                                                    }
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
+
                                                                                 >
                                                                                     Place
                                                                                     bid
@@ -1416,10 +1491,21 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
                                                                         <div className="1/2">
                                                                             <a
-                                                                                href={
-                                                                                    "/search/" +
-                                                                                    ele.VIN
-                                                                                }
+                                                                                onClick={() => {
+                                                                                    dispatch(
+                                                                                        carDetail(
+                                                                                            ele
+                                                                                        )
+                                                                                    ),
+                                                                                        router.push(
+                                                                                            {
+                                                                                                pathname:
+                                                                                                    "/search/" +
+                                                                                                    ele.VIN,
+                                                                                            }
+                                                                                        );
+                                                                                }}
+
                                                                             >
                                                                                 <img
                                                                                     className="img-fluid"
@@ -1605,10 +1691,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 }}
                                                                             >
                                                                                 <a
-                                                                                    href={
-                                                                                        "/search/" +
-                                                                                        ele.VIN
-                                                                                    }
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
                                                                                 >
                                                                                     View
                                                                                     Details
@@ -1649,4 +1745,5 @@ export default connect(mapStateToProps, {
     searchTerm,
     fetchMore,
     getMakes,
+    filterTabAction,
 })(Search);

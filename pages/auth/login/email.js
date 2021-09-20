@@ -71,8 +71,6 @@ const LogIn = ({ beginLogin }) => {
             // notify()
             setisLoading(true);
             seterror(null);
-            console.log(values);
-
             fetch(enviroment.BASE_URL + "auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -102,10 +100,10 @@ const LogIn = ({ beginLogin }) => {
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));
-                        
-                        router.push("/search");
-                        dispatch(logIn());
-                        
+                        setTimeout(function () {
+                            router.back();
+                            dispatch(logIn());
+                        }, 1500);
                     }
                     //save data to store
                     beginLogin({
@@ -204,7 +202,9 @@ const LogIn = ({ beginLogin }) => {
                                 </div>
                             </form>
                             <div className="text-center text-xs mt-10 text-blue-500">
-                                <Link href='/auth/login/forgotPassword'>Forgot Password</Link>
+                                <Link href="/auth/login/forgotPassword">
+                                    Forgot Password
+                                </Link>
                             </div>
                         </div>
                     </div>
