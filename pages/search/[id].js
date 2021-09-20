@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { carDetail, getCollection } from "../../redux/actions/carsAction";
+import {
+    carDetail,
+    carBuyNow,
+    getCollection,
+} from "../../redux/actions/carsAction";
 import Link from "next/link";
 import { enviroment } from "../../src/components/enviroment";
 import { ToastContainer, toast } from "react-toastify";
@@ -699,6 +703,43 @@ const CarDetails = ({
         }
     };
 
+    const onBuyNow = () => {
+        const bidObject = {
+            vin: vin,
+            link: "https://members.manheim.com/",
+            name: name,
+            site: "https://members.manheim.com/",
+            price: price,
+            year: year,
+            exterior_color: exteriorColor,
+            vehicle_type: vehicleType,
+            interior_color: interiorColor,
+            transmission: transmission,
+            odometer: odometer,
+            driveTrain: driveTrain,
+            doors: doors,
+            Model: model,
+            make: make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: bodyStyle,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: zip,
+            bidAmount: bidAmount,
+            owner: userId,
+            facilitationLocation: facilitationLocation,
+            Vehicle_location: vehicleLocation,
+            images: carImages,
+            trucking: truckingPrice || "",
+            shipping: "",
+        };
+        dispatch(carBuyNow(bidObject));
+    };
+
     function startTimer(e) {
         let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
         if (total >= 0) {
@@ -1260,25 +1301,49 @@ const CarDetails = ({
                             </div>
                             <div className="flex justify-center">
                                 {token ? (
-                                    <button
-                                        onClick={placeBid}
-                                        className={
-                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                            (!terms &&
-                                                `opacity-50 cursor-not-allowed`)
-                                        }
-                                        disabled={!terms}
-                                    >
-                                        {isLoading ? (
-                                            <ClipLoader
-                                                color="#fff"
-                                                size={20}
-                                                loading
-                                            />
+                                    <>
+                                        {carDetails.buyNowPrice.length >= 1 ? (
+                                            <button
+                                                onClick={onBuyNow}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Buy Now"
+                                                )}
+                                            </button>
                                         ) : (
-                                            "Place Bid"
+                                            <button
+                                                onClick={placeBid}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Place Bid"
+                                                )}
+                                            </button>
                                         )}
-                                    </button>
+                                    </>
                                 ) : (
                                     <Link href="/auth/login">
                                         <button
