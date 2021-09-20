@@ -67,6 +67,7 @@ const CarDetails = ({
         });
     const Ref = useRef(null);
     const [toggler, setToggler] = useState(false);
+    const [key, setkey] = useState(0);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -422,6 +423,7 @@ const CarDetails = ({
                 <FsLightbox
                     toggler={toggler}
                     sources={returnLargeimage()}
+                    type="image"
                 />
                 <img
                     onClick={() => {
