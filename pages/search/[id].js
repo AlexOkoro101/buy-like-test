@@ -50,7 +50,7 @@ const CarDetails = ({
             progress: undefined,
         });
     const placeBidSuccess = () =>
-        toast.success("Car added to collection", {
+        toast.success("Car added to your collection", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -60,7 +60,7 @@ const CarDetails = ({
             progress: undefined,
         });
     const placeBidInfo = () =>
-        toast.info("Fetching Car Info", {
+        toast.info("Bid already placed by you", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -71,6 +71,7 @@ const CarDetails = ({
         });
     const Ref = useRef(null);
     const [toggler, setToggler] = useState(false);
+    const [key, setkey] = useState(0);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
     const dispatch = useDispatch();
@@ -118,9 +119,9 @@ const CarDetails = ({
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
-    // let truckingPrice = null;
-    const [truckingPrice, settruckingPrice] = useState(null);
 
+    const [noZipValue, setnoZipValue] = useState(false);
+    const [truckingPrice, settruckingPrice] = useState(null)
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
         if (!userActive) {
@@ -188,6 +189,7 @@ const CarDetails = ({
         let initialZip = null;
 
         if (carDetails) {
+            console.log(carDetails)
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -232,19 +234,96 @@ const CarDetails = ({
         displaySmall();
     }, [carDetails, cardD]);
 
+
     const getTrucking = {
         packingCode: `${getZipLocation()}`,
         packingName: "",
     }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
-    const fetchTrucking = () => {
-        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-            method: "POST",
+  const fetchLocalTrucking = () => {
+        if(getZipLocation() === "") {
+            setnoZipValue(true)
+            return;
+        }
+
+        fetch(enviroment.BASE_URL + 'truck/code/' + getZipLocation(), {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        .then((response) => {
+            console.log("local trucking res", response)
+            return response.json()
+        })
+        .then((data) => {
+            console.log("local trucking", data)
+            if (!data.data) {
+                fetchScrapperTrucking()
+            } else {
+                settruckingPrice(data.data.raw[1])
+
+            }
+            // console.log("local trucking price", truckingPrice)
+
+        })
+
+    }
+
+    
+    const fetchScrapperTrucking = () => {
+        if(getZipLocation() === "") {
+            setnoZipValue(true)
+            return;
+        }
+
+        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(getTrucking),
         })
+
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            if (data.status) {
+                createLocalTrucking(data)
+            }
+            console.log("scrapper trucking", data)
+            settruckingPrice(data.raw[1])
+            console.log("scrapper trucking price", truckingPrice)
+
+        })
+
+    }
+    const createLocalTrucking = (data) => {
+        const localTruckingObject = {
+            code:`${getZipLocation()}`,
+            location:"",
+            raw: [
+                    `${data.raw[0]}`,
+                    `${data.raw[1]}`
+                ]
+        }
+
+        fetch(enviroment.BASE_URL + "truck", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(localTruckingObject),
+            redirect: 'follow'
+        })
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
+    useEffect(() => {
+        if(typeof getZipLocation() !== 'undefined') {
+            console.log("zip", getZipLocation())
+            fetchLocalTrucking()
+
             .then((response) => {
                 return response.json();
             })
@@ -254,12 +333,7 @@ const CarDetails = ({
                 console.log("trucking price", truckingPrice);
             });
     };
-    useEffect(() => {
-        if (typeof getZipLocation() !== "undefined") {
-            // console.log("running trucking function...")
-            fetchTrucking();
-        }
-    }, []);
+
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -357,7 +431,12 @@ const CarDetails = ({
     const displayLargeimage = () => {
         return (
             <>
-                <FsLightbox toggler={toggler} sources={returnLargeimage()} />
+                <FsLightbox
+                    toggler={toggler}
+                    sources={returnLargeimage()}
+                    type="image"
+                />
+
                 <img
                     onClick={() => {
                         setToggler(!toggler);
@@ -454,10 +533,6 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-        // if(truckingPrice === null) {
-        //     placeBidInfo()
-        //     return;
-        // }
         async function addCar() {
             seterror(null);
             setisLoading(true);
@@ -505,76 +580,22 @@ const CarDetails = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: "follow",
+                redirect: 'follow'
             })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log("bid response", response);
-                    if (!response.ok) {
-                        toastError();
-                        // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText);
-                        placeBidSuccess();
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    console.log(response);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false); // console.log(response)
-                    if (!response.ok) {
-                        toastError(); // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false); // console.log(response)
-                    if (!response.ok) {
-                        toastError(); // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search"); // dispatch(getCollection(userId))
-                    }
-                })
-                .then((response) => {
-                    setisLoading(false);
-                    if (!response.ok) {
-                        toastError();
-                        throw Error("Could not create collection");
-                    } else {
-                        setmessage(response.statusText);
-                        toastSuccess();
-                        router.push("/search");
-                    }
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
+            .then(response => {
+                setisLoading(false)
+                console.log("bid response", response)
+                if (!response.ok) {
+                    placeBidInfo()
+                } else {
+                    setmessage(response.statusText)
+                    placeBidSuccess();
+                }
+            }) 
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
         }
 
         async function placeItem() {
@@ -1018,28 +1039,36 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Trucking
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice
-                                                            ? `${truckingPrice}`
-                                                            : "Loading..."}
-                                                        {/* ${truckingPrice} */}
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "truck",
-                                                                        950
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
+
+                                                    {noZipValue ? (
+                                                        <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                            Contact Support
+                                                        </td>
+                                                    ) : (
+                                                        <>
+                                                            <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                                {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <label className="detail">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="focus:outline-none detail self-center"
+                                                                        onChange={(e) =>
+                                                                            setFees(
+                                                                                e,
+                                                                                "truck",
+                                                                                950
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span className="detail"></span>
+                                                                </label>
+                                                            </td>
+
+                                                        </>
+                                                    )}
+
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -1292,7 +1321,7 @@ const CarDetails = ({
                                         <span className="detail"></span>
                                     </label>
                                     <label className="font-11 sec-black ml-1.5">
-                                        I agree with
+                                        I agree with {""}
                                         <span className="primary-blue">
                                             terms and conditions
                                         </span>
