@@ -21,6 +21,7 @@ import {
     FETCHING_COLLECTION_SUCCESS,
     LOGIN_FAILED,
     DETAIL,
+    BUY_NOW,
 } from "../types";
 //
 const initialState = {
@@ -41,6 +42,7 @@ const Cars = (state = initialState, action) => {
         case FETCHING_CARS:
         case FETCHING_MAKE:
         case FETCHING_MODEL:
+        case BUY_NOW:
         case FETCHING_COLLECTION:
             return {
                 ...state,
@@ -93,7 +95,7 @@ const Cars = (state = initialState, action) => {
                 carCollection: action.payload,
                 loading: false,
                 error: {},
-            };    
+            };
 
         case SEARCHING_FAILED:
         case FETCHING_FAILED:
