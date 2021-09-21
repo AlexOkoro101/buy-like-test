@@ -9,6 +9,26 @@ import { getCollection } from "../../../redux/actions/carsAction";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { usePaystackPayment } from 'react-paystack';
+
+const config = {
+    reference: (new Date()).getTime().toString(),
+    email: "user@example.com",
+    amount: 20000,
+    publicKey: 'pk_test_d23fcbca6c66668c6e6dbdc5344f28cbcab95e7a',
+};
+
+// you can call this function anything
+const onSuccess = (reference) => {
+  // Implementation for whatever you want to do with reference and after success call.
+  console.log(reference);
+};
+
+// you can call this function anything
+const onClose = () => {
+  // implementation for  whatever you want to do when the Paystack dialog closed.
+  console.log('closed')
+}
 
 const MyCollection = ({
     loading,
@@ -22,6 +42,7 @@ const MyCollection = ({
     const [error, seterror] = useState(null);
     const [message, setmessage] = useState(null);
     const newCollection = useRef();
+    const initializePayment = usePaystackPayment(config);
 
     const toastError = () =>
         toast.error(`${error ? error : "Could not create"}`, {
@@ -142,43 +163,45 @@ const MyCollection = ({
                             role="menu"
                         >
                             {carCollection?.map((collection) => (
-                                <Link
-                                    href={
-                                        "/profile/my-collection/" +
-                                        collection?._id
-                                    }
+                                <div
                                     key={collection?._id}
                                 >
-                                    <div className="px-20 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
+                                    <div className="border-gray-100 border mb-3 px-20 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                                         <>
-                                            <div className="flex flex-col">
-                                                <div className="mb-5">
-                                                    <h4 className="text-sm font-medium blue-text uppercase">
-                                                        {collection?.name}
-                                                    </h4>
-                                                    <h6 className="text-xs font-normal blue-text">
-                                                        {
-                                                            collection?.vehicles
-                                                                .length
-                                                        }{" "}
-                                                        cars selected
-                                                    </h6>
+                                            <Link  href={"/profile/my-collection/" + collection?._id}>
+                                                <div className="flex flex-1 flex-col">
+                                                    <div className="mb-5">
+                                                        <h4 className="text-sm font-medium blue-text uppercase">
+                                                            {collection?.name}
+                                                        </h4>
+                                                        <h6 className="text-xs font-normal blue-text">
+                                                            {
+                                                                collection?.vehicles
+                                                                    .length
+                                                            }{" "}
+                                                            cars selected
+                                                        </h6>
+                                                    </div>
+                                                    <div className="flex py-2">
+                                                        {collection?.vehicles?.map(
+                                                            (vehicle) => (
+                                                                <img
+                                                                    src={
+                                                                        vehicle
+                                                                            ?.images[0]
+                                                                            ?.image_smallUrl
+                                                                    }
+                                                                    alt="car"
+                                                                    className="tiny-car-card"
+                                                                />
+                                                            )
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div className="flex py-2">
-                                                    {collection?.vehicles?.map(
-                                                        (vehicle) => (
-                                                            <img
-                                                                src={
-                                                                    vehicle
-                                                                        ?.images[0]
-                                                                        ?.image_smallUrl
-                                                                }
-                                                                alt="car"
-                                                                className="tiny-car-card"
-                                                            />
-                                                        )
-                                                    )}
-                                                </div>
+
+                                            </Link>
+                                            <div>
+                                                <button onClick={() => initializePayment(onSuccess, onClose)} className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3">Make Deposit</button>
                                             </div>
                                             {/* <div className="flex flex-col mx-auxo items-end">
                                             <h4 className="text-base font-normal gray-text">
@@ -190,7 +213,7 @@ const MyCollection = ({
                                         </div> */}
                                         </>
                                     </div>
-                                </Link>
+                                </div>
                             ))}
                         </div>
                     </>
