@@ -11,8 +11,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { usePaystackPayment } from 'react-paystack';
 var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
+
+
+
 //
 //
 
@@ -25,7 +29,7 @@ const CarDetails = ({
     carCollection,
     res, // const [article, setArticle] =  useState(props.res.data)
 }) => {
-    const toastError = () =>
+    const buyNowError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
             autoClose: 5000,
@@ -35,8 +39,18 @@ const CarDetails = ({
             draggable: true,
             progress: undefined,
         });
-    const toastSuccess = () =>
-        toast.success(`${message ? message : "Success"}`, {
+    const buyNowInfo = () =>
+        toast.error("Car already bought by you", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });    
+    const buyNowSuccess = () =>
+        toast.success("Success", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -65,6 +79,43 @@ const CarDetails = ({
             draggable: true,
             progress: undefined,
         });
+    const placeBidError = () =>
+        toast.error(`${error ? error : "Could not perform operation"}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });  
+        
+    const [userEmail, setuserEmail] = useState(null)
+    const [amount, setAmount] = useState(0);
+    const referenceNumber = () => {
+        return 'bld' + Math.floor(Math.random() * 1000000000 + 1);
+    };
+    const config = {
+        reference: referenceNumber(),
+        email: `${userEmail}`,
+        amount: /*amount * 100*/ 100000,
+        publicKey: 'pk_test_d23fcbca6c66668c6e6dbdc5344f28cbcab95e7a',
+    };
+    
+    // you can call this function anything
+    const onSuccess = (reference) => {
+        // Implementation for whatever you want to do with reference and after success call.
+        console.log(reference);
+    };
+    
+    // you can call this function anything
+    const onClose = () => {
+        // implementation for  whatever you want to do when the Paystack dialog closed.
+        console.log('closed')
+    }
+
+
+    const initializePayment = usePaystackPayment(config);     
     const Ref = useRef(null);
     const [toggler, setToggler] = useState(false);
     const [key, setkey] = useState(0);
@@ -80,7 +131,6 @@ const CarDetails = ({
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState();
     const [hours, sethours] = useState(0);
-    const [amount, setAmount] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
     const [car, setCar] = useState(res);
@@ -117,6 +167,7 @@ const CarDetails = ({
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
     const [truckingPrice, settruckingPrice] = useState(null)
+    const [buyNowPrice, setbuyNowPrice] = useState(null)
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -125,6 +176,7 @@ const CarDetails = ({
             return null;
         }
         const item = JSON.parse(userActive);
+        console.log(item)
         const now = new Date();
         if (now.getTime() > item.expiry) {
             // If the item is expired, delete the item from storage
@@ -135,6 +187,7 @@ const CarDetails = ({
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
+        setuserEmail(item?.email)
     }; //Get Data from local Storage
 
     useEffect(() => {
@@ -214,6 +267,9 @@ const CarDetails = ({
         setcarImages(carDetails.images);
         getZipLocation();
 
+
+        setbuyNowPrice(carDetails.buyNowPrice)
+
         let array = [];
         if (cars) {
             cars.data?.map((ele) => {
@@ -264,6 +320,7 @@ const CarDetails = ({
         })
 
     }
+    
 
     
     const fetchScrapperTrucking = () => {
@@ -692,7 +749,6 @@ const CarDetails = ({
                 Zip:zip,
                 bidAmount:bidAmount,
                 owner:userId,
-                collection: await placeItem(), 
                 facilitationLocation:facilitationLocation,
                 Vehicle_location:vehicleLocation,
                 images:carImages,
@@ -701,8 +757,8 @@ const CarDetails = ({
             }
             console.log("bid object", bidObject)
 
-            //Add car to collection
-            fetch(enviroment.BASE_URL + "bids/add-bid", {
+            //Add car to buy now
+            fetch(enviroment.BASE_URL + "bids/buy-now", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -893,8 +949,6 @@ const CarDetails = ({
     //
     //
 
-
-    
 
     return (
         <div>
@@ -1430,7 +1484,10 @@ const CarDetails = ({
                                     <>
                                     {carDetails?.buyNowPrice?.length >= 1 ? (
                                         <button
-                                            onClick={buyNowFunction}
+                                            onClick={() => {
+                                                initializePayment(onSuccess, onClose)
+                                                console.log(referenceNumber())
+                                            }}
                                             className={
                                                 `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
                                                 (!terms &&
