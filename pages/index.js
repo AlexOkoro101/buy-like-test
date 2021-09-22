@@ -22,10 +22,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
     useEffect(() => {
         if (isComponentFullyMounted === false) {
-            console.log(window.Waypoint);
             return;
         } else {
-            console.log(window.Waypoint);
             if (typeof window !== "undefined") {
                 // Easy Buy Animation here
                 var easyBuyTimeline = anime.timeline({
@@ -228,7 +226,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const [carModels, setcarModels] = useState([]);
 
     const [years, setYears] = useState(() => {
-        let year = 2000;
+        let year = 2005;
         const currentYear = new Date().getFullYear();
         let validVehicleYears = [];
         while (year <= currentYear) {
@@ -245,12 +243,14 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             getCars();
             getMakes();
         }
-        if (cars.length) {
+        if (cars.length > 0) {
+            console.log("two");
             setImages(cars);
         }
         if (makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
+            console.log("three");
         }
     }, [cars]);
     const handleMake = (e) => {
@@ -459,6 +459,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             <option value="" selected disabled>
                                                 Select
                                             </option>
+                                            <option value="">All</option>
                                             {carModels.map((x, id) => (
                                                 <option
                                                     key={id}
@@ -479,6 +480,10 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         {...register("year")}
                                         className="form__control px-1.5 w-full font-13 focus:outline-none "
                                     >
+                                        <option value="" selected disabled>
+                                            Select
+                                        </option>
+                                        <option value="">All</option>
                                         {years.map((x) => (
                                             <option key={x} value={x}>
                                                 {x}

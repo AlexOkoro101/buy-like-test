@@ -8,10 +8,6 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
-
-
 const CollectionDetails = () => {
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -34,68 +30,61 @@ const CollectionDetails = () => {
             progress: undefined,
         });
 
+    const [collection, setcollection] = useState(null);
 
+    const [isLoading, setisLoading] = useState(true);
+    const [error, seterror] = useState(null);
+    const [message, setmessage] = useState(null);
+    const [editCollectionId, seteditCollectionId] = useState(null);
 
-
-    const [collection, setcollection] = useState(null)
-
-    const [isLoading, setisLoading] = useState(true)
-    const [error, seterror] = useState(null)
-    const [message, setmessage] = useState(null)
-    const [editCollectionId, seteditCollectionId] = useState(null)
-
-    const router = useRouter()
-    const collectionId = router.query.collectionId
+    const router = useRouter();
+    const collectionId = router.query.collectionId;
 
     useEffect(() => {
         fetch(enviroment.BASE_URL + "collections/" + collectionId, {
-            method: 'GET',
-            redirect: 'follow'
+            method: "GET",
+            redirect: "follow",
         })
-        .then(response => {
-            setisLoading(false)
-            return response.text()
-        })
-        .then(result => {
-            if(result) {
-                if (Object.entries(result).length >= 1) {
-                    const formatCollection = JSON.parse(result);
-                    // console.log("formated", formatCollection.error)
-                    setcollection(formatCollection)
-                    console.log("formatted", collection)
+            .then((response) => {
+                setisLoading(false);
+                return response.text();
+            })
+            .then((result) => {
+                if (result) {
+                    if (Object.entries(result).length >= 1) {
+                        const formatCollection = JSON.parse(result);
+                        console.log("formated", formatCollection)
+                        setcollection(formatCollection);
+                    }
                 }
-            }
-        })
-        .catch(error => console.log('error', error));
-        
-    }, [collectionId, isLoading])
+            })
+            .catch((error) => console.log("error", error));
+    }, [collectionId, isLoading]);
 
     const removeBid = (id) => {
-        setisLoading(true)
-        seterror(null)
-        setmessage(null)
+        setisLoading(true);
+        seterror(null);
+        setmessage(null);
 
         fetch(enviroment.BASE_URL + "bids/remove-bid/" + id, {
-            method: 'GET',
-            redirect: 'follow'
+            method: "GET",
+            redirect: "follow",
         })
-        .then(response => {
-            if (!response.ok) {
-                toastError()
-                // throw Error("Could not create collection")
-            } else {
-                setmessage(response.statusText)
-                toastSuccess();
-            }
-            setisLoading(false)
-            return response.text()
+            .then((response) => {
+                if (!response.ok) {
+                    toastError();
+                    // throw Error("Could not create collection")
+                } else {
+                    setmessage(response.statusText);
+                    toastSuccess();
+                }
+                setisLoading(false);
+                return response.text();
+            })
+            .then((result) => console.log(result))
+            .catch((error) => console.log("error", error));
+    };
 
-        })
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-    }
-    
-    
     return (
         <div>
             <Meta></Meta>
@@ -117,26 +106,35 @@ const CollectionDetails = () => {
                 )}
 
                 {!collection?.error && (
-
                     <div className="flex font-11 mt-10">
                         <div className="side-card mx-20 px-5 py-5 space-y-4">
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Trucking</h4>
+                                <h4 className="text-xs font-semibold">
+                                    Trucking
+                                </h4>
                                 <p className="text-xs font-normal">$300</p>
                             </div>
 
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Shipping</h4>
+                                <h4 className="text-xs font-semibold">
+                                    Shipping
+                                </h4>
                                 <p className="text-xs font-normal">$950</p>
                             </div>
 
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Clearing</h4>
-                                <p className="text-xs font-normal">$2,000,000</p>
+                                <h4 className="text-xs font-semibold">
+                                    Clearing
+                                </h4>
+                                <p className="text-xs font-normal">
+                                    $2,000,000
+                                </p>
                             </div>
 
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Trucking</h4>
+                                <h4 className="text-xs font-semibold">
+                                    Trucking
+                                </h4>
                                 <p className="text-xs font-normal">$400</p>
                             </div>
 
@@ -144,37 +142,46 @@ const CollectionDetails = () => {
 
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">Total</h4>
-                                <p className="text-xs font-medium">$46,000,000</p>
+                                <p className="text-xs font-medium">
+                                    $46,000,000
+                                </p>
                             </div>
 
                             <div className="border"></div>
 
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Deposit</h4>
+                                <h4 className="text-xs font-semibold">
+                                    Deposit
+                                </h4>
                                 <p className="text-xs font-medium">$1,000</p>
                             </div>
 
                             <div className="border"></div>
 
                             <div className="flex justify-between">
-                                <h4 className="text-xs font-semibold">Balance</h4>
-                                <p className="text-xs font-medium">$45,530,000</p>
+                                <h4 className="text-xs font-semibold">
+                                    Balance
+                                </h4>
+                                <p className="text-xs font-medium">
+                                    $45,530,000
+                                </p>
                             </div>
 
                             <h4 className="font-medium gray-text">
-                                You will be directed to make the rest of the payment
-                                after a bid is won for you. 
+                                You will be directed to make the rest of the
+                                payment after a bid is won for you.
                             </h4>
                         </div>
 
                         <section className="grid gap-y-4 mx-auto mb-10 mr-20">
                             {Collection?.data?.vehicles.length <= 0 && (
-                                <div>
-                                    No cars to show
-                                </div>
+                                <div>No cars to show</div>
                             )}
                             {collection?.data?.vehicles?.map((vehicle) => (
-                                <div key={vehicle._id} className="bid-card flex py-3 px-3">
+                                <div
+                                    key={vehicle._id}
+                                    className="bid-card flex py-3 px-3"
+                                >
                                     <img
                                         src={vehicle.images[0]?.image_largeUrl}
                                         alt="benz"
@@ -193,7 +200,9 @@ const CollectionDetails = () => {
                                                         className="w-1.5 h-2 mt-1 mr-1"
                                                     />
                                                     <p className="text-xs font-normal">
-                                                        {vehicle.Vehicle_location}
+                                                        {
+                                                            vehicle.Vehicle_location
+                                                        }
                                                     </p>
                                                 </div>
                                                 <div className="flex mt-0.5">
@@ -215,9 +224,15 @@ const CollectionDetails = () => {
                                             <div className="flex justify-between mb-1">
                                                 <h3 className="font-medium font-xs primary-blue uppercase">
                                                     Awaiting bid - April 22,2021
+                                                    
                                                 </h3>
                                                 <h3 className="font-medium font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
-                                                    <Link href={"/search/" + vehicle._id}>
+                                                    <Link
+                                                        href={
+                                                            "/search/" +
+                                                            vehicle._id
+                                                        }
+                                                    >
                                                         view details
                                                     </Link>
                                                 </h3>
@@ -247,7 +262,14 @@ const CollectionDetails = () => {
                                                         alt="bin"
                                                         className="w-3 h-3 mr-0.5 mt-0.5 group-hover:text-red-500"
                                                     />
-                                                    <h4 className="font-normal font-sm gray-text group-hover:text-red-500" onClick={() => removeBid(vehicle._id)}>
+                                                    <h4
+                                                        className="font-normal font-sm gray-text group-hover:text-red-500"
+                                                        onClick={() =>
+                                                            removeBid(
+                                                                vehicle._id
+                                                            )
+                                                        }
+                                                    >
                                                         Remove
                                                     </h4>
                                                 </div>
@@ -255,15 +277,11 @@ const CollectionDetails = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             ))}
-
                         </section>
                     </div>
                 )}
-
             </main>
-           
         </div>
     );
 };
