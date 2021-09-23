@@ -242,7 +242,7 @@ const CarDetails = ({
         let initialZip = null;
 
         if (carDetails) {
-            console.log(carDetails)
+            console.log(carDetails);
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -303,13 +303,9 @@ const CarDetails = ({
             return;
         }
 
-        fetch(enviroment.BASE_URL + 'truck/code/' + getZipLocation(), {
-            method: 'GET',
-            redirect: 'follow'
-        })
-        .then((response) => {
-            console.log("local trucking res", response)
-            return response.json()
+        fetch(enviroment.BASE_URL + "truck/code/" + getZipLocation(), {
+            method: "GET",
+            redirect: "follow",
         })
         .then((data) => {
             console.log("local trucking", data)
@@ -326,15 +322,17 @@ const CarDetails = ({
     }
     
 
-    
     const fetchScrapperTrucking = () => {
-        if(getZipLocation() === "") {
-            setnoZipValue(true)
+        const getTrucking = {
+            packingCode: `${getZipLocation()}`,
+            packingName: "",
+        };
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
             return;
         }
-
-        fetch('https://buylink-shiping.herokuapp.com/api/ng-trucking', {
-            method: 'POST',
+        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -356,21 +354,18 @@ const CarDetails = ({
     }
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
-            code:`${getZipLocation()}`,
-            location:"",
-            raw: [
-                    `${data.raw[0]}`,
-                    `${data.raw[1]}`
-                ]
-        }
+            code: `${getZipLocation()}`,
+            location: "",
+            raw: [`${data.raw[0]}`, `${data.raw[1]}`],
+        };
 
         fetch(enviroment.BASE_URL + "truck", {
-            method: 'POST',
+            method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(localTruckingObject),
-            redirect: 'follow'
+            redirect: "follow",
         })
         .then(response => response.text())
         .then(result => console.log(result))
@@ -498,7 +493,7 @@ const CarDetails = ({
                 />
             </>
         );
-    }; // // //
+    };
 
     const getSecondRate = () => {
         let key = "a57db18c0b5cc8ad31a650a1e456712f";
@@ -631,22 +626,22 @@ const CarDetails = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(bidObject),
-                redirect: 'follow'
+                redirect: "follow",
             })
-            .then(response => {
-                setisLoading(false)
-                console.log("bid response", response)
-                if (!response.ok) {
-                    placeBidInfo()
-                } else {
-                    setmessage(response.statusText)
-                    placeBidSuccess();
-                }
-            }) 
-            .catch((error) => {
-                seterror(error);
-                console.log("error", error);
-            });
+                .then((response) => {
+                    setisLoading(false);
+                    console.log("bid response", response);
+                    if (!response.ok) {
+                        placeBidInfo();
+                    } else {
+                        setmessage(response.statusText);
+                        placeBidSuccess();
+                    }
+                })
+                .catch((error) => {
+                    seterror(error);
+                    console.log("error", error);
+                });
         }
 
         async function placeItem() {
@@ -1210,14 +1205,18 @@ const CarDetails = ({
                                                     ) : (
                                                         <>
                                                             <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                                {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                                {truckingPrice
+                                                                    ? `${truckingPrice}`
+                                                                    : "Loading..."}
                                                             </td>
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
                                                                         type="checkbox"
                                                                         className="focus:outline-none detail self-center"
-                                                                        onChange={(e) =>
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
                                                                             setFees(
                                                                                 e,
                                                                                 "truck",
@@ -1228,7 +1227,6 @@ const CarDetails = ({
                                                                     <span className="detail"></span>
                                                                 </label>
                                                             </td>
-
                                                         </>
                                                     )}
                                                 </tr>
