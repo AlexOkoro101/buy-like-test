@@ -97,6 +97,8 @@ const LogIn = ({ beginLogin }) => {
                             userToken: data.data._token,
                             userId: data.data.user._id,
                             userName: data.data.user.profile.firstName,
+                            phone: data.data.user.profile.phoneNumber,
+                            email: data.data.user.email,
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));
