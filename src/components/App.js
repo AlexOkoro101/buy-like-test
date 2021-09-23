@@ -20,6 +20,8 @@ const App = ({ children }) => {
                     dispatch(logOut());
                     router.push("/auth/login");
                 }
+
+
             }
 
             setLoggedIn(true);
@@ -28,6 +30,12 @@ const App = ({ children }) => {
             if (token) {
                 dispatch(logIn());
                 return router.back();
+            }
+        }
+        if (router.pathname.includes("profile")) {
+            if (!token) {
+                dispatch(logOut());
+                router.push("/auth/login");
             }
         }
     };
