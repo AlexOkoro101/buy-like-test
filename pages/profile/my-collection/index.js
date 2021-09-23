@@ -19,6 +19,9 @@ const MyCollection = ({
 }) => {
          
     const [userEmail, setuserEmail] = useState(null)
+    const [userPhone, setuserPhone] = useState(null)
+    const [userName, setuserName] = useState(null)
+
     const [amount, setAmount] = useState(0);
     const referenceNumber = () => {
         return 'bld' + Math.floor(Math.random() * 1000000000 + 1);
@@ -27,13 +30,14 @@ const MyCollection = ({
         reference: referenceNumber(),
         email: `${userEmail}`,
         amount: 100000,
-        publicKey: 'pk_test_d23fcbca6c66668c6e6dbdc5344f28cbcab95e7a',
+        publicKey: 'pk_test_c9e721436fd837814692c450db204c33326ff6d1',
     };
     
     // you can call this function anything
     const onSuccess = (reference) => {
       // Implementation for whatever you want to do with reference and after success call.
       console.log(reference);
+      verifyPaystackPayment(reference.trxref)
     };
     
     // you can call this function anything
@@ -41,9 +45,11 @@ const MyCollection = ({
       // implementation for  whatever you want to do when the Paystack dialog closed.
       console.log('closed')
     }
+    const collectionID = (collectionID) => {
+        console.log("Im here", collectionID)
+    }
     const [id, setId] = useState(null);
     const [carCollection, setcarCollection] = useState([]);
-    const collectionRef = useRef(null);
     const [isLoading, setisLoading] = useState(false);
     const [error, seterror] = useState(null);
     const [message, setmessage] = useState(null);
@@ -74,6 +80,32 @@ const MyCollection = ({
             progress: undefined,
         });
 
+    const placeBidError = () =>
+        toast.error("Could not perform transaction", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });  
+    const placeBidSuccess = () =>
+        toast.success("Payment Successful", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });    
+
+    var nairaFormatter = new Intl.NumberFormat('en-NG', {
+        style: 'currency',
+        currency: 'NGN',        
+    });    
+
     useEffect(() => {
         const getUserId = () => {
             const userActive = localStorage.getItem("user");
@@ -85,6 +117,8 @@ const MyCollection = ({
             const item = JSON.parse(userActive);
             setId(item?.userId);
             setuserEmail(item?.email)
+            setuserPhone(item?.phone)
+            setuserName(item?.userName)
         };
         getUserId();
     }, [id]);
@@ -195,6 +229,78 @@ const MyCollection = ({
             setplaceBidView(false)
         }
     }
+    const verifyPaystackPayment = (ref) => {
+        fetch(enviroment.BASE_URL + 'transactions/initialize/verify/' + ref, {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        .then(res => {
+            console.log(res)
+            return res.text()
+        })
+        .then(data => {
+            console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    const formatData = JSON.parse(data); 
+                    // setcollection(formatData.data);
+                    console.log("callback", formatData)
+
+                    if (formatData.data.status) {
+                        placeBidSuccess()
+                    }
+                    else {
+                        placeBidError()
+                    }
+                }
+            }
+        })
+        .catch(error => console.log('payment error', error));
+    }
+
+    const frontendPayment = (collectionID) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            vin: "",
+            number: `${userPhone}`,
+            fullname: `${userName}`,
+            email: `${userEmail}`,
+            buyNow: false,
+            username: "",
+            collection: `${collectionID}`,
+            owner: `${id}`,
+            vehicle: "61417e66e48f1a073799ba99",
+            bid: "",
+            amount: "1000",
+            amountBalance: "1000",
+            reference: "",
+            currency: "",
+            metadata: "",
+            balance: "",
+            status: false,
+            statusTrans: ""
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log("front end payment", result))
+        .catch(error => console.log('error', error));
+    }
+
+    const initializePaystack = (collectionID) => {
+        initializePayment(onSuccess, onClose)
+        frontendPayment(collectionID)
+    }
 
     return (
         <div>
@@ -281,7 +387,7 @@ const MyCollection = ({
 
                                                 </Link>
                                                 <div>
-                                                    <button onClick={() => initializePayment(onSuccess, onClose)} className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3">Make Deposit</button>
+                                                    <button onClick={() => initializePaystack(collection?._id)} className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3">Make Deposit</button>
                                                 </div>
                                                 {/* <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
@@ -304,13 +410,13 @@ const MyCollection = ({
                         {buyNowCars.length <= 0 && (
                             <div className>No cars to show</div>
                         )}
-                        {buyNowCars?.data?.vehicle?.map((vehicle) => (
+                        {buyNowCars?.map((vehicle) => (
                             <div
                                 key={vehicle._id}
                                 className="bid-card flex py-3 px-3"
                             >
                                 <img
-                                    src={vehicle.images[0]?.image_largeUrl}
+                                    src={vehicle.vehicle?.images[0]?.image_largeUrl}
                                     alt="benz"
                                     className="rounded-md w-64 h-36 flex-no-shrink mr-4"
                                 />
@@ -318,7 +424,7 @@ const MyCollection = ({
                                     <div className="flex justify-between">
                                         <div>
                                             <h4 className="text-xs font-normal">
-                                                {vehicle.name}
+                                                {vehicle.vehicle?.name}
                                             </h4>
                                             <div className="flex mt-0.5">
                                                 <img
@@ -328,13 +434,13 @@ const MyCollection = ({
                                                 />
                                                 <p className="text-xs font-normal">
                                                     {
-                                                        vehicle.Vehicle_location
+                                                        vehicle.vehicle?.Vehicle_location
                                                     }
                                                 </p>
                                             </div>
                                             <div className="flex mt-0.5">
                                                 <h4 className="font-normal font-sm mr-5">
-                                                    {vehicle.year}
+                                                    {vehicle.vehicle?.year}
                                                 </h4>
                                                 <h4 className="font-normal font-sm">
                                                     205,456 miles
@@ -343,21 +449,17 @@ const MyCollection = ({
                                         </div>
                                         <div className="flex flex-col mx-auxo items-end">
                                             <h4 className="text-base font-normal gray-text">
-                                                ${vehicle.bidAmount}
+                                            {nairaFormatter.format(vehicle.vehicle?.bidAmount)}
                                             </h4>
                                         </div>
                                     </div>
                                     <div>
                                         <div className="flex justify-between mb-1">
-                                            <h3 className="font-medium font-xs primary-blue uppercase">
-                                                Awaiting bid - April 22,2021
-                                                
-                                            </h3>
-                                            <h3 className="font-medium font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
+                                            <h3 style={{fontSize: "12px"}} className="font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
                                                 <Link
                                                     href={
-                                                        "/search/" +
-                                                        vehicle._id
+                                                        "/profile/my-collection/bid/" +
+                                                        vehicle.vehicle?.vin
                                                     }
                                                 >
                                                     view details
@@ -383,7 +485,7 @@ const MyCollection = ({
                                                     non-accident
                                                 </p>
                                             </div>
-                                            <div className="flex cursor-pointer group">
+                                            {/* <div className="flex cursor-pointer group">
                                                 <img
                                                     src="../../assets/img/bin.svg"
                                                     alt="bin"
@@ -399,7 +501,7 @@ const MyCollection = ({
                                                 >
                                                     Remove
                                                 </h4>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 </div>

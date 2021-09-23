@@ -8,5 +8,7 @@ module.exports = {
     extend: {},
     opacity: ({ after }) => after(['disabled'])
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide')
+  ],
 }

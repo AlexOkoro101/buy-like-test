@@ -91,6 +91,7 @@ const CarDetails = ({
         });  
         
     const [userEmail, setuserEmail] = useState(null)
+    const [userPhone, setuserPhone] = useState(null)
     const [amount, setAmount] = useState(0);
     const referenceNumber = () => {
         return 'bld' + Math.floor(Math.random() * 1000000000 + 1);
@@ -99,13 +100,15 @@ const CarDetails = ({
         reference: referenceNumber(),
         email: `${userEmail}`,
         amount: /*amount * 100*/ 100000,
-        publicKey: 'pk_test_d23fcbca6c66668c6e6dbdc5344f28cbcab95e7a',
+        publicKey: 'pk_test_c9e721436fd837814692c450db204c33326ff6d1',
     };
     
     // you can call this function anything
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
         console.log(reference);
+        verifyPaystackPayment(reference.trxref)
+
     };
     
     // you can call this function anything
@@ -188,6 +191,7 @@ const CarDetails = ({
         setuserName(item?.userName);
         setuserId(item?.userId);
         setuserEmail(item?.email)
+        setuserPhone(item?.phone)
     }; //Get Data from local Storage
 
     useEffect(() => {
@@ -261,7 +265,7 @@ const CarDetails = ({
         setmake(carDetails.make);
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
+        setbidAmount(carDetails.buyNowPrice * naira);
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -718,10 +722,6 @@ const CarDetails = ({
     };
     const buyNowFunction = () => {
 
-        async function addCar() {
-            seterror(null)
-            setisLoading(true)
-
             const bidObject =  {
                 vin:vin,
                 link:"https://members.manheim.com/",
@@ -747,6 +747,7 @@ const CarDetails = ({
                 sellerCity:"",
                 description:"",
                 Zip:zip,
+                tilteImage:"",
                 bidAmount:bidAmount,
                 owner:userId,
                 facilitationLocation:facilitationLocation,
@@ -770,89 +771,97 @@ const CarDetails = ({
                 setisLoading(false)
                 console.log("bid response", response)
                 if (!response.ok) {
-                    placeBidInfo()
+                    buyNowInfo()
                 } else {
                     setmessage(response.statusText)
-                    placeBidSuccess();
+                    buyNowSuccess();
+                    hideCar(vin)
+                    router.push('/transaction/' + vin)
                 }
             }) 
             .catch((error) => {
                 seterror(error);
                 console.log("error", error);
             });
-        }
+        
 
-        async function placeItem() {
-            
-            let availableCollection = getAvailableCollection();
+    };
 
-            if (!availableCollection) {
-                availableCollection = await createCollection();
-            }
+    const hideCar = (vin) => {
+        fetch("https://buylikepoint.us/bid.php?apiKey=Switch!2020&vin=" + vin, {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
 
-            return availableCollection;
-        }
+    const verifyPaystackPayment = (ref) => {
+        fetch(enviroment.BASE_URL + 'transactions/initialize/verify/' + ref, {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        .then(res => {
+            console.log(res)
+            return res.text()
+        })
+        .then(data => {
+            console.log(data)
+            if (data) {
+                //  console.log(data.data)
+                if (Object.entries(data).length >= 1) {
+                    const formatData = JSON.parse(data); 
+                    // setcollection(formatData.data);
+                    console.log("callback", formatData)
 
-        function getCollections() {
-            // console.log("get collection", collection)
-            return collection || [];
-        }
-
-        function getAvailableCollection() {
-            // Replace getCollections
-            const replaceCollections = getCollections();
-
-            let filterCollection = null;
-
-            for (let index = 0; index < replaceCollections.length; index++) {
-                const currentCollection = replaceCollections[index];
-                if (currentCollection.vehicles.length < 10) {
-                    filterCollection = currentCollection._id;
-                    break;
+                    if (formatData.data.status) {
+                        buyNowFunction()
+                        frontendPayment()
+                    }
                 }
             }
+        })
+        .catch(error => console.log('payment error', error));
+    }
 
-            return filterCollection;
-        }
+    const frontendPayment = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-        async function createCollection() {
-            let randomName = makeCollectionName(7);
+        var raw = JSON.stringify({
+            vin: vin,
+            number: `${userPhone}`,
+            fullname: `${userNmae}`,
+            email: `${userEmail}`,
+            buyNow: true,
+            username: "",
+            collection: '612ccfeeac78e30b1e228a4e',
+            owner: `${userId}`,
+            vehicle: "61417e66e48f1a073799ba99",
+            bid: "",
+            amount: bidAmount,
+            amountBalance: "1000",
+            reference: "",
+            currency: "",
+            metadata: "",
+            balance: "",
+            status: false,
+            statusTrans: ""
+        });
 
-            const collectionObject = {
-                owner: `${userId}`,
-                name: `${randomName}`,
-            };
-            let newCollection;
-            await fetch(enviroment.BASE_URL + "collections", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(collectionObject),
-                redirect: "follow",
-            })
-                .then((response) => {
-                    setisLoading(false);
-                    if (!response.ok) {
-                        // toastError()
-                        // throw Error("Could not create collection")
-                    } else {
-                        setmessage(response.statusText);
-                        return response.json(); // toastSuccess();
-                    }
-                })
-                .then((data) => {
-                    newCollection = data.data._id;
-                })
-                .catch((error) => {
-                    seterror(error);
-                    console.log("error", error);
-                });
-            return newCollection;
-        }
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
 
-        addCar();
-    };
+        fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log("front end payment", result))
+        .catch(error => console.log('error', error));
+    }
 
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
