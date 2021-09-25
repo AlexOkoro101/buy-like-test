@@ -417,19 +417,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <main>
                 {/* <!-- Search region here --> */}
                 <div className="flex items-start main h-full m-0  pb-12 pt-24 lg:px-2">
-                    {!open && (
-                        <div className="mx-3">
-                            <span
-                                onClick={() => setOpen(true)}
-                                className="cursor-pointer"
-                            >
-                                <img
-                                    className="h-8 w-12"
-                                    src="https://img.icons8.com/material-rounded/24/000000/menu--v4.png"
-                                />
-                            </span>
-                        </div>
-                    )}
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 md:w-96">
@@ -1086,6 +1073,27 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         <div className="search-results-holder flex items-center justify-between px-3">
                             {/* <!-- first section here --> */}
                             <div>
+                                {!open && (
+                                    // <button
+                                    //     onClick={() => setOpen(true)}
+                                    //     className="
+                                    //         focus:outline-none primary-black text-black font-10  px-3.5 py-1.5
+                                    //         "
+                                    // >
+                                    //     <img src="https://img.icons8.com/material-rounded/24/000000/menu--v4.png" />
+                                    // </button>
+                                    <button
+                                        type="button"
+                                        className="mr-5"
+                                        value="all"
+                                        onClick={() => setOpen(true)}
+                                    >
+                                        <img
+                                            src="../../assets/img/vectors/filter-icon.svg"
+                                            alt="filter"
+                                        />
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     className={
