@@ -1974,6 +1974,15 @@ const CarDetails = ({
 
                                                 <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
                                                     <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Body type
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.bodyType}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
                                                         Odometer
                                                     </td>
                                                     <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">

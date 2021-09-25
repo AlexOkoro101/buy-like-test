@@ -12,7 +12,7 @@ import Select from "react-select";
 import { useRouter } from "next/router";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
-
+import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -25,6 +25,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [paramValue, setParam] = useState(params);
+    const [makeValue, setmake] = useState({});
     const [pageIndex, setPageIndex] = useState(1);
     const [active, setActive] = useState("all");
     const [filter, setfilter] = useState([]);
@@ -54,6 +55,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             setData(cars.data);
         }
     }, [cars]);
+    useEffect(() => {
+        if (carModels.length <= 0) {
+            getVehicleModels(makes[0].make_display);
+        }
+    });
     useEffect(() => {
         if (carMakes && carMakes.length <= 0) {
             getMakes();
@@ -109,14 +115,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     };
     const handleYear = (e) => {
+        let data = e[0].value;
         setParam((prev) => ({
             ...prev,
-            year: e,
+            year: data,
         }));
         const datas = {
             make: paramValue?.make || "",
             model: paramValue?.model || "",
-            year: e,
+            year: data,
             page: 1,
         };
         dispatch(fetchMore(datas));
@@ -124,13 +131,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     const handleModel = (e) => {
+        let data = e[0].value;
         setParam((prev) => ({
             ...prev,
-            model: e,
+            model: data,
         }));
         const datas = {
             make: paramValue?.make || "",
-            model: e,
+            model: data,
             year: paramValue?.year || "",
             page: 1,
         };
@@ -138,21 +146,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         dispatch(fetchMore(datas));
     };
     const handleMake = (e) => {
-        let data = makes.find(
-            (ele) => ele.make_display.toLowerCase() === e.toLowerCase()
-        );
+        let data = e[0].value;
         const datas = {
-            make: e,
+            make: data,
             model: paramValue?.model || "",
             year: paramValue?.year || "",
             page: 1,
         };
         setParam((prev) => ({
             ...prev,
-            make: e,
+            make: data,
         }));
         setPageIndex(1);
-        getVehicleModels(data.make_id);
+        getVehicleModels(data);
         dispatch(fetchMore(datas));
     };
     const getVehicleModels = (make) => {
@@ -264,6 +270,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
             return query;
         }
+        console.log(info);
         function filterData(arr, query) {
             const filteredData = arr.filter((item) => {
                 for (let key in query) {
@@ -370,12 +377,38 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
         }
     };
+    const customStyles = {
+        menuList: (provided, state) => ({
+            ...provided,
+            border: "1px solid #dee2e6",
+            width: 180,
+            borderRadius: "5px",
+        }),
+
+        control: () => ({
+            // none of react-select's styles are passed to <Control />
+            minWidth: 180,
+            margin: 0,
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "flex",
+            border: "2px solid rgba(59, 130, 246, 0.5)",
+            borderRadius: "5px",
+        }),
+        singleValue: (provided, state) => {
+            const opacity = state.isDisabled ? 0.5 : 1;
+            const transition = "opacity 300ms";
+
+            return { ...provided, opacity, transition };
+        },
+    };
+
     return (
         <div>
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-4">
+                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-2">
                     {/* <!-- filter tab here --> */}
                     <div className="filter-holder hidden  h-full lg:block p-3 w-2/12">
                         {/* <!-- Filter icon --> */}
@@ -401,156 +434,75 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </span>
                             </div>
                         </div>
-
                         {/* <!-- Filters --> */}
-
                         <div>
                             {/* Basic Filters */}
-                            <div>
+                            <div className="mt-3">
                                 {/* <!-- Make Here --> */}
-                                <div className="tab border-bt py-4 overflow-hidden ">
-                                    <input
-                                        className="opacity-0 hidden"
-                                        id="tab-single-one"
-                                        type="radio"
-                                        name="tabs2"
-                                    />
-                                    <label
-                                        className="block cursor-pointer primary-black font-medium font-11 pb-1.5"
-                                        htmlFor="tab-single-one"
-                                    >
-                                        Make
-                                    </label>
-                                    <div className="tab-content overflow-hidden ">
-                                        <div className="flex items-center justify-center py-4">
-                                            <div className="w-full items-center text-center">
-                                                <select
-                                                    className="w-4/5  px-3 py-1.5 text-black text-xs cursor-pointer  m-auto rounded shadow "
-                                                    onChange={(e) =>
-                                                        handleMake(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="">
-                                                        select make
-                                                    </option>
-                                                    {carMakes &&
-                                                        carMakes?.map(
-                                                            (x, id) => (
-                                                                <option
-                                                                    key={id}
-                                                                    value={
-                                                                        x?.make_display
-                                                                    }
-                                                                    className="my-3"
-                                                                >
-                                                                    {
-                                                                        x?.make_display
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
-                                                </select>
-                                            </div>
+                                <ReactMultiSelectCheckboxes
+                                    className="primary-black font-semibold font-11  "
+                                    styles={customStyles}
+                                    placeholderButtonLabel={
+                                        <div className="font-semibold text-xs w-full self-center	">
+                                            Make
                                         </div>
-                                    </div>
-                                </div>
-
-                                {/* <!-- Model Here --> */}
-                                <div className="tab border-bt py-4 overflow-hidden ">
-                                    <input
-                                        className="opacity-0 hidden"
-                                        id="tab-single-twenty"
-                                        type="radio"
-                                        name="tabs2"
-                                    />
-                                    <label
-                                        className="block cursor-pointer primary-black font-medium font-11 pb-1.5"
-                                        htmlFor="tab-single-twenty"
-                                    >
-                                        Model
-                                    </label>
-                                    <div className="tab-content overflow-hidden ">
-                                        <div className="flex justify-center items-center text-center py-4">
-                                            <div className="w-full">
-                                                {carModels?.length ? (
-                                                    <select
-                                                        className="w-4/5  px-3 py-1.5 text-black text-xs cursor-pointer  m-auto rounded shadow "
-                                                        onChange={(e) =>
-                                                            handleModel(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            select model
-                                                        </option>
-                                                        {carModels?.map((x) => (
-                                                            <option
-                                                                key={
-                                                                    x?.model_name
-                                                                }
-                                                                value={
-                                                                    x?.model_name
-                                                                }
-                                                            >
-                                                                {x?.model_name}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                ) : (
-                                                    <p className="text-xs text-red-700">
-                                                        No data available
-                                                    </p>
-                                                )}
+                                    }
+                                    width="100%"
+                                    onChange={(e) => handleMake(e)}
+                                    options={
+                                        carMakes &&
+                                        carMakes.map((ele) => {
+                                            return {
+                                                label: ele.make_display,
+                                                value: ele.make_display,
+                                            };
+                                        })
+                                    }
+                                />
+                                {/* model here */}
+                                <div className="my-5">
+                                    <ReactMultiSelectCheckboxes
+                                        className="primary-black font-semibold font-11  "
+                                        styles={customStyles}
+                                        placeholderButtonLabel={
+                                            <div className="font-semibold text-xs w-full self-center	">
+                                                Model
                                             </div>
-                                        </div>
-
-                                        {/* <!-- Reset button here --> */}
-                                    </div>
+                                        }
+                                        width="100%"
+                                        onChange={(e) => handleModel(e)}
+                                        options={
+                                            carModels &&
+                                            carModels.map((ele) => {
+                                                return {
+                                                    label: ele.model_name,
+                                                    value: ele.model_name,
+                                                };
+                                            })
+                                        }
+                                    />
                                 </div>
-
                                 {/* <!-- Year Here --> */}
-                                <div className="tab border-bt py-4 overflow-hidden ">
-                                    <input
-                                        className="opacity-0 hidden"
-                                        id="tab-single-two"
-                                        type="radio"
-                                        name="tabs2"
-                                    />
-                                    <label
-                                        className="block cursor-pointer primary-black font-medium font-11"
-                                        htmlFor="tab-single-two"
-                                    >
-                                        Year
-                                    </label>
-                                    <div className="tab-content overflow-hidden">
-                                        <div className="flex items-center text-center justify-center py-4">
-                                            <div className="w-full">
-                                                <select
-                                                    className="w-4/5  px-3 py-1.5 text-black text-xs cursor-pointer  m-auto rounded shadow "
-                                                    onChange={(e) =>
-                                                        handleYear(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    {years.map((x) => (
-                                                        <option
-                                                            key={x}
-                                                            value={x}
-                                                        >
-                                                            {x}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
+                                <ReactMultiSelectCheckboxes
+                                    className="primary-black font-semibold font-11 placeholder-gray-900 "
+                                    styles={customStyles}
+                                    placeholderButtonLabel={
+                                        <div className="font-semibold text-xs w-full self-center	">
+                                            Year
                                         </div>
-
-                                        {/* <!-- Reset button here --> */}
-                                    </div>
-                                </div>
+                                    }
+                                    width="100%"
+                                    onChange={(e) => handleYear(e)}
+                                    options={
+                                        years &&
+                                        years.map((ele) => {
+                                            return {
+                                                label: ele,
+                                                value: ele,
+                                            };
+                                        })
+                                    }
+                                />
                             </div>
 
                             {/* Filters */}
@@ -635,7 +587,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             value="Sedan/Saloon"
                                                             className="focus:outline-none search self-center"
                                                             {...register(
-                                                                "make"
+                                                                "bodyType"
                                                             )}
                                                         />
                                                         <span className="search"></span>
@@ -655,7 +607,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             name="filter"
                                                             value="SUV"
                                                             {...register(
-                                                                "make"
+                                                                "bodyType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -676,7 +628,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             name="filter"
                                                             value="Coupe"
                                                             {...register(
-                                                                "make"
+                                                                "bodyType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -697,7 +649,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             name="filter"
                                                             value="Hatchback"
                                                             {...register(
-                                                                "make"
+                                                                "bodyType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -718,7 +670,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             name="filter"
                                                             value="Wagon"
                                                             {...register(
-                                                                "make"
+                                                                "bodyType"
                                                             )}
                                                             className="focus:outline-none search self-center"
                                                         />
@@ -1081,7 +1033,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     </div>
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full relative px-5  lg:w-5/6 ">
+                    <div className="display-holder w-full relative px-2  lg:w-5/6 ">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden ">
                             <div className="w-full">
@@ -1283,7 +1235,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Filter pills here --> */}
-                        <div className="flex flex-wrap my-4 text-white">
+                        <div className="flex w-full flex-wrap my-4 text-white">
                             {paramValue &&
                                 Object.entries(paramValue).length > 0 &&
                                 Object.values(paramValue).map((ele, id) => (
@@ -1323,7 +1275,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className="flex flex-wrap justify-center lg:justify-between display-type"
+                                                className="flex flex-wrap justify-center w-full lg:justify-start gap-2 display-type"
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
