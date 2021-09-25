@@ -24,6 +24,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
+    const [open, setOpen] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [makeValue, setmake] = useState({});
     const [pageIndex, setPageIndex] = useState(1);
@@ -303,11 +304,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             params.images[0].image_smallUrl
         ) {
             return (
-                <img
-                    src={params.images[0].image_largeUrl}
-                    alt="hello"
-                    className="w-full h-full"
-                />
+                <div
+                    className=" w-full h-full bg-black bg-opacity-20"
+                    // style={{
+                    //     backgroundImage: `url(${params.images[0].image_largeUrl})`,
+                    // }}
+                >
+                    <img
+                        src={params.images[0].image_largeUrl}
+                        alt="hello"
+                        className="w-full object-contain h-full"
+                    />
+                </div>
             );
         }
     };
@@ -408,123 +416,140 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex main h-full m-0  pb-12 pt-24 lg:px-2">
-                    {/* <!-- filter tab here --> */}
-                    <div className="filter-holder hidden  h-full lg:block p-3 w-2/12">
-                        {/* <!-- Filter icon --> */}
-                        <div className="flex pb-2">
-                            <div>
-                                <p className="flex items-center primary-black font-medium font-11">
-                                    {" "}
-                                    <span className="mr-1">
-                                        <img
-                                            src="../../assets/img/vectors/filter-icon.svg"
-                                            alt="filter"
-                                        />
-                                    </span>{" "}
-                                    Search
-                                </p>
-                            </div>
-                            <div className="ml-auto self-center">
-                                <span className="cursor-pointer">
-                                    <img
-                                        src="../../assets/img/vectors/close-icon.svg"
-                                        alt="close"
-                                    />
-                                </span>
-                            </div>
-                        </div>
-                        {/* <!-- Filters --> */}
-                        <div>
-                            {/* Basic Filters */}
-                            <div className="mt-3">
-                                {/* <!-- Make Here --> */}
-                                <ReactMultiSelectCheckboxes
-                                    className="primary-black font-semibold font-11  "
-                                    styles={customStyles}
-                                    placeholderButtonLabel={
-                                        <div className="font-semibold text-xs w-full self-center	">
-                                            Make
-                                        </div>
-                                    }
-                                    width="100%"
-                                    onChange={(e) => handleMake(e)}
-                                    options={
-                                        carMakes &&
-                                        carMakes.map((ele) => {
-                                            return {
-                                                label: ele.make_display,
-                                                value: ele.make_display,
-                                            };
-                                        })
-                                    }
+                <div className="flex items-start main h-full m-0  pb-12 pt-24 lg:px-2">
+                    {!open && (
+                        <div className="mx-3">
+                            <span
+                                onClick={() => setOpen(true)}
+                                className="cursor-pointer"
+                            >
+                                <img
+                                    className="h-8 w-12"
+                                    src="https://img.icons8.com/material-rounded/24/000000/menu--v4.png"
                                 />
-                                {/* model here */}
-                                <div className="my-5">
+                            </span>
+                        </div>
+                    )}
+                    {/* <!-- filter tab here --> */}
+                    {open && (
+                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12">
+                            {/* <!-- Filter icon --> */}
+                            <div className="flex pb-2">
+                                <div>
+                                    <p className="flex items-center primary-black font-medium font-11">
+                                        {" "}
+                                        <span className="mr-1">
+                                            <img
+                                                src="../../assets/img/vectors/filter-icon.svg"
+                                                alt="filter"
+                                            />
+                                        </span>{" "}
+                                        Search
+                                    </p>
+                                </div>
+                                <div className="ml-auto self-center">
+                                    <span
+                                        onClick={() => setOpen(false)}
+                                        className="cursor-pointer"
+                                    >
+                                        <img
+                                            src="../../assets/img/vectors/close-icon.svg"
+                                            alt="close"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                            {/* <!-- Filters --> */}
+                            <div>
+                                {/* Basic Filters */}
+                                <div className="mt-3">
+                                    {/* <!-- Make Here --> */}
                                     <ReactMultiSelectCheckboxes
                                         className="primary-black font-semibold font-11  "
                                         styles={customStyles}
                                         placeholderButtonLabel={
                                             <div className="font-semibold text-xs w-full self-center	">
-                                                Model
+                                                Make
                                             </div>
                                         }
                                         width="100%"
-                                        onChange={(e) => handleModel(e)}
+                                        onChange={(e) => handleMake(e)}
                                         options={
-                                            carModels &&
-                                            carModels.map((ele) => {
+                                            carMakes &&
+                                            carMakes.map((ele) => {
                                                 return {
-                                                    label: ele.model_name,
-                                                    value: ele.model_name,
+                                                    label: ele.make_display,
+                                                    value: ele.make_display,
+                                                };
+                                            })
+                                        }
+                                    />
+                                    {/* model here */}
+                                    <div className="my-5">
+                                        <ReactMultiSelectCheckboxes
+                                            className="primary-black font-semibold font-11  "
+                                            styles={customStyles}
+                                            placeholderButtonLabel={
+                                                <div className="font-semibold text-xs w-full self-center	">
+                                                    Model
+                                                </div>
+                                            }
+                                            width="100%"
+                                            onChange={(e) => handleModel(e)}
+                                            options={
+                                                carModels &&
+                                                carModels.map((ele) => {
+                                                    return {
+                                                        label: ele.model_name,
+                                                        value: ele.model_name,
+                                                    };
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    {/* <!-- Year Here --> */}
+                                    <ReactMultiSelectCheckboxes
+                                        className="primary-black font-semibold font-11 placeholder-gray-900 "
+                                        styles={customStyles}
+                                        placeholderButtonLabel={
+                                            <div className="font-semibold text-xs w-full self-center	">
+                                                Year
+                                            </div>
+                                        }
+                                        width="100%"
+                                        onChange={(e) => handleYear(e)}
+                                        options={
+                                            years &&
+                                            years.map((ele) => {
+                                                return {
+                                                    label: ele,
+                                                    value: ele,
                                                 };
                                             })
                                         }
                                     />
                                 </div>
-                                {/* <!-- Year Here --> */}
-                                <ReactMultiSelectCheckboxes
-                                    className="primary-black font-semibold font-11 placeholder-gray-900 "
-                                    styles={customStyles}
-                                    placeholderButtonLabel={
-                                        <div className="font-semibold text-xs w-full self-center	">
-                                            Year
-                                        </div>
-                                    }
-                                    width="100%"
-                                    onChange={(e) => handleYear(e)}
-                                    options={
-                                        years &&
-                                        years.map((ele) => {
-                                            return {
-                                                label: ele,
-                                                value: ele,
-                                            };
-                                        })
-                                    }
-                                />
-                            </div>
 
-                            {/* Filters */}
-                            <form
-                                onSubmit={handleSubmit(handleFilter)}
-                                className="mt-16"
-                            >
-                                {/* <!-- Filter icon --> */}
-                                <div className="flex pb-2">
-                                    <div>
-                                        <p className="flex items-center primary-black font-medium font-11">
-                                            {" "}
-                                            <span className="mr-1">
-                                                <img
-                                                    src="../../assets/img/vectors/filter-icon.svg"
-                                                    alt="filter"
-                                                />
-                                            </span>{" "}
-                                            Filters
-                                        </p>
-                                    </div>
-                                    {/* <div className="ml-auto self-center">
+                                {/* Filters */}
+                                <form
+                                    onSubmit={handleSubmit(handleFilter)}
+                                    className="mt-16"
+                                >
+                                    {/* <!-- Filter icon --> */}
+                                    <div className="flex pb-2">
+                                        <div>
+                                            <p className="flex items-center primary-black font-medium font-11">
+                                                {" "}
+                                                <span className="mr-1">
+                                                    <img
+                                                        src="../../assets/img/vectors/filter-icon.svg"
+                                                        alt="filter"
+                                                    />
+                                                </span>{" "}
+                                                Filters
+                                            </p>
+                                        </div>
+                                        {/* <div className="ml-auto self-center">
                                         <span className="cursor-pointer">
                                             <img
                                                 src="../../assets/img/vectors/close-icon.svg"
@@ -532,508 +557,514 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             />
                                         </span>
                                     </div> */}
-                                </div>
-                                <div className="flex justify-between">
-                                    {/* FIlter Button */}
-                                    <div className="flex  py-4">
-                                        <button id="submitFilter" type="submit">
-                                            Filter
-                                        </button>
                                     </div>
-
-                                    {/* <!-- Clear all filters here --> */}
-                                    <div className="flex  py-4">
-                                        <div>
+                                    <div className="flex justify-between">
+                                        {/* FIlter Button */}
+                                        <div className="flex  py-4">
                                             <button
-                                                type="button"
-                                                className="focus:outline-none font-11 primary-blue"
-                                                onClick={() => clearForm()}
+                                                id="submitFilter"
+                                                type="submit"
                                             >
-                                                Clear all filters
+                                                Filter
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <div className="tabWrapper">
-                                    {/* <!--Body Type  Here --> */}
-                                    <div className="tab border-bt py-4 overflow-hidden ">
-                                        <input
-                                            className="opacity-0 hidden"
-                                            id="tab-single-three"
-                                            type="radio"
-                                            name="tabs2"
-                                        />
-                                        <label
-                                            className="block cursor-pointer primary-black font-medium font-11"
-                                            htmlFor="tab-single-three"
-                                        >
-                                            Body Type
-                                        </label>
-                                        <div
-                                            className="tab-content overflow-hidden"
-                                            id="body"
-                                        >
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Sedan/Saloon
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="filter"
-                                                            value="Sedan/Saloon"
-                                                            className="focus:outline-none search self-center"
-                                                            {...register(
-                                                                "bodyType"
-                                                            )}
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
+                                        {/* <!-- Clear all filters here --> */}
+                                        <div className="flex  py-4">
+                                            <div>
+                                                <button
+                                                    type="button"
+                                                    className="focus:outline-none font-11 primary-blue"
+                                                    onClick={() => clearForm()}
+                                                >
+                                                    Clear all filters
+                                                </button>
                                             </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    SUV
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="filter"
-                                                            value="SUV"
-                                                            {...register(
-                                                                "bodyType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Coupe
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="filter"
-                                                            value="Coupe"
-                                                            {...register(
-                                                                "bodyType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Hatchback
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="filter"
-                                                            value="Hatchback"
-                                                            {...register(
-                                                                "bodyType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Wagon
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="filter"
-                                                            value="Wagon"
-                                                            {...register(
-                                                                "bodyType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            {/* <!-- Reset button here --> */}
                                         </div>
                                     </div>
 
-                                    {/* <!-- Mileage Here --> */}
-                                    <div className="tab border-bt py-4 overflow-hidden ">
-                                        <input
-                                            className="opacity-0 hidden"
-                                            id="tab-single-five"
-                                            type="radio"
-                                            name="tabs2"
-                                        />
-                                        <label
-                                            className="block cursor-pointer primary-black font-medium font-11"
-                                            htmlFor="tab-single-five"
-                                        >
-                                            Mileage
-                                        </label>
-                                        <div
-                                            id="mileage"
-                                            className="tab-content overflow-hidden"
-                                        >
-                                            <div className="flex  py-4">
-                                                <div>
-                                                    <label className="font-10 sec-black">
-                                                        Max. Mileage
-                                                    </label>
+                                    <div className="tabWrapper">
+                                        {/* <!--Body Type  Here --> */}
+                                        <div className="tab border-bt py-4 overflow-hidden ">
+                                            <input
+                                                className="opacity-0 hidden"
+                                                id="tab-single-three"
+                                                type="radio"
+                                                name="tabs2"
+                                            />
+                                            <label
+                                                className="block cursor-pointer primary-black font-medium font-11"
+                                                htmlFor="tab-single-three"
+                                            >
+                                                Body Type
+                                            </label>
+                                            <div
+                                                className="tab-content overflow-hidden"
+                                                id="body"
+                                            >
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Sedan/Saloon
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="filter"
+                                                                value="Sedan/Saloon"
+                                                                className="focus:outline-none search self-center"
+                                                                {...register(
+                                                                    "bodyType"
+                                                                )}
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
                                                 </div>
 
-                                                <div className="ml-auto">
-                                                    <select className="select-group">
-                                                        <option>2000</option>
-                                                    </select>
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        SUV
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="filter"
+                                                                value="SUV"
+                                                                {...register(
+                                                                    "bodyType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
                                                 </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Coupe
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="filter"
+                                                                value="Coupe"
+                                                                {...register(
+                                                                    "bodyType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Hatchback
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="filter"
+                                                                value="Hatchback"
+                                                                {...register(
+                                                                    "bodyType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Wagon
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="filter"
+                                                                value="Wagon"
+                                                                {...register(
+                                                                    "bodyType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                {/* <!-- Reset button here --> */}
                                             </div>
+                                        </div>
 
-                                            {/* <!-- Reset button here --> */}
+                                        {/* <!-- Mileage Here --> */}
+                                        <div className="tab border-bt py-4 overflow-hidden ">
+                                            <input
+                                                className="opacity-0 hidden"
+                                                id="tab-single-five"
+                                                type="radio"
+                                                name="tabs2"
+                                            />
+                                            <label
+                                                className="block cursor-pointer primary-black font-medium font-11"
+                                                htmlFor="tab-single-five"
+                                            >
+                                                Mileage
+                                            </label>
+                                            <div
+                                                id="mileage"
+                                                className="tab-content overflow-hidden"
+                                            >
+                                                <div className="flex  py-4">
+                                                    <div>
+                                                        <label className="font-10 sec-black">
+                                                            Max. Mileage
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="ml-auto">
+                                                        <select className="select-group">
+                                                            <option>
+                                                                2000
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                {/* <!-- Reset button here --> */}
+                                            </div>
+                                        </div>
+
+                                        {/* <!--Transmission  Here --> */}
+                                        <div className="tab border-bt py-4 overflow-hidden ">
+                                            <input
+                                                className="opacity-0 hidden"
+                                                id="tab-single-six"
+                                                type="radio"
+                                                name="tabs2"
+                                            />
+                                            <label
+                                                className="block cursor-pointer primary-black font-medium font-11"
+                                                htmlFor="tab-single-six"
+                                            >
+                                                Transmission
+                                            </label>
+                                            <div
+                                                id="transmission"
+                                                className="tab-content overflow-hidden"
+                                            >
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Automatic
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <input
+                                                            type="radio"
+                                                            name="Automatic"
+                                                            value="Automatic"
+                                                            {...register(
+                                                                "transmission"
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Manual
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <input
+                                                            type="radio"
+                                                            name="Manual"
+                                                            value="Manual"
+                                                            {...register(
+                                                                "transmission"
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* <!-- Reset button here --> */}
+                                            </div>
+                                        </div>
+
+                                        {/* <!--External Colour  Here --> */}
+                                        <div className="tab border-bt py-4 overflow-hidden ">
+                                            <input
+                                                className="opacity-0 hidden"
+                                                id="tab-single-seven"
+                                                type="radio"
+                                                name="tabs2"
+                                            />
+                                            <label
+                                                className="block cursor-pointer primary-black font-medium font-11"
+                                                htmlFor="tab-single-seven"
+                                            >
+                                                External Colour
+                                            </label>
+                                            <div
+                                                id="external"
+                                                className="tab-content overflow-hidden"
+                                            >
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        White
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="white"
+                                                                value="white"
+                                                                {...register(
+                                                                    "exteriorColor"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Black
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="black"
+                                                                value="black"
+                                                                {...register(
+                                                                    "exteriorColor"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Grey
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="gray"
+                                                                value="gray"
+                                                                {...register(
+                                                                    "exteriorColor"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Red
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="red"
+                                                                value="red"
+                                                                {...register(
+                                                                    "exteriorColor"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Gold
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="gold"
+                                                                value="gold"
+                                                                {...register(
+                                                                    "exteriorColor"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                {/* <!-- Reset button here --> */}
+                                            </div>
+                                        </div>
+
+                                        {/* <!--Fuel Type  Here --> */}
+                                        <div className="tab border-bt py-4 overflow-hidden ">
+                                            <input
+                                                className="opacity-0 hidden"
+                                                id="tab-single-eight"
+                                                type="radio"
+                                                name="tabs2"
+                                            />
+                                            <label
+                                                className="block cursor-pointer primary-black font-medium font-11"
+                                                htmlFor="tab-single-eight"
+                                            >
+                                                Fuel Type
+                                            </label>
+                                            <div
+                                                id="fuel"
+                                                className="tab-content overflow-hidden"
+                                            >
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Gasoline
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="gasoline"
+                                                                value="gasoline"
+                                                                {...register(
+                                                                    "sourceEngineFuelType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Diesel
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="diesel"
+                                                                value="diesel"
+                                                                {...register(
+                                                                    "sourceEngineFuelType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Gas/Electric Hybrid
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="gas"
+                                                                value="Gas/Electric Hybrid"
+                                                                {...register(
+                                                                    "sourceEngineFuelType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Plug-in Hybrid
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="plug"
+                                                                value="Plug-in Hybrid"
+                                                                {...register(
+                                                                    "sourceEngineFuelType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex pt-2">
+                                                    <p className="font-11 primary-black">
+                                                        {" "}
+                                                        Electric
+                                                    </p>
+                                                    <div className="ml-auto">
+                                                        <label className="search">
+                                                            <input
+                                                                type="radio"
+                                                                name="Electric"
+                                                                value="Electric"
+                                                                {...register(
+                                                                    "sourceEngineFuelType"
+                                                                )}
+                                                                className="focus:outline-none search self-center"
+                                                            />
+                                                            <span className="search"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                {/* <!-- Reset button here --> */}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    {/* <!--Transmission  Here --> */}
-                                    <div className="tab border-bt py-4 overflow-hidden ">
-                                        <input
-                                            className="opacity-0 hidden"
-                                            id="tab-single-six"
-                                            type="radio"
-                                            name="tabs2"
-                                        />
-                                        <label
-                                            className="block cursor-pointer primary-black font-medium font-11"
-                                            htmlFor="tab-single-six"
-                                        >
-                                            Transmission
-                                        </label>
-                                        <div
-                                            id="transmission"
-                                            className="tab-content overflow-hidden"
-                                        >
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Automatic
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <input
-                                                        type="radio"
-                                                        name="Automatic"
-                                                        value="Automatic"
-                                                        {...register(
-                                                            "transmission"
-                                                        )}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Manual
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <input
-                                                        type="radio"
-                                                        name="Manual"
-                                                        value="Manual"
-                                                        {...register(
-                                                            "transmission"
-                                                        )}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* <!-- Reset button here --> */}
-                                        </div>
-                                    </div>
-
-                                    {/* <!--External Colour  Here --> */}
-                                    <div className="tab border-bt py-4 overflow-hidden ">
-                                        <input
-                                            className="opacity-0 hidden"
-                                            id="tab-single-seven"
-                                            type="radio"
-                                            name="tabs2"
-                                        />
-                                        <label
-                                            className="block cursor-pointer primary-black font-medium font-11"
-                                            htmlFor="tab-single-seven"
-                                        >
-                                            External Colour
-                                        </label>
-                                        <div
-                                            id="external"
-                                            className="tab-content overflow-hidden"
-                                        >
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    White
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="white"
-                                                            value="white"
-                                                            {...register(
-                                                                "exteriorColor"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Black
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="black"
-                                                            value="black"
-                                                            {...register(
-                                                                "exteriorColor"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Grey
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="gray"
-                                                            value="gray"
-                                                            {...register(
-                                                                "exteriorColor"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Red
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="red"
-                                                            value="red"
-                                                            {...register(
-                                                                "exteriorColor"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Gold
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="gold"
-                                                            value="gold"
-                                                            {...register(
-                                                                "exteriorColor"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            {/* <!-- Reset button here --> */}
-                                        </div>
-                                    </div>
-
-                                    {/* <!--Fuel Type  Here --> */}
-                                    <div className="tab border-bt py-4 overflow-hidden ">
-                                        <input
-                                            className="opacity-0 hidden"
-                                            id="tab-single-eight"
-                                            type="radio"
-                                            name="tabs2"
-                                        />
-                                        <label
-                                            className="block cursor-pointer primary-black font-medium font-11"
-                                            htmlFor="tab-single-eight"
-                                        >
-                                            Fuel Type
-                                        </label>
-                                        <div
-                                            id="fuel"
-                                            className="tab-content overflow-hidden"
-                                        >
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Gasoline
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="gasoline"
-                                                            value="gasoline"
-                                                            {...register(
-                                                                "sourceEngineFuelType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Diesel
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="diesel"
-                                                            value="diesel"
-                                                            {...register(
-                                                                "sourceEngineFuelType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Gas/Electric Hybrid
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="gas"
-                                                            value="Gas/Electric Hybrid"
-                                                            {...register(
-                                                                "sourceEngineFuelType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Plug-in Hybrid
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="plug"
-                                                            value="Plug-in Hybrid"
-                                                            {...register(
-                                                                "sourceEngineFuelType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex pt-2">
-                                                <p className="font-11 primary-black">
-                                                    {" "}
-                                                    Electric
-                                                </p>
-                                                <div className="ml-auto">
-                                                    <label className="search">
-                                                        <input
-                                                            type="radio"
-                                                            name="Electric"
-                                                            value="Electric"
-                                                            {...register(
-                                                                "sourceEngineFuelType"
-                                                            )}
-                                                            className="focus:outline-none search self-center"
-                                                        />
-                                                        <span className="search"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            {/* <!-- Reset button here --> */}
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full relative px-2  lg:w-5/6 ">
+                    <div className="display-holder w-full md:w-auto relative px-2  ">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden ">
                             <div className="w-full">
