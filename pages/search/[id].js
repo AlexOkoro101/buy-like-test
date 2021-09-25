@@ -288,8 +288,7 @@ const CarDetails = ({
     const getTrucking = {
         packingCode: `${getZipLocation()}`,
         packingName: "",
-    }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
-
+    };
     const fetchLocalTrucking = () => {
         if (getZipLocation() === "") {
             setnoZipValue(true);
@@ -302,7 +301,7 @@ const CarDetails = ({
         }).then((data) => {
             console.log("local trucking", data);
             if (!data.data) {
-                // fetchScrapperTrucking();
+                fetchScrapperTrucking();
             } else {
                 settruckingPrice(data.data.raw[1]);
             }
