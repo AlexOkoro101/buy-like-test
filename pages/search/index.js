@@ -1379,8 +1379,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 ele?.year
                                                                             }{" "}
                                                                             <span className="ml-6">
-                                                                                205,456
-                                                                                miles
+                                                                                {Object.entries(
+                                                                                    ele?.mileage
+                                                                                )
+                                                                                    .length <=
+                                                                                2
+                                                                                    ? ""
+                                                                                    : ele?.mileage.replace(
+                                                                                          "/",
+                                                                                          "."
+                                                                                      )}
                                                                             </span>
                                                                         </p>
                                                                         <div className="flex pt-2">
@@ -1556,8 +1564,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         alt="beacon"
                                                                                                     />
                                                                                                 </span>{" "}
-                                                                                                205,456
-                                                                                                miles
+                                                                                                {Object.entries(
+                                                                                                    ele?.mileage
+                                                                                                )
+                                                                                                    .length <=
+                                                                                                2
+                                                                                                    ? ""
+                                                                                                    : ele?.mileage.replace(
+                                                                                                          "/",
+                                                                                                          "."
+                                                                                                      )}
                                                                                             </p>
                                                                                         </td>
 
