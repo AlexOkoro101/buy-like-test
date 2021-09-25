@@ -419,7 +419,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div className="flex items-start main h-full m-0  pb-12 pt-24 lg:px-2">
                     {/* <!-- filter tab here --> */}
                     {open && (
-                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 md:w-96">
+                        <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>
@@ -1051,7 +1051,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full md:w-auto relative px-2  ">
+                    <div className="display-holder w-full  relative px-2  ">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden ">
                             <div className="w-full">
@@ -1074,14 +1074,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             {/* <!-- first section here --> */}
                             <div>
                                 {!open && (
-                                    // <button
-                                    //     onClick={() => setOpen(true)}
-                                    //     className="
-                                    //         focus:outline-none primary-black text-black font-10  px-3.5 py-1.5
-                                    //         "
-                                    // >
-                                    //     <img src="https://img.icons8.com/material-rounded/24/000000/menu--v4.png" />
-                                    // </button>
                                     <button
                                         type="button"
                                         className="mr-5"
@@ -1229,7 +1221,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                                 {/* <!-- list view tab here --> */}
                                 <button
-                                    onClick={activateList}
+                                    onClick={() => {
+                                        activateList(), setOpen(true);
+                                    }}
                                     id="list-btn"
                                     type="button"
                                     className={
@@ -1314,7 +1308,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className="flex flex-wrap justify-center w-full lg:justify-start gap-2 display-type"
+                                                className="flex box-border flex-wrap justify-center w-full lg:justify-start gap-2  display-type"
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
@@ -1323,9 +1317,17 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                             ele.vehicleName && (
                                                                 <div
                                                                     key={id}
-                                                                    className="car-display-holder flex flex-col justify-between p-4 mb-4"
+                                                                    className={
+                                                                        open ==
+                                                                        true
+                                                                            ? " car-display-holder flex flex-col justify-between box-border   p-4 mb-4"
+                                                                            : " car-display-holder flex flex-col justify-between box-border  p-4 mb-4"
+                                                                    }
                                                                     style={{
                                                                         height: "380px",
+                                                                        width: open
+                                                                            ? "24%"
+                                                                            : "19.5%",
                                                                     }}
                                                                 >
                                                                     <a
@@ -1467,7 +1469,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         {/* <!-- Car List displays here --> */}
                                         {!grid && (
                                             <div
-                                                className="flex flex-wrap display-type justify-between"
+                                                className="flex flex-wrap display-type w-full justify-between"
                                                 id="car-list"
                                             >
                                                 {/* <!-- Car 1 --> */}
