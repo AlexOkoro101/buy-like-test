@@ -432,7 +432,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
                     {/* <!-- filter tab here --> */}
                     {open && (
-                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12">
+                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 md:w-96">
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>
