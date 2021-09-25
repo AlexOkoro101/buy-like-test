@@ -58,7 +58,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     }, [cars]);
     useEffect(() => {
         if (carModels.length <= 0) {
-            getVehicleModels(makes[0].make_display);
+            if (makes && makes[0]) {
+                getVehicleModels(makes[0].make_display);
+            }
         }
     });
     useEffect(() => {
