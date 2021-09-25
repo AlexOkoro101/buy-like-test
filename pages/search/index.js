@@ -1327,7 +1327,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         height: "380px",
                                                                         width: open
                                                                             ? "24%"
-                                                                            : "19.5%",
+                                                                            : "19%",
                                                                     }}
                                                                 >
                                                                     <a
