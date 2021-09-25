@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import FsLightbox from 'fslightbox-react';
+import FsLightbox from "fslightbox-react";
 import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
@@ -11,11 +11,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { usePaystackPayment } from 'react-paystack';
+import { usePaystackPayment } from "react-paystack";
 var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
-
-
 
 //
 //
@@ -48,7 +46,7 @@ const CarDetails = ({
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });    
+        });
     const buyNowSuccess = () =>
         toast.success("Success", {
             position: "top-right",
@@ -88,37 +86,35 @@ const CarDetails = ({
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });  
-        
-    const [userEmail, setuserEmail] = useState(null)
-    const [userPhone, setuserPhone] = useState(null)
+        });
+
+    const [userEmail, setuserEmail] = useState(null);
+    const [userPhone, setuserPhone] = useState(null);
     const [amount, setAmount] = useState(0);
     const referenceNumber = () => {
-        return 'bld' + Math.floor(Math.random() * 1000000000 + 1);
+        return "bld" + Math.floor(Math.random() * 1000000000 + 1);
     };
     const config = {
         reference: referenceNumber(),
         email: `${userEmail}`,
         amount: /*amount * 100*/ 100000,
-        publicKey: 'pk_test_c9e721436fd837814692c450db204c33326ff6d1',
+        publicKey: "pk_test_c9e721436fd837814692c450db204c33326ff6d1",
     };
-    
+
     // you can call this function anything
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
         console.log(reference);
-        verifyPaystackPayment(reference.trxref)
-
+        verifyPaystackPayment(reference.trxref);
     };
-    
+
     // you can call this function anything
     const onClose = () => {
         // implementation for  whatever you want to do when the Paystack dialog closed.
-        console.log('closed')
-    }
+        console.log("closed");
+    };
 
-
-    const initializePayment = usePaystackPayment(config);     
+    const initializePayment = usePaystackPayment(config);
     const Ref = useRef(null);
     const [toggler, setToggler] = useState(false);
     const [key, setkey] = useState(0);
@@ -169,8 +165,8 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
-    const [truckingPrice, settruckingPrice] = useState(null)
-    const [buyNowPrice, setbuyNowPrice] = useState(null)
+    const [truckingPrice, settruckingPrice] = useState(null);
+    const [buyNowPrice, setbuyNowPrice] = useState(null);
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -179,7 +175,7 @@ const CarDetails = ({
             return null;
         }
         const item = JSON.parse(userActive);
-        console.log(item)
+        console.log(item);
         const now = new Date();
         if (now.getTime() > item.expiry) {
             // If the item is expired, delete the item from storage
@@ -190,8 +186,8 @@ const CarDetails = ({
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
-        setuserEmail(item?.email)
-        setuserPhone(item?.phone)
+        setuserEmail(item?.email);
+        setuserPhone(item?.phone);
     }; //Get Data from local Storage
 
     useEffect(() => {
@@ -271,8 +267,7 @@ const CarDetails = ({
         setcarImages(carDetails.images);
         getZipLocation();
 
-
-        setbuyNowPrice(carDetails.buyNowPrice)
+        setbuyNowPrice(carDetails.buyNowPrice);
 
         let array = [];
         if (cars) {
@@ -290,37 +285,30 @@ const CarDetails = ({
         displaySmall();
     }, [carDetails, cardD]);
 
-
     const getTrucking = {
         packingCode: `${getZipLocation()}`,
         packingName: "",
     }; // const fetchTrucking = () => { //     fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", { //         method: "POST", //         headers: { //             "Content-Type": "application/json", //         }, //         body: JSON.stringify(getTrucking), //     }) //         .then((response) => { //             return response.json(); //         }) //         .then((data) => { //             console.log("trucking", data); //         }); // };
 
-    
     const fetchLocalTrucking = () => {
-        if(getZipLocation() === "") {
-            setnoZipValue(true)
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
             return;
         }
 
         fetch(enviroment.BASE_URL + "truck/code/" + getZipLocation(), {
             method: "GET",
             redirect: "follow",
-        })
-        .then((data) => {
-            console.log("local trucking", data)
+        }).then((data) => {
+            console.log("local trucking", data);
             if (!data.data) {
-                fetchScrapperTrucking()
+                // fetchScrapperTrucking();
             } else {
-                settruckingPrice(data.data.raw[1])
-
+                settruckingPrice(data.data.raw[1]);
             }
             // console.log("local trucking price", truckingPrice)
-
-        })
-
-    }
-    
+        });
+    };
 
     const fetchScrapperTrucking = () => {
         const getTrucking = {
@@ -336,22 +324,20 @@ const CarDetails = ({
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(getTrucking)
+            body: JSON.stringify(getTrucking),
         })
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            if (data.status) {
-                createLocalTrucking(data)
-            }
-            console.log("scrapper trucking", data)
-            settruckingPrice(data.raw[1])
-            console.log("scrapper trucking price", truckingPrice)
-
-        })
-
-    }
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    createLocalTrucking(data);
+                }
+                console.log("scrapper trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("scrapper trucking price", truckingPrice);
+            });
+    };
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
             code: `${getZipLocation()}`,
@@ -367,17 +353,16 @@ const CarDetails = ({
             body: JSON.stringify(localTruckingObject),
             redirect: "follow",
         })
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-    }
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log("error", error));
+    };
     useEffect(() => {
-        if(typeof getZipLocation() !== 'undefined') {
-            console.log("zip", getZipLocation())
-            fetchLocalTrucking()
+        if (typeof getZipLocation() !== "undefined") {
+            console.log("zip", getZipLocation());
+            fetchLocalTrucking();
         }
-
-    }, [])
+    }, []);
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -467,12 +452,12 @@ const CarDetails = ({
         setCount(count - size);
     };
     const returnLargeimage = () => {
-        const largeImageArray = cardD?.images.map(image => {
-            return image.image_largeUrl
-        })
+        const largeImageArray = cardD?.images.map((image) => {
+            return image.image_largeUrl;
+        });
 
         return largeImageArray;
-    }
+    };
     const displayLargeimage = () => {
         return (
             <>
@@ -483,9 +468,9 @@ const CarDetails = ({
                 />
                 <img
                     onClick={() => {
-                        setToggler(!toggler)
-                        console.log("large images", returnLargeimage())
-                        }}
+                        setToggler(!toggler);
+                        console.log("large images", returnLargeimage());
+                    }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
@@ -578,46 +563,45 @@ const CarDetails = ({
     }
 
     const placeBid = () => {
-
         async function addCar() {
-            seterror(null)
-            setisLoading(true)
+            seterror(null);
+            setisLoading(true);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                bidAmount:bidAmount,
-                owner:userId,
-                collection: await placeItem(), 
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: truckingPrice || "", 
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
+            const bidObject = {
+                vin: vin,
+                link: "https://members.manheim.com/",
+                name: name,
+                site: "https://members.manheim.com/",
+                price: price,
+                year: year,
+                exterior_color: exteriorColor,
+                vehicle_type: vehicleType,
+                interior_color: interiorColor,
+                transmission: transmission,
+                odometer: odometer,
+                driveTrain: driveTrain,
+                doors: doors,
+                Model: model,
+                make: make,
+                equipment: "",
+                EngineType: "",
+                interior_type: "",
+                body_style: bodyStyle,
+                fuel_type: "",
+                passengerCapacity: "",
+                sellerCity: "",
+                description: "",
+                Zip: zip,
+                bidAmount: bidAmount,
+                owner: userId,
+                collection: await placeItem(),
+                facilitationLocation: facilitationLocation,
+                Vehicle_location: vehicleLocation,
+                images: carImages,
+                trucking: truckingPrice || "",
+                shipping: "",
+            };
+            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -645,7 +629,6 @@ const CarDetails = ({
         }
 
         async function placeItem() {
-            
             let availableCollection = getAvailableCollection();
 
             if (!availableCollection) {
@@ -716,109 +699,106 @@ const CarDetails = ({
         addCar();
     };
     const buyNowFunction = () => {
+        const bidObject = {
+            vin: vin,
+            link: "https://members.manheim.com/",
+            name: name,
+            site: "https://members.manheim.com/",
+            price: price,
+            year: year,
+            exterior_color: exteriorColor,
+            vehicle_type: vehicleType,
+            interior_color: interiorColor,
+            transmission: transmission,
+            odometer: odometer,
+            driveTrain: driveTrain,
+            doors: doors,
+            Model: model,
+            make: make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: bodyStyle,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: zip,
+            tilteImage: "",
+            bidAmount: bidAmount,
+            owner: userId,
+            facilitationLocation: facilitationLocation,
+            Vehicle_location: vehicleLocation,
+            images: carImages,
+            trucking: truckingPrice || "",
+            shipping: "",
+        };
+        console.log("bid object", bidObject);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                tilteImage:"",
-                bidAmount:bidAmount,
-                owner:userId,
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: truckingPrice || "", 
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
-
-            //Add car to buy now
-            fetch(enviroment.BASE_URL + "bids/buy-now", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(bidObject),
-                redirect: 'follow'
-            })
-            .then(response => {
-                setisLoading(false)
-                console.log("bid response", response)
+        //Add car to buy now
+        fetch(enviroment.BASE_URL + "bids/buy-now", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bidObject),
+            redirect: "follow",
+        })
+            .then((response) => {
+                setisLoading(false);
+                console.log("bid response", response);
                 if (!response.ok) {
-                    buyNowInfo()
+                    buyNowInfo();
                 } else {
-                    setmessage(response.statusText)
+                    setmessage(response.statusText);
                     buyNowSuccess();
-                    hideCar(vin)
-                    router.push('/transaction/' + vin)
+                    hideCar(vin);
+                    router.push("/transaction/" + vin);
                 }
-            }) 
+            })
             .catch((error) => {
                 seterror(error);
                 console.log("error", error);
             });
-        
-
     };
 
     const hideCar = (vin) => {
         fetch("https://buylikepoint.us/bid.php?apiKey=Switch!2020&vin=" + vin, {
-            method: 'GET',
-            redirect: 'follow'
+            method: "GET",
+            redirect: "follow",
         })
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-    }
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.log("error", error));
+    };
 
     const verifyPaystackPayment = (ref) => {
-        fetch(enviroment.BASE_URL + 'transactions/initialize/verify/' + ref, {
-            method: 'GET',
-            redirect: 'follow'
+        fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
+            method: "GET",
+            redirect: "follow",
         })
-        .then(res => {
-            console.log(res)
-            return res.text()
-        })
-        .then(data => {
-            console.log(data)
-            if (data) {
-                //  console.log(data.data)
-                if (Object.entries(data).length >= 1) {
-                    const formatData = JSON.parse(data); 
-                    // setcollection(formatData.data);
-                    console.log("callback", formatData)
+            .then((res) => {
+                console.log(res);
+                return res.text();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatData = JSON.parse(data);
+                        // setcollection(formatData.data);
+                        console.log("callback", formatData);
 
-                    if (formatData.data.status) {
-                        buyNowFunction()
-                        frontendPayment()
+                        if (formatData.data.status) {
+                            buyNowFunction();
+                            frontendPayment();
+                        }
                     }
                 }
-            }
-        })
-        .catch(error => console.log('payment error', error));
-    }
+            })
+            .catch((error) => console.log("payment error", error));
+    };
 
     const frontendPayment = () => {
         var myHeaders = new Headers();
@@ -831,7 +811,7 @@ const CarDetails = ({
             email: `${userEmail}`,
             buyNow: true,
             username: "",
-            collection: '612ccfeeac78e30b1e228a4e',
+            collection: "612ccfeeac78e30b1e228a4e",
             owner: `${userId}`,
             vehicle: "61417e66e48f1a073799ba99",
             bid: "",
@@ -842,21 +822,21 @@ const CarDetails = ({
             metadata: "",
             balance: "",
             status: false,
-            statusTrans: ""
+            statusTrans: "",
         });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
         };
 
         fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log("front end payment", result))
-        .catch(error => console.log('error', error));
-    }
+            .then((response) => response.text())
+            .then((result) => console.log("front end payment", result))
+            .catch((error) => console.log("error", error));
+    };
 
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
@@ -941,7 +921,6 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
-    
 
     //
     //
@@ -952,7 +931,6 @@ const CarDetails = ({
     }
     //
     //
-
 
     return (
         <div>
@@ -968,7 +946,7 @@ const CarDetails = ({
                             <div className="flex mt-1.5">
                                 <div className="flex">
                                     <p className="font-11 primary-gray font-medium">
-                                        2,124 mi
+                                        {Object.entries(cardD?.mileage).length}
                                     </p>
                                     <p className="font-11 ml-2 primary-gray font-medium">
                                         VIN: {""}
@@ -1069,7 +1047,13 @@ const CarDetails = ({
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            2,124 mi
+                                            {Object.entries(cardD?.mileage)
+                                                .length <= 2
+                                                ? ""
+                                                : cardD?.mileage.replace(
+                                                      "/",
+                                                      "."
+                                                  )}
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {cardD.VIN}
@@ -1144,7 +1128,7 @@ const CarDetails = ({
                                         </div>
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
-                                                <tr className="detail-row mb-2">
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 ">
                                                         Destination
                                                     </td>
@@ -1196,11 +1180,37 @@ const CarDetails = ({
 
                                                     {noZipValue ? (
                                                         <td className="flex justify-between font-11 sec-black font-normal pr-20 py-2 text-center">
-                                                            <>
-                                                            Contact Support
-                                                            </>
-                                                            <a href="https://api.whatsapp.com/send?phone=15551234567" style={{margin: "0 10px"}}><i style={{fontSize: "17px", color: "green"}} className="fa fa-whatsapp"></i></a>
-                                                            <a href="mailto:test@example.com" style={{margin: "0 10px"}}><i  style={{fontSize: "17px", color: "blue"}} className="fa fa-envelope-o"></i></a>
+                                                            <>Contact Support</>
+                                                            <a
+                                                                href="https://api.whatsapp.com/send?phone=15551234567"
+                                                                style={{
+                                                                    margin: "0 10px",
+                                                                }}
+                                                            >
+                                                                <i
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "17px",
+                                                                        color: "green",
+                                                                    }}
+                                                                    className="fa fa-whatsapp"
+                                                                ></i>
+                                                            </a>
+                                                            <a
+                                                                href="mailto:test@example.com"
+                                                                style={{
+                                                                    margin: "0 10px",
+                                                                }}
+                                                            >
+                                                                <i
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "17px",
+                                                                        color: "blue",
+                                                                    }}
+                                                                    className="fa fa-envelope-o"
+                                                                ></i>
+                                                            </a>
                                                         </td>
                                                     ) : (
                                                         <>
@@ -1311,7 +1321,7 @@ const CarDetails = ({
                                     <div className="tabcontent" id="budget">
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
-                                                <tr className="detail-row mb-2">
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 ">
                                                         Bid amount
                                                     </td>
@@ -1371,7 +1381,9 @@ const CarDetails = ({
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1489,51 +1501,56 @@ const CarDetails = ({
                             <div className="flex justify-center">
                                 {token ? (
                                     <>
-                                    {carDetails?.buyNowPrice?.length >= 1 ? (
-                                        <button
-                                            onClick={() => {
-                                                initializePayment(onSuccess, onClose)
-                                                console.log(referenceNumber())
-                                            }}
-                                            className={
-                                                `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                (!terms &&
-                                                    `opacity-50 cursor-not-allowed`)
-                                            }
-                                            disabled={!terms}
-                                        >
-                                            {isLoading ? (
-                                                <ClipLoader
-                                                    color="#fff"
-                                                    size={20}
-                                                    loading
-                                                />
-                                            ) : (
-                                                "Buy Now"
-                                            )}
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={placeBid}
-                                            className={
-                                                `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                (!terms &&
-                                                    `opacity-50 cursor-not-allowed`)
-                                            }
-                                            disabled={!terms}
-                                        >
-                                            {isLoading ? (
-                                                <ClipLoader
-                                                    color="#fff"
-                                                    size={20}
-                                                    loading
-                                                />
-                                            ) : (
-                                                "Place Bid"
-                                            )}
-                                        </button>
-                                    )}
-
+                                        {carDetails?.buyNowPrice?.length >=
+                                        1 ? (
+                                            <button
+                                                onClick={() => {
+                                                    initializePayment(
+                                                        onSuccess,
+                                                        onClose
+                                                    );
+                                                    console.log(
+                                                        referenceNumber()
+                                                    );
+                                                }}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Buy Now"
+                                                )}
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={placeBid}
+                                                className={
+                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                    (!terms &&
+                                                        `opacity-50 cursor-not-allowed`)
+                                                }
+                                                disabled={!terms}
+                                            >
+                                                {isLoading ? (
+                                                    <ClipLoader
+                                                        color="#fff"
+                                                        size={20}
+                                                        loading
+                                                    />
+                                                ) : (
+                                                    "Place Bid"
+                                                )}
+                                            </button>
+                                        )}
                                     </>
                                 ) : (
                                     <Link href="/auth/login">
@@ -1790,149 +1807,269 @@ const CarDetails = ({
                                 <p className="lg:py-1.5">AUCTION INFO</p>
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
-                            <div className="w-full md:w-1/3 ">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Vehicle Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make} {""}
-                                                {cardD?.model}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Interior Colour
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                        <div className="w-11/12 m-auto flex flex-col md:flex-row items-start justify-center ">
+                            <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
+                                <tbody>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Vehicle Name
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            <p className="truncate overflow-hidden overflow-ellipsis ">
+                                                {cardD?.vehicleName}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Interior Colour
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            <p className="truncate overflow-hidden overflow-ellipsis ">
                                                 {cardD?.sourceInteriorColor}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Seller Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Seller Name
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            <p className="truncate overflow-hidden overflow-ellipsis ">
                                                 {cardD?.sourceSellerName}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Mileage
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {Object.entries(cardD?.mileage)
+                                                .length <= 2
+                                                ? ""
+                                                : cardD?.mileage.replace(
+                                                      "/",
+                                                      "."
+                                                  )}
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Mileage
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.mileage}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            year
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {cardD?.year || "Not Specified"}
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Tranbaseission
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.tranbaseission ||
-                                                    "Not Specified"}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Drive train
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.driveTrain}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className="w-full md:w-1/3  ">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Company Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Drive train
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {cardD?.driveTrain}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table className="w-full md:w-1/2 overflow-hidden  border-separate">
+                                <tbody>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Company Name
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            <p className="truncate overflow-hidden overflow-ellipsis ">
                                                 {cardD?.companyName}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                            </p>
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Make
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.make}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Make
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {cardD?.make}
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Model
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.model}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Model
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {cardD?.model}
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Pickup Location
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Pickup Location
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            <p className="truncate overflow-hidden overflow-ellipsis ">
                                                 {cardD?.pickupLocation}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                            </p>
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Engine Type
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
-                                                {cardD?.sourceEngineFuelType}
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Engine Fuel Type
+                                        </td>
+                                        <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                            {cardD?.sourceEngineFuelType}
+                                        </td>
+                                    </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Exterior Color
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {cardD?.sourceExteriorColor}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                            Exterior Color
+                                        </td>
+                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                            {cardD?.sourceExteriorColor}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <div className="relative w-11/12 m-auto">
+                            <details className="w-full">
+                                <div class="content mb-2 w-full h-full">
+                                    <div className="w-full flex flex-col md:flex-row items-start  justify-center mt-6">
+                                        <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
+                                            <tbody>
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Passenger capacity
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {
+                                                            cardD?.passengerCapacity
+                                                        }
+                                                    </td>
+                                                </tr>
 
-                        <div className="text-center mt-5">
-                            <a
-                                href="#"
-                                className="primary-blue font-semibold text-sm"
-                            >
-                                Show More Details
-                            </a>
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Vehicle type
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.vehicleType}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Engine type
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {
+                                                            cardD?.sourceEngineType
+                                                        }
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Odometer
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.odometer}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Transmission
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.transmission ||
+                                                            "Not Specified"}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Buy now price
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.buyNowPrice ||
+                                                            "Not specified"}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table className="w-full md:w-1/2 overflow-hidden  border-separate">
+                                            <tbody>
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Seller city
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        <p className="truncate overflow-hidden overflow-ellipsis ">
+                                                            {cardD?.sellerCity}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Seller state
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.sellerState}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Facilitation Location
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {
+                                                            cardD?.facilitationLocation
+                                                        }
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Seller phone
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.sellerPhone}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Seller rating
+                                                    </td>
+                                                    <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                        {cardD?.sellerRating}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                        Bidding price
+                                                    </td>
+                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                        {cardD?.mmrPrice}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
+                                    Show More Details
+                                </summary>
+                            </details>
                         </div>
                     </section>
                     <section className="overview-section w-full py-3 px-7">
@@ -1988,7 +2125,14 @@ const CarDetails = ({
                                                     <p className="sec-black font-11 flex items-center pt-2">
                                                         {ele?.year}
                                                         <span className="ml-6">
-                                                            205,456 miles
+                                                            {Object.entries(
+                                                                ele?.mileage
+                                                            ).length <= 2
+                                                                ? ""
+                                                                : ele?.mileage.replace(
+                                                                      "/",
+                                                                      "."
+                                                                  )}
                                                         </span>
                                                     </p>
                                                     <div className="flex pt-2">
