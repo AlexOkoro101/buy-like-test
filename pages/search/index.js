@@ -1306,7 +1306,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 );
                                                                         }}
                                                                         style={{
-                                                                            width: "273px",
+                                                                            width: "100%",
                                                                             height: "204px",
                                                                         }}
                                                                     >
