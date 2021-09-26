@@ -18,10 +18,43 @@ import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+//
+export function useWindowDimensions() {
+    const hasWindow = typeof window !== "undefined";
+
+    function getWindowDimensions() {
+        const width = hasWindow ? window.innerWidth : null;
+        const height = hasWindow ? window.innerHeight : null;
+        return {
+            width,
+            height,
+        };
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(
+        getWindowDimensions()
+    );
+
+    useEffect(() => {
+        if (hasWindow) {
+            function handleResize() {
+                setWindowDimensions(getWindowDimensions());
+            }
+
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }
+    }, [hasWindow]);
+
+    return windowDimensions;
+}
+//
+//
+//
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
     const { register, handleSubmit, reset } = useForm();
-
+    const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
@@ -1327,9 +1360,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     }
                                                                     style={{
                                                                         height: "380px",
-                                                                        width: open
-                                                                            ? "24%"
-                                                                            : "19%",
+                                                                        width:
+                                                                            open &&
+                                                                            width >=
+                                                                                900
+                                                                                ? "24%"
+                                                                                : !open &&
+                                                                                  width >=
+                                                                                      900
+                                                                                ? "19%"
+                                                                                : "100%",
                                                                     }}
                                                                 >
                                                                     <a
