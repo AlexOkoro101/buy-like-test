@@ -165,8 +165,10 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
-    const [truckingPrice, settruckingPrice] = useState(null);
-    const [buyNowPrice, setbuyNowPrice] = useState(null);
+    const [truckingPrice, settruckingPrice] = useState(null)
+    const [addTrucking, setaddTrucking] = useState(false)
+    const [buyNowPrice, setbuyNowPrice] = useState(null)
+
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -297,48 +299,55 @@ const CarDetails = ({
         fetch(enviroment.BASE_URL + "truck/code/" + getZipLocation(), {
             method: "GET",
             redirect: "follow",
-        }).then((data) => {
-            console.log("local trucking", data);
-            if (!data.data) {
-                fetchScrapperTrucking();
+        })
+        .then(res => {
+            return res.text()
+        })
+        .then((data) => {
+            const formatData = JSON.parse(data); 
+            console.log("local trucking", formatData.data)
+            if (formatData?.data !== null) {
+                // console.log("has value")
+                console.log("local trucking", formatData.data.raw[1])
+                settruckingPrice(formatData.data.raw[1])
             } else {
-                settruckingPrice(data.data.raw[1]);
+                fetchScrapperTrucking()
             }
-            // console.log("local trucking price", truckingPrice)
-        });
-    };
+
+        })
+
+    }
+    
 
     const fetchScrapperTrucking = () => {
-    //     if(getZipLocation() === "") {
-    //         setnoZipValue(true)
-    //         return;
-    //     }
+        const getTrucking = {
+            packingCode: `${getZipLocation()}`,
+            packingName: "",
+        };
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
+            return;
+        }
+        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                credentials: "same-origin",
+            },
+            body: JSON.stringify(getTrucking)
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            if (data.status) {
+                createLocalTrucking(data)
+            }
+            console.log("scrapper trucking", data)
+            settruckingPrice(data.raw[1])
+            console.log("scrapper trucking price", truckingPrice)
 
-    //     console.log("data-=-------click---fetchTrucking-->",)
-    //   const login ={
-    //      packingCode:"45011",
-    //      packingName:""
-    //   }
-        //  const requestOptions = {
-        //     method: 'POST',
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(getTrucking)
-        // })
-        // .then((response) => {
-        //     return response.json()
-        // })
-        // .then((data) => {
-        //     if (data.status) {
-        //         createLocalTrucking(data)
-        //     }
-        //     console.log("scrapper trucking", data)
-        //     settruckingPrice(data.raw[1])
-        //     console.log("scrapper trucking price", truckingPrice)
-
-        // })
-
+        })
     }
 
     const createLocalTrucking = (data) => {
@@ -750,19 +759,55 @@ const CarDetails = ({
             shipping: "",
         };
         console.log("bid object", bidObject);
+            const bidObject =  {
+                vin:vin,
+                link:"https://members.manheim.com/",
+                name:name,
+                site:"https://members.manheim.com/",
+                price:price,
+                year:year,
+                exterior_color:exteriorColor,
+                vehicle_type:vehicleType,
+                interior_color:interiorColor,
+                transmission:transmission,
+                odometer:odometer,
+                driveTrain:driveTrain,
+                doors:doors,
+                Model:model,
+                make:make,
+                equipment:"",
+                EngineType:"",
+                interior_type:"",
+                body_style:bodyStyle,
+                fuel_type:"",
+                passengerCapacity:"",
+                sellerCity:"",
+                description:"",
+                Zip:zip,
+                tilteImage:"",
+                bidAmount:bidAmount,
+                owner:userId,
+                facilitationLocation:facilitationLocation,
+                Vehicle_location:vehicleLocation,
+                images:carImages,
+                trucking: addTrucking ? truckingPrice : "",
+                shipping: ""
+            }
+            console.log("bid object", bidObject)
 
-        //Add car to buy now
-        fetch(enviroment.BASE_URL + "bids/buy-now", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bidObject),
-            redirect: "follow",
-        })
-            .then((response) => {
-                setisLoading(false);
-                console.log("bid response", response);
+            //Add car to buy now
+            fetch(enviroment.BASE_URL + "bids/buy-now", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bidObject),
+                redirect: 'follow'
+            })
+            .then(response => {
+                setisLoading(false)
+                console.log("bid response", response)
+
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -840,6 +885,7 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
+        console.log("raw", raw)
 
         var requestOptions = {
             method: "POST",
@@ -853,6 +899,7 @@ const CarDetails = ({
             .then((result) => console.log("front end payment", result))
             .catch((error) => console.log("error", error));
     };
+
 
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
@@ -874,10 +921,12 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
+                    setaddTrucking(true)
                     setTotalAmount(
                         parseInt(totalAmount) + parseInt(value) * naira
                     );
                 } else {
+                    setaddTrucking(false)
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
@@ -977,7 +1026,7 @@ const CarDetails = ({
 
                             <div className="overflow-scroll w-full md:px-5">
                                 <div
-                                    className=" flex transition-all mt-3
+                                    className="flex transition-all mt-3
                                 "
                                     style={{
                                         width: "100%",
@@ -1059,13 +1108,8 @@ const CarDetails = ({
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            {Object.entries(cardD?.mileage)
-                                                .length <= 2
-                                                ? ""
-                                                : cardD?.mileage.replace(
-                                                      "/",
-                                                      "."
-                                                  )}
+                                            {cardD?.odometer?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} mi
+
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {cardD.VIN}
@@ -1242,7 +1286,7 @@ const CarDetails = ({
                                                                             setFees(
                                                                                 e,
                                                                                 "truck",
-                                                                                950
+                                                                                truckingPrice.slice(1)
                                                                             )
                                                                         }
                                                                     />
@@ -1258,7 +1302,7 @@ const CarDetails = ({
                                                         Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        $1050
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1269,7 +1313,7 @@ const CarDetails = ({
                                                                     setFees(
                                                                         e,
                                                                         "ship",
-                                                                        950
+                                                                        1050
                                                                     )
                                                                 }
                                                             />
