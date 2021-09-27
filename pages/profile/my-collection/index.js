@@ -206,6 +206,7 @@ const MyCollection = ({
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
+                        console.log(formatCollection.data)
                         setcarCollection(formatCollection.data);
                     }
                 }
@@ -371,7 +372,7 @@ const MyCollection = ({
                                                         <div className="flex py-2">
                                                             {collection?.vehicles?.map(
                                                                 (vehicle) => (
-                                                                    <img
+                                                                    <img key={vehicle?.image_id}
                                                                         src={
                                                                             vehicle
                                                                                 ?.images[0]
@@ -387,16 +388,20 @@ const MyCollection = ({
 
                                                 </Link>
                                                 <div>
+                                                    {collection?.done === true ? (
+                                                    <div className="flex flex-col mx-auxo items-end">
+                                                        {/* <h4 className="text-base font-normal gray-text">
+                                                            $15,000 - $30,500
+                                                        </h4>
+                                                        <h6 className="text-xs font-normal light-gray-text">
+                                                            $1000 deposit paid
+                                                        </h6> */}
+                                                    </div>
+
+                                                    ) : (
                                                     <button onClick={() => initializePaystack(collection?._id)} className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3">Make Deposit</button>
+                                                    ) }
                                                 </div>
-                                                {/* <div className="flex flex-col mx-auxo items-end">
-                                                <h4 className="text-base font-normal gray-text">
-                                                    $15,000 - $30,500
-                                                </h4>
-                                                <h6 className="text-xs font-normal light-gray-text">
-                                                    $1000 deposit paid
-                                                </h6>
-                                            </div> */}
                                             </>
                                         </div>
                                     </div>
@@ -443,7 +448,7 @@ const MyCollection = ({
                                                     {vehicle.vehicle?.year}
                                                 </h4>
                                                 <h4 className="font-normal font-sm">
-                                                    205,456 miles
+                                                    {/* {205,456} miles */}
                                                 </h4>
                                             </div>
                                         </div>

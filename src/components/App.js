@@ -17,8 +17,7 @@ const App = ({ children }) => {
         if (router.pathname !== "/" && !router.pathname.includes("auth")) {
             if (!token) {
                 if (router.pathname === "/search/[id]") {
-                    dispatch(logOut());
-                    router.push("/auth/login");
+                    return;
                 }
 
 
@@ -32,7 +31,7 @@ const App = ({ children }) => {
                 return router.back();
             }
         }
-        if (router.pathname.includes("profile")) {
+        if (router.pathname.includes("profile") || router.pathname === "/transaction/[id]") {
             if (!token) {
                 dispatch(logOut());
                 router.push("/auth/login");

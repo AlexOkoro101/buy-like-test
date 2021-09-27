@@ -48,7 +48,7 @@ const BidDetails = () => {
 
     useEffect(() => {
         console.log(bidId)
-        fetch(enviroment.BASE_URL + "vehicle/vin/" + bidId, {
+        fetch(enviroment.BASE_URL + "vehicles/vin/" + bidId, {
             method: "GET",
             redirect: "follow",
         })

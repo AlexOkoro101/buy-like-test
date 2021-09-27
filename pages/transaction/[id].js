@@ -30,17 +30,18 @@ const Transaction = () => {
     const getCarDetail = () => {
         var requestOptions = {
             method: 'GET',
-            redirect: 'follow'
+            redirect: 'follow',
+            credentials: "same-origin",
           };
           
-          fetch(enviroment.BASE_URL + "vehicle/vin/" + carId, requestOptions)
+          fetch(enviroment.BASE_URL + "vehicles/vin/" + carId, requestOptions)
             .then(response => response.text())
             .then((result) => {
                 console.log(result)
                 if (result) {
                     if (Object.entries(result).length >= 1) {
                         const formatCarDetails = JSON.parse(result);
-                        // console.log("formated", formatCarDetails.data[0])
+                        console.log("formated", formatCarDetails.data)
                         setcarDetails(formatCarDetails.data.vehicle);
                     }
                 }
@@ -56,91 +57,8 @@ const Transaction = () => {
         <div>
             <div className="flex justify-center pt-16">
                 <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder ">
-                    <aside className="deposit-holder lg:h-screen px-4 md:px-2 lg:pl-24 lg:pr-9 pt-9 pb-4">
-                        <p className="primary-color text-sm font-bold mb-3">
-                            Make Deposit
-                        </p>
-                        <div className="grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1 car-holder py-2.5">
-                            <span className="col-span-3 inline-block overflow-hidden rounded-md">
-                                <img
-                                    className="w-full"
-                                    src={carDetails?.images[0]?.image_largeUrl}
-                                    alt=""
-                                />
-                            </span>
-                            <div className="col-span-3">
-                                <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
-                                    {carDetails?.name}
-                                </p>
-                                <p className="primary-black font-medium py-1 font-11 uppercase">
-                                    2,124 mi
-                                </p>
-                                <p className="primary-black font-medium font-11 uppercase">
-                                    vin: {carDetails?.vin}
-                                </p>
-                            </div>
-                        </div>
 
-                        <table className="min-w-full ">
-                            <tbody>
-                                <tr className="detail-row mb-2">
-                                    <td className="sec-black font-10 font-semibold py-1.5">
-                                        Trucking
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5">
-                                        {carDetails?.trucking}
-                                    </td>
-                                </tr>
-
-                                <tr className="detail-row mb-2">
-                                    <td className="sec-black font-10 font-semibold py-1.5">
-                                        Shipping
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5">
-                                        $1050
-                                    </td>
-                                </tr>
-
-                                <tr className="detail-row mb-2">
-                                    <td className="sec-black font-10 font-semibold py-1.5">
-                                        Clearing
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5">
-                                        $N2,000,000
-                                    </td>
-                                </tr>
-
-                                <tr className="detail-row mb-2">
-                                    <td className="sec-black font-10 font-semibold py-1.5">
-                                        Service Fee
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5">
-                                        $400
-                                    </td>
-                                </tr>
-
-                                <tr className="detail-row mb-2 ">
-                                    <td className="sec-black font-10 font-semibold py-1.5 total-border">
-                                        Total
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5 total-border">
-                                        N46,000,000
-                                    </td>
-                                </tr>
-
-                                <tr className="detail-row mb-2">
-                                    <td className="sec-black font-10 font-semibold py-1.5">
-                                        Deposit
-                                    </td>
-                                    <td className="font-10 primary-black font-normal py-1.5">
-                                        $1,000
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </aside>
-
-                    <section className=" px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28  ">
+                    <section className="w-full px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28  ">
                         <div className="py-6 max-w-3xl mx-auto">
                             <div className="w-full flex uppercase ">
                                 <div
@@ -344,7 +262,7 @@ const Transaction = () => {
                                                     <div className="flex flex-col mb-4  mt-3">
                                                         <div className="col-span-6 lg:col-span-3 ">
                                                             <label
-                                                                for="lga"
+                                                                htmlFor="lga"
                                                                 className="block font-10 primary-color "
                                                             >
                                                                 Bank Name
@@ -368,7 +286,7 @@ const Transaction = () => {
 
                                                         <div className="col-span-6 lg:col-span-3  mt-3">
                                                             <label
-                                                                for="phone"
+                                                                htmlFor="phone"
                                                                 className="block font-10 primary-color "
                                                             >
                                                                 Account number
@@ -384,7 +302,7 @@ const Transaction = () => {
 
                                                     <div className="flex flex-col mb-4">
                                                         <label
-                                                            for="card-number"
+                                                            htmlFor="card-number"
                                                             className="font-10 primary-black pb-1.5"
                                                         >
                                                             Expiry Date
@@ -417,11 +335,11 @@ const Transaction = () => {
                                                             type="button"
                                                             className="focus:outline-none primary-btn make-payment font-semibold tracking-wider  text-white font-10 "
                                                         >
-                                                            MAKE PAYMENT
+                                                            SAVE DETAILS
                                                         </button>
                                                     </div>
 
-                                                    <div className="text-center py-4">
+                                                    {/* <div className="text-center py-4">
                                                         <p className="font-10 primary-black">
                                                             OR
                                                         </p>
@@ -439,7 +357,7 @@ const Transaction = () => {
                                                                 alt="Paystack"
                                                             />
                                                         </button>
-                                                    </div>
+                                                    </div> */}
                                                 </form>
                                             </div>
                                         </div>
