@@ -25,6 +25,7 @@ const App = ({ children }) => {
 
             setLoggedIn(true);
         }
+
         if (router.pathname.includes("auth")) {
             if (token) {
                 dispatch(logIn());

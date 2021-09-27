@@ -9,7 +9,7 @@ import { getCars } from "../redux/actions/carsAction";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { searchTerm, carDetail, getMakes } from "../redux/actions/carsAction";
+import { searchTerm, getCategory, getMakes } from "../redux/actions/carsAction";
 
 //
 const Home = ({ getCars, cars, makes, getMakes }) => {
@@ -300,8 +300,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     };
 
     const onCategory = (data) => {
-        let options = { make: data, model: "", year: "" };
-        dispatch(searchTerm(options));
+        let options = { bodyType: data };
+        dispatch(getCategory(options));
         router.push("/search");
     };
 
