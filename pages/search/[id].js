@@ -840,7 +840,7 @@ const CarDetails = ({
             collection: '612ccfeeac78e30b1e228a4e',
             owner: `${userId}`,
             vehicle: "61417e66e48f1a073799ba99",
-            bid: "",
+            bid: bidAmount || "",
             amount: bidAmount,
             amountBalance: "1000",
             reference: "",
