@@ -128,7 +128,7 @@ const CarDetails = ({
     const [id, setId] = useState(0);
     const [percentage, setPercentage] = useState();
     const [days, setdays] = useState(0);
-    const [distance, setDistance] = useState();
+    const [distance, setDistance] = useState(null);
     const [hours, sethours] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
@@ -238,7 +238,6 @@ const CarDetails = ({
         let initialZip = null;
 
         if (carDetails) {
-            console.log(carDetails);
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -310,33 +309,38 @@ const CarDetails = ({
     };
 
     const fetchScrapperTrucking = () => {
-        const getTrucking = {
-            packingCode: `${getZipLocation()}`,
-            packingName: "",
-        };
-        if (getZipLocation() === "") {
-            setnoZipValue(true);
-            return;
-        }
-        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(getTrucking),
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status) {
-                    createLocalTrucking(data);
-                }
-                console.log("scrapper trucking", data);
-                settruckingPrice(data.raw[1]);
-                console.log("scrapper trucking price", truckingPrice);
-            });
-    };
+    //     if(getZipLocation() === "") {
+    //         setnoZipValue(true)
+    //         return;
+    //     }
+
+    //     console.log("data-=-------click---fetchTrucking-->",)
+    //   const login ={
+    //      packingCode:"45011",
+    //      packingName:""
+    //   }
+        //  const requestOptions = {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(getTrucking)
+        // })
+        // .then((response) => {
+        //     return response.json()
+        // })
+        // .then((data) => {
+        //     if (data.status) {
+        //         createLocalTrucking(data)
+        //     }
+        //     console.log("scrapper trucking", data)
+        //     settruckingPrice(data.raw[1])
+        //     console.log("scrapper trucking price", truckingPrice)
+
+        // })
+
+    }
+
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
             code: `${getZipLocation()}`,
@@ -527,13 +531,14 @@ const CarDetails = ({
     };
 
     function renderCounter(e) {
-        if (e) {
+        if (e !== null && distance > 0) {
+            console.log(e, "pp");
             return (
                 <>
                     <CountdownCircleTimer
                         isPlaying
                         duration={distance}
-                        colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                        colors={[["#00ff00"], ["#F7B801"], ["#A30000"]]}
                     >
                         {({ remainingTime }) =>
                             moment(carDetails.auctionEndTime)
@@ -544,7 +549,19 @@ const CarDetails = ({
                 </>
             );
         } else {
-            return null;
+            return (
+                <CountdownCircleTimer
+                    isPlaying
+                    duration={0}
+                    colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                >
+                    {({ remainingTime }) =>
+                        moment(carDetails.auctionEndTime)
+                            .endOf("seconds")
+                            .fromNow()
+                    }
+                </CountdownCircleTimer>
+            );
         }
     }
 
@@ -839,6 +856,7 @@ const CarDetails = ({
 
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
+        setDistance(total / 1000);
         const seconds = Math.floor((total / 1000) % 60);
         const minutes = Math.floor((total / (1000 * 60)) % 60);
         const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
@@ -911,11 +929,6 @@ const CarDetails = ({
     }
 
     function getDeadTime() {
-        let data = new Date(carDetails.auctionEndTime).getTime();
-        let countDownDate = new Date().getTime();
-        let now = new Date().getTime() >= data ? new Date().getTime() : data;
-        let distance = now - countDownDate;
-        setDistance(distance);
         let deadline = new Date(carDetails.auctionEndTime);
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
@@ -1585,11 +1598,9 @@ const CarDetails = ({
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>
-                                        {renderCounter(
-                                            carDetails.auctionEndTime
-                                        )}
-                                    </div>
+                                    {distance !== null && (
+                                        <div>{renderCounter(distance)}</div>
+                                    )}
 
                                     <div className="timer">
                                         <button
@@ -2097,7 +2108,7 @@ const CarDetails = ({
                                         ele.vehicleName && (
                                             <div
                                                 key={id}
-                                                className="car-display-holder mx-2 flex flex-col justify-between p-4 mb-4"
+                                                className="car-display-holder w-1/5 mx-2 flex flex-col justify-between p-4 mb-4"
                                                 style={{
                                                     height: "380px",
                                                 }}
