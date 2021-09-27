@@ -28,16 +28,34 @@ const MyCollection = ({
     };
     const config = {
         reference: referenceNumber(),
-        email: `${userEmail}`,
+        // email: `${userEmail}`,
+        email: `judgechuks@gmail.com`,
         amount: 100000,
-        publicKey: 'pk_test_c9e721436fd837814692c450db204c33326ff6d1',
+        publicKey: 'pk_test_1007e9b8ddb07fc05a17864b53865c135a948fbe',
     };
     
     // you can call this function anything
     const onSuccess = (reference) => {
       // Implementation for whatever you want to do with reference and after success call.
-      console.log(reference);
-      verifyPaystackPayment(reference.trxref)
+        console.log("-----------onSuccess------->",reference.reference);
+        fetch("http://localhost:4000/transactions/initialize/verify/"+reference.reference, {
+        // fetch(enviroment.BASE_URL + "transactions/initialize/verify"+reference, {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+    .then(res => res.json())
+    .then(
+      (res) => {
+        console.log("category product -------->",res)
+       
+      },
+      (error) => {
+      
+      }
+  )
+
     };
     
     // you can call this function anything

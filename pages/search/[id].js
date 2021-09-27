@@ -309,33 +309,38 @@ const CarDetails = ({
     };
 
     const fetchScrapperTrucking = () => {
-        const getTrucking = {
-            packingCode: `${getZipLocation()}`,
-            packingName: "",
-        };
-        if (getZipLocation() === "") {
-            setnoZipValue(true);
-            return;
-        }
-        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(getTrucking),
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status) {
-                    createLocalTrucking(data);
-                }
-                console.log("scrapper trucking", data);
-                settruckingPrice(data.raw[1]);
-                console.log("scrapper trucking price", truckingPrice);
-            });
-    };
+    //     if(getZipLocation() === "") {
+    //         setnoZipValue(true)
+    //         return;
+    //     }
+
+    //     console.log("data-=-------click---fetchTrucking-->",)
+    //   const login ={
+    //      packingCode:"45011",
+    //      packingName:""
+    //   }
+        //  const requestOptions = {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(getTrucking)
+        // })
+        // .then((response) => {
+        //     return response.json()
+        // })
+        // .then((data) => {
+        //     if (data.status) {
+        //         createLocalTrucking(data)
+        //     }
+        //     console.log("scrapper trucking", data)
+        //     settruckingPrice(data.raw[1])
+        //     console.log("scrapper trucking price", truckingPrice)
+
+        // })
+
+    }
+
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
             code: `${getZipLocation()}`,
