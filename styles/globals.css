@@ -365,6 +365,7 @@ progress::-moz-progress-bar {
 .footer-border {
     border-top: 1px solid white;
 }
+
 .works__section {
     background-image: url('../public/assets/img/how-bg.png');
     background-repeat: no-repeat;
@@ -418,7 +419,14 @@ footer {
 
 @media (min-width: 768px) and (max-width: 991.98px) {}
 
-@media (min-width: 992px) and (max-width: 1199.98px) {}
+@media (max-width: 992px) {
+    .car__holder {
+        background: #FFFFFF;
+        box-shadow: 0px 0px 10px rgba(0, 58, 78, 0.1);
+        border-radius: 5px;
+        width: 50% !important;
+    }
+}
 
 
 /* Search A category Styles here */

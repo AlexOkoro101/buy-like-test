@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { enviroment } from "../../src/components/enviroment";
 
 const Transaction = () => {
     const router = useRouter();
@@ -32,14 +33,15 @@ const Transaction = () => {
             redirect: 'follow'
           };
           
-          fetch("https://buylikepoint.us/json.php/view.php?vin=" + `${carId}` + "&apiKey=Switch!2020&apiKey=Switch!2020", requestOptions)
+          fetch(enviroment.BASE_URL + "vehicle/vin/" + carId, requestOptions)
             .then(response => response.text())
             .then((result) => {
+                console.log(result)
                 if (result) {
                     if (Object.entries(result).length >= 1) {
                         const formatCarDetails = JSON.parse(result);
                         // console.log("formated", formatCarDetails.data[0])
-                        setcarDetails(formatCarDetails.data[0]);
+                        setcarDetails(formatCarDetails.data.vehicle);
                     }
                 }
             })
@@ -68,13 +70,13 @@ const Transaction = () => {
                             </span>
                             <div className="col-span-3">
                                 <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
-                                    {carDetails?.vehicleName}
+                                    {carDetails?.name}
                                 </p>
                                 <p className="primary-black font-medium py-1 font-11 uppercase">
                                     2,124 mi
                                 </p>
                                 <p className="primary-black font-medium font-11 uppercase">
-                                    vin: {carDetails.VIN}
+                                    vin: {carDetails?.vin}
                                 </p>
                             </div>
                         </div>
@@ -86,7 +88,7 @@ const Transaction = () => {
                                         Trucking
                                     </td>
                                     <td className="font-10 primary-black font-normal py-1.5">
-                                        $300
+                                        {carDetails?.trucking}
                                     </td>
                                 </tr>
 
@@ -95,7 +97,7 @@ const Transaction = () => {
                                         Shipping
                                     </td>
                                     <td className="font-10 primary-black font-normal py-1.5">
-                                        $950
+                                        $1050
                                     </td>
                                 </tr>
 

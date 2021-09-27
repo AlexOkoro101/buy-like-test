@@ -177,6 +177,7 @@ export const getMakes = () => (dispatch) => {
             return response.json();
         })
         .then((data) => {
+            console.log(data, "llllll");
             if (data) {
                 if (Object.entries(data).length >= 1) {
                     let carMakes = data.data;
@@ -379,4 +380,42 @@ export const filterTabAction = (event, type) => async (dispatch) => {
         });
         console.log(error);
     }
+};
+
+export const getCategory = (data) => (dispatch) => {
+    let body = { make: data.bodyType, model: "", year: "" };
+    dispatch({
+        type: SEARCHING,
+        payload: body,
+    });
+
+    let url = `${api}?bodyType=${data.bodyType}&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    fetch(url.trim(), {
+        method: "GET",
+        headers: {},
+        credentials: "same-origin",
+    })
+        .then(function (response) {
+            return response.text();
+        })
+        .then((res) => {
+            if (res) {
+                if (Object.entries(res).length >= 1) {
+                    const dada = JSON.parse(res);
+                    if (dada) {
+                        dispatch({
+                            type: FETCH_SUCCESSFUL,
+                            payload: dada,
+                        });
+                    }
+                }
+            }
+        })
+        .catch(function (error) {
+            dispatch({
+                type: FETCHING_CARS_FAILED,
+                payload: error.message,
+            });
+            console.log(error);
+        });
 };

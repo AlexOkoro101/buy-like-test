@@ -72,6 +72,10 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         setnavDropdown(!navDropdown);
     };
 
+    useEffect(() => {
+        setnavDropdown(false);
+    }, [router.pathname])
+
     //close drop down
     function closeDropdown(ref) {
         useEffect(() => {
@@ -160,7 +164,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                     </button>
                                 </div>
 
-                                <div id="data-dropdown-toggle" className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
+                                <div ref={navRef} id="data-dropdown-toggle" className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
                                     <span>
                                         <button
                                             className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none "
@@ -189,7 +193,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                         </button>
                                     </span>
                                     <div
-                                        ref={navRef}
+                                        
                                         className={
                                             !navDropdown
                                                 ? "opacity-0 invisible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10"

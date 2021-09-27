@@ -14,18 +14,6 @@ const App = ({ children }) => {
     const myFunction = () => {
         const user = localStorage.getItem("user");
         let token = JSON.parse(user)?.userToken;
-        if (router.pathname !== "/" && !router.pathname.includes("auth")) {
-            if (!token) {
-                if (router.pathname === "/search/[id]") {
-                    dispatch(logOut());
-                    router.push("/auth/login");
-                }
-
-
-            }
-
-            setLoggedIn(true);
-        }
         if (router.pathname.includes("auth")) {
             if (token) {
                 dispatch(logIn());
