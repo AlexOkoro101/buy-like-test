@@ -56,7 +56,7 @@ const Transactions = () => {
             <div className="h-screen  mt-24 mb-20 px-32">
                 {!transactions?.length ? (
                     <div>
-                        <p>No transaction available</p>
+                        <p>Loading...</p>
                     </div>
                 ) : (
                     <>
@@ -78,7 +78,7 @@ const Transactions = () => {
                                 <table className="w-full flex flex-row flex-no-wrap ">
                                     <thead className="tertiary-gray text-xs font-medium border-transactions">
                                         <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name </th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             <th className="p-3.5 text-left">Form of payment</th>
                                             <th className="p-3.5 text-left">Status</th>
@@ -86,7 +86,7 @@ const Transactions = () => {
                                             <th className="p-3.5 text-left">Balance</th>
                                         </tr>
                                         <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             <th className="p-3.5 text-left">Form of payment</th>
                                             <th className="p-3.5 text-left">Status</th>
@@ -94,7 +94,7 @@ const Transactions = () => {
                                             <th className="p-3.5 text-left">Balance</th>
                                         </tr>
                                         <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             <th className="p-3.5 text-left">Form of payment</th>
                                             <th className="p-3.5 text-left">Status</th>
@@ -102,16 +102,7 @@ const Transactions = () => {
                                             <th className="p-3.5 text-left">Balance</th>
                                         </tr>
                                         <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
-                                            <th className="p-3.5 text-left">Amount paid</th>
-                                            <th className="p-3.5 text-left">Form of payment</th>
-                                            <th className="p-3.5 text-left">Status</th>
-                                            <th className="p-3.5 text-left">Location</th>
-                                            <th className="p-3.5 text-left">Balance</th>
-                                        </tr>
-
-                                        <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             <th className="p-3.5 text-left">Form of payment</th>
                                             <th className="p-3.5 text-left">Status</th>
@@ -120,7 +111,16 @@ const Transactions = () => {
                                         </tr>
 
                                         <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle Details</th>
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
+                                            <th className="p-3.5 text-left">Amount paid</th>
+                                            <th className="p-3.5 text-left">Form of payment</th>
+                                            <th className="p-3.5 text-left">Status</th>
+                                            <th className="p-3.5 text-left">Location</th>
+                                            <th className="p-3.5 text-left">Balance</th>
+                                        </tr>
+
+                                        <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
+                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             <th className="p-3.5 text-left">Form of payment</th>
                                             <th className="p-3.5 text-left">Status</th>
@@ -133,10 +133,10 @@ const Transactions = () => {
 
                                     {transactions.map((transaction) => (
                                         <tr key={transaction?._id} className="flex flex-col border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <td className="p-3.5">Mercedes Benz GLK</td>
+                                            <td className="p-3.5">{transaction?.BidCollection?.name || ""}</td>
                                             <td className="p-3.5">{transaction?.amount}</td>
-                                            <td className="p-3.5">Wire transfer</td>
-                                            <td className="p-3.5">{transaction?.status}</td>
+                                            <td className="p-3.5">{transaction?.type || ""}</td>
+                                            <td className="p-3.5">{transaction?.statusTrans}</td>
                                             <td className="p-3.5">Location</td>
                                             <td className="p-3.5">{transaction?.amountBalance}</td>
                                         </tr>

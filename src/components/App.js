@@ -14,13 +14,25 @@ const App = ({ children }) => {
     const myFunction = () => {
         const user = localStorage.getItem("user");
         let token = JSON.parse(user)?.userToken;
+        if (router.pathname !== "/" && !router.pathname.includes("auth")) {
+            if (!token) {
+                if (router.pathname === "/search/[id]") {
+                    return;
+                }
+
+
+            }
+
+            setLoggedIn(true);
+        }
+
         if (router.pathname.includes("auth")) {
             if (token) {
                 dispatch(logIn());
                 return router.back();
             }
         }
-        if (router.pathname.includes("profile")) {
+        if (router.pathname.includes("profile") || router.pathname === "/transaction/[id]") {
             if (!token) {
                 dispatch(logOut());
                 router.push("/auth/login");

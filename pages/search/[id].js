@@ -166,6 +166,7 @@ const CarDetails = ({
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
     const [truckingPrice, settruckingPrice] = useState(null);
+    const [addTrucking, setaddTrucking] = useState(false);
     const [buyNowPrice, setbuyNowPrice] = useState(null);
 
     const retrieveData = () => {
@@ -297,49 +298,52 @@ const CarDetails = ({
         fetch(enviroment.BASE_URL + "truck/code/" + getZipLocation(), {
             method: "GET",
             redirect: "follow",
-        }).then((data) => {
-            console.log("local trucking", data);
-            if (!data.data) {
-                fetchScrapperTrucking();
-            } else {
-                settruckingPrice(data.data.raw[1]);
-            }
-            // console.log("local trucking price", truckingPrice)
-        });
+        })
+            .then((res) => {
+                return res.text();
+            })
+            .then((data) => {
+                const formatData = JSON.parse(data);
+                console.log("local trucking", formatData.data);
+                if (formatData?.data !== null) {
+                    // console.log("has value")
+                    console.log("local trucking", formatData.data.raw[1]);
+                    settruckingPrice(formatData.data.raw[1]);
+                } else {
+                    fetchScrapperTrucking();
+                }
+            });
     };
 
     const fetchScrapperTrucking = () => {
-    //     if(getZipLocation() === "") {
-    //         setnoZipValue(true)
-    //         return;
-    //     }
-
-    //     console.log("data-=-------click---fetchTrucking-->",)
-    //   const login ={
-    //      packingCode:"45011",
-    //      packingName:""
-    //   }
-        //  const requestOptions = {
-        //     method: 'POST',
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(getTrucking)
-        // })
-        // .then((response) => {
-        //     return response.json()
-        // })
-        // .then((data) => {
-        //     if (data.status) {
-        //         createLocalTrucking(data)
-        //     }
-        //     console.log("scrapper trucking", data)
-        //     settruckingPrice(data.raw[1])
-        //     console.log("scrapper trucking price", truckingPrice)
-
-        // })
-
-    }
+        const getTrucking = {
+            packingCode: `${getZipLocation()}`,
+            packingName: "",
+        };
+        if (getZipLocation() === "") {
+            setnoZipValue(true);
+            return;
+        }
+        fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                credentials: "same-origin",
+            },
+            body: JSON.stringify(getTrucking),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    createLocalTrucking(data);
+                }
+                console.log("scrapper trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("scrapper trucking price", truckingPrice);
+            });
+    };
 
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
@@ -749,6 +753,7 @@ const CarDetails = ({
             trucking: truckingPrice || "",
             shipping: "",
         };
+
         console.log("bid object", bidObject);
 
         //Add car to buy now
@@ -763,6 +768,7 @@ const CarDetails = ({
             .then((response) => {
                 setisLoading(false);
                 console.log("bid response", response);
+
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -840,6 +846,7 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
+        console.log("raw", raw);
 
         var requestOptions = {
             method: "POST",
@@ -874,10 +881,12 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
+                    setaddTrucking(true);
                     setTotalAmount(
                         parseInt(totalAmount) + parseInt(value) * naira
                     );
                 } else {
+                    setaddTrucking(false);
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
@@ -977,7 +986,7 @@ const CarDetails = ({
 
                             <div className="overflow-scroll w-full md:px-5">
                                 <div
-                                    className=" flex transition-all mt-3
+                                    className="flex transition-all mt-3
                                 "
                                     style={{
                                         width: "100%",
@@ -1059,13 +1068,13 @@ const CarDetails = ({
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            {Object.entries(cardD?.mileage)
-                                                .length <= 2
-                                                ? ""
-                                                : cardD?.mileage.replace(
-                                                      "/",
-                                                      "."
-                                                  )}
+                                            {cardD?.odometer
+                                                ?.toString()
+                                                .replace(
+                                                    /\B(?=(\d{3})+(?!\d))/g,
+                                                    ","
+                                                )}{" "}
+                                            mi
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {cardD.VIN}
@@ -1242,7 +1251,9 @@ const CarDetails = ({
                                                                             setFees(
                                                                                 e,
                                                                                 "truck",
-                                                                                950
+                                                                                truckingPrice.slice(
+                                                                                    1
+                                                                                )
                                                                             )
                                                                         }
                                                                     />
@@ -1258,7 +1269,7 @@ const CarDetails = ({
                                                         Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
+                                                        $1050
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1269,7 +1280,7 @@ const CarDetails = ({
                                                                     setFees(
                                                                         e,
                                                                         "ship",
-                                                                        950
+                                                                        1050
                                                                     )
                                                                 }
                                                             />
