@@ -165,10 +165,9 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
-    const [truckingPrice, settruckingPrice] = useState(null)
-    const [addTrucking, setaddTrucking] = useState(false)
-    const [buyNowPrice, setbuyNowPrice] = useState(null)
-
+    const [truckingPrice, settruckingPrice] = useState(null);
+    const [addTrucking, setaddTrucking] = useState(false);
+    const [buyNowPrice, setbuyNowPrice] = useState(null);
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -300,24 +299,21 @@ const CarDetails = ({
             method: "GET",
             redirect: "follow",
         })
-        .then(res => {
-            return res.text()
-        })
-        .then((data) => {
-            const formatData = JSON.parse(data); 
-            console.log("local trucking", formatData.data)
-            if (formatData?.data !== null) {
-                // console.log("has value")
-                console.log("local trucking", formatData.data.raw[1])
-                settruckingPrice(formatData.data.raw[1])
-            } else {
-                fetchScrapperTrucking()
-            }
-
-        })
-
-    }
-    
+            .then((res) => {
+                return res.text();
+            })
+            .then((data) => {
+                const formatData = JSON.parse(data);
+                console.log("local trucking", formatData.data);
+                if (formatData?.data !== null) {
+                    // console.log("has value")
+                    console.log("local trucking", formatData.data.raw[1]);
+                    settruckingPrice(formatData.data.raw[1]);
+                } else {
+                    fetchScrapperTrucking();
+                }
+            });
+    };
 
     const fetchScrapperTrucking = () => {
         const getTrucking = {
@@ -334,21 +330,20 @@ const CarDetails = ({
                 "Content-Type": "application/json",
                 credentials: "same-origin",
             },
-            body: JSON.stringify(getTrucking)
+            body: JSON.stringify(getTrucking),
         })
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            if (data.status) {
-                createLocalTrucking(data)
-            }
-            console.log("scrapper trucking", data)
-            settruckingPrice(data.raw[1])
-            console.log("scrapper trucking price", truckingPrice)
-
-        })
-    }
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    createLocalTrucking(data);
+                }
+                console.log("scrapper trucking", data);
+                settruckingPrice(data.raw[1]);
+                console.log("scrapper trucking price", truckingPrice);
+            });
+    };
 
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
@@ -758,55 +753,21 @@ const CarDetails = ({
             trucking: truckingPrice || "",
             shipping: "",
         };
-        console.log("bid object", bidObject);
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                tilteImage:"",
-                bidAmount:bidAmount,
-                owner:userId,
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: addTrucking ? truckingPrice : "",
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
 
-            //Add car to buy now
-            fetch(enviroment.BASE_URL + "bids/buy-now", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(bidObject),
-                redirect: 'follow'
-            })
-            .then(response => {
-                setisLoading(false)
-                console.log("bid response", response)
+        console.log("bid object", bidObject);
+
+        //Add car to buy now
+        fetch(enviroment.BASE_URL + "bids/buy-now", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bidObject),
+            redirect: "follow",
+        })
+            .then((response) => {
+                setisLoading(false);
+                console.log("bid response", response);
 
                 if (!response.ok) {
                     buyNowInfo();
@@ -885,7 +846,7 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
-        console.log("raw", raw)
+        console.log("raw", raw);
 
         var requestOptions = {
             method: "POST",
@@ -899,7 +860,6 @@ const CarDetails = ({
             .then((result) => console.log("front end payment", result))
             .catch((error) => console.log("error", error));
     };
-
 
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
@@ -921,12 +881,12 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
-                    setaddTrucking(true)
+                    setaddTrucking(true);
                     setTotalAmount(
                         parseInt(totalAmount) + parseInt(value) * naira
                     );
                 } else {
-                    setaddTrucking(false)
+                    setaddTrucking(false);
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
@@ -1108,8 +1068,13 @@ const CarDetails = ({
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            {cardD?.odometer?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} mi
-
+                                            {cardD?.odometer
+                                                ?.toString()
+                                                .replace(
+                                                    /\B(?=(\d{3})+(?!\d))/g,
+                                                    ","
+                                                )}{" "}
+                                            mi
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {cardD.VIN}
@@ -1286,7 +1251,9 @@ const CarDetails = ({
                                                                             setFees(
                                                                                 e,
                                                                                 "truck",
-                                                                                truckingPrice.slice(1)
+                                                                                truckingPrice.slice(
+                                                                                    1
+                                                                                )
                                                                             )
                                                                         }
                                                                     />
