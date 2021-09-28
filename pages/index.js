@@ -239,15 +239,15 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (cars.length <= 0) {
+        if (cars && cars.length <= 0) {
             getCars();
             getMakes();
         }
-        if (cars.length > 0) {
+        if (cars && cars.length > 0) {
             console.log("two");
             setImages(cars);
         }
-        if (makes.length) {
+        if (makes && makes.length) {
             setcarMakes(makes);
             getVehicleModels(makes[0].make_display);
             console.log("three");

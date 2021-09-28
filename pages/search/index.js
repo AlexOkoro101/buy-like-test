@@ -16,7 +16,16 @@ import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
-
+import {
+    FuelType,
+    BodyType,
+    TransmissionType,
+    EngineType,
+    InteriorColour,
+    InteriorType,
+    ExternalColour,
+    FacilitationLocation,
+} from "./data";
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //
 export function useWindowDimensions() {
@@ -441,13 +450,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         menuList: (provided, state) => ({
             ...provided,
             border: "1px solid #dee2e6",
-            width: 180,
+            width: "100%",
             borderRadius: "5px",
         }),
 
         control: () => ({
             // none of react-select's styles are passed to <Control />
-            minWidth: 180,
+            minWidth: "100%",
             margin: 0,
             display: "flex",
             justifyContent: "space-between",
@@ -463,36 +472,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         },
     };
 
-    //
-    // Filter inputs Options
-    //
-    const FuelType = [
-        { value: "Gasoline", label: "Gasoline" },
-        { value: "Diesel", label: "Diesel" },
-        { value: "Gas/Electric Hybrid", label: "Gas/Electric Hybrid" },
-        { value: "Plug-in Hybrid", label: "Plug-in Hybrid" },
-        { value: "Electric", label: "Electric" },
-    ];
-    const BodyType = [
-        { value: "Sedan/Saloon", label: "Sedan/Saloon" },
-        { value: "Suv", label: "Suv" },
-        { value: "Coupe", label: "Coupe" },
-        { value: "Hatchback", label: "Hatchback" },
-        { value: "Wagon", label: "Wagon" },
-    ];
-    const TransmissionType = [
-        { value: "Automatic", label: "Automatic" },
-        { value: "Manual", label: "Manual" },
-    ];
-    const ExternalColour = [
-        { value: "White", label: "White" },
-        { value: "Black", label: "Black" },
-        { value: "Grey", label: "Grey" },
-        { value: "Red", label: "Red" },
-        { value: "Gold", label: "Gold" },
-    ];
-    //
-    // End of Filter Input Options
     return (
         <div>
             <Meta></Meta>
@@ -713,6 +692,62 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 width="100%"
                                                 onChange={(e) => handleMake(e)}
                                                 options={FuelType}
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Facilitation Location
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                onChange={(e) => handleMake(e)}
+                                                options={FacilitationLocation}
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Interior Colour
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                onChange={(e) => handleMake(e)}
+                                                options={InteriorColour}
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Interior Type
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                onChange={(e) => handleMake(e)}
+                                                options={InteriorType}
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Engine Type
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                onChange={(e) => handleMake(e)}
+                                                options={EngineType}
                                             />
                                         </div>
                                     </div>
