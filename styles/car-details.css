@@ -322,4 +322,8 @@ input.detail:checked~span:after {
 
 }
 
+.overview-section .overview-table {
+    width: 450px;
+}
+
 

@@ -53,7 +53,7 @@ const Testimonials = () => {
           <div className="splide__list">
             <Slider {...settings}>
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
@@ -75,7 +75,7 @@ const Testimonials = () => {
                 </p>
               </div>
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
@@ -97,7 +97,7 @@ const Testimonials = () => {
                 </p>
               </div>
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
@@ -119,7 +119,7 @@ const Testimonials = () => {
                 </p>
               </div>
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
@@ -141,7 +141,7 @@ const Testimonials = () => {
                 </p>
               </div>{' '}
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
@@ -163,7 +163,7 @@ const Testimonials = () => {
                 </p>
               </div>
               <div className=" testimonial__holder p-8 ">
-                <p className="primary-color text-base font-normal ">
+                <p style={{lineHeight: "24px"}} className="primary-color text-base font-normal ">
                   The car is exactly what I saw in the picture. The staff were
                   good listeners and professional. The car is exactly what I saw
                   in the picture.
