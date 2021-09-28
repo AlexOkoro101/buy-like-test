@@ -315,5 +315,11 @@ input.detail:checked~span:after {
 
 
 }
+@media (min-width: 1024px) {
+    .car-details-holder {
+        width: 32%;
+    }
+
+}
 
 
