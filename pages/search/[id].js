@@ -128,7 +128,7 @@ const CarDetails = ({
     const [id, setId] = useState(0);
     const [percentage, setPercentage] = useState();
     const [days, setdays] = useState(0);
-    const [distance, setDistance] = useState();
+    const [distance, setDistance] = useState(null);
     const [hours, sethours] = useState(0);
     const [minute, setminute] = useState(0);
     const [seconds, setseconds] = useState(0);
@@ -240,7 +240,6 @@ const CarDetails = ({
         let initialZip = null;
 
         if (carDetails) {
-            console.log(carDetails);
             initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
@@ -349,6 +348,7 @@ const CarDetails = ({
                 console.log("scrapper trucking price", truckingPrice);
             });
     };
+
     const createLocalTrucking = (data) => {
         const localTruckingObject = {
             code: `${getZipLocation()}`,
@@ -542,13 +542,14 @@ const CarDetails = ({
     };
 
     function renderCounter(e) {
-        if (e) {
+        if (e !== null && distance > 0) {
+            console.log(e, "pp");
             return (
                 <>
                     <CountdownCircleTimer
                         isPlaying
                         duration={distance}
-                        colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                        colors={[["#00ff00"], ["#F7B801"], ["#A30000"]]}
                     >
                         {({ remainingTime }) =>
                             moment(carDetails.auctionEndTime)
@@ -559,7 +560,19 @@ const CarDetails = ({
                 </>
             );
         } else {
-            return null;
+            return (
+                <CountdownCircleTimer
+                    isPlaying
+                    duration={0}
+                    colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
+                >
+                    {({ remainingTime }) =>
+                        moment(carDetails.auctionEndTime)
+                            .endOf("seconds")
+                            .fromNow()
+                    }
+                </CountdownCircleTimer>
+            );
         }
     }
 
@@ -839,7 +852,7 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
-        console.log("raw", raw)
+        console.log("raw", raw);
 
         var requestOptions = {
             method: "POST",
@@ -854,9 +867,9 @@ const CarDetails = ({
             .catch((error) => console.log("error", error));
     };
 
-
     function getTimeRemaining(e) {
         const total = Date.parse(e) - Date.parse(new Date());
+        setDistance(total / 1000);
         const seconds = Math.floor((total / 1000) % 60);
         const minutes = Math.floor((total / (1000 * 60)) % 60);
         const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
@@ -874,12 +887,12 @@ const CarDetails = ({
         switch (type) {
             case "truck":
                 if (e.target.checked === true) {
-                    setaddTrucking(true)
+                    setaddTrucking(true);
                     setTotalAmount(
                         parseInt(totalAmount) + parseInt(value) * naira
                     );
                 } else {
-                    setaddTrucking(false)
+                    setaddTrucking(false);
                     setTotalAmount(
                         parseInt(totalAmount) - parseInt(value) * naira
                     );
@@ -931,11 +944,6 @@ const CarDetails = ({
     }
 
     function getDeadTime() {
-        let data = new Date(carDetails.auctionEndTime).getTime();
-        let countDownDate = new Date().getTime();
-        let now = new Date().getTime() >= data ? new Date().getTime() : data;
-        let distance = now - countDownDate;
-        setDistance(distance);
         let deadline = new Date(carDetails.auctionEndTime);
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
@@ -1249,7 +1257,9 @@ const CarDetails = ({
                                                                             setFees(
                                                                                 e,
                                                                                 "truck",
-                                                                                truckingPrice.slice(1)
+                                                                                truckingPrice.slice(
+                                                                                    1
+                                                                                )
                                                                             )
                                                                         }
                                                                     />
@@ -1605,11 +1615,9 @@ const CarDetails = ({
                             </div>
                             <div className="flex flex-col relative  lg:block">
                                 <div className="timer-container relative bg-white">
-                                    <div>
-                                        {renderCounter(
-                                            carDetails.auctionEndTime
-                                        )}
-                                    </div>
+                                    {distance !== null && (
+                                        <div>{renderCounter(distance)}</div>
+                                    )}
 
                                     <div className="timer">
                                         <button

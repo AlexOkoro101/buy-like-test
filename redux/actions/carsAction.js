@@ -177,6 +177,7 @@ export const getMakes = () => (dispatch) => {
             return response.json();
         })
         .then((data) => {
+            console.log(data, "llllll");
             if (data) {
                 if (Object.entries(data).length >= 1) {
                     let carMakes = data.data;
