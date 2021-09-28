@@ -165,9 +165,10 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
-    const [truckingPrice, settruckingPrice] = useState(null);
-    const [addTrucking, setaddTrucking] = useState(false);
-    const [buyNowPrice, setbuyNowPrice] = useState(null);
+    const [truckingPrice, settruckingPrice] = useState(null)
+    const [addTrucking, setaddTrucking] = useState(false)
+    const [buyNowPrice, setbuyNowPrice] = useState(null)
+    const [overview, setoverview] = useState(true)
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -299,21 +300,24 @@ const CarDetails = ({
             method: "GET",
             redirect: "follow",
         })
-            .then((res) => {
-                return res.text();
-            })
-            .then((data) => {
-                const formatData = JSON.parse(data);
-                console.log("local trucking", formatData.data);
-                if (formatData?.data !== null) {
-                    // console.log("has value")
-                    console.log("local trucking", formatData.data.raw[1]);
-                    settruckingPrice(formatData.data.raw[1]);
-                } else {
-                    fetchScrapperTrucking();
-                }
-            });
-    };
+        .then(res => {
+            return res.text()
+        })
+        .then((data) => {
+            const formatData = JSON.parse(data); 
+            console.log("local trucking", formatData.data)
+            if (formatData?.data !== null) {
+                // console.log("has value")
+                console.log("local trucking", formatData.data.raw[1])
+                settruckingPrice(formatData.data.raw[1])
+            } else {
+                fetchScrapperTrucking()
+            }
+
+        })
+
+    }
+    
 
     const fetchScrapperTrucking = () => {
         const getTrucking = {
@@ -408,7 +412,8 @@ const CarDetails = ({
                 <img
                     src={params.images[0].image_largeUrl}
                     alt="hello"
-                    className="w-full h-full"
+                    style={{height: "11.25rem", borderRadius: "5px"}}
+                    className="br-5 w-64"
                 />
             );
         }
@@ -480,7 +485,9 @@ const CarDetails = ({
                     }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
-                    className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
+                    className="br-5 object-fit cursor-pointer"
+                    width="715"
+                    height="424"
                     alt="Benz"
                 />
             </>
@@ -719,56 +726,55 @@ const CarDetails = ({
         addCar();
     };
     const buyNowFunction = () => {
-        const bidObject = {
-            vin: vin,
-            link: "https://members.manheim.com/",
-            name: name,
-            site: "https://members.manheim.com/",
-            price: price,
-            year: year,
-            exterior_color: exteriorColor,
-            vehicle_type: vehicleType,
-            interior_color: interiorColor,
-            transmission: transmission,
-            odometer: odometer,
-            driveTrain: driveTrain,
-            doors: doors,
-            Model: model,
-            make: make,
-            equipment: "",
-            EngineType: "",
-            interior_type: "",
-            body_style: bodyStyle,
-            fuel_type: "",
-            passengerCapacity: "",
-            sellerCity: "",
-            description: "",
-            Zip: zip,
-            tilteImage: "",
-            bidAmount: bidAmount,
-            owner: userId,
-            facilitationLocation: facilitationLocation,
-            Vehicle_location: vehicleLocation,
-            images: carImages,
-            trucking: truckingPrice || "",
-            shipping: "",
-        };
 
-        console.log("bid object", bidObject);
+            const bidObject =  {
+                vin:vin,
+                link:"https://members.manheim.com/",
+                name:name,
+                site:"https://members.manheim.com/",
+                price:price,
+                year:year,
+                exterior_color:exteriorColor,
+                vehicle_type:vehicleType,
+                interior_color:interiorColor,
+                transmission:transmission,
+                odometer:odometer,
+                driveTrain:driveTrain,
+                doors:doors,
+                Model:model,
+                make:make,
+                equipment:"",
+                EngineType:"",
+                interior_type:"",
+                body_style:bodyStyle,
+                fuel_type:"",
+                passengerCapacity:"",
+                sellerCity:"",
+                description:"",
+                Zip:zip,
+                tilteImage:"",
+                bidAmount:bidAmount,
+                owner:userId,
+                facilitationLocation:facilitationLocation,
+                Vehicle_location:vehicleLocation,
+                images:carImages,
+                trucking: addTrucking ? truckingPrice : "",
+                shipping: ""
+            }
+            console.log("bid object", bidObject)
 
-        //Add car to buy now
-        fetch(enviroment.BASE_URL + "bids/buy-now", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bidObject),
-            redirect: "follow",
-        })
-            .then((response) => {
-                setisLoading(false);
-                console.log("bid response", response);
-
+            //Add car to buy now
+            fetch(enviroment.BASE_URL + "bids/buy-now", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bidObject),
+                redirect: 'follow'
+            })
+            .then(response => {
+                setisLoading(false)
+                console.log("bid response", response)
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -836,7 +842,7 @@ const CarDetails = ({
             collection: "612ccfeeac78e30b1e228a4e",
             owner: `${userId}`,
             vehicle: "61417e66e48f1a073799ba99",
-            bid: "",
+            bid: bidAmount || "",
             amount: bidAmount,
             amountBalance: "1000",
             reference: "",
@@ -954,11 +960,11 @@ const CarDetails = ({
     //
 
     return (
-        <div>
+        <main>
             <ToastContainer />
             {cardD && cardD.auctionEndTime && (
                 <>
-                    <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
+                    <div className="flex flex-wrap justify-center pt-20 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
                                 {cardD.vehicleName}
@@ -981,10 +987,10 @@ const CarDetails = ({
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full lg:w-3/6 md:px-5 overflow-hidden">
-                            <div className="md:px-5">{displayLargeimage()}</div>
+                        <div className="w-full lg:w-3/5">
+                            <div>{displayLargeimage()}</div>
 
-                            <div className="overflow-scroll w-full md:px-5">
+                            <div className="overflow-scroll">
                                 <div
                                     className="flex transition-all mt-3
                                 "
@@ -1068,13 +1074,13 @@ const CarDetails = ({
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            {cardD?.odometer
-                                                ?.toString()
-                                                .replace(
-                                                    /\B(?=(\d{3})+(?!\d))/g,
-                                                    ","
-                                                )}{" "}
-                                            mi
+                                            {Object.entries(cardD?.mileage)
+                                                .length <= 2
+                                                ? ""
+                                                : cardD?.mileage.replace(
+                                                      "/",
+                                                      "."
+                                                  )}
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {cardD.VIN}
@@ -1118,17 +1124,17 @@ const CarDetails = ({
                                         className="tabcontent"
                                         id="offer-amount"
                                     >
-                                        <div className="edit-holder my-1.5 px-2  flex items-center">
+                                        <div className="edit-holder my-1.5 px-3  flex items-center">
                                             <table>
                                                 <tbody>
                                                     <tr className="">
-                                                        <td className="sec-black font-11 font-semibold w-28  ">
-                                                            <label>
+                                                        <td className="text-xs font-medium sec-gray pr-6">
+                                                            <label htmlFor="amount">
                                                                 Add amount to
                                                                 bid
                                                             </label>
                                                         </td>
-                                                        <td className="text-sm font-medium sec-black">
+                                                        <td className="text-xs font-medium sec-black">
                                                             <input
                                                                 value={bidAmount.toLocaleString()}
                                                                 id="amount"
@@ -1149,7 +1155,7 @@ const CarDetails = ({
                                         </div>
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                <tr className="detail-row mb-2">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 ">
                                                         Destination
                                                     </td>
@@ -1344,7 +1350,7 @@ const CarDetails = ({
                                     <div className="tabcontent" id="budget">
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
+                                                <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 ">
                                                         Bid amount
                                                     </td>
@@ -1587,7 +1593,7 @@ const CarDetails = ({
                                 )}
                             </div>
                         </div>
-                    </section>
+                    </div>
 
                     <section className="w-full mt-20">
                         <div className=" justify-center mb-10 block lg:hidden"></div>
@@ -1809,224 +1815,322 @@ const CarDetails = ({
                         </div>
                     </section>
 
-                    <section
-                        className="py-4 flex flex-col w-full overview-section"
-                        style={{ justifyContent: "center" }}
-                    >
+                    <div
+                        className="py-4 overview-section">
                         <div className="flex justify-center px-5">
-                            <div className="overview-tab relative mr-6 lg:mr-16 active lg:px-4 lg:text-base text-xs font-semibold  primary-black lg:py-0.5">
+                            <div onClick={() => {setoverview(true)}} className={"overview-tab relative mr-6 lg:mr-16 lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " + (overview ? " active" : "")}>
                                 <p className="lg:py-1.5 ">OVERVIEW</p>
                             </div>
 
-                            <div className="overview-tab text-xs relative mr-6 lg:mr-16 lg:px-4 lg:text-base  font-semibold  primary-black lg:py-0.5">
-                                <p className="lg:py-1.5">
-                                    EQUIPMENT AND OPTIONS
-                                </p>
-                            </div>
 
-                            <div className="overview-tab text-xs relative mr-2 lg:mr-16 lg:px-4 lg:text-base font-semibold  primary-black lg:py-0.5">
+                            <div onClick={() => {setoverview(false)}} className={"overview-tab text-xs relative mr-2 lg:mr-16 lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " + (!overview ? " active" : "")}>
                                 <p className="lg:py-1.5">AUCTION INFO</p>
                             </div>
                         </div>
-                        <div className="w-11/12 m-auto flex flex-col md:flex-row items-start justify-center ">
-                            <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
-                                <tbody>
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Vehicle Name
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            <p className="truncate overflow-hidden overflow-ellipsis ">
-                                                {cardD?.vehicleName}
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Interior Colour
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            <p className="truncate overflow-hidden overflow-ellipsis ">
-                                                {cardD?.sourceInteriorColor}
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Seller Name
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            <p className="truncate overflow-hidden overflow-ellipsis ">
-                                                {cardD?.sourceSellerName}
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Mileage
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {Object.entries(cardD?.mileage)
-                                                .length <= 2
-                                                ? ""
-                                                : cardD?.mileage.replace(
-                                                      "/",
-                                                      "."
-                                                  )}
-                                        </td>
-                                    </tr>
+                        <div className={overview ? "flex flex-wrap px-5 justify-center mt-6 " : " hidden"}>
+                            <div>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            year
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {cardD?.year || "Not Specified"}
-                                        </td>
-                                    </tr>
+                                <table className="min-w-full border-separate overview-table">
+                                    <tbody>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Vehicle Name
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {cardD?.vehicleName}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Vehicle VIN
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {cardD?.VIN}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Interior Color
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {cardD?.sourceInteriorColor}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Mileage
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {Object.entries(cardD?.mileage)
+                                                    .length <= 2
+                                                    ? ""
+                                                    : cardD?.mileage.replace(
+                                                        "/",
+                                                        "."
+                                                    )}
+                                            </td>
+                                        </tr>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Drive train
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {cardD?.driveTrain}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table className="w-full md:w-1/2 overflow-hidden  border-separate">
-                                <tbody>
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Company Name
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            <p className="truncate overflow-hidden overflow-ellipsis ">
-                                                {cardD?.companyName}
-                                            </p>
-                                        </td>
-                                    </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                year
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.year || "Not Specified"}
+                                            </td>
+                                        </tr>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Make
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {cardD?.make}
-                                        </td>
-                                    </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Drive train
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.driveTrain}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="lg:ml-3">
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Model
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {cardD?.model}
-                                        </td>
-                                    </tr>
+                                <table className="min-w-full border-separate overview-table">
+                                    <tbody>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Pickup Location
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            <p className="truncate overflow-hidden overflow-ellipsis ">
-                                                {cardD?.pickupLocation}
-                                            </p>
-                                        </td>
-                                    </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Make
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.make}
+                                            </td>
+                                        </tr>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Engine Fuel Type
-                                        </td>
-                                        <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
-                                            {cardD?.sourceEngineFuelType}
-                                        </td>
-                                    </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Model
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.model}
+                                            </td>
+                                        </tr>
 
-                                    <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                        <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
-                                            Exterior Color
-                                        </td>
-                                        <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                            {cardD?.sourceExteriorColor}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
+                                                Engine Fuel Type
+                                            </td>
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                {cardD?.sourceEngineFuelType}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Exterior Color
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.sourceExteriorColor}
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Body type
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.bodyType}
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Doors
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.doors}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div className="relative w-11/12 m-auto">
-                            <details className="w-full">
-                                <div class="content mb-2 w-full h-full">
+                        <div className={!overview ? "flex flex-wrap px-5 justify-center mt-6 " : " hidden"} >
+                            <div>
+
+                                <table className="min-w-full border-separate overview-table">
+                                    <tbody>
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Facilitation Location
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {
+                                                    cardD?.facilitationLocation
+                                                }
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Seller city
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {cardD?.sellerCity}
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Seller state
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.sellerState}
+                                            </td>
+                                        </tr>
+
+
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Seller phone
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.sellerPhone}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Seller rating
+                                            </td>
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                {cardD?.sellerRating}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="lg:ml-3">
+
+                                <table className="min-w-full border-separate overview-table">
+                                    <tbody>
+                                        <tr className="detail-row">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Bidding price
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.mmrPrice}
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Pickup Location
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {cardD?.pickupLocation}
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Auction End Time
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.auctionEndTime}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Buy now price
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                {cardD?.buyNowPrice ||
+                                                    "Not specified"}
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="relative w-full flex flex-wrap px-5 justify-center mt-6">
+                            <details className="relative justify-center overflow-hidden">
+                                <div className="content mb-2 w-full h-full">
                                     <div className="w-full flex flex-col md:flex-row items-start  justify-center mt-6">
                                         <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
                                             <tbody>
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Passenger capacity
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {
                                                             cardD?.passengerCapacity
                                                         }
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Vehicle type
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.vehicleType}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Engine type
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {
                                                             cardD?.sourceEngineType
                                                         }
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Body type
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.bodyType}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Odometer
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.odometer}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Transmission
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.transmission ||
                                                             "Not Specified"}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Buy now price
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.buyNowPrice ||
                                                             "Not specified"}
                                                     </td>
@@ -2035,48 +2139,48 @@ const CarDetails = ({
                                         </table>
                                         <table className="w-full md:w-1/2 overflow-hidden  border-separate">
                                             <tbody>
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Seller city
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
-                                                        <p className="truncate overflow-hidden overflow-ellipsis ">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
+                                                        <span className="truncate overflow-hidden overflow-ellipsis ">
                                                             {cardD?.sellerCity}
-                                                        </p>
+                                                        </span>
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Seller state
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.sellerState}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Facilitation Location
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {
                                                             cardD?.facilitationLocation
                                                         }
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Seller phone
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.sellerPhone}
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Seller rating
                                                     </td>
                                                     <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
@@ -2084,11 +2188,11 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row p-3 flex justify-between items-center overflow-hidden my-1">
-                                                    <td className="sec-black text-sm md:text-base  font-semibold w-52 ">
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Bidding price
                                                     </td>
-                                                    <td className="text-sm md:text-base turncate overflow-hidden sec-black font-normal  w-auto">
+                                                    <td className="turncate text-sm sec-black font-normal py-2 pr-32">
                                                         {cardD?.mmrPrice}
                                                     </td>
                                                 </tr>
@@ -2101,7 +2205,7 @@ const CarDetails = ({
                                 </summary>
                             </details>
                         </div>
-                    </section>
+                    </div>
                     <section className="overview-section w-full py-3 px-7">
                         <div className="text-center py-3">
                             <hr className="red-underline2 w-20 m-auto pb-4" />
@@ -2110,7 +2214,7 @@ const CarDetails = ({
                             </h4>
                         </div>
                         <div
-                            className="flex flex-wrap justify-center lg:justify-center display-type"
+                            className="flex justify-center flex-wrap mt-4 display-type"
                             id="car-grid"
                         >
                             {data?.length > 0 &&
@@ -2119,14 +2223,11 @@ const CarDetails = ({
                                         ele.vehicleName && (
                                             <div
                                                 key={id}
-                                                className="car-display-holder w-1/5 mx-2 flex flex-col justify-between p-4 mb-4"
-                                                style={{
-                                                    height: "380px",
-                                                }}
-                                            >
-                                                <div
-                                                    className="cursor-pointer"
-                                                    onClick={() => {
+                                                className="similar-cars-holder p-3 mr-4 mb-5 lg:mb-0 cursor-pointer"
+                                                // style={{
+                                                //     height: "380px",
+                                                // }}
+                                                onClick={() => {
                                                         dispatch(
                                                             carDetail(ele)
                                                         ),
@@ -2136,83 +2237,60 @@ const CarDetails = ({
                                                                     ele.VIN,
                                                             });
                                                     }}
-                                                    style={{
-                                                        width: "273px",
-                                                        height: "204px",
-                                                    }}
-                                                >
+                                            >
+                                                
                                                     {addImage(ele)}
-                                                </div>
-                                                <div className="mt-3">
-                                                    <p className="text-xs primary-black font-medium">
-                                                        {ele?.vehicleName
-                                                            ? ele?.vehicleName
-                                                            : [
-                                                                  ele?.make,
-                                                                  ele.model,
-                                                              ].join(" ")}
+                                                <p class="pt-2 primary-black font-medium text-xs"></p>
+                                                <div className="flex pt-2">
+                                                    <p className="flex items-center sec-black font-10">
+                                                        <span class="mr-1">
+                                                            <img src="../assets/img/vectors/red-location-beacon.svg" alt="location" />
+                                                        </span>
+                                                        {ele?.pickupLocation}
                                                     </p>
-                                                    <p className="sec-black font-11 flex items-center pt-2">
-                                                        {ele?.year}
-                                                        <span className="ml-6">
-                                                            {Object.entries(
+                                                    <div className="ml-auto flex self-center">
+                                                        <img className="img-fluid" src="../../assets/img/vectors/red-date.svg" alt="date" />
+                                                        <p className="sec-black font-10 ml-1">  {new Date(
+                                                                    ele?.auctionEndTime
+                                                                ).toLocaleDateString()}</p>
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                                <div class="flex font-11 primary-gray pt-1">
+                                                        <p>{ele?.year}</p>
+                                                        <p class="ml-3.5">{Object.entries(
                                                                 ele?.mileage
                                                             ).length <= 2
                                                                 ? ""
                                                                 : ele?.mileage.replace(
                                                                       "/",
                                                                       "."
-                                                                  )}
-                                                        </span>
-                                                    </p>
-                                                    <div className="flex pt-2">
-                                                        <p className="flex items-center sec-black font-10">
-                                                            <span className="mr-1">
-                                                                <img
-                                                                    src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                    alt="location"
-                                                                />
-                                                            </span>
-                                                            {
-                                                                ele?.pickupLocation
-                                                            }
-                                                        </p>
-                                                        <div className="ml-auto flex self-center">
-                                                            <img
-                                                                className="img-fluid"
-                                                                src="../../assets/img/vectors/red-date.svg"
-                                                                alt="date"
-                                                            />
-                                                            <p className="sec-black font-10 ml-1">
-                                                                {new Date(
-                                                                    ele?.auctionEndTime
-                                                                ).toLocaleDateString()}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex pt-3">
-                                                        <div className="ml-auto  self-center">
-                                                            <button
-                                                                type="button"
-                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                onClick={() => {
-                                                                    dispatch(
-                                                                        carDetail(
-                                                                            ele
-                                                                        )
-                                                                    ),
-                                                                        router.push(
-                                                                            {
-                                                                                pathname:
-                                                                                    "/search/" +
-                                                                                    ele.VIN,
-                                                                            }
-                                                                        );
-                                                                }}
-                                                            >
-                                                                Place bid
-                                                            </button>
-                                                        </div>
+                                                                  )}</p>
+                                                </div>
+                                                <div className="flex pt-2">
+                                                    <p class=" sec-black text-base">${ele?.buyNowPrice}</p>
+                                                    <div className="ml-auto  self-center">
+                                                        <button
+                                                            type="button"
+                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                            onClick={() => {
+                                                                dispatch(
+                                                                    carDetail(
+                                                                        ele
+                                                                    )
+                                                                ),
+                                                                    router.push(
+                                                                        {
+                                                                            pathname:
+                                                                                "/search/" +
+                                                                                ele.VIN,
+                                                                        }
+                                                                    );
+                                                            }}
+                                                        >
+                                                            Place bid
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2231,7 +2309,7 @@ const CarDetails = ({
                     </section>
                 </>
             )}
-        </div>
+        </main>
     );
 };
 
