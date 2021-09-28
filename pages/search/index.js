@@ -25,7 +25,7 @@ import {
     InteriorType,
     ExternalColour,
     FacilitationLocation,
-} from "./data";
+} from "../../src/components/data";
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //
 export function useWindowDimensions() {
