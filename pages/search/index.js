@@ -62,13 +62,22 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    const { register, handleSubmit, reset } = useForm();
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
     const [paramValue, setParam] = useState(params);
     const [makeValue, setmake] = useState({});
+    const [filterValue, setFilterValue] = useState({
+        transmission: "",
+        bodyType: "",
+        engineType: "",
+        exterior_color: "",
+        interior_color: "",
+        interior_type: "",
+        fuel_type: "",
+        location: "",
+    });
     const [pageIndex, setPageIndex] = useState(1);
     const [active, setActive] = useState("all");
     const [filter, setfilter] = useState([]);
@@ -101,20 +110,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     useEffect(() => {
         if (carModels.length <= 0) {
             if (makes && makes[0]) {
-                getVehicleModels(makes[0].make_display);
+                getVehicleModels();
             }
         }
-    });
+    }, []);
+    useEffect(() => {
+        handleTransmission();
+    }, [filterValue]);
     useEffect(() => {
         if (carMakes && carMakes.length <= 0) {
             getMakes();
         }
         if (makes && makes[0]) {
             setcarMakes(makes);
-            getVehicleModels(makes[0].make_display);
         }
-        setcarMakes(makes);
-        getMakes();
     }, [makes]);
     useEffect(() => {
         let data = paramValue;
@@ -124,7 +133,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 setParam({ ...data });
             }
         }
-        getVehicleModels(paramValue.make);
+        if (paramValue.make) {
+            getVehicleModels(paramValue.make);
+        }
     }, [paramValue, params]);
 
     const handleSearch = async (e) => {
@@ -144,7 +155,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 year: paramValue?.year || "",
                 page: i,
             };
-            dispatch(fetchMore(datas));
+            dispatch(fetchMore(filterValue, datas));
         } else {
             let data =
                 active === "now"
@@ -178,7 +189,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: data,
             page: 1,
         };
-        dispatch(fetchMore(datas));
+        dispatch(fetchMore(filterValue, datas));
         setPageIndex(1);
     };
 
@@ -200,7 +211,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             page: 1,
         };
         setPageIndex(1);
-        dispatch(fetchMore(datas));
+        dispatch(fetchMore(filterValue, datas));
     };
     const handleMake = (e) => {
         var data;
@@ -220,34 +231,33 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             make: data,
         }));
         setPageIndex(1);
-        getVehicleModels(data);
-        dispatch(fetchMore(datas));
+        let dat = makes.find(
+            (ele) => ele.name.toLowerCase() === e[0].value.toLowerCase()
+        );
+        setcarModels(dat.models);
+        dispatch(fetchMore(filterValue, datas));
     };
-    const getVehicleModels = (make) => {
-        try {
-            fetch(
-                "https://buylinke.herokuapp.com/vehicle-type/model?model=" +
-                    `${make}`,
-                {
-                    method: "POST",
-                }
-            )
-                .then(function (response) {
-                    return response.json();
-                })
-                .then((data) => {
-                    let carModels = data;
-                    let makeSplit = carModels.data.split("(")[1];
-                    let anotherSplit = makeSplit.split(")")[0];
-                    let formatModel = JSON.parse(anotherSplit);
-                    let datas = [...formatModel.Models];
-                    setcarModels([...datas]);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        } catch (error) {
-            console.log(error);
+    //
+    // Filter actions
+    const handleTransmission = () => {
+        const datas = {
+            make: paramValue?.make || "",
+            model: paramValue?.model || "",
+            year: paramValue?.year || "",
+            page: pageIndex,
+        };
+        dispatch(fetchMore(filterValue, datas));
+    };
+    //
+    //
+    const getVehicleModels = (e) => {
+        if (e) {
+            let dat = makes.find(
+                (ele) => ele.name.toLowerCase() === e.toLowerCase()
+            );
+            setcarModels(dat.models);
+        } else {
+            setcarModels(makes[0].models);
         }
     };
     const activateList = () => {
@@ -349,8 +359,23 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         setData(result);
     };
     const clearForm = () => {
-        reset();
-        fetchPage(pageIndex);
+        // setFilterValue({
+        //     transmission: "",
+        //     bodyType: "",
+        //     engineType: "",
+        //     exterior_color: "",
+        //     interior_color: "",
+        //     interior_type: "",
+        //     fuel_type: "",
+        //     location: "",
+        // });
+        // document
+        //     .querySelectorAll("input[type=checkbox]")
+        //     .forEach((el) => (el.checked = false));
+
+        //
+        //
+        console.log("clear");
     };
     const activateGrid = () => {
         setgrid(true);
@@ -513,7 +538,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <div className="mt-3">
                                     {/* <!-- Make Here --> */}
                                     <ReactMultiSelectCheckboxes
-                                        isMulti={false}
                                         className="primary-black font-semibold font-11  "
                                         styles={customStyles}
                                         placeholderButtonLabel={
@@ -527,8 +551,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             carMakes &&
                                             carMakes.map((ele) => {
                                                 return {
-                                                    label: ele.make_display,
-                                                    value: ele.make_display,
+                                                    label: ele.name,
+                                                    value: ele.name,
                                                 };
                                             })
                                         }
@@ -549,8 +573,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 carModels &&
                                                 carModels.map((ele) => {
                                                     return {
-                                                        label: ele.model_name,
-                                                        value: ele.model_name,
+                                                        label: ele.name,
+                                                        value: ele.name,
                                                     };
                                                 })
                                             }
@@ -580,10 +604,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
 
                                 {/* Filters */}
-                                <form
-                                    onSubmit={handleSubmit(handleFilter)}
-                                    className="mt-16"
-                                >
+                                <form className="mt-16">
                                     {/* <!-- Filter icon --> */}
                                     <div className="flex pb-2">
                                         <div>
@@ -609,27 +630,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     </div>
                                     <div className="flex justify-between">
                                         {/* FIlter Button */}
-                                        <div className="flex  py-4">
-                                            <button
-                                                id="submitFilter"
-                                                type="submit"
-                                            >
-                                                Filter
-                                            </button>
-                                        </div>
+                                        <div className="flex  py-4"></div>
 
                                         {/* <!-- Clear all filters here --> */}
-                                        <div className="flex  py-4">
-                                            <div>
-                                                <button
-                                                    type="button"
-                                                    className="focus:outline-none font-11 primary-blue"
-                                                    onClick={() => clearForm()}
-                                                >
-                                                    Clear all filters
-                                                </button>
-                                            </div>
-                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className={
+                                                "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            }
+                                            value="all"
+                                            onClick={() => clearForm()}
+                                        >
+                                            Clear all filters
+                                        </button>
                                     </div>
 
                                     <div className="tabWrapper">
@@ -644,7 +658,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        bodyType: e[0].value,
+                                                    }));
+                                                }}
                                                 options={BodyType}
                                             />
                                         </div>
@@ -660,7 +679,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        transmission:
+                                                            e[0].value,
+                                                    }));
+                                                }}
                                                 options={TransmissionType}
                                             />
                                         </div>
@@ -675,7 +700,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        exterior_color:
+                                                            e[0].value,
+                                                    }));
+                                                }}
                                                 options={ExternalColour}
                                             />
                                         </div>
@@ -690,7 +721,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        fuel_type: e[0].value,
+                                                    }));
+                                                }}
                                                 options={FuelType}
                                             />
                                         </div>
@@ -704,7 +740,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        location: e[0].value,
+                                                    }));
+                                                }}
                                                 options={FacilitationLocation}
                                             />
                                         </div>
@@ -718,7 +759,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        interior_color:
+                                                            e[0].value,
+                                                    }));
+                                                }}
                                                 options={InteriorColour}
                                             />
                                         </div>
@@ -732,7 +779,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        interior_type:
+                                                            e[0].value,
+                                                    }));
+                                                }}
                                                 options={InteriorType}
                                             />
                                         </div>
@@ -746,7 +799,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
-                                                onChange={(e) => handleMake(e)}
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e[0].value,
+                                                    }));
+                                                }}
                                                 options={EngineType}
                                             />
                                         </div>

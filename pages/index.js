@@ -249,45 +249,18 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         }
         if (makes && makes.length) {
             setcarMakes(makes);
-            getVehicleModels(makes[0].make_display);
+            getVehicleModels();
             console.log("three");
         }
     }, [cars]);
     const handleMake = (e) => {
         let data = makes.find(
-            (ele) => ele.make_display.toLowerCase() === e.toLowerCase()
+            (ele) => ele.name.toLowerCase() === e.toLowerCase()
         );
-        getVehicleModels(data.make_id);
+        setcarModels(data.models);
     };
-    const getVehicleModels = (make) => {
-        setmodel(true);
-        try {
-            fetch(
-                "https://buylinke.herokuapp.com/vehicle-type/model?model=" +
-                    `${make}`,
-                {
-                    method: "POST",
-                }
-            )
-                .then(function (response) {
-                    return response.json();
-                })
-                .then((data) => {
-                    setmodel(false);
-                    let carModels = data;
-                    let makeSplit = carModels.data.split("(")[1];
-                    let anotherSplit = makeSplit.split(")")[0];
-                    let formatModel = JSON.parse(anotherSplit);
-                    let datas = [...formatModel.Models];
-                    setcarModels([...datas]);
-                })
-                .catch(function (error) {
-                    setmodel(false);
-                    console.log(error);
-                });
-        } catch (error) {
-            console.log(error);
-        }
+    const getVehicleModels = () => {
+        setcarModels(makes[0].models);
     };
 
     const { register, handleSubmit } = useForm();
@@ -434,9 +407,9 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             carMakes?.map((x, id) => (
                                                 <option
                                                     key={id}
-                                                    value={x?.make_display}
+                                                    value={x?.name}
                                                 >
-                                                    {x?.make_display}
+                                                    {x?.name}
                                                 </option>
                                             ))}
                                     </select>
@@ -472,9 +445,9 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             {carModels.map((x, id) => (
                                                 <option
                                                     key={id}
-                                                    value={x?.model_name}
+                                                    value={x?.name}
                                                 >
-                                                    {x?.model_name}
+                                                    {x?.name}
                                                 </option>
                                             ))}
                                         </select>

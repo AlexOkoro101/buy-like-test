@@ -113,58 +113,13 @@ export const searchTerm = (event) => async (dispatch) => {
         console.log(error);
     }
 };
-export const fetchMore = (event) => async (dispatch) => {
-    console.log(event);
-    dispatch({
-        type: FETCHING,
-        payload: {
-            make: event.make || "",
-            model: event.model || "",
-            year: event.year || "",
-        },
-    });
-    try {
-        let res = await fetch(
-            `${api}?year=${event.year}&make=${event.make}&model=${event.model}&page=${event.page}&apiKey=Switch!2020`,
-            {
-                method: "GET",
-                headers: {},
-                credentials: "same-origin",
-            }
-        )
-            .then(function (response) {
-                return response.text();
-            })
-            .catch(function (error) {
-                dispatch({
-                    type: FETCHING_FAILED,
-                    payload: error.message,
-                });
-                console.log(error);
-            });
-        if (res) {
-            const response = JSON.parse(res);
-            if (response) {
-                dispatch({
-                    type: SEARCHING_SUCCESS,
-                    payload: response,
-                });
-            }
-        }
-    } catch (error) {
-        dispatch({
-            type: FETCHING_FAILED,
-            payload: error.message,
-        });
-        console.log(error);
-    }
-};
+
 export const getMakes = () => (dispatch) => {
     dispatch({
         type: FETCHING_MAKE,
     });
 
-    fetch("https://buylinke.herokuapp.com/vehicle-type/make", {
+    fetch("https://buylinke.herokuapp.com/makes", {
         method: "GET",
         redirect: "follow",
         credentials: "same-origin",
@@ -177,21 +132,10 @@ export const getMakes = () => (dispatch) => {
             return response.json();
         })
         .then((data) => {
-            console.log(data, "llllll");
-            if (data) {
-                if (Object.entries(data).length >= 1) {
-                    let carMakes = data.data;
-                    let makeSplit = carMakes.split("(")[1];
-                    let anotherSplit = makeSplit.split(")")[0];
-                    let formatMake = JSON.parse(anotherSplit);
-                    if (formatMake) {
-                        dispatch({
-                            type: FETCHING_MAKE_SUCCESS,
-                            payload: formatMake.Makes,
-                        });
-                    }
-                }
-            }
+            dispatch({
+                type: FETCHING_MAKE_SUCCESS,
+                payload: data.data,
+            });
         })
         .catch(function (error) {
             dispatch({
@@ -418,4 +362,80 @@ export const getCategory = (data) => (dispatch) => {
             });
             console.log(error);
         });
+};
+
+//
+//
+export const fetchMore = (event, main) => async (dispatch) => {
+    console.log(main);
+    dispatch({
+        type: FETCHING,
+        payload: {
+            make: main.make || "",
+            model: main.model || "",
+            year: main.year || "",
+        },
+    });
+    let data = {
+        transmission:
+            Object.entries(event.transmission).length > 0
+                ? event.transmission
+                : "",
+        bodyType:
+            Object.entries(event.bodyType).length > 0 ? event.bodyType : "",
+        engineType:
+            Object.entries(event.engineType).length > 0 ? event.engineType : "",
+        exterior_color:
+            Object.entries(event.exterior_color).length > 0
+                ? event.exterior_color
+                : "",
+        interior_color:
+            Object.entries(event.interior_color).length > 0
+                ? event.interior_color
+                : "",
+        interior_type:
+            Object.entries(event.interior_type).length > 0
+                ? event.interior_type
+                : "",
+        fuel_type:
+            Object.entries(event.fuel_type).length > 0 ? event.fuel_type : "",
+        location:
+            Object.entries(event.location).length > 0 ? event.location : "",
+    };
+    try {
+        let res = await fetch(
+            `${api}?year=${main.year}&make=${main.make}&model=${main.model}&page=${main.page}&transmission=${data.transmission}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
+            {
+                method: "GET",
+                headers: {},
+                credentials: "same-origin",
+            }
+        )
+            .then(function (response) {
+                return response.text();
+            })
+            .catch(function (error) {
+                dispatch({
+                    type: FETCHING_FAILED,
+                    payload: error.message,
+                });
+                console.log(error);
+            });
+        if (res) {
+            const response = JSON.parse(res);
+            if (response) {
+                console.log(response, "pppp");
+                dispatch({
+                    type: SEARCHING_SUCCESS,
+                    payload: response,
+                });
+            }
+        }
+    } catch (error) {
+        dispatch({
+            type: FETCHING_FAILED,
+            payload: error.message,
+        });
+        console.log(error);
+    }
 };
