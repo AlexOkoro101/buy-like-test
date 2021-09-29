@@ -391,7 +391,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         ) {
             return (
                 <div
-                    className=" w-full h-full bg-black bg-opacity-20"
+                    className=" w-full h-full bg-black bg-opacity-20 rounded-md"
                     // style={{
                     //     backgroundImage: `url(${params.images[0].image_largeUrl})`,
                     // }}
@@ -399,7 +399,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     <img
                         src={params.images[0].image_largeUrl}
                         alt="hello"
-                        className="w-full object-contain h-full"
+                        className="w-full object-contain h-full rounded-md object-center"
                     />
                 </div>
             );
@@ -1084,11 +1084,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     className={
                                                                         open ==
                                                                         true
-                                                                            ? " car-display-holder flex flex-col justify-between box-border   p-4 mb-4"
-                                                                            : " car-display-holder flex flex-col justify-between box-border  p-4 mb-4"
+                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-xl   p-4 mb-4"
+                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-xl  p-4 mb-4"
                                                                     }
                                                                     style={{
-                                                                        height: "380px",
+                                                                        height: "335px",
                                                                         width:
                                                                             open &&
                                                                             width >=
@@ -1119,7 +1119,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         }}
                                                                         style={{
                                                                             width: "100%",
-                                                                            height: "204px",
+                                                                            height: "178px",
                                                                         }}
                                                                     >
                                                                         {addImage(

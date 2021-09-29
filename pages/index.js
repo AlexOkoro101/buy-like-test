@@ -249,7 +249,11 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         }
         if (makes && makes.length) {
             setcarMakes(makes);
+<<<<<<< HEAD
             getVehicleModels();
+=======
+            getVehicleModels(makes[0]?.make_display);
+>>>>>>> 3a154e8e7ea00e22d464b92dda2fd4fdf5be8003
             console.log("three");
         }
     }, [cars]);
@@ -384,7 +388,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     <div className=" request__holder relative w-full p-12  ">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="flex  flex-wrap justify-center ">
-                                <div className="flex flex-col ml-1 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
+                                <div className="relative flex flex-col ml-1 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
+                                    <svg class="w-3 h-3 absolute top-4 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#1F2A53" fill-rule="nonzero"/></svg>
                                     <label
                                         htmlFor="year "
                                         className="primary-black font-semibold text-sm "
@@ -393,7 +398,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     </label>
                                     <select
                                         name=" "
-                                        id="year "
+                                        id="make"
                                         className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         {...register("make")}
                                         onChange={(e) =>
@@ -414,7 +419,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             ))}
                                     </select>
                                 </div>
-                                <div className="flex flex-col ml-1 xl:ml-1 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
+                                <div className="relative flex flex-col ml-1 xl:ml-3 lg:ml-3 pb-5 w-full md:w-52 lg:w-52">
+                                    <svg class="w-3 h-3 absolute top-4 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#1F2A53" fill-rule="nonzero"/></svg>
                                     <label
                                         htmlFor="model "
                                         className="primary-black font-semibold text-sm "
@@ -424,7 +430,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     {fetchModel === true ? (
                                         <select
                                             name=" "
-                                            id="model "
+                                            id="model"
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                         >
                                             <option value="" selected disabled>
@@ -434,7 +440,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     ) : (
                                         <select
                                             name=" "
-                                            id="model "
+                                            id="model"
                                             className="form__control px-1.5 w-full font-13 focus:outline-none "
                                             {...register("model")}
                                         >
@@ -454,11 +460,13 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     )}
                                 </div>
 
-                                <div className="flex flex-col ml-1 xl:ml-1 pb-5 w-full md:w-52 lg:w-52">
+                                <div className="relative flex flex-col ml-1 xl:ml-3 pb-5 w-full md:w-52 lg:w-52">
                                     <label className="primary-black font-semibold text-sm ">
                                         Select Year
                                     </label>
+                                    <svg class="w-3 h-3 absolute top-4 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#1F2A53" fill-rule="nonzero"/></svg>
                                     <select
+                                        id="year"
                                         {...register("year")}
                                         className="form__control px-1.5 w-full font-13 focus:outline-none "
                                     >
@@ -474,7 +482,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     </select>
                                 </div>
 
-                                <div className="flex-col flex mt-4 pt-1 ml-1 xl:ml-1 lg:ml-3 pb-5 w-full md:w-40 lg:w-40">
+                                <div className="flex-col flex mt-4 pt-1 ml-1 xl:ml-3 lg:ml-3 pb-5 w-full md:w-40 lg:w-40">
                                     <button
                                         type="submit"
                                         className="estimate__btn uppercase focus:outline-none font-semibold"
@@ -592,7 +600,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
                     <div className="flex flex-wrap justify-between lg:flex-nowrap md:flex-nowrap lg:justify-between md:justify-between mt-14 ">
                         {/* <!-- Hatchback here --> */}
-                        <div className="car__holder flex flex-col justify-center px-4 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
+                        <div className="car__holder flex flex-col justify-center px-6 pt-4 mb-5 lg:mb-0 md:mb-0 pb-3 ">
                             <img
                                 src="./assets/img/hatchback.svg "
                                 alt="Hatchback "
@@ -679,7 +687,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     <div className="text-center mt-10 ">
                         <button
                             type="button "
-                            className="estimate__btn focus:outline-none font-semibold px-4 "
+                            className="estimate__btn focus:outline-none font-semibold px-8 "
                             onClick={() => router.push("/search")}
                         >
                             SEE ALL VECHICLES
@@ -691,7 +699,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     className="w-full filtered__section "
                     id="number-offset"
                 >
-                    <div className="relative px-2 lg:px-20 ">
+                    <div className="relative px-2 lg:pr-16 lg:pl-0">
                         <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-32 ">
                             <div
                                 className="purple__ellipse mt-5 lg:mt-0 "
@@ -700,6 +708,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 <img
                                     src="./assets/img/tesla.svg "
                                     className="pt-7 tesla"
+                                    width="600px"
                                     alt="Tesla "
                                 />
                             </div>
@@ -730,8 +739,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     </div>
                 </section>
                 {/*  */}
-                <section className="wholesale__section w-full pb-12 px-2 lg:px-20 ">
-                    <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap justify-between pt-10 ">
+                <section className="wholesale__section w-full pb-12 px-2 lg:px-40">
+                    <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap justify-between pt-20">
                         <div className="w-full md:w-1/2 xl:w-2/5 ">
                             <div>
                                 <h3 className="primary-red line-60 font-medium text-3xl lg:text-4xl ">
@@ -760,7 +769,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                 {/*  */}
                 <section className="w-full easybuy__section ">
                     <div className="relative lg:pr-20 ">
-                        <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-32 ">
+                        <div className="flex flex-wrap lg:flex-nowrap md:flex-nowrap flex-col-reverse md:flex-row lg:flex-row justify-between pt-10 pb-20 lg:pb-2 ">
                             <div className="relative " id="easyBuywaypoint">
                                 <img
                                     src="./assets/img/land-rover.svg "
