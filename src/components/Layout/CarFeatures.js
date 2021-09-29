@@ -80,17 +80,17 @@ const CarFeatures = () => {
         <div className="py-14">
           <div className="feature__holder ">
             <div className="flex flex-wrap md:flex-nowrap lg:flex-nowrap pt-4">
-              <div className="w-full lg:w-1/2">
+              <div className="w-full">
                 {/* First Car here */}
                 <div
                   className={`flex items-center features__bg ${
                     greenStatus ? 'active' : null
-                  } px-5 py-2`}
+                  } px-5 py-3`}
                   style={{ cursor: 'pointer' }}
                   onClick={onGreenLight}
                 >
                   <div>
-                    <h5 className="feature__header font-medium text-lg">
+                    <h5 className="feature__header font-medium text-base">
                       Green Light Car
                     </h5>
                   </div>
@@ -117,12 +117,12 @@ const CarFeatures = () => {
                 <div
                   className={`flex items-center features__bg ${
                     redStatus ? 'active' : null
-                  } px-5 py-2`}
+                  } px-5 py-3`}
                   style={{ cursor: 'pointer' }}
                   onClick={onRedLight}
                 >
                   <div>
-                    <h5 className="feature__header font-medium text-lg">
+                    <h5 className="feature__header font-medium text-base">
                       Red Light Car
                     </h5>
                   </div>
@@ -149,12 +149,12 @@ const CarFeatures = () => {
                 <div
                   className={`flex items-center features__bg ${
                     blueStatus ? 'active' : null
-                  } px-5 py-2`}
+                  } px-5 py-3`}
                   style={{ cursor: 'pointer' }}
                   onClick={onBlueLight}
                 >
                   <div>
-                    <h5 className="feature__header font-medium text-lg">
+                    <h5 className="feature__header font-medium text-base">
                       Blue Light Car
                     </h5>
                   </div>
@@ -181,12 +181,12 @@ const CarFeatures = () => {
                 <div
                   className={`flex items-center features__bg ${
                     odometerStatus ? 'active' : null
-                  } px-5 py-2`}
+                  } px-5 py-3`}
                   style={{ cursor: 'pointer' }}
                   onClick={onOdometerLight}
                 >
                   <div>
-                    <h5 className="feature__header font-medium text-lg">
+                    <h5 className="feature__header font-medium text-base">
                       Odometer
                     </h5>
                   </div>
@@ -210,31 +210,31 @@ const CarFeatures = () => {
                   </div>
                 </div>
                 {/* Fifth Car here */}
-                {/* <div className="flex items-center features__bg px-5 py-2">
-                      <div>
-                        <h5 className="feature__header font-medium text-lg">
-                          Read more
-                        </h5>
-                      </div>
-                      <div className="ml-auto">
-                        <svg
-                          width={12}
-                          height={22}
-                          viewBox="0 0 12 22"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M1.5 2L10.5 11L1.5 20"
-                            stroke="#1F2A53"
-                            strokeOpacity="0.75"
-                            strokeWidth="2.75"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                    </div> */}
+                <div className="flex items-center features__bg px-5 py-3">
+                  <div>
+                    <h5 className="feature__header font-medium text-base">
+                      Read more
+                    </h5>
+                  </div>
+                  <div className="ml-auto">
+                    <svg
+                      width={12}
+                      height={22}
+                      viewBox="0 0 12 22"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.5 2L10.5 11L1.5 20"
+                        stroke="#1F2A53"
+                        strokeOpacity="0.75"
+                        strokeWidth="2.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
               {/* Details here */}
               <div className="pt-6 px-8 pb-3">

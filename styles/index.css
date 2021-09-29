@@ -83,7 +83,7 @@ body {
 
 .primary-btn {
     background: var(--red);
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 
@@ -353,9 +353,21 @@ progress::-moz-progress-bar {
     background: #FFFFFF;
     box-shadow: 0px 0px 10px rgba(0, 58, 78, 0.1);
     border-radius: 5px;
-    width: 180px;
+    width: 206px;
+    text-align: center;
+}
+.car__holder img {
+    width: 85%;
+    margin: auto;
 }
 
+select#make option, select#model option, select#year option {
+    background-color: #fff;
+}
+select#make option:checked, select#model option:checked, select#year option:checked {
+    background-color: rgb(235, 226, 226);
+    border-color: #2482D8;
+}
 @media (max-width: 992px) {
     .car__holder {
         background: #FFFFFF;
@@ -385,6 +397,24 @@ progress::-moz-progress-bar {
     background-image: url('../public/assets/img/vectors/purple-ellipse.svg');
     background-repeat: no-repeat;
     background-size: contain;
+}
+.red__ellipse {
+    background-position: center;
+    background-image: url('../public/assets/img/vectors/red.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-top: 50px;
+}
+
+.filtered__text {
+    color:#1F2A53;
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 400;
+}
+.slick-dots li button:before {
+    font-size: 12px !important;
+    color: #0C74D4 !important;
 }
 
 
@@ -485,7 +515,7 @@ progress::-moz-progress-bar {
     background: #FFFFFF;
     box-shadow: 0px 0px 10px 5px rgba(73, 165, 198, 0.05);
     border-radius: 10px;
-    width: 270px;
+    width: 290px;
 }
 
 /* Car features styles here */
@@ -642,12 +672,12 @@ progress::-moz-progress-bar {
 
 .faq-header {
     color: #D80739;
-    font-size: 1.25rem;
+    font-size: 20px;
 }
 
 .faq {
     color: var(--primary-color);
-    font-size: 0.875rem;
+    font-size: 14px;
 }
 
 .faq.all {
