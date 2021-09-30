@@ -357,7 +357,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         ) {
             return (
                 <div
-                    className=" w-full h-full bg-black bg-opacity-20 rounded-md"
+
+                    style={{width: "240px", height: "178px"}}
+                    className=" bg-black bg-opacity-20 rounded-md"
                     // style={{
                     //     backgroundImage: `url(${params.images[0].image_largeUrl})`,
                     // }}

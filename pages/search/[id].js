@@ -249,11 +249,16 @@ const CarDetails = ({
     const showMoreVehicles = () => {
         var num = 4;
         getSimilarVehicles(num)
-        console.log("my num", num)
+        // console.log("my num", num)
     }
 
     const getSimilarVehicles = (num) => {
         let array = [];
+        if(size === 12) {
+            router.push("/search")
+            return
+        }
+
         if (cars) {
             cars.data?.map((ele) => {
                 if (ele.vehicleName !== "") {
@@ -261,7 +266,7 @@ const CarDetails = ({
                 }
             });
         }
-        setsize((num || 0) + 4)
+        setsize((num || 0) + size)
         const items = array.slice(0, size + (num || 0)); 
         console.log("items",items);
         console.log("size", size)
