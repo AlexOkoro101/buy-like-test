@@ -475,8 +475,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         menuList: (provided, state) => ({
             ...provided,
             border: "1px solid #dee2e6",
-            width: "100%",
+            width: 200,
             borderRadius: "5px",
+            zIndex: 0,
         }),
 
         control: () => ({
@@ -488,6 +489,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             flexWrap: "flex",
             border: "2px solid rgba(59, 130, 246, 0.5)",
             borderRadius: "5px",
+            zIndex: 0,
         }),
         singleValue: (provided, state) => {
             const opacity = state.isDisabled ? 0.5 : 1;
