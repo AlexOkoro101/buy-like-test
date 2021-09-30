@@ -170,10 +170,10 @@ const CarDetails = ({
     const [vehicleLocation, setvehicleLocation] = useState("");
     const [carImages, setcarImages] = useState([]);
     const [noZipValue, setnoZipValue] = useState(false);
-    const [truckingPrice, settruckingPrice] = useState(null)
-    const [addTrucking, setaddTrucking] = useState(false)
-    const [buyNowPrice, setbuyNowPrice] = useState(null)
-    const [overview, setoverview] = useState(true)
+    const [truckingPrice, settruckingPrice] = useState(null);
+    const [addTrucking, setaddTrucking] = useState(false);
+    const [buyNowPrice, setbuyNowPrice] = useState(null);
+    const [overview, setoverview] = useState(true);
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -236,11 +236,11 @@ const CarDetails = ({
     }, [userId, message]);
 
     const [page, setPage] = useState(0);
-    const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
+    const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 6);
     const [count, setCount] = useState(0);
     const [naira, setNaira] = useState(0);
     const user = useSelector(selectToken);
-    const [size, setsize] = useState(4)
+    const [size, setsize] = useState(4);
 
     const getZipLocation = () => {
         let initialZip = null;
@@ -256,6 +256,7 @@ const CarDetails = ({
         getSimilarVehicles(num)
         // console.log("my num", num)
     }
+
 
     const getSimilarVehicles = (num) => {
         let array = [];
@@ -275,8 +276,9 @@ const CarDetails = ({
         const items = array.slice(0, size + (num || 0)); 
         console.log("items",items);
         console.log("size", size)
+
         setData(items);
-    }
+    };
 
     useEffect(() => {
         setDetail(carDetails);
@@ -303,7 +305,7 @@ const CarDetails = ({
 
         setbuyNowPrice(carDetails.buyNowPrice);
 
-        getSimilarVehicles()
+        getSimilarVehicles();
         getRate();
         getSecondRate();
         displaySmall();
@@ -323,24 +325,21 @@ const CarDetails = ({
             method: "GET",
             redirect: "follow",
         })
-        .then(res => {
-            return res.text()
-        })
-        .then((data) => {
-            const formatData = JSON.parse(data); 
-            console.log("local trucking", formatData.data)
-            if (formatData?.data !== null) {
-                // console.log("has value")
-                console.log("local trucking", formatData.data.raw[1])
-                settruckingPrice(formatData.data.raw[1])
-            } else {
-                fetchScrapperTrucking()
-            }
-
-        })
-
-    }
-    
+            .then((res) => {
+                return res.text();
+            })
+            .then((data) => {
+                const formatData = JSON.parse(data);
+                console.log("local trucking", formatData.data);
+                if (formatData?.data !== null) {
+                    // console.log("has value")
+                    console.log("local trucking", formatData.data.raw[1]);
+                    settruckingPrice(formatData.data.raw[1]);
+                } else {
+                    fetchScrapperTrucking();
+                }
+            });
+    };
 
     const fetchScrapperTrucking = () => {
         const getTrucking = {
@@ -432,16 +431,15 @@ const CarDetails = ({
             params.images[0].image_smallUrl
         ) {
             return (
-                <div className=" bg-black bg-opacity-20 rounded-md"
-                
-                    style={{width: "240px", height: "178px"}}
+                <div
+                    className=" bg-black bg-opacity-20 rounded-md"
+                    style={{ width: "240px", height: "178px" }}
                 >
                     <img
                         src={params.images[0].image_largeUrl}
                         alt="hello"
                         className="w-full h-full object-center rounded-md object-contain"
                     />
-
                 </div>
             );
         }
@@ -453,11 +451,11 @@ const CarDetails = ({
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
-            size = 5;
+            size = 6;
         }
         let count = cardD?.images?.length - size;
         setCount(count);
-        if (data > window.innerWidth <= 760 ? 3 : 5) {
+        if (data > window.innerWidth <= 760 ? 3 : 6) {
             let data = cardD?.images?.slice(page, size);
             setimageD(data);
         } else {
@@ -470,7 +468,7 @@ const CarDetails = ({
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
-            size = 5;
+            size = 6;
         }
         let data = cardD?.images?.slice(page - size, limit - size);
         setimageD(data);
@@ -483,7 +481,7 @@ const CarDetails = ({
         if (window.innerWidth <= 760) {
             size = 3;
         } else {
-            size = 5;
+            size = 6;
         }
         let data = cardD?.images?.slice(page + size, limit + size);
         setimageD(data);
@@ -759,55 +757,54 @@ const CarDetails = ({
         addCar();
     };
     const buyNowFunction = () => {
+        const bidObject = {
+            vin: vin,
+            link: "https://members.manheim.com/",
+            name: name,
+            site: "https://members.manheim.com/",
+            price: price,
+            year: year,
+            exterior_color: exteriorColor,
+            vehicle_type: vehicleType,
+            interior_color: interiorColor,
+            transmission: transmission,
+            odometer: odometer,
+            driveTrain: driveTrain,
+            doors: doors,
+            Model: model,
+            make: make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: bodyStyle,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: zip,
+            tilteImage: "",
+            bidAmount: bidAmount,
+            owner: userId,
+            facilitationLocation: facilitationLocation,
+            Vehicle_location: vehicleLocation,
+            images: carImages,
+            trucking: addTrucking ? truckingPrice : "",
+            shipping: "",
+        };
+        console.log("bid object", bidObject);
 
-            const bidObject =  {
-                vin:vin,
-                link:"https://members.manheim.com/",
-                name:name,
-                site:"https://members.manheim.com/",
-                price:price,
-                year:year,
-                exterior_color:exteriorColor,
-                vehicle_type:vehicleType,
-                interior_color:interiorColor,
-                transmission:transmission,
-                odometer:odometer,
-                driveTrain:driveTrain,
-                doors:doors,
-                Model:model,
-                make:make,
-                equipment:"",
-                EngineType:"",
-                interior_type:"",
-                body_style:bodyStyle,
-                fuel_type:"",
-                passengerCapacity:"",
-                sellerCity:"",
-                description:"",
-                Zip:zip,
-                tilteImage:"",
-                bidAmount:bidAmount,
-                owner:userId,
-                facilitationLocation:facilitationLocation,
-                Vehicle_location:vehicleLocation,
-                images:carImages,
-                trucking: addTrucking ? truckingPrice : "",
-                shipping: ""
-            }
-            console.log("bid object", bidObject)
-
-            //Add car to buy now
-            fetch(enviroment.BASE_URL + "bids/buy-now", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(bidObject),
-                redirect: 'follow'
-            })
-            .then(response => {
-                setisLoading(false)
-                console.log("bid response", response)
+        //Add car to buy now
+        fetch(enviroment.BASE_URL + "bids/buy-now", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bidObject),
+            redirect: "follow",
+        })
+            .then((response) => {
+                setisLoading(false);
+                console.log("bid response", response);
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -1021,80 +1018,88 @@ const CarDetails = ({
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
-                            <div>{displayLargeimage()}</div>
-
-                            <div className="overflow-scroll">
-                                <div
-                                    className="flex transition-all mt-3
+                            <div>
+                                <div>{displayLargeimage()}</div>
+                                <div className="overflow-hidden">
+                                    <div
+                                        className="flex justify-start h-full transition-all mt-3
                                 "
-                                    style={{
-                                        width: "100%",
-                                        height: "87px",
-                                    }}
-                                >
-                                    {page >=
-                                    (window.innerWidth < 760 ? 3 : 5) ? (
+                                    >
                                         <div
-                                            className=" flex mr-2 md:mr-4 animate-pulse items-center text-xs font-mono justify-center  "
+                                            className={
+                                                page >=
+                                                (window.innerWidth < 760
+                                                    ? 3
+                                                    : 6)
+                                                    ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
+                                                    : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
+                                            }
                                             style={{
-                                                width: "25px",
                                                 height: "60.03px",
+                                                width: "20px",
                                             }}
                                         >
-                                            <div
+                                            <button
                                                 onClick={() => prevPage(page)}
-                                                className="cursor-pointer"
                                             >
                                                 <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
-                                            </div>
+                                            </button>
                                         </div>
-                                    ) : (
-                                        ""
-                                    )}
-                                    {imageD &&
-                                        imageD.map((ele, id) => (
-                                            <div
-                                                key={id}
-                                                onClick={() => setId(page + id)}
-                                                className="mr-3 h-full transition-all cursor-pointer transform hover:scale-105"
-                                            >
-                                                <img
-                                                    src={ele?.image_largeUrl}
-                                                    className="rounded-md shadow-sm"
+                                        {imageD &&
+                                            imageD.map((ele, id) => (
+                                                <div
+                                                    key={id}
+                                                    onClick={() =>
+                                                        setId(page + id)
+                                                    }
+                                                    className="mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
                                                     style={{
-                                                        height: "60.3px",
-                                                        width: "90.03px",
+                                                        width: "9%",
                                                     }}
-                                                    alt=""
-                                                />
-                                            </div>
-                                        ))}
-                                    {imageD &&
-                                    imageD.length ===
-                                        (window.innerWidth <= 760 ? 3 : 5) &&
-                                    count > 0 ? (
-                                        <div
-                                            className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
-                                            style={{
-                                                height: "60.3px",
-                                                width: "90.03px",
-                                                backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
-                                                backgroundSize: "cover",
-                                            }}
-                                        >
+                                                >
+                                                    <img
+                                                        src={
+                                                            ele?.image_largeUrl
+                                                        }
+                                                        className="rounded-md shadow-sm"
+                                                        style={{
+                                                            height: "60.3px",
+                                                        }}
+                                                        alt=""
+                                                    />
+                                                </div>
+                                            ))}
+                                        {imageD &&
+                                        imageD.length ===
+                                            (window.innerWidth <= 760
+                                                ? 3
+                                                : 6) &&
+                                        count > 0 ? (
                                             <div
-                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
+                                                className="rounded-md w-1/6 flex items-center text-xs font-mono justify-center relative shadow-sm"
+                                                style={{
+                                                    height: "60.3px",
+                                                    backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
+                                                    backgroundSize: "cover",
+                                                    width: "9%",
+                                                }}
+                                            >
+                                                <div
+                                                    className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
                         bg-opacity-40 text-white flex items-center justify-center
                         "
-                                                style={{ fontSize: "10px" }}
-                                                onClick={() => nextPage(page)}
-                                            >
-                                                load {count} more
+                                                    style={{ fontSize: "10px" }}
+                                                    onClick={() =>
+                                                        nextPage(page)
+                                                    }
+                                                >
+                                                    load {count} more
+                                                </div>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        ""
-                                    )}
+                                        ) : (
+                                            ""
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1851,21 +1856,40 @@ const CarDetails = ({
                         </div>
                     </section>
 
-                    <div
-                        className="py-4 overview-section">
+                    <div className="py-4 overview-section">
                         <div className="flex justify-center px-5">
-                            <div onClick={() => {setoverview(true)}} className={"overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " + (overview ? " active" : "")}>
+                            <div
+                                onClick={() => {
+                                    setoverview(true);
+                                }}
+                                className={
+                                    "overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " +
+                                    (overview ? " active" : "")
+                                }
+                            >
                                 <p className="lg:py-1.5 ">OVERVIEW</p>
                             </div>
 
-
-                            <div onClick={() => {setoverview(false)}} className={"overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " + (!overview ? " active" : "")}>
+                            <div
+                                onClick={() => {
+                                    setoverview(false);
+                                }}
+                                className={
+                                    "overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " +
+                                    (!overview ? " active" : "")
+                                }
+                            >
                                 <p className="lg:py-1.5">AUCTION INFO</p>
                             </div>
                         </div>
-                        <div className={overview ? "flex flex-wrap px-5 justify-center mt-6 " : " hidden"}>
+                        <div
+                            className={
+                                overview
+                                    ? "flex flex-wrap px-5 justify-center mt-6 "
+                                    : " hidden"
+                            }
+                        >
                             <div>
-
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
@@ -1873,7 +1897,7 @@ const CarDetails = ({
                                                 Vehicle Name
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                    {cardD?.vehicleName}
+                                                {cardD?.vehicleName}
                                             </td>
                                         </tr>
                                         <tr className="detail-row mb-2">
@@ -1905,9 +1929,9 @@ const CarDetails = ({
                                                     .length <= 2
                                                     ? ""
                                                     : cardD?.mileage.replace(
-                                                        "/",
-                                                        "."
-                                                    )}
+                                                          "/",
+                                                          "."
+                                                      )}
                                             </td>
                                         </tr>
 
@@ -1932,10 +1956,8 @@ const CarDetails = ({
                                 </table>
                             </div>
                             <div className="lg:ml-3">
-
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
-
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Make
@@ -1953,7 +1975,6 @@ const CarDetails = ({
                                                 {cardD?.model}
                                             </td>
                                         </tr>
-
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
@@ -1992,9 +2013,14 @@ const CarDetails = ({
                                 </table>
                             </div>
                         </div>
-                        <div className={!overview ? "flex flex-wrap px-5 justify-center mt-6 " : " hidden"} >
+                        <div
+                            className={
+                                !overview
+                                    ? "flex flex-wrap px-5 justify-center mt-6 "
+                                    : " hidden"
+                            }
+                        >
                             <div>
-
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row">
@@ -2002,12 +2028,10 @@ const CarDetails = ({
                                                 Facilitation Location
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                {
-                                                    cardD?.facilitationLocation
-                                                }
+                                                {cardD?.facilitationLocation}
                                             </td>
                                         </tr>
-                                        
+
                                         <tr className="detail-row">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Seller City
@@ -2027,7 +2051,6 @@ const CarDetails = ({
                                                 {cardD?.sellerState}
                                             </td>
                                         </tr>
-
 
                                         <tr className="detail-row">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
@@ -2050,7 +2073,6 @@ const CarDetails = ({
                                 </table>
                             </div>
                             <div className="lg:ml-3">
-
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row">
@@ -2090,7 +2112,6 @@ const CarDetails = ({
                                                     "Not specified"}
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -2258,53 +2279,64 @@ const CarDetails = ({
                                             <div
                                                 key={id}
                                                 className="similar-cars-holder p-3 mr-4 mb-5 lg:mb-0 cursor-pointer"
-                                                style={{
-                                                    // width: "240px",
-                                                    // height: "178px",
-                                                }}
+                                                style={
+                                                    {
+                                                        // width: "240px",
+                                                        // height: "178px",
+                                                    }
+                                                }
                                                 onClick={() => {
-                                                        dispatch(
-                                                            carDetail(ele)
-                                                        ),
-                                                            router.push({
-                                                                pathname:
-                                                                    "/search/" +
-                                                                    ele.VIN,
-                                                            });
-                                                    }}
+                                                    dispatch(carDetail(ele)),
+                                                        router.push({
+                                                            pathname:
+                                                                "/search/" +
+                                                                ele.VIN,
+                                                        });
+                                                }}
                                             >
-                                                
-                                                    {addImage(ele)}
+                                                {addImage(ele)}
                                                 <p class="pt-2 primary-black font-medium text-xs"></p>
                                                 <div className="flex pt-2">
                                                     <p className="flex items-center sec-black font-10">
                                                         <span class="mr-1">
-                                                            <img src="../assets/img/vectors/red-location-beacon.svg" alt="location" />
+                                                            <img
+                                                                src="../assets/img/vectors/red-location-beacon.svg"
+                                                                alt="location"
+                                                            />
                                                         </span>
                                                         {ele?.pickupLocation}
                                                     </p>
                                                     <div className="ml-auto flex self-center">
-                                                        <img className="img-fluid" src="../../assets/img/vectors/red-date.svg" alt="date" />
-                                                        <p className="sec-black font-10 ml-1">  {new Date(
-                                                                    ele?.auctionEndTime
-                                                                ).toLocaleDateString()}</p>
+                                                        <img
+                                                            className="img-fluid"
+                                                            src="../../assets/img/vectors/red-date.svg"
+                                                            alt="date"
+                                                        />
+                                                        <p className="sec-black font-10 ml-1">
+                                                            {" "}
+                                                            {new Date(
+                                                                ele?.auctionEndTime
+                                                            ).toLocaleDateString()}
+                                                        </p>
                                                     </div>
-                                                    
-                                                    
                                                 </div>
                                                 <div class="flex font-11 primary-gray pt-1">
-                                                        <p>{ele?.year}</p>
-                                                        <p class="ml-3.5">{Object.entries(
-                                                                ele?.mileage
-                                                            ).length <= 2
-                                                                ? ""
-                                                                : ele?.mileage.replace(
-                                                                      "/",
-                                                                      "."
-                                                                  )}</p>
+                                                    <p>{ele?.year}</p>
+                                                    <p class="ml-3.5">
+                                                        {Object.entries(
+                                                            ele?.mileage
+                                                        ).length <= 2
+                                                            ? ""
+                                                            : ele?.mileage.replace(
+                                                                  "/",
+                                                                  "."
+                                                              )}
+                                                    </p>
                                                 </div>
                                                 <div className="flex pt-2">
-                                                    <p class=" sec-black text-base">${ele?.buyNowPrice}</p>
+                                                    <p class=" sec-black text-base">
+                                                        ${ele?.buyNowPrice}
+                                                    </p>
                                                     <div className="ml-auto  self-center">
                                                         <button
                                                             type="button"
@@ -2335,7 +2367,9 @@ const CarDetails = ({
 
                         <div className="text-center my-5">
                             <p
-                                onClick={() => {showMoreVehicles()}}
+                                onClick={() => {
+                                    showMoreVehicles();
+                                }}
                                 className="primary-blue font-semibold text-sm cursor-pointer"
                             >
                                 Show More Vehicles
