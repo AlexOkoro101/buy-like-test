@@ -62,6 +62,10 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
+    var dollarFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',        
+    }); 
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
@@ -391,10 +395,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         ) {
             return (
                 <div
-                    className=" w-full h-full bg-black bg-opacity-20 rounded-md"
-                    // style={{
-                    //     backgroundImage: `url(${params.images[0].image_largeUrl})`,
-                    // }}
+
+                    className="w-full h-full bg-black bg-opacity-20 rounded-md"
                 >
                     <img
                         src={params.images[0].image_largeUrl}
@@ -1074,7 +1076,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className="flex box-border flex-wrap justify-center w-full lg:justify-start gap-2  display-type"
+                                                className="flex box-border flex-wrap justify-center w-full lg:justify-start gap-2 display-type"
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
@@ -1086,20 +1088,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     className={
                                                                         open ==
                                                                         true
-                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-xl   p-4 mb-4"
-                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-xl  p-4 mb-4"
+                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-xl mr-1  p-4 mb-4"
+                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-xl mr-1 p-4 mb-4"
                                                                     }
                                                                     style={{
-                                                                        height: "335px",
+                                                                        height: "382px",
                                                                         width:
                                                                             open &&
                                                                             width >=
                                                                                 900
-                                                                                ? "24%"
+                                                                                ? "32%"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
-                                                                                ? "24"
+                                                                                ? "24%"
                                                                                 : "100%",
                                                                     }}
                                                                 >
@@ -1121,7 +1123,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         }}
                                                                         style={{
                                                                             width: "100%",
-                                                                            height: "178px",
+                                                                            height: "80%",
                                                                         }}
                                                                     >
                                                                         {addImage(
@@ -1193,8 +1195,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black font-10 ml-1">
-                                                                                            &#36;{" "}
-                                                                                            {ele.buyNowPrice.toLocaleString()}
+                                                                                            
+                                                                                            {dollarFormatter.format(ele.buyNowPrice)}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1221,8 +1223,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black font-10 ml-1">
-                                                                                            &#36;{" "}
-                                                                                            {ele.mmrPrice.toLocaleString()}
+                                                                                            {dollarFormatter.format(ele.mmrPrice.toLocaleString())}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"

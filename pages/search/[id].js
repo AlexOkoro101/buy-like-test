@@ -88,6 +88,11 @@ const CarDetails = ({
             progress: undefined,
         });
 
+    var dollarFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',        
+    });    
+
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [amount, setAmount] = useState(0);
@@ -248,12 +253,18 @@ const CarDetails = ({
 
     const showMoreVehicles = () => {
         var num = 4;
-        getSimilarVehicles(num);
-        console.log("my num", num);
-    };
+        getSimilarVehicles(num)
+        // console.log("my num", num)
+    }
+
 
     const getSimilarVehicles = (num) => {
         let array = [];
+        if(size === 12) {
+            router.push("/search")
+            return
+        }
+
         if (cars) {
             cars.data?.map((ele) => {
                 if (ele.vehicleName !== "") {
@@ -261,10 +272,11 @@ const CarDetails = ({
                 }
             });
         }
-        setsize((num || 0) + 4);
-        const items = array.slice(0, size + (num || 0));
-        console.log("items", items);
-        console.log("size", size);
+        setsize((num || 0) + size)
+        const items = array.slice(0, size + (num || 0)); 
+        console.log("items",items);
+        console.log("size", size)
+
         setData(items);
     };
 
@@ -285,7 +297,7 @@ const CarDetails = ({
         setmake(carDetails.make);
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice * naira);
+        setbidAmount(carDetails.buyNowPrice);
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -523,7 +535,7 @@ const CarDetails = ({
                         parseInt(carDetails.buyNowPrice * data.data.rate)
                     );
                     setAmount(carDetails.buyNowPrice * data.data.rate);
-                    setbidAmount(carDetails.buyNowPrice * data.data.rate);
+                    setbidAmount(carDetails.buyNowPrice);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -561,30 +573,35 @@ const CarDetails = ({
             return (
                 <>
                     <CountdownCircleTimer
+                        size={186}
+                        strokeWidth={2}
+                        strokeWidth={2}
                         isPlaying
                         duration={distance}
-                        colors={[["#00ff00"], ["#F7B801"], ["#A30000"]]}
+                        colors={[["#0C74D4"], ["#F7B801"], ["#A30000"]]}
                     >
-                        {({ remainingTime }) =>
+                        {/* {({ remainingTime }) =>
                             moment(carDetails.auctionEndTime)
                                 .endOf("seconds")
                                 .fromNow()
-                        }
+                        } */}
                     </CountdownCircleTimer>
                 </>
             );
         } else {
             return (
                 <CountdownCircleTimer
+                    size={186}
+                    strokeWidth={2}
                     isPlaying
                     duration={0}
                     colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
                 >
-                    {({ remainingTime }) =>
+                    {/* {({ remainingTime }) =>
                         moment(carDetails.auctionEndTime)
                             .endOf("seconds")
                             .fromNow()
-                    }
+                    } */}
                 </CountdownCircleTimer>
             );
         }
@@ -1110,9 +1127,9 @@ const CarDetails = ({
                                     <div className="ml-auto">
                                         {cardD.buyNowPrice.length > 2 ? (
                                             <p className="primary-color text-xs font-medium">
-                                                BUY NOW @ &#8358;
+                                                BUY NOW @ {""}
                                                 {""}
-                                                {amount}
+                                                {dollarFormatter.format(carDetails.buyNowPrice)}
                                             </p>
                                         ) : (
                                             parseFloat(
@@ -1157,7 +1174,7 @@ const CarDetails = ({
                                                         </td>
                                                         <td className="text-xs font-medium sec-black">
                                                             <input
-                                                                value={bidAmount.toLocaleString()}
+                                                                value={bidAmount}
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
@@ -1296,7 +1313,7 @@ const CarDetails = ({
                                                         Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $1050
+                                                        $1,050
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -1635,12 +1652,12 @@ const CarDetails = ({
                                 </p>
                             </div>
                             <div className="flex flex-col relative  lg:block">
-                                <div className="timer-container relative bg-white">
+                                <div style={{padding: "15px"}} className="timer-container relative">
                                     {distance !== null && (
                                         <div>{renderCounter(distance)}</div>
                                     )}
 
-                                    <div className="timer">
+                                    <div className="timer text-center">
                                         <button
                                             type="button"
                                             className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
@@ -1675,6 +1692,9 @@ const CarDetails = ({
                                             </p>
                                         </div>
 
+                                        <p className="font-9 font-semibold text-center primary-gray pt-4">
+                                                TIME LEFT
+                                        </p>        
                                         <div className="flex mt-1.5 justify-center">
                                             <div className="flex flex-col ml-2">
                                                 <p className="days font-13 sec-black font-semibold ">
