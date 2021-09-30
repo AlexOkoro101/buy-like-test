@@ -88,10 +88,10 @@ const CarDetails = ({
             progress: undefined,
         });
 
-    var dollarFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',        
-    });    
+    var dollarFormatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+    });
 
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
@@ -253,16 +253,15 @@ const CarDetails = ({
 
     const showMoreVehicles = () => {
         var num = 4;
-        getSimilarVehicles(num)
+        getSimilarVehicles(num);
         // console.log("my num", num)
-    }
-
+    };
 
     const getSimilarVehicles = (num) => {
         let array = [];
-        if(size === 12) {
-            router.push("/search")
-            return
+        if (size === 12) {
+            router.push("/search");
+            return;
         }
 
         if (cars) {
@@ -272,11 +271,8 @@ const CarDetails = ({
                 }
             });
         }
-        setsize((num || 0) + size)
-        const items = array.slice(0, size + (num || 0)); 
-        console.log("items",items);
-        console.log("size", size)
-
+        setsize((num || 0) + size);
+        const items = array.slice(0, size + (num || 0));
         setData(items);
     };
 
@@ -1129,7 +1125,9 @@ const CarDetails = ({
                                             <p className="primary-color text-xs font-medium">
                                                 BUY NOW @ {""}
                                                 {""}
-                                                {dollarFormatter.format(carDetails.buyNowPrice)}
+                                                {dollarFormatter.format(
+                                                    carDetails.buyNowPrice
+                                                )}
                                             </p>
                                         ) : (
                                             parseFloat(
@@ -1174,7 +1172,9 @@ const CarDetails = ({
                                                         </td>
                                                         <td className="text-xs font-medium sec-black">
                                                             <input
-                                                                value={bidAmount}
+                                                                value={
+                                                                    bidAmount
+                                                                }
                                                                 id="amount"
                                                                 className=" w-full focus:outline-none"
                                                                 type="text"
@@ -1652,7 +1652,10 @@ const CarDetails = ({
                                 </p>
                             </div>
                             <div className="flex flex-col relative  lg:block">
-                                <div style={{padding: "15px"}} className="timer-container relative">
+                                <div
+                                    style={{ padding: "15px" }}
+                                    className="timer-container relative"
+                                >
                                     {distance !== null && (
                                         <div>{renderCounter(distance)}</div>
                                     )}
@@ -1693,8 +1696,8 @@ const CarDetails = ({
                                         </div>
 
                                         <p className="font-9 font-semibold text-center primary-gray pt-4">
-                                                TIME LEFT
-                                        </p>        
+                                            TIME LEFT
+                                        </p>
                                         <div className="flex mt-1.5 justify-center">
                                             <div className="flex flex-col ml-2">
                                                 <p className="days font-13 sec-black font-semibold ">
