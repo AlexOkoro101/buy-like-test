@@ -278,12 +278,12 @@ progress::-moz-progress-bar {
     right: 0px;
 }
 
-.feature__holder {
+/* .feature__holder {
     background: white;
     position: relative;
     z-index: 2;
     box-shadow: 0px -3px 10px rgba(0, 58, 78, 0.1);
-}
+} */
 
 .filtered__section {
     background: linear-gradient(105.52deg, #F3F7FB 0%, #FFFFFF 60.87%);

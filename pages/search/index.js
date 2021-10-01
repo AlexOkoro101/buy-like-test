@@ -62,10 +62,10 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    var dollarFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',        
-    }); 
+    var dollarFormatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+    });
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
@@ -104,8 +104,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+            console.log("ooooo");
             fetchPage(pageIndex);
-        } else if (cars.data === null || cars.data === undefined) {
+        } else if (cars.data === {}) {
+            console.log("mmmm");
+            console.log(cars);
             fetchPage(pageIndex);
         } else {
             setData(cars.data);
@@ -394,10 +397,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             params.images[0].image_smallUrl
         ) {
             return (
-                <div
-
-                    className="w-full h-full bg-black bg-opacity-20 rounded-md"
-                >
+                <div className="w-full h-full bg-black bg-opacity-20 rounded-md">
                     <img
                         src={params.images[0].image_largeUrl}
                         alt="hello"
@@ -477,7 +477,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         menuList: (provided, state) => ({
             ...provided,
             border: "1px solid #dee2e6",
-            width: 200,
+            width: "100%",
             borderRadius: "5px",
             zIndex: 0,
         }),
@@ -506,7 +506,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex items-start main h-full m-0  pb-12 pt-24 lg:px-2">
+                <div className="flex searching items-start main h-full m-0  pb-12 pt-24 lg:px-2">
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
@@ -608,7 +608,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
 
                                 {/* Filters */}
-                                <form className="mt-16">
+                                <form className="mt-16 h-full">
                                     {/* <!-- Filter icon --> */}
                                     <div className="flex pb-2">
                                         <div>
@@ -650,7 +650,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </button>
                                     </div>
 
-                                    <div className="tabWrapper">
+                                    <div className="tabWrapper h-full relative">
                                         {/* <!--Body Type  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
@@ -795,7 +795,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
-                                                className="primary-black font-semibold font-11  "
+                                                className="primary-black  font-semibold font-11  "
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1082,7 +1082,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 {data?.length > 0 &&
                                                     data?.map(
                                                         (ele, id) =>
-                                                            ele.vehicleName && (
+                                                            ele && (
                                                                 <div
                                                                     key={id}
                                                                     className={
@@ -1195,8 +1195,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black font-10 ml-1">
-                                                                                            
-                                                                                            {dollarFormatter.format(ele.buyNowPrice)}
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.buyNowPrice
+                                                                                            )}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1223,7 +1224,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black font-10 ml-1">
-                                                                                            {dollarFormatter.format(ele.mmrPrice.toLocaleString())}
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.mmrPrice.toLocaleString()
+                                                                                            )}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"

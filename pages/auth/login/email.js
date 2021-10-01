@@ -142,7 +142,7 @@ const LogIn = ({ beginLogin }) => {
                                 <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
                                     <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0">
                                         <label className="pb-1 sec-black font-10 font-medium">
-                                            Email ddress
+                                            Email Address
                                         </label>
                                         <input
                                             className="login-control focus:outline-none px-2"

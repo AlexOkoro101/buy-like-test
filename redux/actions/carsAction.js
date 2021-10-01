@@ -403,7 +403,7 @@ export const fetchMore = (event, main) => async (dispatch) => {
             Object.entries(event.location).length > 0 ? event.location : "",
     };
     try {
-        let res = await fetch(
+        fetch(
             `${api}?year=${main.year}&make=${main.make}&model=${main.model}&page=${main.page}&transmission=${data.transmission}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
             {
                 method: "GET",
@@ -414,6 +414,20 @@ export const fetchMore = (event, main) => async (dispatch) => {
             .then(function (response) {
                 return response.text();
             })
+            .then(function (res) {
+                if (JSON.parse(res)) {
+                    const response = JSON.parse(res);
+                    dispatch({
+                        type: SEARCHING_SUCCESS,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: FETCHING_FAILED,
+                        payload: "No vehicle matches parameters",
+                    });
+                }
+            })
             .catch(function (error) {
                 dispatch({
                     type: FETCHING_FAILED,
@@ -421,16 +435,6 @@ export const fetchMore = (event, main) => async (dispatch) => {
                 });
                 console.log(error);
             });
-        if (res) {
-            const response = JSON.parse(res);
-            if (response) {
-                console.log(response, "pppp");
-                dispatch({
-                    type: SEARCHING_SUCCESS,
-                    payload: response,
-                });
-            }
-        }
     } catch (error) {
         dispatch({
             type: FETCHING_FAILED,
