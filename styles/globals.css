@@ -10,6 +10,9 @@
     --red: #D80739;
 }
 
+.tab>div>div {
+    position: relative !important;
+}
 
 /* General Styles here */
 
