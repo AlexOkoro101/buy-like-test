@@ -1090,7 +1090,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             : " car-display-holder flex flex-col justify-between box-border rounded-xl mr-1 p-4 mb-4"
                                                                     }
                                                                     style={{
-                                                                        height: "382px",
+                                                                        height: "auto",
                                                                         width:
                                                                             open &&
                                                                             width >=
@@ -1129,7 +1129,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         )}
                                                                     </a>
                                                                     <div className="mt-3">
-                                                                        <p className="text-xs primary-black font-medium">
+                                                                        <p className="text-sm primary-black font-medium">
                                                                             {ele?.vehicleName
                                                                                 ? ele?.vehicleName
                                                                                 : [
@@ -1139,7 +1139,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                       " "
                                                                                   )}
                                                                         </p>
-                                                                        <p className="sec-black font-11 flex items-center pt-2">
+                                                                        <p className="sec-black text-sm flex items-center pt-2">
                                                                             {" "}
                                                                             {
                                                                                 ele?.year
@@ -1157,8 +1157,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                       )}
                                                                             </span>
                                                                         </p>
-                                                                        <div className="flex pt-2">
-                                                                            <p className="flex items-center sec-black font-10">
+                                                                        <div className="flex">
+                                                                            <p className="flex items-center sec-black text-sm">
                                                                                 {" "}
                                                                                 <span className="mr-1">
                                                                                     <img
@@ -1192,7 +1192,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     .length >
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black font-10 ml-1">
+                                                                                        <p className="sec-black text-base ml-1">
                                                                                             
                                                                                             {dollarFormatter.format(ele.buyNowPrice)}
                                                                                         </p>
@@ -1220,7 +1220,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black font-10 ml-1">
+                                                                                        <p className="sec-black text-base ml-1">
                                                                                             {dollarFormatter.format(ele.mmrPrice.toLocaleString())}
                                                                                         </p>
                                                                                         <a
