@@ -62,7 +62,7 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    var dollarFormatter = new Intl.NumberFormat();
+    var dollarFormatter = new Intl.NumberFormat(); 
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
@@ -101,8 +101,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+            console.log("ooooo");
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
+            console.log("mmmm");
+            console.log(cars);
             fetchPage(pageIndex);
         } else {
             setData(cars.data);
@@ -127,6 +130,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, [makes]);
     useEffect(() => {
+        let data = paramValue;
+        for (var f in data) {
+            if (data[f] === "") {
+                delete data[f];
+                setParam({ ...data });
+            }
+        }
         if (paramValue.make) {
             getVehicleModels(paramValue.make);
         }
@@ -169,32 +179,28 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const handleYear = (e) => {
         var data;
         if (e[0]) {
-            data = e.map((el) => {
-                return el.value;
-            });
+            data = e[0].value;
         } else {
             data = "";
         }
         setParam((prev) => ({
             ...prev,
-            model: data,
+            year: data,
         }));
         const datas = {
             make: paramValue?.make || "",
-            model: paramValue?.model,
-            year: data.toString() || "",
+            model: paramValue?.model || "",
+            year: data,
             page: 1,
         };
-        setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
+        setPageIndex(1);
     };
 
     const handleModel = (e) => {
         var data;
         if (e[0]) {
-            data = e.map((el) => {
-                return el.value;
-            });
+            data = e[0].value;
         } else {
             data = "";
         }
@@ -204,7 +210,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         const datas = {
             make: paramValue?.make || "",
-            model: data.toString(),
+            model: data,
             year: paramValue?.year || "",
             page: 1,
         };
@@ -213,8 +219,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
     const handleMake = (e) => {
         var data;
-        if (e.value) {
-            data = e.value;
+        if (e[0]) {
+            data = e[0].value;
         } else {
             data = "";
         }
@@ -230,7 +236,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         setPageIndex(1);
         let dat = makes.find(
-            (ele) => ele.name.toLowerCase() === data.toLowerCase()
+            (ele) => ele.name.toLowerCase() === e[0].value.toLowerCase()
         );
         setcarModels(dat.models);
         dispatch(fetchMore(filterValue, datas));
@@ -249,16 +255,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     //
     //
     const getVehicleModels = (e) => {
-        console.log(paramValue, "lll");
-
-        // if (e) {
-        //     let dat = makes.find(
-        //         (ele) => ele.name.toLowerCase() === e.toLowerCase()
-        //     );
-        //     setcarModels(dat.models);
-        // } else {
-        //     setcarModels(makes[0].models);
-        // }
+        if (e) {
+            let dat = makes.find(
+                (ele) => ele.name.toLowerCase() === e.toLowerCase()
+            );
+            setcarModels(dat.models);
+        } else {
+            setcarModels(makes[0].models);
+        }
     };
     const activateList = () => {
         setgrid(false);
@@ -323,30 +327,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         return paginationRender;
     }
     const removeItem = (val) => {
-        for (const key in paramValue) {
-            if (Object.hasOwnProperty.call(paramValue, key)) {
-                const element = paramValue[key];
-                for (let index = 0; index < element.length; index++) {
-                    const ele = element[index];
-                    if (ele === val) {
-                        console.log(element[index].indexOf(ele));
-                    }
-                }
-            }
-        }
-        // let data = paramValue;
-        // for (var f in data) {
-        //     if (data[f] === val) {
-        //         delete data[f];
-        //         const dataWithArrays = Object.fromEntries(
-        //             Object.entries(data).map(([key, value]) => [
-        //                 key,
-        //                 value.split(","),
-        //             ])
-        //         );
-        //         setParam(dataWithArrays);
-        //     }
-        // }
         let data = paramValue;
         for (var f in data) {
             if (data[f] == val) {
@@ -416,14 +396,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             return (
                 <div
                     style={{
-                        width:
-                            open && width >= 900
+                            width: open &&
+                            width >=
+                                900
                                 ? "273px"
-                                : !open && width >= 900
+                                : !open &&
+                                    width >=
+                                        900
                                 ? "247px"
                                 : "100%",
-                        height: "164px",
-                    }}
+                            height: "164px",
+                        }}
+
                     className="bg-black bg-opacity-20 rounded-md"
                 >
                     <img
@@ -501,52 +485,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
         }
     };
-
-    function getChips() {
-        let data = [];
-        let mat = [];
-        for (const key in paramValue) {
-            if (Object.hasOwnProperty.call(paramValue, key)) {
-                const element = paramValue[key];
-                if (typeof element === "object") {
-                    for (let index = 0; index < element.length; index++) {
-                        const ele = element[index];
-                        data.push(ele);
-                    }
-                } else {
-                    if (element !== "") {
-                        mat.push(element.split(","));
-                    }
-                }
-            }
-        }
-        if (mat.length > 0) {
-            mat.map(function (subarray) {
-                subarray.map(function (ele) {
-                    data.push(ele);
-                });
-            });
-        }
-        return data.map((ele, id) => {
-            return (
-                <span
-                    key={id}
-                    className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
-                >
-                    {ele}
-                    <span className="ml-1.5">
-                        {" "}
-                        <img
-                            src="../../assets/img/vectors/white-close.svg"
-                            alt="close"
-                            className="cursor-pointer"
-                            onClick={() => removeItem(ele)}
-                        />{" "}
-                    </span>
-                </span>
-            );
-        });
-    }
     const customStyles = {
         menuList: (provided, state) => ({
             ...provided,
@@ -580,10 +518,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div
-                    className="flex items-start main h-full m-0  pb-12 pt-24"
-                    id="carDeets"
-                >
+                <div className="flex items-start main h-full m-0  pb-12 pt-24" id="carDeets">
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
@@ -618,29 +553,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {/* Basic Filters */}
                                 <div className="mt-3">
                                     {/* <!-- Make Here --> */}
-                                    <ReactMultiSelectCheckboxes
-                                        className="primary-black font-semibold font-11  "
-                                        styles={customStyles}
-                                        isMulti={false}
-                                        placeholderButtonLabel={
-                                            <div className="font-semibold text-xs w-full self-center	">
-                                                Make
-                                            </div>
-                                        }
-                                        width="100%"
-                                        onChange={(e) => handleMake(e)}
-                                        options={
-                                            carMakes &&
-                                            carMakes.map((ele) => {
-                                                return {
-                                                    label: ele.name,
-                                                    value: ele.name,
-                                                };
-                                            })
-                                        }
-                                    />
-                                    {/* model here */}
-                                    <div className="my-5">
+                                    <div className="tab border-bt py-4  ">
                                         <ReactMultiSelectCheckboxes
                                             className="primary-black font-semibold font-11  "
                                             styles={customStyles}
@@ -661,6 +574,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 })
                                             }
                                         />
+
                                     </div>
                                     {/* model here */}
                                     <div>
@@ -685,6 +599,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     })
                                                 }
                                             />
+
                                         </div>
                                     </div>
                                     {/* <!-- Year Here --> */}
@@ -709,6 +624,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 })
                                             }
                                         />
+
                                     </div>
                                 </div>
 
@@ -990,9 +906,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <Select
                                     className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Search ${dollarFormatter.format(
-                                        cars.total
-                                    )} cars`}
+                                    placeholder={`Search ${dollarFormatter.format(cars.total)} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
                                     onInputChange={handleInputChange}
@@ -1132,7 +1046,25 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                         {/* <!-- Filter pills here --> */}
                         <div className="flex w-full flex-wrap my-4 text-white">
-                            {getChips()}
+                            {paramValue &&
+                                Object.entries(paramValue).length > 0 &&
+                                Object.values(paramValue).map((ele, id) => (
+                                    <span
+                                        key={id}
+                                        className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
+                                    >
+                                        {ele && ele}
+                                        <span className="ml-1.5">
+                                            {" "}
+                                            <img
+                                                src="../../assets/img/vectors/white-close.svg"
+                                                alt="close"
+                                                className="cursor-pointer"
+                                                onClick={() => removeItem(ele)}
+                                            />{" "}
+                                        </span>
+                                    </span>
+                                ))}
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
@@ -1153,12 +1085,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className={
-                                                    "flex box-border flex-wrap justify-center w-full lg:justify-start display-type " +
-                                                    (open
-                                                        ? " gap-x-6"
-                                                        : " gap-x-4")
-                                                }
+                                                className={"flex box-border flex-wrap justify-center w-full lg:justify-start display-type " + (open ? " gap-x-6" : " gap-x-4")}
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
@@ -1204,16 +1131,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 );
                                                                         }}
                                                                         style={{
-                                                                            width:
-                                                                                open &&
-                                                                                width >=
-                                                                                    900
-                                                                                    ? "273px"
-                                                                                    : !open &&
-                                                                                      width >=
-                                                                                          900
-                                                                                    ? "247px"
-                                                                                    : "100%",
+                                                                            width: open &&
+                                                                            width >=
+                                                                                900
+                                                                                ? "273px"
+                                                                                : !open &&
+                                                                                  width >=
+                                                                                      900
+                                                                                ? "247px"
+                                                                                : "100%",
                                                                             height: "164px",
                                                                         }}
                                                                     >
@@ -1223,15 +1149,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     </a>
                                                                     <div className="mt-3">
                                                                         <p className="text-sm primary-black font-medium">
-                                                                            {ele?.make &&
-                                                                            ele?.model
+                                                                            {(ele?.make && ele?.model)
                                                                                 ? [
                                                                                       ele?.make,
                                                                                       ele.model,
                                                                                   ].join(
                                                                                       " "
                                                                                   )
-                                                                                : ele?.vehicleName}
+                                                                                    : ele?.vehicleName
+                                                                                  }
                                                                         </p>
                                                                         <p className="sec-black text-sm flex items-center mt-2 font-medium">
                                                                             {" "}
@@ -1249,10 +1175,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                           "/",
                                                                                           "."
                                                                                       )} */}
-                                                                                {dollarFormatter.format(
-                                                                                    ele?.odometer
-                                                                                )}{" "}
-                                                                                miles
+                                                                                      {dollarFormatter.format(ele?.odometer)} miles
                                                                             </span>
                                                                         </p>
                                                                         <div className="flex justify-between">
@@ -1278,14 +1201,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     {" "}
                                                                                     {new Date(
                                                                                         ele?.auctionEndTime
-                                                                                    ).toLocaleDateString(
-                                                                                        "en-NG",
-                                                                                        {
-                                                                                            year: "numeric",
-                                                                                            day: "numeric",
-                                                                                            month: "long",
-                                                                                        }
-                                                                                    )}
+                                                                                    ).toLocaleDateString('en-NG', {year: 'numeric', day: 'numeric', month: 'long'})}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -1298,10 +1214,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.buyNowPrice
-                                                                                            )}
+                                                                                            
+                                                                                            ${dollarFormatter.format(ele.buyNowPrice)}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1328,10 +1242,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.mmrPrice
-                                                                                            )}
+                                                                                            ${dollarFormatter.format(ele.mmrPrice)}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
