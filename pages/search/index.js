@@ -62,10 +62,7 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    var dollarFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',        
-    }); 
+    var dollarFormatter = new Intl.NumberFormat(); 
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
@@ -395,8 +392,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         ) {
             return (
                 <div
+                    style={{
+                            width: open &&
+                            width >=
+                                900
+                                ? "273px"
+                                : !open &&
+                                    width >=
+                                        900
+                                ? "247px"
+                                : "100%",
+                            height: "164px",
+                        }}
 
-                    className="w-full h-full bg-black bg-opacity-20 rounded-md"
+                    className="bg-black bg-opacity-20 rounded-md"
                 >
                     <img
                         src={params.images[0].image_largeUrl}
@@ -506,7 +515,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex items-start main h-full m-0  pb-12 pt-24 lg:px-2">
+                <div className="flex items-start main h-full m-0  pb-12 pt-24" id="carDeets">
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
@@ -541,41 +550,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {/* Basic Filters */}
                                 <div className="mt-3">
                                     {/* <!-- Make Here --> */}
-                                    <ReactMultiSelectCheckboxes
-                                        className="primary-black font-semibold font-11  "
-                                        styles={customStyles}
-                                        placeholderButtonLabel={
-                                            <div className="font-semibold text-xs w-full self-center	">
-                                                Make
-                                            </div>
-                                        }
-                                        width="100%"
-                                        onChange={(e) => handleMake(e)}
-                                        options={
-                                            carMakes &&
-                                            carMakes.map((ele) => {
-                                                return {
-                                                    label: ele.name,
-                                                    value: ele.name,
-                                                };
-                                            })
-                                        }
-                                    />
-                                    {/* model here */}
-                                    <div className="my-5">
+                                    <div className="tab border-bt py-4  ">
                                         <ReactMultiSelectCheckboxes
                                             className="primary-black font-semibold font-11  "
                                             styles={customStyles}
                                             placeholderButtonLabel={
                                                 <div className="font-semibold text-xs w-full self-center	">
-                                                    Model
+                                                    Make
                                                 </div>
                                             }
                                             width="100%"
-                                            onChange={(e) => handleModel(e)}
+                                            onChange={(e) => handleMake(e)}
                                             options={
-                                                carModels &&
-                                                carModels.map((ele) => {
+                                                carMakes &&
+                                                carMakes.map((ele) => {
                                                     return {
                                                         label: ele.name,
                                                         value: ele.name,
@@ -583,28 +571,58 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 })
                                             }
                                         />
+
+                                    </div>
+                                    {/* model here */}
+                                    <div>
+                                        <div className="tab border-bt py-4  ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Model
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                onChange={(e) => handleModel(e)}
+                                                options={
+                                                    carModels &&
+                                                    carModels.map((ele) => {
+                                                        return {
+                                                            label: ele.name,
+                                                            value: ele.name,
+                                                        };
+                                                    })
+                                                }
+                                            />
+
+                                        </div>
                                     </div>
                                     {/* <!-- Year Here --> */}
-                                    <ReactMultiSelectCheckboxes
-                                        className="primary-black font-semibold font-11 placeholder-gray-900 "
-                                        styles={customStyles}
-                                        placeholderButtonLabel={
-                                            <div className="font-semibold text-xs w-full self-center	">
-                                                Year
-                                            </div>
-                                        }
-                                        width="100%"
-                                        onChange={(e) => handleYear(e)}
-                                        options={
-                                            years &&
-                                            years.map((ele) => {
-                                                return {
-                                                    label: ele,
-                                                    value: ele,
-                                                };
-                                            })
-                                        }
-                                    />
+                                    <div className="tab border-bt py-4  ">
+                                        <ReactMultiSelectCheckboxes
+                                            className="primary-black font-semibold font-11 placeholder-gray-900 "
+                                            styles={customStyles}
+                                            placeholderButtonLabel={
+                                                <div className="font-semibold text-xs w-full self-center	">
+                                                    Year
+                                                </div>
+                                            }
+                                            width="100%"
+                                            onChange={(e) => handleYear(e)}
+                                            options={
+                                                years &&
+                                                years.map((ele) => {
+                                                    return {
+                                                        label: ele,
+                                                        value: ele,
+                                                    };
+                                                })
+                                            }
+                                        />
+
+                                    </div>
                                 </div>
 
                                 {/* Filters */}
@@ -819,7 +837,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full  relative px-2  ">
+                    <div className="display-holder w-full  relative px-5  ">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden ">
                             <div className="w-full">
@@ -893,11 +911,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Second section here --> */}
-                            <div className="hidden lg:block ">
+                            <div className="hidden lg:block h-6">
                                 <Select
                                     className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Search ${cars.total} cars`}
+                                    placeholder={`Search ${dollarFormatter.format(cars.total)} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
                                     onInputChange={handleInputChange}
@@ -1076,7 +1094,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className="flex box-border flex-wrap justify-center w-full lg:justify-start gap-2 display-type"
+                                                className={"flex box-border flex-wrap justify-center w-full lg:justify-start display-type " + (open ? " gap-x-6" : " gap-x-4")}
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
@@ -1088,8 +1106,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     className={
                                                                         open ==
                                                                         true
-                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-xl mr-1  p-4 mb-4"
-                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-xl mr-1 p-4 mb-4"
+                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-md  p-4 mb-4"
+                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-md p-4 mb-4"
                                                                     }
                                                                     style={{
                                                                         height: "auto",
@@ -1097,11 +1115,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             open &&
                                                                             width >=
                                                                                 900
-                                                                                ? "32%"
+                                                                                ? "305px"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
-                                                                                ? "24%"
+                                                                                ? "280px"
                                                                                 : "100%",
                                                                     }}
                                                                 >
@@ -1122,8 +1140,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 );
                                                                         }}
                                                                         style={{
-                                                                            width: "100%",
-                                                                            height: "80%",
+                                                                            width: open &&
+                                                                            width >=
+                                                                                900
+                                                                                ? "273px"
+                                                                                : !open &&
+                                                                                  width >=
+                                                                                      900
+                                                                                ? "247px"
+                                                                                : "100%",
+                                                                            height: "164px",
                                                                         }}
                                                                     >
                                                                         {addImage(
@@ -1132,22 +1158,23 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     </a>
                                                                     <div className="mt-3">
                                                                         <p className="text-sm primary-black font-medium">
-                                                                            {ele?.vehicleName
-                                                                                ? ele?.vehicleName
-                                                                                : [
+                                                                            {(ele?.make && ele?.model)
+                                                                                ? [
                                                                                       ele?.make,
                                                                                       ele.model,
                                                                                   ].join(
                                                                                       " "
-                                                                                  )}
+                                                                                  )
+                                                                                    : ele?.vehicleName
+                                                                                  }
                                                                         </p>
-                                                                        <p className="sec-black text-sm flex items-center pt-2">
+                                                                        <p className="sec-black text-sm flex items-center mt-2 font-medium">
                                                                             {" "}
                                                                             {
                                                                                 ele?.year
                                                                             }{" "}
                                                                             <span className="ml-6">
-                                                                                {Object.entries(
+                                                                                {/* {Object.entries(
                                                                                     ele?.mileage
                                                                                 )
                                                                                     .length <=
@@ -1156,11 +1183,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     : ele?.mileage.replace(
                                                                                           "/",
                                                                                           "."
-                                                                                      )}
+                                                                                      )} */}
+                                                                                      {dollarFormatter.format(ele?.odometer)} miles
                                                                             </span>
                                                                         </p>
-                                                                        <div className="flex">
-                                                                            <p className="flex items-center sec-black text-sm">
+                                                                        <div className="flex justify-between">
+                                                                            <p className="flex items-center sec-black text-sm font-normal">
                                                                                 {" "}
                                                                                 <span className="mr-1">
                                                                                     <img
@@ -1178,15 +1206,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     src="../../assets/img/vectors/red-date.svg"
                                                                                     alt="date"
                                                                                 />
-                                                                                <p className="sec-black font-10 ml-1">
+                                                                                <p className="sec-black font-10 ml-1 font-normal">
                                                                                     {" "}
                                                                                     {new Date(
                                                                                         ele?.auctionEndTime
-                                                                                    ).toLocaleDateString()}
+                                                                                    ).toLocaleDateString('en-NG', {year: 'numeric', day: 'numeric', month: 'long'})}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="flex pt-3">
+                                                                        <div className="flex pt-4">
                                                                             <div className="flex justify-end w-full">
                                                                                 {Object.entries(
                                                                                     ele.buyNowPrice
@@ -1194,9 +1222,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     .length >
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1">
+                                                                                        <p className="sec-black text-base ml-1 font-normal">
                                                                                             
-                                                                                            {dollarFormatter.format(ele.buyNowPrice)}
+                                                                                            ${dollarFormatter.format(ele.buyNowPrice)}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1217,13 +1245,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             }}
                                                                                         >
                                                                                             Buy
-                                                                                            now
+                                                                                            Now
                                                                                         </a>
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1">
-                                                                                            {dollarFormatter.format(ele.mmrPrice.toLocaleString())}
+                                                                                        <p className="sec-black text-base ml-1 font-normal">
+                                                                                            ${dollarFormatter.format(ele.mmrPrice)}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1244,7 +1272,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             }}
                                                                                         >
                                                                                             Place
-                                                                                            bid
+                                                                                            Bid
                                                                                         </a>
                                                                                     </div>
                                                                                 )}
