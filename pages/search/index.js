@@ -631,7 +631,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {/* Filters */}
                                 <form className="mt-16 h-full">
                                     {/* <!-- Filter icon --> */}
-                                    <div className="flex pb-2">
+                                    <div className="flex justify-between items-center pb-2">
                                         <div>
                                             <p className="flex items-center primary-black font-medium font-11">
                                                 {" "}
@@ -644,31 +644,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 Filters
                                             </p>
                                         </div>
-                                        {/* <div className="ml-auto self-center">
-                                        <span className="cursor-pointer">
-                                            <img
-                                                src="../../assets/img/vectors/close-icon.svg"
-                                                alt="close"
-                                            />
-                                        </span>
-                                    </div> */}
-                                    </div>
-                                    <div className="flex justify-between">
-                                        {/* FIlter Button */}
-                                        <div className="flex  py-4"></div>
+                                        <div>
 
-                                        {/* <!-- Clear all filters here --> */}
-
-                                        <button
-                                            type="button"
-                                            className={
-                                                "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                                            }
-                                            value="all"
-                                            onClick={() => clearForm()}
-                                        >
-                                            Clear all filters
-                                        </button>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    "clearfilter focus:outline-none font-10 font-semibold px-3.5 py-1.5"
+                                                }
+                                                value="all"
+                                                onClick={() => clearForm()}
+                                            >
+                                                Clear all filters
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="tabWrapper h-full relative">
