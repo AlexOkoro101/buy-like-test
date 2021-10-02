@@ -1,7 +1,7 @@
 /* Search Results styles here */
 
-.main {
-    background: #FDFEFF;
+.tab>div>div {
+    position: relative !important;
 }
 
 .filter-holder {

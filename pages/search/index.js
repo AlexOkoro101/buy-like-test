@@ -101,8 +101,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+            console.log("ooooo");
             fetchPage(pageIndex);
-        } else if (cars.data === null || cars.data === undefined) {
+        } else if (cars.data === {}) {
+            console.log("mmmm");
+            console.log(cars);
             fetchPage(pageIndex);
         } else {
             setData(cars.data);
@@ -486,7 +489,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         menuList: (provided, state) => ({
             ...provided,
             border: "1px solid #dee2e6",
-            width: 200,
+            width: "100%",
             borderRadius: "5px",
             zIndex: 0,
         }),
@@ -626,7 +629,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
 
                                 {/* Filters */}
-                                <form className="mt-16">
+                                <form className="mt-16 h-full">
                                     {/* <!-- Filter icon --> */}
                                     <div className="flex pb-2">
                                         <div>
@@ -668,7 +671,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </button>
                                     </div>
 
-                                    <div className="tabWrapper">
+                                    <div className="tabWrapper h-full relative">
                                         {/* <!--Body Type  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
@@ -813,7 +816,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
-                                                className="primary-black font-semibold font-11  "
+                                                className="primary-black  font-semibold font-11  "
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1100,7 +1103,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 {data?.length > 0 &&
                                                     data?.map(
                                                         (ele, id) =>
-                                                            ele.vehicleName && (
+                                                            ele && (
                                                                 <div
                                                                     key={id}
                                                                     className={

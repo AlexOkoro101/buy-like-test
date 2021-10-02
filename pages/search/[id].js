@@ -996,12 +996,14 @@ const CarDetails = ({
     return (
         <main>
             <ToastContainer />
-            {cardD && cardD.auctionEndTime && (
+            {cardD && (
                 <>
                     <div className="flex flex-wrap justify-center pt-20 px-5 xl:px-0">
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
-                                {cardD.vehicleName}
+                                {cardD?.vehicleName
+                                    ? cardD?.vehicleName
+                                    : [cardD?.make, cardD.model].join(" ")}
                             </p>
 
                             <div className="flex mt-1.5">
@@ -2255,7 +2257,7 @@ const CarDetails = ({
                             {data?.length > 0 &&
                                 data?.map(
                                     (ele, id) =>
-                                        ele.vehicleName && (
+                                        ele && (
                                             <div
                                                 key={id}
                                                 className="similar-cars-holder p-3 mr-4 mb-5 lg:mb-0 cursor-pointer"
