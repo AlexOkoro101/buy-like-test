@@ -313,6 +313,18 @@ input.detail:checked~span:after {
     box-sizing: initial !important;
     border-color: transparent !important;
 }
+.css-1vr111p-option {
+    min-width: auto !important;
+}
+.css-hppqp6 {
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+.clearfilter {
+    background-color: transparent;
+    border-radius: 3px;
+    color: cadetblue;
+}
 
 @media (min-width: 1024px) {
     #carDeets{
