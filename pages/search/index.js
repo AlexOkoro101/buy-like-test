@@ -104,8 +104,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+            console.log("ooooo");
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
+            console.log("mmmm");
+            console.log(cars);
             fetchPage(pageIndex);
         } else {
             setData(cars.data);
@@ -130,6 +133,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, [makes]);
     useEffect(() => {
+        let data = paramValue;
+        for (var f in data) {
+            if (data[f] === "") {
+                delete data[f];
+                setParam({ ...data });
+            }
+        }
         if (paramValue.make) {
             getVehicleModels(paramValue.make);
         }
@@ -178,17 +188,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const handleYear = (e) => {
         var data;
         if (e[0]) {
-            data = e.map((el) => {
-                return el.value;
-            });
+            data = e[0].value;
         } else {
             data = "";
         }
         setDefaultYear(e);
         const datas = {
             make: paramValue?.make || "",
-            model: paramValue?.model,
-            year: data.toString() || "",
+            model: paramValue?.model || "",
+            year: data,
             page: 1,
         };
         setParam((prev) => ({
@@ -197,6 +205,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
+        setPageIndex(1);
     };
 
     const handleModel = (e) => {
@@ -233,8 +242,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
     const handleMake = (e) => {
         var data;
-        if (e.value) {
-            data = e.value;
+        if (e[0]) {
+            data = e[0].value;
         } else {
             data = "";
         }
@@ -252,7 +261,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }));
         setPageIndex(1);
         let dat = makes.find(
-            (ele) => ele.name.toLowerCase() === data.toLowerCase()
+            (ele) => ele.name.toLowerCase() === e[0].value.toLowerCase()
         );
         setcarModels(dat.models);
         dispatch(fetchMore(filterValue, datas));
@@ -343,30 +352,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         return paginationRender;
     }
     const removeItem = (val) => {
-        for (const key in paramValue) {
-            if (Object.hasOwnProperty.call(paramValue, key)) {
-                const element = paramValue[key];
-                for (let index = 0; index < element.length; index++) {
-                    const ele = element[index];
-                    if (ele === val) {
-                        console.log(element[index].indexOf(ele));
-                    }
-                }
-            }
-        }
-        // let data = paramValue;
-        // for (var f in data) {
-        //     if (data[f] === val) {
-        //         delete data[f];
-        //         const dataWithArrays = Object.fromEntries(
-        //             Object.entries(data).map(([key, value]) => [
-        //                 key,
-        //                 value.split(","),
-        //             ])
-        //         );
-        //         setParam(dataWithArrays);
-        //     }
-        // }
         let data = paramValue;
         for (var f in data) {
             if (data[f] == val) {
@@ -788,7 +773,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {/* Filters */}
                                 <form className="mt-16 h-full">
                                     {/* <!-- Filter icon --> */}
-                                    <div className="flex pb-2">
+                                    <div className="flex justify-between items-center pb-2">
                                         <div>
                                             <p className="flex items-center primary-black font-medium font-11">
                                                 {" "}
@@ -801,31 +786,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 Filters
                                             </p>
                                         </div>
-                                        {/* <div className="ml-auto self-center">
-                                        <span className="cursor-pointer">
-                                            <img
-                                                src="../../assets/img/vectors/close-icon.svg"
-                                                alt="close"
-                                            />
-                                        </span>
-                                    </div> */}
-                                    </div>
-                                    <div className="flex justify-between">
-                                        {/* FIlter Button */}
-                                        <div className="flex  py-4"></div>
-
-                                        {/* <!-- Clear all filters here --> */}
-
-                                        <button
-                                            type="button"
-                                            className={
-                                                "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                                            }
-                                            value="all"
-                                            onClick={() => clearForm()}
-                                        >
-                                            Clear all filters
-                                        </button>
+                                        <div>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    "clearfilter focus:outline-none font-10 font-semibold px-3.5 py-1.5"
+                                                }
+                                                value="all"
+                                                onClick={() => clearForm()}
+                                            >
+                                                Clear all filters
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="tabWrapper h-full relative">
@@ -1217,7 +1189,25 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                         {/* <!-- Filter pills here --> */}
                         <div className="flex w-full flex-wrap my-4 text-white">
-                            {getChips()}
+                            {paramValue &&
+                                Object.entries(paramValue).length > 0 &&
+                                Object.values(paramValue).map((ele, id) => (
+                                    <span
+                                        key={id}
+                                        className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
+                                    >
+                                        {ele && ele}
+                                        <span className="ml-1.5">
+                                            {" "}
+                                            <img
+                                                src="../../assets/img/vectors/white-close.svg"
+                                                alt="close"
+                                                className="cursor-pointer"
+                                                onClick={() => removeItem(ele)}
+                                            />{" "}
+                                        </span>
+                                    </span>
+                                ))}
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
