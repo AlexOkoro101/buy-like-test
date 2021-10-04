@@ -85,6 +85,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [options, setoptions] = useState([]);
     const [data, setData] = useState(cars.data);
     const [total, setTotal] = useState(cars.total);
+    const [defaultMake, setDefaultMake] = useState({});
+    const [defaultModel, setDefaultModel] = useState();
+    const [defaultYear, setDefaultYear] = useState({});
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
@@ -132,6 +135,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, [paramValue, params]);
 
+    useEffect(() => {
+        getYearValue();
+        getModelValue();
+        getMakeValue();
+    }, [paramValue, params]);
+
     const handleSearch = async (e) => {
         const data = {
             VIN: e.target.value,
@@ -175,41 +184,52 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         } else {
             data = "";
         }
-        setParam((prev) => ({
-            ...prev,
-            model: data,
-        }));
+        setDefaultYear(e);
         const datas = {
             make: paramValue?.make || "",
             model: paramValue?.model,
             year: data.toString() || "",
             page: 1,
         };
+        setParam((prev) => ({
+            ...prev,
+            year: data,
+        }));
         setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
     };
 
     const handleModel = (e) => {
         var data;
+        var MakeData = "";
         if (e[0]) {
             data = e.map((el) => {
                 return el.value;
             });
+            MakeData = makes.find((ele) =>
+                ele.models.map(
+                    (el) => el.name.toLowerCase() === e[0].value.toLowerCase()
+                )
+            );
         } else {
             data = "";
         }
-        setParam((prev) => ({
-            ...prev,
-            model: data,
-        }));
+
         const datas = {
-            make: paramValue?.make || "",
+            make: MakeData.name || "",
             model: data.toString(),
             year: paramValue?.year || "",
             page: 1,
         };
+        setDefaultMake({ label: MakeData.name, value: MakeData.name });
+        setParam((prev) => ({
+            ...prev,
+            make: MakeData.name,
+            model: data,
+        }));
         setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
+        setDefaultModel(e);
     };
     const handleMake = (e) => {
         var data;
@@ -224,6 +244,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
+        setDefaultModel();
+        setDefaultMake(e);
         setParam((prev) => ({
             ...prev,
             make: data,
@@ -249,16 +271,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     //
     //
     const getVehicleModels = (e) => {
-        console.log(paramValue, "lll");
-
-        // if (e) {
-        //     let dat = makes.find(
-        //         (ele) => ele.name.toLowerCase() === e.toLowerCase()
-        //     );
-        //     setcarModels(dat.models);
-        // } else {
-        //     setcarModels(makes[0].models);
-        // }
+        if (e) {
+            let dat = makes.find(
+                (ele) => ele.name.toLowerCase() === e.toLowerCase()
+            );
+            setcarModels(dat.models);
+        } else {
+            setcarModels(makes[0].models);
+        }
     };
     const activateList = () => {
         setgrid(false);
@@ -502,6 +522,76 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     };
 
+    const getMakeValue = () => {
+        let data = carMakes.filter((option) => option.name == paramValue.make);
+        setDefaultMake(
+            data.map((ele) => {
+                return {
+                    label: ele.name,
+                    value: ele.name,
+                };
+            })
+        );
+    };
+
+    const getModelValue = () => {
+        let data = paramValue.model;
+        if (typeof data === "object") {
+            let res = data.map((ele) =>
+                carModels.filter((option) => option.name == ele)
+            );
+            setDefaultModel(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele.name,
+                        value: ele.name,
+                    };
+                })
+            );
+        } else {
+            let res = data
+                .split(",")
+                .map((ele) => carModels.filter((option) => option.name == ele));
+            setDefaultModel(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele.name,
+                        value: ele.name,
+                    };
+                })
+            );
+        }
+    };
+
+    const getYearValue = () => {
+        let data = paramValue.year;
+        if (typeof data === "object") {
+            let res = data.map((ele) =>
+                years.filter((option) => option == ele)
+            );
+            setDefaultYear(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele,
+                        value: ele,
+                    };
+                })
+            );
+        } else {
+            let res = data
+                .split(",")
+                .map((ele) => years.filter((option) => option == ele));
+            setDefaultYear(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele,
+                        value: ele,
+                    };
+                })
+            );
+        }
+    };
+
     function getChips() {
         let data = [];
         let mat = [];
@@ -617,38 +707,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             <div>
                                 {/* Basic Filters */}
                                 <div className="mt-3">
-                                    {/* <!-- Make Here --> */}
-                                    <ReactMultiSelectCheckboxes
-                                        className="primary-black font-semibold font-11  "
-                                        styles={customStyles}
-                                        isMulti={false}
-                                        placeholderButtonLabel={
-                                            <div className="font-semibold text-xs w-full self-center	">
-                                                Make
-                                            </div>
-                                        }
-                                        width="100%"
-                                        onChange={(e) => handleMake(e)}
-                                        options={
-                                            carMakes &&
-                                            carMakes.map((ele) => {
-                                                return {
-                                                    label: ele.name,
-                                                    value: ele.name,
-                                                };
-                                            })
-                                        }
-                                    />
-                                    {/* model here */}
-                                    <div className="my-5">
+                                    <div className="tab border-bt py-4  ">
+                                        {/* <!-- Make Here --> */}
                                         <ReactMultiSelectCheckboxes
                                             className="primary-black font-semibold font-11  "
                                             styles={customStyles}
+                                            isMulti={false}
                                             placeholderButtonLabel={
                                                 <div className="font-semibold text-xs w-full self-center	">
                                                     Make
                                                 </div>
                                             }
+                                            value={defaultMake}
                                             width="100%"
                                             onChange={(e) => handleMake(e)}
                                             options={
@@ -662,6 +732,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             }
                                         />
                                     </div>
+
                                     {/* model here */}
                                     <div>
                                         <div className="tab border-bt py-4  ">
@@ -674,6 +745,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
+                                                value={defaultModel}
                                                 onChange={(e) => handleModel(e)}
                                                 options={
                                                     carModels &&
@@ -698,6 +770,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 </div>
                                             }
                                             width="100%"
+                                            value={defaultYear}
                                             onChange={(e) => handleYear(e)}
                                             options={
                                                 years &&
