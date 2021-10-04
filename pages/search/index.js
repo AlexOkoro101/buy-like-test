@@ -62,7 +62,7 @@ export function useWindowDimensions() {
 //
 
 const Search = ({ cars, params, loading, getMakes, makes }) => {
-    var dollarFormatter = new Intl.NumberFormat(); 
+    var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
@@ -85,6 +85,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [options, setoptions] = useState([]);
     const [data, setData] = useState(cars.data);
     const [total, setTotal] = useState(cars.total);
+    const [defaultMake, setDefaultMake] = useState({});
+    const [defaultModel, setDefaultModel] = useState();
+    const [defaultYear, setDefaultYear] = useState({});
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
@@ -142,6 +145,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, [paramValue, params]);
 
+    useEffect(() => {
+        getYearValue();
+        getModelValue();
+        getMakeValue();
+    }, [paramValue, params]);
+
     const handleSearch = async (e) => {
         const data = {
             VIN: e.target.value,
@@ -183,39 +192,53 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         } else {
             data = "";
         }
-        setParam((prev) => ({
-            ...prev,
-            year: data,
-        }));
+        setDefaultYear(e);
         const datas = {
             make: paramValue?.make || "",
             model: paramValue?.model || "",
             year: data,
             page: 1,
         };
+        setParam((prev) => ({
+            ...prev,
+            year: data,
+        }));
+        setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
         setPageIndex(1);
     };
 
     const handleModel = (e) => {
         var data;
+        var MakeData = "";
         if (e[0]) {
-            data = e[0].value;
+            data = e.map((el) => {
+                return el.value;
+            });
+            MakeData = makes.find((ele) =>
+                ele.models.map(
+                    (el) => el.name.toLowerCase() === e[0].value.toLowerCase()
+                )
+            );
         } else {
             data = "";
         }
-        setParam((prev) => ({
-            ...prev,
-            model: data,
-        }));
+
         const datas = {
-            make: paramValue?.make || "",
-            model: data,
+            make: MakeData.name || "",
+            model: data.toString(),
             year: paramValue?.year || "",
             page: 1,
         };
+        setDefaultMake({ label: MakeData.name, value: MakeData.name });
+        setParam((prev) => ({
+            ...prev,
+            make: MakeData.name,
+            model: data,
+        }));
         setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
+        setDefaultModel(e);
     };
     const handleMake = (e) => {
         var data;
@@ -230,6 +253,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
+        setDefaultModel();
+        setDefaultMake(e);
         setParam((prev) => ({
             ...prev,
             make: data,
@@ -396,18 +421,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             return (
                 <div
                     style={{
-                            width: open &&
-                            width >=
-                                900
+                        width:
+                            open && width >= 900
                                 ? "273px"
-                                : !open &&
-                                    width >=
-                                        900
+                                : !open && width >= 900
                                 ? "247px"
                                 : "100%",
-                            height: "164px",
-                        }}
-
+                        height: "164px",
+                    }}
                     className="bg-black bg-opacity-20 rounded-md"
                 >
                     <img
@@ -485,6 +506,122 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
         }
     };
+
+    const getMakeValue = () => {
+        let data = carMakes.filter((option) => option.name == paramValue.make);
+        setDefaultMake(
+            data.map((ele) => {
+                return {
+                    label: ele.name,
+                    value: ele.name,
+                };
+            })
+        );
+    };
+
+    const getModelValue = () => {
+        let data = paramValue.model;
+        if (typeof data === "object") {
+            let res = data.map((ele) =>
+                carModels.filter((option) => option.name == ele)
+            );
+            setDefaultModel(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele.name,
+                        value: ele.name,
+                    };
+                })
+            );
+        } else {
+            let res = data
+                .split(",")
+                .map((ele) => carModels.filter((option) => option.name == ele));
+            setDefaultModel(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele.name,
+                        value: ele.name,
+                    };
+                })
+            );
+        }
+    };
+
+    const getYearValue = () => {
+        let data = paramValue.year;
+        if (typeof data === "object") {
+            let res = data.map((ele) =>
+                years.filter((option) => option == ele)
+            );
+            setDefaultYear(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele,
+                        value: ele,
+                    };
+                })
+            );
+        } else {
+            let res = data
+                .split(",")
+                .map((ele) => years.filter((option) => option == ele));
+            setDefaultYear(
+                [].concat(...res).map((ele) => {
+                    return {
+                        label: ele,
+                        value: ele,
+                    };
+                })
+            );
+        }
+    };
+
+    function getChips() {
+        let data = [];
+        let mat = [];
+        for (const key in paramValue) {
+            if (Object.hasOwnProperty.call(paramValue, key)) {
+                const element = paramValue[key];
+                if (typeof element === "object") {
+                    for (let index = 0; index < element.length; index++) {
+                        const ele = element[index];
+                        data.push(ele);
+                    }
+                } else {
+                    if (element !== "") {
+                        mat.push(element.split(","));
+                    }
+                }
+            }
+        }
+        if (mat.length > 0) {
+            mat.map(function (subarray) {
+                subarray.map(function (ele) {
+                    data.push(ele);
+                });
+            });
+        }
+        return data.map((ele, id) => {
+            return (
+                <span
+                    key={id}
+                    className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
+                >
+                    {ele}
+                    <span className="ml-1.5">
+                        {" "}
+                        <img
+                            src="../../assets/img/vectors/white-close.svg"
+                            alt="close"
+                            className="cursor-pointer"
+                            onClick={() => removeItem(ele)}
+                        />{" "}
+                    </span>
+                </span>
+            );
+        });
+    }
     const customStyles = {
         menuList: (provided, state) => ({
             ...provided,
@@ -518,7 +655,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <Meta></Meta>
             <main>
                 {/* <!-- Search region here --> */}
-                <div className="flex items-start main h-full m-0  pb-12 pt-24" id="carDeets">
+                <div
+                    className="flex items-start main h-full m-0  pb-12 pt-24"
+                    id="carDeets"
+                >
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
@@ -552,16 +692,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             <div>
                                 {/* Basic Filters */}
                                 <div className="mt-3">
-                                    {/* <!-- Make Here --> */}
                                     <div className="tab border-bt py-4  ">
+                                        {/* <!-- Make Here --> */}
                                         <ReactMultiSelectCheckboxes
                                             className="primary-black font-semibold font-11  "
                                             styles={customStyles}
+                                            isMulti={false}
                                             placeholderButtonLabel={
                                                 <div className="font-semibold text-xs w-full self-center	">
                                                     Make
                                                 </div>
                                             }
+                                            value={defaultMake}
                                             width="100%"
                                             onChange={(e) => handleMake(e)}
                                             options={
@@ -574,8 +716,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 })
                                             }
                                         />
-
                                     </div>
+
                                     {/* model here */}
                                     <div>
                                         <div className="tab border-bt py-4  ">
@@ -588,6 +730,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     </div>
                                                 }
                                                 width="100%"
+                                                value={defaultModel}
                                                 onChange={(e) => handleModel(e)}
                                                 options={
                                                     carModels &&
@@ -599,7 +742,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     })
                                                 }
                                             />
-
                                         </div>
                                     </div>
                                     {/* <!-- Year Here --> */}
@@ -613,6 +755,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 </div>
                                             }
                                             width="100%"
+                                            value={defaultYear}
                                             onChange={(e) => handleYear(e)}
                                             options={
                                                 years &&
@@ -624,7 +767,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 })
                                             }
                                         />
-
                                     </div>
                                 </div>
 
@@ -645,7 +787,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             </p>
                                         </div>
                                         <div>
-
                                             <button
                                                 type="button"
                                                 className={
@@ -906,7 +1047,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <Select
                                     className=" px-3 w-80 cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Search ${dollarFormatter.format(cars.total)} cars`}
+                                    placeholder={`Search ${dollarFormatter.format(
+                                        cars.total
+                                    )} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
                                     onInputChange={handleInputChange}
@@ -1085,7 +1228,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     <>
                                         {grid && (
                                             <div
-                                                className={"flex box-border flex-wrap justify-center w-full lg:justify-start display-type " + (open ? " gap-x-6" : " gap-x-4")}
+                                                className={
+                                                    "flex box-border flex-wrap justify-center w-full lg:justify-start display-type " +
+                                                    (open
+                                                        ? " gap-x-6"
+                                                        : " gap-x-4")
+                                                }
                                                 id="car-grid"
                                             >
                                                 {data?.length > 0 &&
@@ -1131,15 +1279,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 );
                                                                         }}
                                                                         style={{
-                                                                            width: open &&
-                                                                            width >=
-                                                                                900
-                                                                                ? "273px"
-                                                                                : !open &&
-                                                                                  width >=
-                                                                                      900
-                                                                                ? "247px"
-                                                                                : "100%",
+                                                                            width:
+                                                                                open &&
+                                                                                width >=
+                                                                                    900
+                                                                                    ? "273px"
+                                                                                    : !open &&
+                                                                                      width >=
+                                                                                          900
+                                                                                    ? "247px"
+                                                                                    : "100%",
                                                                             height: "164px",
                                                                         }}
                                                                     >
@@ -1149,15 +1298,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     </a>
                                                                     <div className="mt-3">
                                                                         <p className="text-sm primary-black font-medium">
-                                                                            {(ele?.make && ele?.model)
+                                                                            {ele?.make &&
+                                                                            ele?.model
                                                                                 ? [
                                                                                       ele?.make,
                                                                                       ele.model,
                                                                                   ].join(
                                                                                       " "
                                                                                   )
-                                                                                    : ele?.vehicleName
-                                                                                  }
+                                                                                : ele?.vehicleName}
                                                                         </p>
                                                                         <p className="sec-black text-sm flex items-center mt-2 font-medium">
                                                                             {" "}
@@ -1175,7 +1324,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                           "/",
                                                                                           "."
                                                                                       )} */}
-                                                                                      {dollarFormatter.format(ele?.odometer)} miles
+                                                                                {dollarFormatter.format(
+                                                                                    ele?.odometer
+                                                                                )}{" "}
+                                                                                miles
                                                                             </span>
                                                                         </p>
                                                                         <div className="flex justify-between">
@@ -1201,7 +1353,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     {" "}
                                                                                     {new Date(
                                                                                         ele?.auctionEndTime
-                                                                                    ).toLocaleDateString('en-NG', {year: 'numeric', day: 'numeric', month: 'long'})}
+                                                                                    ).toLocaleDateString(
+                                                                                        "en-NG",
+                                                                                        {
+                                                                                            year: "numeric",
+                                                                                            day: "numeric",
+                                                                                            month: "long",
+                                                                                        }
+                                                                                    )}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -1214,8 +1373,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
-                                                                                            
-                                                                                            ${dollarFormatter.format(ele.buyNowPrice)}
+                                                                                            $
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.buyNowPrice
+                                                                                            )}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
@@ -1242,7 +1403,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
-                                                                                            ${dollarFormatter.format(ele.mmrPrice)}
+                                                                                            $
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.mmrPrice
+                                                                                            )}
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
