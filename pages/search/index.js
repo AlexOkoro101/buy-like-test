@@ -85,9 +85,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [options, setoptions] = useState([]);
     const [data, setData] = useState(cars.data);
     const [total, setTotal] = useState(cars.total);
-    const [defaultMake, setDefaultMake] = useState({});
+    const [defaultMake, setDefaultMake] = useState();
     const [defaultModel, setDefaultModel] = useState();
-    const [defaultYear, setDefaultYear] = useState({});
+    const [defaultYear, setDefaultYear] = useState();
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
@@ -533,7 +533,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
-        } else {
+        } else if (typeof data === "string") {
             let res = data
                 .split(",")
                 .map((ele) => carModels.filter((option) => option.name == ele));
@@ -562,7 +562,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
-        } else {
+        } else if (typeof data === "string") {
             let res = data
                 .split(",")
                 .map((ele) => years.filter((option) => option == ele));
