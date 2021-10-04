@@ -188,7 +188,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const handleYear = (e) => {
         var data;
         if (e[0]) {
-            data = e[0].value;
+            data = e.map((el) => {
+                return el.value;
+            });
         } else {
             data = "";
         }
@@ -196,7 +198,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         const datas = {
             make: paramValue?.make || "",
             model: paramValue?.model || "",
-            year: data,
+            year: data.toString(),
             page: 1,
         };
         setParam((prev) => ({
@@ -629,8 +631,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             width: "100%",
             borderRadius: "5px",
             zIndex: 0,
+            justifyContent: "space-between",
         }),
-
         control: () => ({
             // none of react-select's styles are passed to <Control />
             minWidth: "100%",
@@ -744,29 +746,30 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             />
                                         </div>
                                     </div>
-                                    {/* <!-- Year Here --> */}
-                                    <div className="tab border-bt py-4  ">
-                                        <ReactMultiSelectCheckboxes
-                                            className="primary-black font-semibold font-11 placeholder-gray-900 "
-                                            styles={customStyles}
-                                            placeholderButtonLabel={
-                                                <div className="font-semibold text-xs w-full self-center	">
-                                                    Year
-                                                </div>
-                                            }
-                                            width="100%"
-                                            value={defaultYear}
-                                            onChange={(e) => handleYear(e)}
-                                            options={
-                                                years &&
-                                                years.map((ele) => {
-                                                    return {
-                                                        label: ele,
-                                                        value: ele,
-                                                    };
-                                                })
-                                            }
-                                        />
+                                    <div>
+                                        <div className="tab border-bt py-4">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11 placeholder-gray-900 "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-96 self-center">
+                                                        Year
+                                                    </div>
+                                                }
+                                                width="100%"
+                                                value={defaultYear}
+                                                onChange={(e) => handleYear(e)}
+                                                options={
+                                                    years &&
+                                                    years.map((ele) => {
+                                                        return {
+                                                            label: ele,
+                                                            value: ele,
+                                                        };
+                                                    })
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1189,25 +1192,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                         {/* <!-- Filter pills here --> */}
                         <div className="flex w-full flex-wrap my-4 text-white">
-                            {paramValue &&
-                                Object.entries(paramValue).length > 0 &&
-                                Object.values(paramValue).map((ele, id) => (
-                                    <span
-                                        key={id}
-                                        className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
-                                    >
-                                        {ele && ele}
-                                        <span className="ml-1.5">
-                                            {" "}
-                                            <img
-                                                src="../../assets/img/vectors/white-close.svg"
-                                                alt="close"
-                                                className="cursor-pointer"
-                                                onClick={() => removeItem(ele)}
-                                            />{" "}
-                                        </span>
-                                    </span>
-                                ))}
+                            {getChips()}
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
