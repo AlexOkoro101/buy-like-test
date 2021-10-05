@@ -104,11 +104,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
-            console.log("ooooo");
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
-            console.log("mmmm");
-            console.log(cars);
             fetchPage(pageIndex);
         } else {
             setData(cars.data);
@@ -144,6 +141,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             getVehicleModels(paramValue.make);
         }
     }, [paramValue, params]);
+
+    useEffect(() => {
+        let data = params;
+        for (var f in data) {
+            if (data[f] === "") {
+                delete data[f];
+                setParam({ ...data });
+            }
+        }
+    }, [params]);
 
     useEffect(() => {
         getYearValue();
@@ -212,58 +219,73 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
     const handleModel = (e) => {
         var data;
-        var MakeData = "";
+        var MakeData;
+        var datas;
         if (e[0]) {
             data = e.map((el) => {
                 return el.value;
             });
+        } else {
+            data = "";
+        }
+        if (paramValue.make === undefined || paramValue === null) {
             MakeData = makes.find((ele) =>
                 ele.models.map(
                     (el) => el.name.toLowerCase() === e[0].value.toLowerCase()
                 )
             );
+            setDefaultMake({ label: MakeData.name, value: MakeData.name });
+            datas = {
+                make: MakeData.name || "",
+                model: data.toString(),
+                year: paramValue?.year || "",
+                page: 1,
+            };
+            setParam((prev) => ({
+                ...prev,
+                make: MakeData.name,
+                model: data,
+            }));
         } else {
-            data = "";
+            setDefaultMake(e);
+            datas = {
+                make: paramValue?.make || "",
+                model: data.toString(),
+                year: paramValue?.year || "",
+                page: 1,
+            };
+            setParam((prev) => ({
+                ...prev,
+                model: data,
+            }));
         }
-
-        const datas = {
-            make: MakeData.name || "",
-            model: data.toString(),
-            year: paramValue?.year || "",
-            page: 1,
-        };
-        setDefaultMake({ label: MakeData.name, value: MakeData.name });
-        setParam((prev) => ({
-            ...prev,
-            make: MakeData.name,
-            model: data,
-        }));
         setPageIndex(1);
         dispatch(fetchMore(filterValue, datas));
         setDefaultModel(e);
     };
     const handleMake = (e) => {
         var data;
-        if (e[0]) {
-            data = e[0].value;
+        if (e) {
+            data = e.value;
         } else {
             data = "";
         }
         const datas = {
             make: data,
-            model: paramValue?.model || "",
+            model: "",
             year: paramValue?.year || "",
             page: 1,
         };
         setDefaultModel();
         setDefaultMake(e);
         setParam((prev) => ({
+            model: "",
             ...prev,
             make: data,
         }));
         setPageIndex(1);
         let dat = makes.find(
-            (ele) => ele.name.toLowerCase() === e[0].value.toLowerCase()
+            (ele) => ele.name.toLowerCase() === e.value.toLowerCase()
         );
         setcarModels(dat.models);
         dispatch(fetchMore(filterValue, datas));
@@ -373,7 +395,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }
             return query;
         }
-        console.log(info);
         function filterData(arr, query) {
             const filteredData = arr.filter((item) => {
                 for (let key in query) {
@@ -579,7 +600,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     };
 
-    function getChips() {
+    const getChips = () => {
         let data = [];
         let mat = [];
         for (const key in paramValue) {
@@ -591,7 +612,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         data.push(ele);
                     }
                 } else {
-                    if (element !== "") {
+                    if (element !== undefined && element !== null) {
                         mat.push(element.split(","));
                     }
                 }
@@ -604,6 +625,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 });
             });
         }
+        // data.map((ele) => {
+
+        // })
         return data.map((ele, id) => {
             return (
                 <span
@@ -623,7 +647,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 </span>
             );
         });
-    }
+    };
     const customStyles = {
         menuList: (provided, state) => ({
             ...provided,
