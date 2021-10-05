@@ -326,6 +326,33 @@ input.detail:checked~span:after {
     color: cadetblue;
 }
 
+@media (max-width: 1021px) {
+    .css-g1d714-ValueContainer {
+        height: 36px !important;
+    }
+    .css-yk16xz-control  {
+        min-height: 36px !important;
+        border-radius: 3px !important;
+    }
+    .css-1pahdxg-control {
+        min-height: 36px !important;
+        border-radius: 3px !important;
+    }
+    .css-2b097c-container {
+        height: 36px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    
+    .search-results-holder {
+        background: transparent;
+        box-shadow: none;
+        border-radius: unset;
+    }
+   
+}
+
 @media (min-width: 1024px) {
     #carDeets{
         padding-left: 69px;
