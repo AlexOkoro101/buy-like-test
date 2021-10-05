@@ -842,7 +842,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        bodyType: e[0].value,
+                                                        bodyType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={BodyType}
@@ -863,8 +867,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        transmission:
-                                                            e[0].value,
+                                                        transmission: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={TransmissionType}
@@ -884,8 +891,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        exterior_color:
-                                                            e[0].value,
+                                                        exterior_color: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={ExternalColour}
@@ -905,7 +915,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        fuel_type: e[0].value,
+                                                        fuel_type: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={FuelType}
@@ -924,7 +938,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        location: e[0].value,
+                                                        location: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={FacilitationLocation}
@@ -943,8 +961,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        interior_color:
-                                                            e[0].value,
+                                                        interior_color: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={InteriorColour}
@@ -963,8 +984,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        interior_type:
-                                                            e[0].value,
+                                                        interior_type: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={InteriorType}
@@ -983,7 +1007,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        engineType: e[0].value,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
                                                     }));
                                                 }}
                                                 options={EngineType}

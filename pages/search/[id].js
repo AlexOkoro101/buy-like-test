@@ -510,7 +510,7 @@ const CarDetails = ({
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
                     className="br-5 object-fit cursor-pointer"
-                    width="95%"
+                    width="97%"
                     alt="Benz"
                 />
             </>
