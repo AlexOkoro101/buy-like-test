@@ -445,7 +445,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div
                     style={{
                         width:
-                            open && width >= 900
+                            width >= 900 ? "100%"
+                            : open && width >= 900
                                 ? "273px"
                                 : !open && width >= 900
                                 ? "247px"
@@ -687,7 +688,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 >
                     {/* <!-- filter tab here --> */}
                     {open && (
-                        <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
+                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 xl:w-2/12">
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>
@@ -1024,13 +1025,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full  relative px-5  ">
+                    <div className="display-holder w-full  relative px-5  lg:px-0 lg:pl-5">
                         {/* <!-- Filter and search for mobile here --> */}
-                        <div className="mb-3 px-3 block lg:hidden ">
-                            <div className="w-full">
-                                <div className="w-full">
+                        <div className="mb-3 px-3 block lg:hidden h-9">
+                            <div className="w-full h-full">
+                                <div className="w-full h-full">
                                     <Select
-                                        className="w-full cursor-pointer focus:outline-none"
+                                        className="w-full h-full cursor-pointer focus:outline-none"
                                         type="text"
                                         placeholder={`Search ${cars.total} cars`}
                                         isClearable
@@ -1063,8 +1064,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     type="button"
                                     className={
                                         active === "all"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                                     }
                                     value="all"
                                     onClick={() => filterTab("all")}
@@ -1075,8 +1076,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     type="button"
                                     className={
                                         active === "now"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                                     }
                                     value="now"
                                     onClick={() => filterTab("now")}
@@ -1087,8 +1088,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     type="button"
                                     className={
                                         active === "bid"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                                     }
                                     value="bid"
                                     onClick={() => filterTab("bid")}
@@ -1268,8 +1269,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 className={
                                                     "flex box-border flex-wrap justify-center w-full lg:justify-start display-type " +
                                                     (open
-                                                        ? " gap-x-6"
-                                                        : " gap-x-4")
+                                                        ? " gap-x-6 xl:gap-x-4"
+                                                        : " gap-x-4 xl:gap-x-2")
                                                 }
                                                 id="car-grid"
                                             >
@@ -1288,13 +1289,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     style={{
                                                                         height: "auto",
                                                                         width:
+                                                                            width > 900 && width < 1024 ? "280px" :
                                                                             open &&
-                                                                            width >=
-                                                                                900
+                                                                            width >
+                                                                                1024
                                                                                 ? "305px"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
+                                                                                ? "280px"
+                                                                                : width < 1300 && width > 625
                                                                                 ? "280px"
                                                                                 : "100%",
                                                                     }}
@@ -1317,7 +1321,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         }}
                                                                         style={{
                                                                             width:
-                                                                                open &&
+                                                                                width >= 900 ? "100%"
+                                                                                : open &&
                                                                                 width >=
                                                                                     900
                                                                                     ? "273px"
