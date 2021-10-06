@@ -1,6 +1,66 @@
 //
 // Filter inputs Options
 //
+
+export const SC = [
+    { value: "SC 300", label: "SC 300" },
+    { value: "SC 400", label: "SC 400" },
+    { value: "SC 400 Luxury Sport Cpe", label: "SC 400 Luxury Sport Cpe" },
+    { value: "SC 430", label: "SC 430" },
+];
+export const RC = [
+    { value: "RC", label: "RC" },
+    { value: "RC 200t", label: "RC 200t" },
+    { value: "RC 300", label: "RC 300" },
+    { value: "RC 350", label: "RC 350" },
+    { value: "RC F", label: "RC F" },
+];
+export const NX = [
+    { value: "NX", label: "NX" },
+    { value: "NX 200t", label: "NX 200t" },
+    { value: "NX 300h", label: "NX 300h" },
+];
+export const LS = [
+    { value: "LS 400", label: "LS 400" },
+    { value: "LS 400 Luxury Sdn", label: "LS 400 Luxury Sdn" },
+    { value: "LS 430", label: "LS 430" },
+    { value: "LS 460", label: "LS 460" },
+    { value: "LS 600h L", label: "LS 600h L" },
+];
+export const IS = [
+    { value: "IS", label: "IS" },
+    { value: "IS 200t", label: "IS 200t" },
+    { value: "IS 250", label: "IS 250" },
+    { value: "IS 250C", label: "IS 250C" },
+    { value: "IS 300", label: "IS 300" },
+    { value: "IS 350", label: "IS 350" },
+    { value: "IS 350C", label: "IS 350C" },
+    { value: "IS F", label: "IS F" },
+];
+export const GS = [
+    { value: "GS 200t", label: "GS 200t" },
+    { value: "GS 300", label: "GS 300" },
+    { value: "GS 300 Luxury Perform Sdn", label: "GS 300 Luxury Perform Sdn" },
+    { value: "GS 350", label: "GS 350" },
+    { value: "GS 400 Luxury Perform Sdn", label: "GS 400 Luxury Perform Sdn" },
+    { value: "GS 430", label: "GS 430" },
+    { value: "GS 450h", label: "GS 450h" },
+    { value: "GS F", label: "GS F" },
+];
+export const ES = [
+    { value: "ES 300", label: "ES 300" },
+    { value: "ES 300 Luxury Sport Sdn", label: "ES 300 Luxury Sport Sdn" },
+    { value: "ES 300h", label: "ES 300h" },
+    { value: "ES 330", label: "ES 330" },
+    { value: "ES 350", label: "ES 350" },
+];
+export const RX = [
+    { value: "RX 450h", label: "RX 450h" },
+    { value: "RX 400h", label: "RX 400h" },
+    { value: "RX 350", label: "RX 350" },
+    { value: "RX 330", label: "RX 330" },
+    { value: "RX 300 Luxury SUV", label: "RX 300 Luxury SUV" },
+];
 export const FuelType = [
     { value: "Gasoline", label: "Gasoline" },
     { value: "Diesel", label: "Diesel" },
