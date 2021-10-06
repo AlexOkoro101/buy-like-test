@@ -1385,17 +1385,17 @@ const CarDetails = ({
                                 )}
                                 {!offer && (
                                     <div className="tabcontent" id="budget">
-                                        <table className="min-w-full border-separate detail-table">
+                                        <table className="min-w-full border-separate detail-table table-fixed">
                                             <tbody>
 
-                                                <tr className="destination-row">
+                                                <tr className="destination-row pb-2">
                                                     <td className="sec-black font-11 font-semibold w-28 py-2 p-2 destination">
                                                         Destination
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2 destination-content">
+                                                    <td className="font-11 sec-black font-normal py-2 destination-content">
                                                         Nigeria
                                                     </td>
-                                                    <td className="float-right px-2">
+                                                    <td className="px-2 destination-dropdown">
                                                         <img
                                                             src="../assets/img/vectors/arrow-down2.svg"
                                                             alt="tooltip"
@@ -1403,18 +1403,21 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="">
-                                                    <td className="font-semibold sec-black font-11 p-2">
+                                                <tr className="max-bid-row">
+                                                    <td style={{width: "300px"}} className="font-semibold sec-black font-11 p-2 max-bid">
                                                             Enter max. bid
                                                     
                                                     </td>
-                                                    <td className="text-sm font-medium sec-gray">
+                                                    <td className="text-sm font-medium sec-gray max-bid-content">
                                                         <input
                                                             id="budget"
                                                             className="border-none edit-control focus:outline-none"
                                                             type="text"
                                                             placeholder="N8,000"
                                                         />
+                                                    </td>
+                                                    <td className="font-11 font-normal sec-black max-bid-dropdown">
+                                                        <Ng className="inline" width="12px" height="12px"></Ng> NGN
                                                     </td>
                                                 </tr>
 
@@ -1529,14 +1532,14 @@ const CarDetails = ({
                                                 <hr style={{width: "349%"}} className="w-screen" />
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-bold w-28 p-2">
+                                                    <td className="sec-black font-11 font-bold p-2">
                                                         Total
                                                     </td>
                                                     <td className="font-11 sec-black font-bold pr-8 py-2">
                                                         N
                                                         {totalAmount.toLocaleString()}
                                                     </td>
-                                                    <td className="font-11 w-16 font-normal sec-black px-2">
+                                                    <td className="font-11 font-normal sec-black w-24">
                                                         
                                                             <Ng className="inline" width="12px" height="12px"></Ng> NGN
                                                         
