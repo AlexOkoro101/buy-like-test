@@ -994,24 +994,22 @@ const CarDetails = ({
                         <div className="flex gap-x-4">
                             <p className="font-medium font-10 sec-black">Share via</p>
                             <button>
-                                <Link href="">
+                                <Link href={"https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" + router.pathname}>
                                     <img src="../assets/img/twitter.svg" alt="twiter" />
                                 </Link>
                             </button>
                             <button>
-                                <Link href="">
-                                    <img src="../assets/img/facebook.svg" alt="twiter" />
-                                </Link>
+                                <a href={"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" + router.pathname} target="_blank">
+                                    <img src="../assets/img/facebook.svg" alt="facebook" />
+                                </a>
                             </button>
                             <button>
-                                <Link href="">
-                                    <img src="../assets/img/whatsapp-svg.svg" alt="twiter" />
-                                </Link>
+                                <a href={`https://api.whatsapp.com/send?phone=+2348096632497&text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`} data-action="share/whatsapp/share" target="_blank">
+                                    <img src="../assets/img/whatsapp-svg.svg" alt="whatsapp" />
+                                </a>
                             </button>
-                            <button>
-                                <Link href="">
-                                    <img src="../assets/img/copy-svg.svg" alt="twiter" />
-                                </Link>
+                            <button onClick={() => navigator.clipboard.writeText('www.buylikedealers.com/' + cardD?.VIN)}>
+                                <img src="../assets/img/copy-svg.svg" alt="copy" />
                             </button>
                         </div>
                     </div>
