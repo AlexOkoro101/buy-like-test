@@ -463,12 +463,28 @@ tbody .destination-row {
     border-radius: 5px;
     border: 1px solid #E1E1E1;
 }
-tbody .destination {
+tbody .destination, tbody .max-bid {
     background: #F8F8F8;
-    border-right: 1px solid #E1E1E1;
+    border: 1px solid #E1E1E1;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
-tbody .destination-content {
-    background: #FFFFFF;
-    /* border: 1px solid #E1E1E1; */
+tbody .destination-content, tbody .max-bid-content {
+    border: 1px solid #E1E1E1;
+    border-right: none;
+    padding-left: 13px;
+}
+tbody .destination-dropdown {
+    border: 1px solid #E1E1E1;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+tbody .max-bid-dropdown {
+    background: #F8F8F8;
+    border: 1px solid #E1E1E1;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
