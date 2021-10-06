@@ -1004,7 +1004,7 @@ const CarDetails = ({
                                 </a>
                             </button>
                             <button>
-                                <a href={`https://api.whatsapp.com/send?phone=+2348096632497&text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`} data-action="share/whatsapp/share" target="_blank">
+                                <a href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`} data-action="share/whatsapp/share" target="_blank">
                                     <img src="../assets/img/whatsapp-svg.svg" alt="whatsapp" />
                                 </a>
                             </button>
@@ -1238,10 +1238,11 @@ const CarDetails = ({
                                                         <td className="font-11 sec-black font-normal py-2">
                                                             <>Contact Support</>
                                                             <a
-                                                                href="https://api.whatsapp.com/send?phone=15551234567"
+                                                                href="https://api.whatsapp.com/send?phone=+17135130111"
                                                                 style={{
                                                                     margin: "0 10px",
                                                                 }}
+                                                                target="_blank"
                                                             >
                                                                 <i
                                                                     style={{
@@ -1257,6 +1258,7 @@ const CarDetails = ({
                                                                 style={{
                                                                     margin: "0 10px",
                                                                 }}
+                                                                target="_blank"
                                                             >
                                                                 <i
                                                                     style={{
