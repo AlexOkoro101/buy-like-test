@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { usePaystackPayment } from "react-paystack";
+import { Ng } from 'react-flags-select';
 var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -88,11 +89,9 @@ const CarDetails = ({
             progress: undefined,
         });
 
-    var dollarFormatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-    });
-
+    var dollarFormatter = new Intl.NumberFormat();
+    
+    const [selectedCountryCurrency, setSelectedCountryCurrency] = useState('');
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [amount, setAmount] = useState(0);
@@ -408,7 +407,7 @@ const CarDetails = ({
                 tabcontent[i].style.display = "none";
             }
 
-            tablinks = document.getElementsByClassName("details-tab");
+            tablinks = document.getElementsByClassName("buy-now-tab");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(
                     " active",
@@ -991,7 +990,33 @@ const CarDetails = ({
             <ToastContainer />
             {cardD && (
                 <>
-                    <div className="flex flex-wrap justify-center pt-20 px-5 xl:px-0">
+                    <div className="pt-20 px-24 flex items-center justify-end">
+                        <div className="flex gap-x-4">
+                            <p className="font-medium font-10 sec-black">Share via</p>
+                            <button>
+                                <Link href="">
+                                    <img src="../assets/img/twitter.svg" alt="twiter" />
+                                </Link>
+                            </button>
+                            <button>
+                                <Link href="">
+                                    <img src="../assets/img/facebook.svg" alt="twiter" />
+                                </Link>
+                            </button>
+                            <button>
+                                <Link href="">
+                                    <img src="../assets/img/whatsapp-svg.svg" alt="twiter" />
+                                </Link>
+                            </button>
+                            <button>
+                                <Link href="">
+                                    <img src="../assets/img/copy-svg.svg" alt="twiter" />
+                                </Link>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mt-5 justify-center px-5 xl:px-0">
+                        
                         <div className="details-border-b py-1 block lg:hidden">
                             <p className="font-13 font-bold primary-color">
                                 {cardD?.vehicleName
@@ -1090,59 +1115,65 @@ const CarDetails = ({
                             </div>
                         </div>
                         <div className="car-details-holder px-4 pt-4 pb-12">
-                            <div className="details-border-b px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
-                                <p className="text-base font-bold primary-color">
+                            <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
+                                <p className="text-sm font-bold primary-color">
                                     {`${cardD?.vehicleName}`}
                                 </p>
 
-                                <div className="flex mt-1.5">
-                                    <div className="flex">
-                                        <p className="font-11 primary-gray font-medium">
-                                            {Object.entries(cardD?.mileage)
+                                <div className="mt-1.5">
+                                    <div className="flex gap-x-5">
+                                        <p className="font-11 sec-black font-bold">
+                                                {cardD?.odometer
                                                 .length <= 2
                                                 ? ""
-                                                : cardD?.mileage.replace(
-                                                      "/",
-                                                      "."
-                                                  )}
+                                                : dollarFormatter.format(cardD?.odometer)} mi
+                                                <img src="../assets/img/dot.svg" className="inline pl-1" alt="" />
+                                                
+                                                  
                                         </p>
-                                        <p className="font-11 ml-2 primary-gray font-medium">
+                                        <p className="font-11 sec-black font-bold">
                                             VIN: {cardD.VIN}
                                         </p>
                                     </div>
-                                    <div className="ml-auto">
-                                        {cardD.buyNowPrice.length > 2 ? (
-                                            <p className="primary-color text-xs font-medium">
-                                                BUY NOW @ {""}
-                                                {""}
-                                                {dollarFormatter.format(
-                                                    carDetails.buyNowPrice
-                                                )}
-                                            </p>
-                                        ) : (
-                                            parseFloat(
-                                                cardD.mmrPrice * naira
-                                            ).toLocaleString()
-                                        )}
-                                    </div>
+                                        <div>
+                                        
+                                            {cardD.buyNowPrice.length > 2 ? (
+                                                <p className="sec-black font-11 font-bold">
+                                                    EST PRICE {""}
+                                                    
+                                                    ${dollarFormatter.format(
+                                                        carDetails.buyNowPrice
+                                                    )}
+                                                </p>
+                                            ) : (
+                                                parseFloat(
+                                                    cardD.mmrPrice * naira
+                                                ).toLocaleString()
+                                            )}
+                                        </div>
                                 </div>
                             </div>
 
-                            <div className="flex mt-4 lg:mt-0">
-                                <div className="details-tab  cursor-pointer active w-full font-10 font-semibold  primary-black py-0.5 ">
-                                    <p href className="py-2">
-                                        Offer Amount
-                                    </p>
+                            <div className="flex mt-4 lg:mt-0 justify-between">
+                            
+                                <div className="flex buy-now-tab cursor-pointer active items-center justify-center"
+                                    onClick={(e) => openForm(e, true)}
+                                >
+                                    <div className="text-center">
+                                        <img src={offer ? "../assets/img/buy-now-active.svg" : "../assets/img/buy-now.svg"} className="inline" alt="bid" />
+                                        <p className={offer ? "buy-now-active-tab-text" : "place-bid-tab-text"}>Buy Now</p>
+                                    </div>
                                 </div>
-                                {/* 
+                                
                                 <div
-                                    className="ml-auto px-14 cursor-pointer lg:px-20 font-10 font-medium details-tab primary-black py-0.5"
+                                    className="flex buy-now-tab cursor-pointer items-center justify-center"
                                     onClick={(e) => openForm(e, false)}
                                 >
-                                    <p href className="py-1.5">
-                                        Budget
-                                    </p>
-                                </div> */}
+                                    <div className="text-center">
+                                        <img src={offer ? "../assets/img/bid.svg" : "../assets/img/bid-active.svg"} className="inline" alt="bid" />
+                                        <p className={offer ? "place-bid-tab-text" : "buy-now-active-tab-text"}>Place Bid</p>
+                                    </div>
+                                </div>
                             </div>
                             <div className="mt-3">
                                 {offer && (
@@ -1150,37 +1181,6 @@ const CarDetails = ({
                                         className="tabcontent"
                                         id="offer-amount"
                                     >
-                                        <div className="edit-holder my-1.5 px-3  flex items-center">
-                                            <table>
-                                                <tbody>
-                                                    <tr className="">
-                                                        <td className="text-xs font-medium sec-gray pr-6">
-                                                            <label htmlFor="amount">
-                                                                Add amount to
-                                                                bid
-                                                            </label>
-                                                        </td>
-                                                        <td className="text-xs font-medium sec-black">
-                                                            <input
-                                                                value={
-                                                                    bidAmount
-                                                                }
-                                                                id="amount"
-                                                                className=" w-full focus:outline-none"
-                                                                type="text"
-                                                                placeholder="$8,000"
-                                                                onChange={(e) =>
-                                                                    setbidAmount(
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                }
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
                                                 <tr className="detail-row mb-2">
@@ -1190,7 +1190,7 @@ const CarDetails = ({
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         Nigeria
                                                     </td>
-                                                    <td className="float-right px-2">
+                                                    <td className="float-right px-2 mt-2">
                                                         <img
                                                             src="../assets/img/vectors/arrow-down2.svg"
                                                             alt="tooltip"
@@ -1198,7 +1198,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 py-2 p-2">
                                                         Auction Fee
                                                     </td>
@@ -1213,7 +1213,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Tax and Reg
                                                     </td>
@@ -1228,7 +1228,10 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <hr style={{width: "285%"}} className="w-screen" />
+
+
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Trucking
                                                     </td>
@@ -1298,7 +1301,7 @@ const CarDetails = ({
                                                     )}
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Shipping
                                                     </td>
@@ -1323,7 +1326,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Clearing
                                                     </td>
@@ -1348,7 +1351,9 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <hr style={{width: "285%"}} className="w-screen" />
+
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 py-2">
                                                         Service Fee
                                                     </td>
@@ -1358,16 +1363,20 @@ const CarDetails = ({
                                                     <td> </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <hr style={{width: "285%"}} className="w-screen" />
+
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-bold w-28 p-2">
                                                         Total
                                                     </td>
-                                                    <td className="font-11 sec-black font-bold pr-20 py-2">
+                                                    <td className="font-11 sec-black font-bold pr-8 py-2">
                                                         N
                                                         {totalAmount.toLocaleString()}
                                                     </td>
-                                                    <td className="font-10 font-medium primary-blue text-center px-2">
-                                                        Change currency
+                                                    <td className="font-11 w-16 font-normal sec-black px-2">
+                                                        
+                                                            <Ng className="inline" width="12px" height="12px"></Ng> NGN
+                                                        
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -1378,21 +1387,12 @@ const CarDetails = ({
                                     <div className="tabcontent" id="budget">
                                         <table className="min-w-full border-separate detail-table">
                                             <tbody>
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 ">
-                                                        Bid amount
-                                                    </td>
-                                                    <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        $ 121,000
-                                                    </td>
-                                                    <td className="float-right px-2"></td>
-                                                </tr>
 
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2 p-2">
+                                                <tr className="destination-row">
+                                                    <td className="sec-black font-11 font-semibold w-28 py-2 p-2 destination">
                                                         Destination
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td className="font-11 sec-black font-normal pr-20 py-2 destination-content">
                                                         Nigeria
                                                     </td>
                                                     <td className="float-right px-2">
@@ -1403,7 +1403,22 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
+                                                    <td className="font-semibold sec-black font-11 p-2">
+                                                            Enter max. bid
+                                                    
+                                                    </td>
+                                                    <td className="text-sm font-medium sec-gray">
+                                                        <input
+                                                            id="budget"
+                                                            className="border-none edit-control focus:outline-none"
+                                                            type="text"
+                                                            placeholder="N8,000"
+                                                        />
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Auction Fee
                                                     </td>
@@ -1418,7 +1433,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Tax and Reg
                                                     </td>
@@ -1433,7 +1448,9 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <hr style={{width: "349%"}} className="w-screen" />
+
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Trucking
                                                     </td>
@@ -1453,25 +1470,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Service Fee
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Shipping
                                                     </td>
@@ -1489,7 +1488,7 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <tr className="detail-row">
+                                                <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Clearing
                                                     </td>
@@ -1506,30 +1505,47 @@ const CarDetails = ({
                                                         </label>
                                                     </td>
                                                 </tr>
+
+                                                <hr style={{width: "349%"}} className="w-screen" />
+
+                                                <tr className="">
+                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                        Service Fee
+                                                    </td>
+                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                        $950
+                                                    </td>
+                                                    <td className="text-right px-2">
+                                                        <label className="detail">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="focus:outline-none detail self-center"
+                                                            />
+                                                            <span className="detail"></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+
+                                                <hr style={{width: "349%"}} className="w-screen" />
+
+                                                <tr className="">
+                                                    <td className="sec-black font-11 font-bold w-28 p-2">
+                                                        Total
+                                                    </td>
+                                                    <td className="font-11 sec-black font-bold pr-8 py-2">
+                                                        N
+                                                        {totalAmount.toLocaleString()}
+                                                    </td>
+                                                    <td className="font-11 w-16 font-normal sec-black px-2">
+                                                        
+                                                            <Ng className="inline" width="12px" height="12px"></Ng> NGN
+                                                        
+                                                    </td>
+                                                </tr>
+                                                
                                             </tbody>
                                         </table>
-                                        <div className="edit-holder my-1.5 px-3 flex items-center">
-                                            <table>
-                                                <tbody>
-                                                    <tr className="">
-                                                        <td className="font-10 font-medium sec-gray pr-1">
-                                                            <label>
-                                                                Enter your
-                                                                budget
-                                                            </label>
-                                                        </td>
-                                                        <td className="text-sm font-medium sec-gray">
-                                                            <input
-                                                                id="budget"
-                                                                className="border-none edit-control focus:outline-none"
-                                                                type="text"
-                                                                placeholder="$8,000"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        
                                     </div>
                                 )}
                             </div>
@@ -1610,6 +1626,7 @@ const CarDetails = ({
                                         )}
                                     </>
                                 ) : (
+                                    <>
                                     <Link href="/auth/login">
                                         <button
                                             type="button"
@@ -1618,6 +1635,14 @@ const CarDetails = ({
                                             LOGIN OR SIGN UP TO PROCEED
                                         </button>
                                     </Link>
+
+                                    <p className="font-11 sec-black mx-2 mt-2">OR</p>
+
+                                    <Link href="">
+                                        <button type="button" className="whatsapp-proceed"><img src="../assets/img/whatsapp-btn.svg" className="inline" alt="" /> WHATSAPP</button>
+                                    </Link>
+
+                                    </>
                                 )}
                             </div>
                         </div>
