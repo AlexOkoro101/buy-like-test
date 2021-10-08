@@ -90,6 +90,7 @@ const CarDetails = ({
         });
 
     var dollarFormatter = new Intl.NumberFormat();
+
     
     const [selectedCountryCurrency, setSelectedCountryCurrency] = useState('');
     const [userEmail, setuserEmail] = useState(null);
@@ -974,6 +975,13 @@ const CarDetails = ({
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
+    const bidAmountRef = useRef("");
+    const formatbidAmount= () => {
+        
+        bidAmountRef.current.value = dollarFormatter.format(bidAmountRef.current.value)
+        
+    }
+
 
     //
     //
@@ -984,6 +992,8 @@ const CarDetails = ({
     }
     //
     //
+
+
 
     return (
         <main>
@@ -1404,20 +1414,24 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="max-bid-row">
-                                                    <td style={{width: "300px"}} className="font-semibold sec-black font-11 p-2 max-bid">
-                                                            Enter max. bid
-                                                    
+                                                    <td colSpan="1" className="font-semibold sec-black font-11 p-2 max-bid">
+                                                        Enter max. bid
                                                     </td>
                                                     <td className="text-sm font-medium sec-gray max-bid-content">
                                                         <input
+                                                            ref={bidAmountRef}
                                                             id="budget"
-                                                            className="border-none edit-control focus:outline-none"
+                                                            className="bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500"
                                                             type="text"
                                                             placeholder="N8,000"
+                                                            onBlur={() => formatbidAmount()}
                                                         />
                                                     </td>
                                                     <td className="font-11 font-normal sec-black max-bid-dropdown">
-                                                        <Ng className="inline" width="12px" height="12px"></Ng> NGN
+                                                        <div className="flex justify-center items-center">
+                                                            <Ng className="inline" width="12px" height="12px"></Ng>
+                                                            <p>NGN</p>
+                                                        </div>
                                                     </td>
                                                 </tr>
 
@@ -1437,13 +1451,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Tax and Reg
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200">
                                                         Not Applicable
                                                     </td>
-                                                    <td className="float-right px-2">
+                                                    <td className="px-2 border-b border-gray-200">
                                                         <img
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
@@ -1451,7 +1465,6 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <hr style={{width: "349%"}} className="w-screen" />
 
                                                 <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
@@ -1492,13 +1505,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Clearing
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200">
                                                         $950
                                                     </td>
-                                                    <td className="text-right px-2">
+                                                    <td className="text-right px-2 border-b border-gray-200">
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1509,16 +1522,15 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <hr style={{width: "349%"}} className="w-screen" />
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Service Fee
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200">
                                                         $950
                                                     </td>
-                                                    <td className="text-right px-2">
+                                                    <td className="text-right px-2 border-b border-gray-200">
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1529,17 +1541,15 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <hr style={{width: "349%"}} className="w-screen" />
-
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-bold p-2">
+                                                    <td colSpan="1" className="sec-black font-11 font-bold p-2">
                                                         Total
                                                     </td>
-                                                    <td className="font-11 sec-black font-bold pr-8 py-2">
+                                                    <td colSpan="1" className="font-11 sec-black font-bold pr-8 py-2">
                                                         N
                                                         {totalAmount.toLocaleString()}
                                                     </td>
-                                                    <td className="font-11 font-normal sec-black w-24">
+                                                    <td colSpan="3" className="font-11 font-normal sec-black">
                                                         
                                                             <Ng className="inline" width="12px" height="12px"></Ng> NGN
                                                         
@@ -1666,7 +1676,7 @@ const CarDetails = ({
                                     Vehicle location
                                 </p>
                                 <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    Houston, Tx
+                                    {cardD?.pickupLocation}
                                 </p>
                             </div>
                             <div className="flex flex-col relative  lg:block">
@@ -1768,7 +1778,7 @@ const CarDetails = ({
                                     Est. Delivery
                                 </p>
                                 <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    Thur Feb 14, 2020
+                                    {new Date(+new Date + 36288e5).toLocaleDateString("en-NG", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
                                 </p>
                             </div>
                         </div>
