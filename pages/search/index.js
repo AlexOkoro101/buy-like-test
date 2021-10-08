@@ -67,6 +67,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
+    const [advance, setAdvance] = useState(false);
     const [paramValue, setParam] = useState(params);
     const [makeValue, setmake] = useState({});
     const [filterValue, setFilterValue] = useState({
@@ -119,7 +120,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, []);
     useEffect(() => {
-        handleTransmission();
+        if (advance === true) {
+            handleTransmission();
+        }
     }, [filterValue]);
     useEffect(() => {
         if (carMakes && carMakes.length <= 0) {
@@ -287,7 +290,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         let dat = makes.find(
             (ele) => ele.name.toLowerCase() === e.value.toLowerCase()
         );
-        setcarModels(dat.models);
+        if (dat) {
+            setcarModels(dat.models);
+        } else {
+            setcarModels(makes[0].models);
+        }
         dispatch(fetchMore(filterValue, datas));
     };
     //
@@ -308,7 +315,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             let dat = makes.find(
                 (ele) => ele.name.toLowerCase() === e.toLowerCase()
             );
-            setcarModels(dat.models);
+            if (dat) {
+                setcarModels(dat.models);
+            }
         } else {
             setcarModels(makes[0].models);
         }
@@ -445,8 +454,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div
                     style={{
                         width:
-                            width >= 900 ? "100%"
-                            : open && width >= 900
+                            width >= 900
+                                ? "100%"
+                                : open && width >= 900
                                 ? "273px"
                                 : !open && width >= 900
                                 ? "247px"
@@ -848,7 +858,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={BodyType}
                                             />
@@ -873,7 +884,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={TransmissionType}
                                             />
@@ -897,7 +909,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={ExternalColour}
                                             />
@@ -921,7 +934,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={FuelType}
                                             />
@@ -944,7 +958,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={FacilitationLocation}
                                             />
@@ -967,7 +982,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={InteriorColour}
                                             />
@@ -990,7 +1006,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={InteriorType}
                                             />
@@ -1013,7 +1030,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={EngineType}
                                             />
@@ -1289,16 +1307,23 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     style={{
                                                                         height: "auto",
                                                                         width:
-                                                                            width > 900 && width < 1024 ? "280px" :
-                                                                            open &&
                                                                             width >
+                                                                                900 &&
+                                                                            width <
                                                                                 1024
+                                                                                ? "280px"
+                                                                                : open &&
+                                                                                  width >
+                                                                                      1024
                                                                                 ? "305px"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
                                                                                 ? "280px"
-                                                                                : width < 1300 && width > 625
+                                                                                : width <
+                                                                                      1300 &&
+                                                                                  width >
+                                                                                      625
                                                                                 ? "280px"
                                                                                 : "100%",
                                                                     }}
@@ -1321,10 +1346,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         }}
                                                                         style={{
                                                                             width:
-                                                                                width >= 900 ? "100%"
-                                                                                : open &&
                                                                                 width >=
-                                                                                    900
+                                                                                900
+                                                                                    ? "100%"
+                                                                                    : open &&
+                                                                                      width >=
+                                                                                          900
                                                                                     ? "273px"
                                                                                     : !open &&
                                                                                       width >=
@@ -1497,7 +1524,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
                                                                 >
                                                                     {/* <!-- image to details here --> */}
-                                                                    <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
+                                                                    <div className="flex w-5/6 flex-col md:flex-row justify-between flex-wrap">
                                                                         <div className="1/2">
                                                                             <a
                                                                                 onClick={() => {
@@ -1533,7 +1560,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                                                                         {/* <!-- Details here --> */}
                                                                         <div className="w-1/2 py-4">
-                                                                            <p className="text-base primary-black ">
+                                                                            <p className="text-base font-semibold primary-black ">
                                                                                 {ele?.vehicleName
                                                                                     ? ele?.vehicleName
                                                                                     : [
@@ -1547,9 +1574,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             {/* <!-- location to mileage here  --> */}
                                                                             <table className="min-w-full ">
                                                                                 <tbody>
-                                                                                    <tr>
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                    <tr className="py-8">
+                                                                                        <td className="py-5  whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs font-medium primary-black ">
                                                                                                 {" "}
                                                                                                 <span className="mr-1">
                                                                                                     <img
@@ -1563,8 +1590,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             </p>
                                                                                         </td>
 
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black ">
+                                                                                        <td className="py-1.5 mx-2  whitespace-no-wrap">
+                                                                                            <p className="flex items-center text-xs font-medium primary-black ">
                                                                                                 {" "}
                                                                                                 <span className="mr-1">
                                                                                                     <img
@@ -1572,21 +1599,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         alt="beacon"
                                                                                                     />
                                                                                                 </span>{" "}
-                                                                                                {Object.entries(
-                                                                                                    ele?.mileage
-                                                                                                )
-                                                                                                    .length <=
-                                                                                                2
-                                                                                                    ? ""
-                                                                                                    : ele?.mileage.replace(
-                                                                                                          "/",
-                                                                                                          "."
-                                                                                                      )}
+                                                                                                {dollarFormatter.format(
+                                                                                                    ele?.odometer
+                                                                                                )}{" "}
+                                                                                                miles
                                                                                             </p>
                                                                                         </td>
 
                                                                                         <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black">
+                                                                                            <p className="flex items-center text-xs font-medium primary-black">
                                                                                                 {" "}
                                                                                                 <span className="mr-1">
                                                                                                     <img
@@ -1596,21 +1617,24 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 </span>
                                                                                                 {new Date(
                                                                                                     ele?.auctionEndTime
-                                                                                                ).toLocaleDateString()}
+                                                                                                ).toLocaleDateString(
+                                                                                                    "en-NG",
+                                                                                                    {
+                                                                                                        year: "numeric",
+                                                                                                        day: "numeric",
+                                                                                                        month: "long",
+                                                                                                    }
+                                                                                                )}
                                                                                             </p>
                                                                                         </td>
                                                                                     </tr>
 
                                                                                     <tr>
                                                                                         <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black">
-                                                                                                Exterior:{" "}
-                                                                                                {
-                                                                                                    ""
-                                                                                                }
-                                                                                                {
-                                                                                                    ""
-                                                                                                }
+                                                                                            <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                <span className="font-semibold mr-2">
+                                                                                                    Exterior:
+                                                                                                </span>
                                                                                                 {
                                                                                                     ele?.sourceExteriorColor
                                                                                                 }
@@ -1618,11 +1642,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </td>
 
                                                                                         <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black">
-                                                                                                Interior{" "}
-                                                                                                {
-                                                                                                    ""
-                                                                                                }
+                                                                                            <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                <span className="font-semibold mr-2">
+                                                                                                    Interior:
+                                                                                                </span>
                                                                                                 {
                                                                                                     ele?.interiorColor
                                                                                                 }
@@ -1630,11 +1653,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </td>
 
                                                                                         <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs primary-black">
-                                                                                                VIN:{" "}
-                                                                                                {
-                                                                                                    ""
-                                                                                                }
+                                                                                            <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                <span className="font-semibold mr-2">
+                                                                                                    VIN:
+                                                                                                </span>
                                                                                                 {
                                                                                                     ele?.VIN
                                                                                                 }
@@ -1643,89 +1665,125 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
-
-                                                                            {/* <!-- others here --> */}
-                                                                            <div className="flex border-t my-3 py-3">
-                                                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                                                    Vehicle
-                                                                                    Type:{" "}
+                                                                            <div className="flex w-full justify-between border-t mt-5 pt-8">
+                                                                                <p className="flex font-medium items-center text-xs primary-black">
+                                                                                    <span className="font-semibold mr-2">
+                                                                                        Rating:
+                                                                                    </span>
                                                                                     {
-                                                                                        ""
-                                                                                    }
-                                                                                    {
-                                                                                        ""
-                                                                                    }
-                                                                                    {
-                                                                                        ele?.vehicleType
+                                                                                        ele?.sellerRating
                                                                                     }
                                                                                 </p>
-                                                                                <p className="flex items-center font-11 primary-black mr-6">
+                                                                                <p className="flex  font-medium items-center text-xs primary-black">
+                                                                                    <span className="font-semibold mr-2">
+                                                                                        Seller's
+                                                                                        Name:
+                                                                                    </span>
                                                                                     {
-                                                                                        ele?.exteriorColor
+                                                                                        ele?.sourceSellerName
                                                                                     }
                                                                                 </p>
-                                                                                <p className="flex items-center font-11 primary-black mr-6">
-                                                                                    {" "}
-                                                                                    Fully
-                                                                                    Loaded
+                                                                                <p className="flex font-medium items-center text-xs primary-black">
+                                                                                    <span className="font-semibold mr-2">
+                                                                                        Seller's
+                                                                                        Phone:
+                                                                                    </span>
+                                                                                    {
+                                                                                        ele?.sellerPhone
+                                                                                    }
                                                                                 </p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="w-1/5 py-4 items-end flex flex-col">
-                                                                        <div className="relative pt-1.5">
-                                                                            {ele
-                                                                                .buyNowPrice
-                                                                                .length >
-                                                                                0 && (
-                                                                                <>
-                                                                                    <img
-                                                                                        src="../../assets/img/vectors/buy.svg"
-                                                                                        alt="buy"
-                                                                                    />
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                                                                    >
-                                                                                        BUY
-                                                                                        NOW
-                                                                                    </button>
-                                                                                </>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <div>
-                                                                            <button
-                                                                                type="button"
-                                                                                className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
-                                                                                onClick={() => {
-                                                                                    dispatch(
-                                                                                        carDetail(
-                                                                                            ele
-                                                                                        )
-                                                                                    );
-                                                                                }}
-                                                                            >
-                                                                                <a
-                                                                                    onClick={() => {
-                                                                                        dispatch(
-                                                                                            carDetail(
-                                                                                                ele
-                                                                                            )
-                                                                                        ),
-                                                                                            router.push(
-                                                                                                {
-                                                                                                    pathname:
-                                                                                                        "/search/" +
-                                                                                                        ele.VIN,
-                                                                                                }
-                                                                                            );
-                                                                                    }}
-                                                                                >
-                                                                                    View
-                                                                                    Details
-                                                                                </a>
-                                                                            </button>
+                                                                    <div className="w-1/6 py-4 items-end flex flex-col">
+                                                                        <div className="flex pt-4">
+                                                                            <div className="flex justify-end w-full">
+                                                                                {Object.entries(
+                                                                                    ele.buyNowPrice
+                                                                                )
+                                                                                    .length >
+                                                                                2 ? (
+                                                                                    <div className="flex flex-col w-full justify-between items-center">
+                                                                                        <p className="sec-black text-base ml-1 font-medium">
+                                                                                            $
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.buyNowPrice
+                                                                                            )}
+                                                                                        </p>
+                                                                                        <div className="relative my-3">
+                                                                                            {ele
+                                                                                                .buyNowPrice
+                                                                                                .length >
+                                                                                                0 && (
+                                                                                                <>
+                                                                                                    <img
+                                                                                                        src="../../assets/img/vectors/buy.svg"
+                                                                                                        alt="buy"
+                                                                                                    />
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                                                                    >
+                                                                                                        BUY
+                                                                                                        NOW
+                                                                                                    </button>
+                                                                                                </>
+                                                                                            )}
+                                                                                        </div>
+                                                                                        <a
+                                                                                            type="button"
+                                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
+                                                                                            onClick={() => {
+                                                                                                dispatch(
+                                                                                                    carDetail(
+                                                                                                        ele
+                                                                                                    )
+                                                                                                ),
+                                                                                                    router.push(
+                                                                                                        {
+                                                                                                            pathname:
+                                                                                                                "/search/" +
+                                                                                                                ele.VIN,
+                                                                                                        }
+                                                                                                    );
+                                                                                            }}
+                                                                                        >
+                                                                                            Buy
+                                                                                            Now
+                                                                                        </a>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="flex flex-col w-full justify-between items-center">
+                                                                                        <p className="sec-black text-base ml-1 font-medium">
+                                                                                            $
+                                                                                            {dollarFormatter.format(
+                                                                                                ele.mmrPrice
+                                                                                            )}
+                                                                                        </p>
+                                                                                        <a
+                                                                                            type="button"
+                                                                                            className="focus:outline-none text-white primary-btn mt-3 py-1.5 font-10 font-semibold px-5"
+                                                                                            onClick={() => {
+                                                                                                dispatch(
+                                                                                                    carDetail(
+                                                                                                        ele
+                                                                                                    )
+                                                                                                ),
+                                                                                                    router.push(
+                                                                                                        {
+                                                                                                            pathname:
+                                                                                                                "/search/" +
+                                                                                                                ele.VIN,
+                                                                                                        }
+                                                                                                    );
+                                                                                            }}
+                                                                                        >
+                                                                                            Place
+                                                                                            Bid
+                                                                                        </a>
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
