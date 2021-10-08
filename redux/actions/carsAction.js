@@ -327,13 +327,13 @@ export const filterTabAction = (event, type) => async (dispatch) => {
 };
 
 export const getCategory = (data) => (dispatch) => {
-    let body = { make: data.bodyType, model: "", year: "" };
+    let body = { bodyType: data.bodyType, model: "", year: "" };
     dispatch({
         type: SEARCHING,
         payload: body,
     });
 
-    let url = `${api}?bodyType=${data.bodyType}&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    let url = `${api}?bodyType=${data.bodyType}&make=&model=&year=&page=1&apiKey=Switch!2020`;
     fetch(url.trim(), {
         method: "GET",
         headers: {},

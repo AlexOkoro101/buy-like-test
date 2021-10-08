@@ -10,6 +10,49 @@ const Meta = ({ title, keywords, description }) => {
             <meta name="keywords" content={keywords} />
             <meta name="description" content={description} />
             <meta charSet="utf-8" />
+            <meta
+            name="google-site-verification"
+            content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
+            />
+            <meta
+                property="og:title"
+                content={
+                    title === null
+                    ? "BuyLike Dealers"
+                    : title
+                }
+                />
+            <meta
+                name="description"
+                content={
+                    title === null
+                    ? "Buy cars like dealears with ease"
+                    : title
+                }
+            />
+            <meta property="og:url" content={"http://localhost:3000"} />
+            <meta
+                property="og:description"
+                content={
+                    title
+                }
+            />
+            <meta name="twitter:site" content={"http://localhost:3000"} />
+            <meta
+                name="twitter:card"
+                content={
+                "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
+                }
+            />
+            <meta
+                property="og:image"
+                content={
+                "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
+                }
+            />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            
             <link rel="icon" href="../../public/favicon.ico" />
 
             {/* Fontawesome here */}
@@ -38,7 +81,7 @@ const Meta = ({ title, keywords, description }) => {
 };
 
 Meta.defaultProps = {
-    title: "BuyLike Delears",
+    title: "BuyLike Dealers",
     keywords: "cars, vechiles, motocycles",
     description: "Buy cars like dealears with ease",
 };

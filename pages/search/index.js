@@ -67,6 +67,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
+    const [advance, setAdvance] = useState(false);
     const [paramValue, setParam] = useState(params);
     const [makeValue, setmake] = useState({});
     const [filterValue, setFilterValue] = useState({
@@ -119,7 +120,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         }
     }, []);
     useEffect(() => {
-        handleTransmission();
+        if (advance === true) {
+            handleTransmission();
+        }
     }, [filterValue]);
     useEffect(() => {
         if (carMakes && carMakes.length <= 0) {
@@ -287,7 +290,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         let dat = makes.find(
             (ele) => ele.name.toLowerCase() === e.value.toLowerCase()
         );
-        setcarModels(dat.models);
+        if (dat) {
+            setcarModels(dat.models);
+        } else {
+            setcarModels(makes[0].models);
+        }
         dispatch(fetchMore(filterValue, datas));
     };
     //
@@ -308,7 +315,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             let dat = makes.find(
                 (ele) => ele.name.toLowerCase() === e.toLowerCase()
             );
-            setcarModels(dat.models);
+            if (dat) {
+                setcarModels(dat.models);
+            }
         } else {
             setcarModels(makes[0].models);
         }
@@ -445,8 +454,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div
                     style={{
                         width:
-                            width >= 900 ? "100%"
-                            : open && width >= 900
+                            width >= 900
+                                ? "100%"
+                                : open && width >= 900
                                 ? "273px"
                                 : !open && width >= 900
                                 ? "247px"
@@ -848,7 +858,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={BodyType}
                                             />
@@ -873,7 +884,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={TransmissionType}
                                             />
@@ -897,7 +909,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={ExternalColour}
                                             />
@@ -921,7 +934,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={FuelType}
                                             />
@@ -944,7 +958,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={FacilitationLocation}
                                             />
@@ -967,7 +982,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={InteriorColour}
                                             />
@@ -990,7 +1006,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={InteriorType}
                                             />
@@ -1013,7 +1030,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 return el.value;
                                                             }
                                                         ),
-                                                    }));
+                                                    })),
+                                                        setAdvance(true);
                                                 }}
                                                 options={EngineType}
                                             />
@@ -1289,16 +1307,23 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     style={{
                                                                         height: "auto",
                                                                         width:
-                                                                            width > 900 && width < 1024 ? "280px" :
-                                                                            open &&
                                                                             width >
+                                                                                900 &&
+                                                                            width <
                                                                                 1024
+                                                                                ? "280px"
+                                                                                : open &&
+                                                                                  width >
+                                                                                      1024
                                                                                 ? "305px"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
                                                                                 ? "280px"
-                                                                                : width < 1300 && width > 625
+                                                                                : width <
+                                                                                      1300 &&
+                                                                                  width >
+                                                                                      625
                                                                                 ? "280px"
                                                                                 : "100%",
                                                                     }}
@@ -1321,10 +1346,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         }}
                                                                         style={{
                                                                             width:
-                                                                                width >= 900 ? "100%"
-                                                                                : open &&
                                                                                 width >=
-                                                                                    900
+                                                                                900
+                                                                                    ? "100%"
+                                                                                    : open &&
+                                                                                      width >=
+                                                                                          900
                                                                                     ? "273px"
                                                                                     : !open &&
                                                                                       width >=
