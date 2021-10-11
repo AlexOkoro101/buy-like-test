@@ -159,7 +159,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         getYearValue();
         getModelValue();
         getMakeValue();
-    }, [paramValue, params]);
+    }, [paramValue, params, carModels, carMakes]);
 
     const handleSearch = async (e) => {
         const data = {
@@ -266,7 +266,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         dispatch(fetchMore(filterValue, datas));
         setDefaultModel(e);
     };
-    const handleMake = (e) => {
+    const handleMake = async (e) => {
+        setDefaultModel();
         var data;
         if (e) {
             data = e.value;
@@ -279,7 +280,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
-        setDefaultModel();
         setDefaultMake(e);
         setParam((prev) => ({
             model: "",
@@ -384,15 +384,35 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         );
         return paginationRender;
     }
-    const removeItem = (val) => {
+    const removeItem = async (val) => {
         let data = paramValue;
         for (var f in data) {
-            if (data[f] == val) {
+            if (data[f] === val) {
                 delete data[f];
                 setParam({ ...data });
+                fetchPage(pageIndex);
+                break;
+            } else {
+                const dataWithArrays = Object.fromEntries(
+                    Object.entries(data).map(([key, value]) => [
+                        key,
+                        ...value
+                            .split(",")
+                            .filter(
+                                (ele) => ele.toLowerCase() != val.toLowerCase()
+                            ),
+                    ])
+                );
+                setParam(dataWithArrays);
+                const datas = {
+                    make: dataWithArrays?.make || "",
+                    model: dataWithArrays?.model || "",
+                    year: dataWithArrays?.year || "",
+                    page: pageIndex,
+                };
+                dispatch(fetchMore(filterValue, datas));
             }
         }
-        fetchPage(pageIndex);
     };
     const handleFilter = async (info) => {
         function buildFilter(filter) {
@@ -579,6 +599,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultModel();
         }
     };
 
@@ -608,6 +630,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultYear(null);
         }
     };
 
