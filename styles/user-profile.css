@@ -179,18 +179,18 @@ section {
 }
 
 @media (min-width: 640px) {
-    table {
+    /* table {
         display: inline-table !important;
     }
 
     thead tr:not(:first-child) {
         display: none;
-    }
+    } */
 }
 
-td:not(:last-child) {
+/* td:not(:last-child) {
     border-bottom: 0;
-}
+} */
 
 @media (max-width: 575.98px) {
     .container-main {

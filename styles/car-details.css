@@ -487,4 +487,17 @@ tbody .max-bid-dropdown {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+.currency-flags {
+    padding-bottom: 0 !important;
+    width: 100%;
+}
+.currency-flags-button {
+    border: none !important;
+    padding: 0 !important;
+    justify-content: space-evenly !important;
+}
+.currency-flags-button span {
+    padding: 0;
+    margin: 0;
+}
 
