@@ -765,6 +765,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     Make
                                                 </div>
                                             }
+                                            getDropdownButtonLabel={({
+                                                placeholderButtonLabel,
+                                                value,
+                                            }) => {
+                                                return (
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Make
+                                                    </div>
+                                                );
+                                            }}
                                             value={defaultMake}
                                             width="100%"
                                             onChange={(e) => handleMake(e)}
@@ -791,6 +801,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Model
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-full self-center	">
+                                                            Model
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 value={defaultModel}
                                                 onChange={(e) => handleModel(e)}
@@ -816,6 +836,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Year
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Year
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 value={defaultYear}
                                                 onChange={(e) => handleYear(e)}
@@ -874,6 +904,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Body type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Body type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -900,6 +940,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Transmission type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Transmission type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -925,6 +975,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         External Colour
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            External Colour
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -950,6 +1010,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Fuel type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Fuel type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -971,9 +1041,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
-                                                        Facilitation Location
+                                                        Pickup Location
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Pickup Location
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -998,6 +1078,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Colour
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Interior Colour
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -1022,6 +1112,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Interior Type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -1046,6 +1146,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Engine Type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Engine Type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
