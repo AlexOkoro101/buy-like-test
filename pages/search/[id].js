@@ -110,7 +110,6 @@ const CarDetails = ({
     // you can call this function anything
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
-        console.log(reference);
         verifyPaystackPayment(reference.trxref);
     };
 
@@ -183,7 +182,6 @@ const CarDetails = ({
             return null;
         }
         const item = JSON.parse(userActive);
-        console.log(item);
         const now = new Date();
         if (now.getTime() > item.expiry) {
             // If the item is expired, delete the item from storage
@@ -274,8 +272,6 @@ const CarDetails = ({
         }
         setsize((num || 0) + size);
         const items = array.slice(0, size + (num || 0));
-        console.log("items", items);
-        console.log("size", size);
         setData(items);
     };
 
@@ -336,10 +332,8 @@ const CarDetails = ({
             })
             .then((data) => {
                 const formatData = JSON.parse(data);
-                console.log("local trucking", formatData.data);
                 if (formatData?.data !== null) {
                     // console.log("has value")
-                    console.log("local trucking", formatData.data.raw[1]);
                     settruckingPrice(formatData.data.raw[1]);
                 } else {
                     fetchScrapperTrucking();
@@ -371,9 +365,7 @@ const CarDetails = ({
                 if (data.status) {
                     createLocalTrucking(data);
                 }
-                console.log("scrapper trucking", data);
                 settruckingPrice(data.raw[1]);
-                console.log("scrapper trucking price", truckingPrice);
             });
     };
 
@@ -398,7 +390,6 @@ const CarDetails = ({
     };
     useEffect(() => {
         if (typeof getZipLocation() !== "undefined") {
-            console.log("zip", getZipLocation());
             fetchLocalTrucking();
         }
     }, []);
@@ -514,7 +505,6 @@ const CarDetails = ({
                 <img
                     onClick={() => {
                         setToggler(!toggler);
-                        console.log("large images", returnLargeimage());
                     }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
@@ -575,7 +565,6 @@ const CarDetails = ({
 
     function renderCounter(e) {
         if (e !== null && distance > 0) {
-            console.log(e, "pp");
             return (
                 <>
                     <CountdownCircleTimer
@@ -665,7 +654,6 @@ const CarDetails = ({
                 trucking: truckingPrice || "",
                 shipping: "",
             };
-            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -678,7 +666,6 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
-                    console.log("bid response", response);
                     if (!response.ok) {
                         placeBidInfo();
                     } else {
@@ -797,7 +784,6 @@ const CarDetails = ({
             trucking: addTrucking ? truckingPrice : "",
             shipping: "",
         };
-        console.log("bid object", bidObject);
 
         //Add car to buy now
         fetch(enviroment.BASE_URL + "bids/buy-now", {
@@ -810,7 +796,6 @@ const CarDetails = ({
         })
             .then((response) => {
                 setisLoading(false);
-                console.log("bid response", response);
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -842,18 +827,14 @@ const CarDetails = ({
             redirect: "follow",
         })
             .then((res) => {
-                console.log(res);
                 return res.text();
             })
             .then((data) => {
-                console.log(data);
                 if (data) {
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatData = JSON.parse(data);
                         // setcollection(formatData.data);
-                        console.log("callback", formatData);
-
                         if (formatData.data.status) {
                             buyNowFunction();
                             frontendPayment();
@@ -888,7 +869,6 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
-        console.log("raw", raw);
 
         var requestOptions = {
             method: "POST",
@@ -1566,9 +1546,6 @@ const CarDetails = ({
                                                                 onSelect={(
                                                                     code
                                                                 ) => {
-                                                                    console.log(
-                                                                        code
-                                                                    );
                                                                     setSelectedCountryCurrency(
                                                                         code
                                                                     );
@@ -1752,9 +1729,6 @@ const CarDetails = ({
                                                             onSelect={(
                                                                 code
                                                             ) => {
-                                                                console.log(
-                                                                    code
-                                                                );
                                                                 setSelectedCountryCurrency(
                                                                     code
                                                                 );
@@ -1801,9 +1775,6 @@ const CarDetails = ({
                                                     initializePayment(
                                                         onSuccess,
                                                         onClose
-                                                    );
-                                                    console.log(
-                                                        referenceNumber()
                                                     );
                                                 }}
                                                 className={
@@ -2533,13 +2504,13 @@ const CarDetails = ({
                                                 }}
                                             >
                                                 {addImage(ele)}
-                                                <p class="pt-2 primary-black font-medium text-xs">
+                                                <p className="pt-2 primary-black font-medium text-xs">
                                                     {ele?.make} {""}{" "}
                                                     {ele?.model}
                                                 </p>
                                                 <div className="flex pt-2 justify-between">
                                                     <p className="flex items-center sec-black font-10">
-                                                        <span class="mr-1">
+                                                        <span className="mr-1">
                                                             <img
                                                                 src="../assets/img/vectors/red-location-beacon.svg"
                                                                 alt="location"
@@ -2567,9 +2538,9 @@ const CarDetails = ({
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="flex font-11 primary-gray pt-1">
+                                                <div className="flex font-11 primary-gray pt-1">
                                                     <p>{ele?.year}</p>
-                                                    <p class="ml-3.5">
+                                                    <p className="ml-3.5">
                                                         {dollarFormatter.format(
                                                             ele?.odometer
                                                         )}
@@ -2577,7 +2548,7 @@ const CarDetails = ({
                                                     </p>
                                                 </div>
                                                 <div className="flex pt-2">
-                                                    <p class=" sec-black text-base">
+                                                    <p className=" sec-black text-base">
                                                         $
                                                         {ele?.buyNowPrice
                                                             ? dollarFormatter.format(
