@@ -158,8 +158,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     useEffect(() => {
         getYearValue();
         getModelValue();
+    }, [paramValue, params, carModels]);
+
+    useEffect(() => {
         getMakeValue();
-    }, [paramValue, params]);
+    }, [makes]);
 
     const handleSearch = async (e) => {
         const data = {
@@ -390,6 +393,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             if (data[f] == val) {
                 delete data[f];
                 setParam({ ...data });
+            } else {
+                const dataWithArrays = Object.fromEntries(
+                    Object.entries(data).map(([key, value]) => [
+                        key,
+                        ...value.split(",").splice(val, 1),
+                    ])
+                );
+                setParam({ ...dataWithArrays });
             }
         }
         fetchPage(pageIndex);
@@ -579,6 +590,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultModel();
         }
     };
 
@@ -608,6 +621,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultYear(null);
         }
     };
 
