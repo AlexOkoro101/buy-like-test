@@ -407,6 +407,7 @@ const CarDetails = ({
     }, []);
 
     const openForm = (evt, status) => {
+        setTotalAmount(parseInt(carDetails.buyNowPrice * naira));
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -949,6 +950,17 @@ const CarDetails = ({
                     setTotalAmount(parseInt(totalAmount) + parseInt(value));
                 } else {
                     setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            case "bidClear":
+                if (e.target.checked === true) {
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
+                } else {
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
                 }
                 break;
             default:
@@ -1621,6 +1633,15 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "truck",
+                                                                        truckingPrice.slice(
+                                                                            1
+                                                                        )
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1642,6 +1663,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "ship",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1663,6 +1691,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "bidClear",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
