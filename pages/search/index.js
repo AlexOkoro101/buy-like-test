@@ -1465,11 +1465,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         </div>
                                                                         <div className="flex pt-4">
                                                                             <div className="flex justify-end w-full">
-                                                                                {Object.entries(
+                                                                                {parseInt(
                                                                                     ele.buyNowPrice
-                                                                                )
-                                                                                    .length >
-                                                                                2 ? (
+                                                                                ) ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
                                                                                             $
