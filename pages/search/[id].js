@@ -989,6 +989,10 @@ const CarDetails = ({
         
         bidAmountRef.current.value = dollarFormatter.format(bidAmountRef.current.value)
         
+    } 
+
+    const sendSheet = () => {
+        
     }
 
 
@@ -1264,6 +1268,7 @@ const CarDetails = ({
                                                         <td className="font-11 sec-black font-normal py-2">
                                                             <>Contact Support</>
                                                             <a
+                                                                onClick={() => sendSheet()}
                                                                 href="https://api.whatsapp.com/send?phone=+17135130111"
                                                                 style={{
                                                                     margin: "0 10px",
@@ -1401,7 +1406,20 @@ const CarDetails = ({
                                                     </td>
                                                     <td className="font-11 w-16 font-normal sec-black px-2">
                                                         
-                                                            <Ng className="inline" width="12px" height="12px"></Ng> NGN
+                                                            <ReactFlagsSelect
+                                                                selected={selectedCountryCurrency}
+                                                                searchable={true}
+                                                                searchPlaceholder="Search countries"
+                                                                selectedSize={10}
+                                                                optionsSize={10}
+                                                                showSelectedLabel={false}
+                                                                fullWidth={false}
+                                                                onSelect={code => {
+                                                                    console.log(code)
+                                                                    setSelectedCountryCurrency(code)}}
+                                                                className="currency-flags"
+                                                                selectButtonClassName="currency-flags-button"
+                                                            />
                                                         
                                                     </td>
                                                 </tr>
