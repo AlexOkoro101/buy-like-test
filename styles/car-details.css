@@ -491,6 +491,10 @@ tbody .max-bid-dropdown {
     padding-bottom: 0 !important;
     width: 100%;
 }
+.currency-flags ul {
+    left: -163px !important;
+}
+
 .currency-flags-button {
     border: none !important;
     padding: 0 !important;
