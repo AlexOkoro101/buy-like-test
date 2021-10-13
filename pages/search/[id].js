@@ -12,14 +12,13 @@ import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { usePaystackPayment } from "react-paystack";
-import { Ng } from 'react-flags-select';
-import ReactFlagsSelect from 'react-flags-select';
+import { Ng } from "react-flags-select";
+import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
 
 //
 //
-
 
 //
 //
@@ -93,8 +92,8 @@ const CarDetails = ({
 
     var dollarFormatter = new Intl.NumberFormat();
 
-    
-    const [selectedCountryCurrency, setSelectedCountryCurrency] = useState('NG');
+    const [selectedCountryCurrency, setSelectedCountryCurrency] =
+        useState("NG");
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [amount, setAmount] = useState(0);
@@ -111,7 +110,6 @@ const CarDetails = ({
     // you can call this function anything
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
-        console.log(reference);
         verifyPaystackPayment(reference.trxref);
     };
 
@@ -184,7 +182,6 @@ const CarDetails = ({
             return null;
         }
         const item = JSON.parse(userActive);
-        console.log(item);
         const now = new Date();
         if (now.getTime() > item.expiry) {
             // If the item is expired, delete the item from storage
@@ -275,8 +272,6 @@ const CarDetails = ({
         }
         setsize((num || 0) + size);
         const items = array.slice(0, size + (num || 0));
-        console.log("items", items);
-        console.log("size", size);
         setData(items);
     };
 
@@ -311,7 +306,7 @@ const CarDetails = ({
         displaySmall();
 
         if (!carDetails.buyNowPrice && carDetails.mmrPrice) {
-            setOffer(false)
+            setOffer(false);
         }
         // if(carDetails.buyNowPrice && !carDetails.mmrPrice) {
         //     setOffer(true)
@@ -337,10 +332,8 @@ const CarDetails = ({
             })
             .then((data) => {
                 const formatData = JSON.parse(data);
-                console.log("local trucking", formatData.data);
                 if (formatData?.data !== null) {
                     // console.log("has value")
-                    console.log("local trucking", formatData.data.raw[1]);
                     settruckingPrice(formatData.data.raw[1]);
                 } else {
                     fetchScrapperTrucking();
@@ -372,9 +365,7 @@ const CarDetails = ({
                 if (data.status) {
                     createLocalTrucking(data);
                 }
-                console.log("scrapper trucking", data);
                 settruckingPrice(data.raw[1]);
-                console.log("scrapper trucking price", truckingPrice);
             });
     };
 
@@ -399,7 +390,6 @@ const CarDetails = ({
     };
     useEffect(() => {
         if (typeof getZipLocation() !== "undefined") {
-            console.log("zip", getZipLocation());
             fetchLocalTrucking();
         }
     }, []);
@@ -408,6 +398,7 @@ const CarDetails = ({
     }, []);
 
     const openForm = (evt, status) => {
+        setTotalAmount(parseInt(carDetails.buyNowPrice * naira));
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -514,12 +505,10 @@ const CarDetails = ({
                 <img
                     onClick={() => {
                         setToggler(!toggler);
-                        console.log("large images", returnLargeimage());
                     }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
-                    className="br-5 object-fit cursor-pointer"
-                    width="97%"
+                    className="br-5 w-full h-full object-contain object-center cursor-pointer"
                     alt="Benz"
                 />
             </>
@@ -575,7 +564,6 @@ const CarDetails = ({
 
     function renderCounter(e) {
         if (e !== null && distance > 0) {
-            console.log(e, "pp");
             return (
                 <>
                     <CountdownCircleTimer
@@ -665,7 +653,6 @@ const CarDetails = ({
                 trucking: truckingPrice || "",
                 shipping: "",
             };
-            console.log("bid object", bidObject);
 
             //Add car to collection
             fetch(enviroment.BASE_URL + "bids/add-bid", {
@@ -678,7 +665,6 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
-                    console.log("bid response", response);
                     if (!response.ok) {
                         placeBidInfo();
                     } else {
@@ -797,7 +783,6 @@ const CarDetails = ({
             trucking: addTrucking ? truckingPrice : "",
             shipping: "",
         };
-        console.log("bid object", bidObject);
 
         //Add car to buy now
         fetch(enviroment.BASE_URL + "bids/buy-now", {
@@ -810,7 +795,6 @@ const CarDetails = ({
         })
             .then((response) => {
                 setisLoading(false);
-                console.log("bid response", response);
                 if (!response.ok) {
                     buyNowInfo();
                 } else {
@@ -842,18 +826,14 @@ const CarDetails = ({
             redirect: "follow",
         })
             .then((res) => {
-                console.log(res);
                 return res.text();
             })
             .then((data) => {
-                console.log(data);
                 if (data) {
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatData = JSON.parse(data);
                         // setcollection(formatData.data);
-                        console.log("callback", formatData);
-
                         if (formatData.data.status) {
                             buyNowFunction();
                             frontendPayment();
@@ -888,7 +868,6 @@ const CarDetails = ({
             status: false,
             statusTrans: "",
         });
-        console.log("raw", raw);
 
         var requestOptions = {
             method: "POST",
@@ -946,6 +925,13 @@ const CarDetails = ({
                 }
                 break;
             case "clear":
+                if (e.target.checked === true) {
+                    setTotalAmount(parseInt(totalAmount) + parseInt(value));
+                } else {
+                    setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            case "bidClear":
                 if (e.target.checked === true) {
                     setTotalAmount(
                         parseInt(totalAmount) + parseInt(value) * naira
@@ -1006,64 +992,113 @@ const CarDetails = ({
     //
     //
 
-
-
     return (
         <main>
             <ToastContainer />
             {cardD && (
                 <>
-                    <div className="pt-20 px-24 flex items-center justify-end">
+                    <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
                         <div className="flex gap-x-4">
-                            <p className="font-medium font-10 sec-black">Share via</p>
+                            <p className="font-medium font-10 sec-black">
+                                Share via
+                            </p>
                             <button>
-                                <Link href={"https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" + router.pathname}>
-                                    <img src="../assets/img/twitter.svg" alt="twiter" />
+                                <Link
+                                    href={
+                                        "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" +
+                                        router.pathname
+                                    }
+                                >
+                                    <img
+                                        src="../assets/img/twitter.svg"
+                                        alt="twiter"
+                                    />
                                 </Link>
                             </button>
                             <button>
-                                <a href={"https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" + router.pathname} target="_blank">
-                                    <img src="../assets/img/facebook.svg" alt="facebook" />
+                                <a
+                                    href={
+                                        "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" +
+                                        router.pathname
+                                    }
+                                    target="_blank"
+                                >
+                                    <img
+                                        src="../assets/img/facebook.svg"
+                                        alt="facebook"
+                                    />
                                 </a>
                             </button>
                             <button>
-                                <a href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`} data-action="share/whatsapp/share" target="_blank">
-                                    <img src="../assets/img/whatsapp-svg.svg" alt="whatsapp" />
+                                <a
+                                    href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
+                                        cardD?.vehicleName
+                                    )}%20%20www.buylikedealers.com/${
+                                        cardD?.VIN
+                                    }`}
+                                    data-action="share/whatsapp/share"
+                                    target="_blank"
+                                >
+                                    <img
+                                        src="../assets/img/whatsapp-svg.svg"
+                                        alt="whatsapp"
+                                    />
                                 </a>
                             </button>
-                            <button onClick={() => navigator.clipboard.writeText('www.buylikedealers.com/' + cardD?.VIN)}>
-                                <img src="../assets/img/copy-svg.svg" alt="copy" />
+                            <button
+                                onClick={() =>
+                                    navigator.clipboard.writeText(
+                                        "www.buylikedealers.com/" + cardD?.VIN
+                                    )
+                                }
+                            >
+                                <img
+                                    src="../assets/img/copy-svg.svg"
+                                    alt="copy"
+                                />
                             </button>
                         </div>
                     </div>
-                    <div className="flex flex-wrap mt-5 justify-center px-5 xl:px-0">
-                        
-                        <div className="details-border-b py-1 block lg:hidden">
-                            <p className="font-13 font-bold primary-color">
-                                {cardD?.vehicleName
-                                    ? cardD?.vehicleName
-                                    : [cardD?.make, cardD.model].join(" ")}
+                    <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
+                        <div className="py-1 block lg:hidden hidden-header">
+                            <p className="text-sm font-bold primary-color">
+                                {`${cardD?.make}, ${cardD?.model}`}
                             </p>
 
-                            <div className="flex mt-1.5">
+                            <div className="flex mt-1.5 flex-col">
                                 <div className="flex">
                                     <p className="font-11 primary-gray font-medium">
-                                        {Object.entries(cardD?.mileage).length}
+                                        {dollarFormatter.format(cardD?.odometer)} mi
+                                    </p>
+                                    <p className="font-11 ml-2 primary-gray font-medium">
+                                        {cardD?.year}
                                     </p>
                                     <p className="font-11 ml-2 primary-gray font-medium">
                                         VIN: {""}
                                         {cardD?.VIN}
                                     </p>
                                 </div>
-                                <div className="ml-auto">
-                                    <p className="primary-color text-base font-extrabold">
-                                        {}
-                                    </p>
+                                <div>
+                                    {cardD.buyNowPrice.length > 2 ? (
+                                        <p className="primary-color text-sm font-bold">
+                                            $
+                                            {dollarFormatter.format(
+                                                carDetails.buyNowPrice
+                                            )}
+                                        </p>
+                                    ) : (
+                                        <p className="primary-color text-base font-extrabold">
+                                            $
+                                            {dollarFormatter.format(
+                                                carDetails.mmrPrice
+                                            )}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
-                            <div>{displayLargeimage()}</div>
+                            <div className="w-full displayLargeimage">{displayLargeimage()}</div>
 
                             <div className="overflow-hidden">
                                 <div
@@ -1091,10 +1126,8 @@ const CarDetails = ({
                                             <div
                                                 key={id}
                                                 onClick={() => setId(page + id)}
-                                                className="mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
-                                                style={{
-                                                    width: "9%",
-                                                }}
+                                                className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
+                                                
                                             >
                                                 <img
                                                     src={ele?.image_largeUrl}
@@ -1111,12 +1144,12 @@ const CarDetails = ({
                                         (window.innerWidth <= 760 ? 3 : 8) &&
                                     count > 0 ? (
                                         <div
-                                            className="rounded-md w-1/6 flex items-center text-xs font-mono justify-center relative shadow-sm"
+                                            className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
                                                 height: "60.3px",
                                                 backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
                                                 backgroundSize: "cover",
-                                                width: "9%",
+                                                
                                             }}
                                         >
                                             <div
@@ -1138,68 +1171,110 @@ const CarDetails = ({
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
                                 <p className="text-sm font-bold primary-color">
-                                    {`${cardD?.vehicleName}`}
+                                    {`${cardD?.make}, ${cardD?.model}`}
                                 </p>
 
                                 <div className="mt-1.5">
                                     <div className="flex gap-x-5">
                                         <p className="font-11 sec-black font-bold">
-                                                {cardD?.odometer
-                                                .length <= 2
+                                            {cardD?.odometer.length <= 2
                                                 ? ""
-                                                : dollarFormatter.format(cardD?.odometer)} mi
-                                                <img src="../assets/img/dot.svg" className="inline pl-1" alt="" />
-                                                
-                                                  
+                                                : dollarFormatter.format(
+                                                      cardD?.odometer
+                                                  )}{" "}
+                                            mi
+                                            <img
+                                                src="../assets/img/dot.svg"
+                                                className="inline pl-1"
+                                                alt=""
+                                            />
                                         </p>
                                         <p className="font-11 sec-black font-bold">
                                             VIN: {cardD.VIN}
                                         </p>
                                     </div>
-                                        <div>
-                                        
-                                            {cardD.buyNowPrice.length > 2 ? (
-                                                <p className="sec-black font-11 font-bold">
-                                                    EST PRICE {""}
-                                                    
-                                                    ${dollarFormatter.format(
-                                                        carDetails.buyNowPrice
-                                                    )}
-                                                </p>
-                                            ) : (
-                                                <p className="sec-black font-11 font-bold">
-                                                    EST PRICE {""}
-                                                    
-                                                    ${dollarFormatter.format(
-                                                        carDetails.mmrPrice
-                                                    )}
-                                                </p>
-                                               
-                                            )}
-                                        </div>
+                                    <div>
+                                        {cardD.buyNowPrice.length > 2 ? (
+                                            <p className="sec-black font-11 font-bold">
+                                                EST PRICE {""}$
+                                                {dollarFormatter.format(
+                                                    carDetails.buyNowPrice
+                                                )}
+                                            </p>
+                                        ) : (
+                                            <p className="sec-black font-11 font-bold">
+                                                EST PRICE {""}$
+                                                {dollarFormatter.format(
+                                                    carDetails.mmrPrice
+                                                )}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="flex mt-4 lg:mt-0 justify-between">
-
-                                
-                            
-                                <div className={"flex buy-now-tab cursor-pointer items-center justify-center " + (!cardD?.buyNowPrice ? "pointer-events-none" : "active")}
+                                <div
+                                    className={
+                                        "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                        (!cardD?.buyNowPrice
+                                            ? "pointer-events-none"
+                                            : "active")
+                                    }
                                     onClick={(e) => openForm(e, true)}
                                 >
                                     <div className="text-center">
-                                        <img src={offer ? "../assets/img/buy-now-active.svg" : "../assets/img/buy-now.svg"} className="inline" alt="bid" />
-                                        <p className={offer ? "buy-now-active-tab-text" : "place-bid-tab-text"}>Buy Now</p>
+                                        <img
+                                            src={
+                                                offer
+                                                    ? "../assets/img/buy-now-active.svg"
+                                                    : "../assets/img/buy-now.svg"
+                                            }
+                                            className="inline"
+                                            alt="bid"
+                                        />
+                                        <p
+                                            className={
+                                                offer
+                                                    ? "buy-now-active-tab-text"
+                                                    : "place-bid-tab-text"
+                                            }
+                                        >
+                                            Buy Now
+                                        </p>
                                     </div>
                                 </div>
-                                
+
                                 <div
-                                    className={"flex buy-now-tab cursor-pointer items-center justify-center " + (!cardD?.mmrPrice && "pointer-events-none ") + (!cardD?.buyNowPrice && cardD?.mmrPrice ? " active" : "")}
+                                    className={
+                                        "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                        (!cardD?.mmrPrice &&
+                                            "pointer-events-none ") +
+                                        (!cardD?.buyNowPrice && cardD?.mmrPrice
+                                            ? " active"
+                                            : "")
+                                    }
                                     onClick={(e) => openForm(e, false)}
                                 >
                                     <div className="text-center">
-                                        <img src={offer ? "../assets/img/bid.svg" : "../assets/img/bid-active.svg"} className="inline" alt="bid" />
-                                        <p className={offer ? "place-bid-tab-text" : "buy-now-active-tab-text"}>Place Bid</p>
+                                        <img
+                                            src={
+                                                offer
+                                                    ? "../assets/img/bid.svg"
+                                                    : "../assets/img/bid-active.svg"
+                                            }
+                                            className="inline"
+                                            alt="bid"
+                                        />
+                                        <p
+                                            className={
+                                                offer
+                                                    ? "place-bid-tab-text"
+                                                    : "buy-now-active-tab-text"
+                                            }
+                                        >
+                                            Place Bid
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -1209,16 +1284,16 @@ const CarDetails = ({
                                         className="tabcontent"
                                         id="offer-amount"
                                     >
-                                        <table className="min-w-full border-separate detail-table">
+                                        <table className="w-full border-separate detail-table table-fixed">
                                             <tbody>
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 ">
+                                                <tr className="detail-row">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold p-2 ">
                                                         Destination
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                         Nigeria
                                                     </td>
-                                                    <td className="float-right px-2 mt-2">
+                                                    <td className="px-2 mt-2">
                                                         <img
                                                             src="../assets/img/vectors/arrow-down2.svg"
                                                             alt="tooltip"
@@ -1227,13 +1302,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2 p-2">
+                                                    <td  colSpan="2" className="sec-black font-11 font-semibold w-28 p-2">
                                                         Auction Fee
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                         $300
                                                     </td>
-                                                    <td className="float-right px-2">
+                                                    <td className="px-2">
                                                         <img
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
@@ -1242,13 +1317,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Tax and Reg
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
                                                         Not Applicable
                                                     </td>
-                                                    <td className="float-right px-2">
+                                                    <td className="px-2 border-b border-gray-200">
                                                         <img
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
@@ -1256,16 +1331,14 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <hr style={{width: "285%"}} className="w-screen" />
-
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2">
                                                         Trucking
                                                     </td>
 
                                                     {noZipValue ? (
-                                                        <td className="font-11 sec-black font-normal py-2">
+                                                        <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                             <>Contact Support</>
                                                             <a
                                                                 onClick={() => sendSheet()}
@@ -1303,12 +1376,12 @@ const CarDetails = ({
                                                         </td>
                                                     ) : (
                                                         <>
-                                                            <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                            <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                                 {truckingPrice
                                                                     ? `${truckingPrice}`
                                                                     : "Loading..."}
                                                             </td>
-                                                            <td className="text-right px-2">
+                                                            <td className="px-2">
                                                                 <label className="detail">
                                                                     <input
                                                                         type="checkbox"
@@ -1333,13 +1406,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2">
                                                         Shipping
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                         $1,050
                                                     </td>
-                                                    <td className="text-right px-2">
+                                                    <td className="px-2">
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1358,13 +1431,13 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2 border-b border-gray-200">
                                                         Clearing
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
                                                         N2,000,000
                                                     </td>
-                                                    <td className="text-right px-2">
+                                                    <td className="px-2 border-b border-gray-200">
                                                         <label className="detail">
                                                             <input
                                                                 type="checkbox"
@@ -1382,29 +1455,25 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-                                                <hr style={{width: "285%"}} className="w-screen" />
-
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2 border-b border-gray-200">
                                                         Service Fee
                                                     </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td colSpan="3" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
                                                         $400
                                                     </td>
-                                                    <td> </td>
+                                                  
                                                 </tr>
 
-                                                <hr style={{width: "285%"}} className="w-screen" />
-
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-bold w-28 p-2">
+                                                    <td colSpan="2" className="sec-black font-11 font-bold py-2">
                                                         Total
                                                     </td>
-                                                    <td className="font-11 sec-black font-bold pr-8 py-2">
+                                                    <td colSpan="2" className="font-11 sec-black font-bold py-2">
                                                         N
                                                         {totalAmount.toLocaleString()}
                                                     </td>
-                                                    <td className="font-11 w-16 font-normal sec-black px-2">
+                                                    <td className="font-11 w-16 font-normal sec-black">
                                                         
                                                             <ReactFlagsSelect
                                                                 selected={selectedCountryCurrency}
@@ -1431,12 +1500,14 @@ const CarDetails = ({
                                     <div className="tabcontent" id="budget">
                                         <table className="w-full border-separate detail-table table-fixed">
                                             <tbody>
-
                                                 <tr className="destination-row pb-2">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 destination">
                                                         Destination
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal py-2 destination-content">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal py-2 destination-content"
+                                                    >
                                                         Nigeria
                                                     </td>
                                                     <td className="px-2 destination-dropdown">
@@ -1451,29 +1522,48 @@ const CarDetails = ({
                                                     <td className="font-semibold sec-black font-11 p-2 max-bid">
                                                         Enter max. bid
                                                     </td>
-                                                    <td colSpan="3" className="text-sm font-medium sec-gray max-bid-content">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="text-sm font-medium sec-gray max-bid-content"
+                                                    >
                                                         <input
                                                             ref={bidAmountRef}
                                                             id="budget"
                                                             className="bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
                                                             type="text"
                                                             placeholder="N8,000"
-                                                            onBlur={() => formatbidAmount()}
+                                                            onBlur={() =>
+                                                                formatbidAmount()
+                                                            }
                                                         />
                                                     </td>
                                                     <td className="font-11 font-normal sec-black max-bid-dropdown">
                                                         <div className="">
                                                             <ReactFlagsSelect
-                                                                selected={selectedCountryCurrency}
-                                                                searchable={true}
+                                                                selected={
+                                                                    selectedCountryCurrency
+                                                                }
+                                                                searchable={
+                                                                    true
+                                                                }
                                                                 searchPlaceholder="Search countries"
-                                                                selectedSize={10}
+                                                                selectedSize={
+                                                                    10
+                                                                }
                                                                 optionsSize={10}
-                                                                showSelectedLabel={false}
-                                                                fullWidth={false}
-                                                                onSelect={code => {
-                                                                    console.log(code)
-                                                                    setSelectedCountryCurrency(code)}}
+                                                                showSelectedLabel={
+                                                                    false
+                                                                }
+                                                                fullWidth={
+                                                                    false
+                                                                }
+                                                                onSelect={(
+                                                                    code
+                                                                ) => {
+                                                                    setSelectedCountryCurrency(
+                                                                        code
+                                                                    );
+                                                                }}
                                                                 className="currency-flags"
                                                                 selectButtonClassName="currency-flags-button"
                                                             />
@@ -1485,7 +1575,10 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Auction Fee
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal pr-20 py-2"
+                                                    >
                                                         $300
                                                     </td>
                                                     <td className=" px-2">
@@ -1500,7 +1593,10 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Tax and Reg
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                    >
                                                         Not Applicable
                                                     </td>
                                                     <td className="px-2 border-b border-gray-200">
@@ -1511,12 +1607,14 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-
                                                 <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Trucking
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal pr-20 py-2"
+                                                    >
                                                         {truckingPrice
                                                             ? `${truckingPrice}`
                                                             : "Loading..."}
@@ -1526,6 +1624,15 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "truck",
+                                                                        truckingPrice.slice(
+                                                                            1
+                                                                        )
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1536,7 +1643,10 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                         Shipping
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal pr-20 py-2">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal pr-20 py-2"
+                                                    >
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2">
@@ -1544,6 +1654,13 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "ship",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1554,7 +1671,10 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Clearing
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
+                                                    >
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2 border-b border-gray-200">
@@ -1562,18 +1682,27 @@ const CarDetails = ({
                                                             <input
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
+                                                                onChange={(e) =>
+                                                                    setFees(
+                                                                        e,
+                                                                        "bidClear",
+                                                                        950
+                                                                    )
+                                                                }
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
                                                     </td>
                                                 </tr>
 
-
                                                 <tr className="">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Service Fee
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
+                                                    >
                                                         $950
                                                     </td>
                                                     <td className="text-right px-2 border-b border-gray-200">
@@ -1591,33 +1720,40 @@ const CarDetails = ({
                                                     <td className="sec-black font-11 font-bold p-2">
                                                         Total
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-bold pr-8 py-2">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-bold pr-8 py-2"
+                                                    >
                                                         N
                                                         {totalAmount.toLocaleString()}
                                                     </td>
                                                     <td className="font-11 font-normal sec-black">
-                                                        
                                                         <ReactFlagsSelect
-                                                            selected={selectedCountryCurrency}
+                                                            selected={
+                                                                selectedCountryCurrency
+                                                            }
                                                             searchable={true}
                                                             searchPlaceholder="Search countries"
                                                             selectedSize={10}
                                                             optionsSize={10}
-                                                            showSelectedLabel={false}
+                                                            showSelectedLabel={
+                                                                false
+                                                            }
                                                             fullWidth={false}
-                                                            onSelect={code => {
-                                                                console.log(code)
-                                                                setSelectedCountryCurrency(code)}}
+                                                            onSelect={(
+                                                                code
+                                                            ) => {
+                                                                setSelectedCountryCurrency(
+                                                                    code
+                                                                );
+                                                            }}
                                                             className="currency-flags"
                                                             selectButtonClassName="currency-flags-button"
                                                         />
-                                                        
                                                     </td>
                                                 </tr>
-                                                
                                             </tbody>
                                         </table>
-                                        
                                     </div>
                                 )}
                             </div>
@@ -1653,9 +1789,6 @@ const CarDetails = ({
                                                     initializePayment(
                                                         onSuccess,
                                                         onClose
-                                                    );
-                                                    console.log(
-                                                        referenceNumber()
                                                     );
                                                 }}
                                                 className={
@@ -1699,21 +1832,32 @@ const CarDetails = ({
                                     </>
                                 ) : (
                                     <>
-                                    <Link href="/auth/login">
-                                        <button
-                                            type="button"
-                                            className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                                        >
-                                            SUBMIT A REQUEST TO PROCEED
-                                        </button>
-                                    </Link>
+                                        <Link href="/auth/login">
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                            >
+                                                SUBMIT A REQUEST TO PROCEED
+                                            </button>
+                                        </Link>
 
-                                    <p className="font-11 sec-black mx-2 mt-2">OR</p>
+                                        <p className="font-11 sec-black mx-2 mt-2">
+                                            OR
+                                        </p>
 
-                                    <Link href="">
-                                        <button type="button" className="whatsapp-proceed"><img src="../assets/img/whatsapp-btn.svg" className="inline" alt="" /> WHATSAPP US</button>
-                                    </Link>
-
+                                        <Link href="">
+                                            <button
+                                                type="button"
+                                                className="whatsapp-proceed"
+                                            >
+                                                <img
+                                                    src="../assets/img/whatsapp-btn.svg"
+                                                    className="inline"
+                                                    alt=""
+                                                />{" "}
+                                                WHATSAPP US
+                                            </button>
+                                        </Link>
                                     </>
                                 )}
                             </div>
@@ -1723,7 +1867,7 @@ const CarDetails = ({
                     <section className="w-full mt-20">
                         <div className=" justify-center mb-10 block lg:hidden"></div>
 
-                        <div className="flex justify-around flex-wrap">
+                        <div className="flex justify-around flex-col lg:flex-row flex-wrap items-center gap-y-8">
                             <div className="flex flex-col self-center">
                                 <div className="items-center self-center">
                                     <img
@@ -1770,14 +1914,11 @@ const CarDetails = ({
                                             <p className="sec-black font-medium font-11">
                                                 {new Date(
                                                     carDetails?.auctionEndTime
-                                                ).toLocaleDateString(
-                                                    "en-NG",
-                                                    {
-                                                        year: "numeric",
-                                                        day: "numeric",
-                                                        month: "long",
-                                                    }
-                                                )}
+                                                ).toLocaleDateString("en-NG", {
+                                                    year: "numeric",
+                                                    day: "numeric",
+                                                    month: "long",
+                                                })}
                                             </p>
                                             <p className="sec-black font-medium font-11 ml-4">
                                                 {new Date(
@@ -1844,7 +1985,14 @@ const CarDetails = ({
                                     Est. Delivery
                                 </p>
                                 <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    {new Date(+new Date + 36288e5).toLocaleDateString("en-NG", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
+                                    {new Date(
+                                        +new Date() + 36288e5
+                                    ).toLocaleDateString("en-NG", {
+                                        weekday: "long",
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
                                 </p>
                             </div>
                         </div>
@@ -1954,7 +2102,7 @@ const CarDetails = ({
                     </section>
 
                     <div className="py-4 overview-section">
-                        <div className="flex justify-center px-5">
+                        <div className="flex justify-center gap-x-8 lg:gap-x-0 px-5">
                             <div
                                 onClick={() => {
                                     setoverview(true);
@@ -1982,12 +2130,12 @@ const CarDetails = ({
                         <div
                             className={
                                 overview
-                                    ? "flex flex-wrap px-5 justify-center mt-6 "
+                                    ? "flex px-5 justify-center mt-6 w-full lg:w-auto flex-col lg:flex-row items-center"
                                     : " hidden"
                             }
                         >
-                            <div>
-                                <table className="min-w-full border-separate overview-table">
+                            <div className="w-full lg:w-auto">
+                                <table className="lg:w-auto w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
@@ -2014,7 +2162,7 @@ const CarDetails = ({
                                                 {cardD?.year || "Not Specified"}
                                             </td>
                                         </tr>
-                                        
+
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Vehicle VIN
@@ -2043,20 +2191,21 @@ const CarDetails = ({
                                                 </span>
                                             </td>
                                         </tr>
-                                        
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="lg:ml-3">
+                            <div className="lg:ml-3 w-full lg:w-auto">
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
-                                        
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Mileage
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                {dollarFormatter.format(cardD?.odometer)}miles
+                                                {dollarFormatter.format(
+                                                    cardD?.odometer
+                                                )}
+                                                miles
                                             </td>
                                         </tr>
 
@@ -2077,7 +2226,6 @@ const CarDetails = ({
                                             </td>
                                         </tr>
 
-
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Drive train
@@ -2087,7 +2235,6 @@ const CarDetails = ({
                                             </td>
                                         </tr>
 
-                                        
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Body type
@@ -2146,7 +2293,6 @@ const CarDetails = ({
                                                 {cardD?.sellerState}
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -2158,7 +2304,10 @@ const CarDetails = ({
                                                 Bidding Price
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                ${dollarFormatter.format(cardD?.mmrPrice)}
+                                                $
+                                                {dollarFormatter.format(
+                                                    cardD?.mmrPrice
+                                                )}
                                             </td>
                                         </tr>
                                         <tr className="detail-row mb-2">
@@ -2186,8 +2335,10 @@ const CarDetails = ({
                                                 Buy Now Price
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                ${dollarFormatter.format(cardD?.buyNowPrice) ||
-                                                    "Not specified"}
+                                                $
+                                                {dollarFormatter.format(
+                                                    cardD?.buyNowPrice
+                                                ) || "Not specified"}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2347,7 +2498,7 @@ const CarDetails = ({
                             </h4>
                         </div>
                         <div
-                            className="flex justify-center flex-wrap mt-4 display-type"
+                            className="flex w-11/12 mx-auto justify-center  flex-wrap my-4 display-type"
                             id="car-grid"
                         >
                             {data?.length > 0 &&
@@ -2356,7 +2507,7 @@ const CarDetails = ({
                                         ele && (
                                             <div
                                                 key={id}
-                                                className="similar-cars-holder p-3 mr-4 mb-5 lg:mb-0 cursor-pointer"
+                                                className="similar-cars-holder p-3 mr-4 my-5 lg:mb-0 cursor-pointer"
                                                 onClick={() => {
                                                     dispatch(carDetail(ele)),
                                                         router.push({
@@ -2367,10 +2518,13 @@ const CarDetails = ({
                                                 }}
                                             >
                                                 {addImage(ele)}
-                                                <p class="pt-2 primary-black font-medium text-xs">{ele?.make} {""} {ele?.model}</p>
+                                                <p className="pt-2 primary-black font-medium text-xs">
+                                                    {ele?.make} {""}{" "}
+                                                    {ele?.model}
+                                                </p>
                                                 <div className="flex pt-2 justify-between">
                                                     <p className="flex items-center sec-black font-10">
-                                                        <span class="mr-1">
+                                                        <span className="mr-1">
                                                             <img
                                                                 src="../assets/img/vectors/red-location-beacon.svg"
                                                                 alt="location"
@@ -2398,15 +2552,25 @@ const CarDetails = ({
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="flex font-11 primary-gray pt-1">
+                                                <div className="flex font-11 primary-gray pt-1">
                                                     <p>{ele?.year}</p>
-                                                    <p class="ml-3.5">
-                                                        {dollarFormatter.format(ele?.odometer)}miles
+                                                    <p className="ml-3.5">
+                                                        {dollarFormatter.format(
+                                                            ele?.odometer
+                                                        )}
+                                                        miles
                                                     </p>
                                                 </div>
                                                 <div className="flex pt-2">
-                                                    <p class=" sec-black text-base">
-                                                        ${ele?.buyNowPrice ? dollarFormatter.format(ele?.buyNowPrice) :  dollarFormatter.format(ele?.mmrPrice)}
+                                                    <p className=" sec-black text-base">
+                                                        $
+                                                        {ele?.buyNowPrice
+                                                            ? dollarFormatter.format(
+                                                                  ele?.buyNowPrice
+                                                              )
+                                                            : dollarFormatter.format(
+                                                                  ele?.mmrPrice
+                                                              )}
                                                     </p>
                                                     <div className="ml-auto  self-center">
                                                         <button
@@ -2427,8 +2591,9 @@ const CarDetails = ({
                                                                     );
                                                             }}
                                                         >
-                                                        {ele?.buyNowPrice ? "Buy now" : "Place bid"}
-                                                            
+                                                            {ele?.buyNowPrice
+                                                                ? "Buy now"
+                                                                : "Place bid"}
                                                         </button>
                                                     </div>
                                                 </div>

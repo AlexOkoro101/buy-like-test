@@ -159,7 +159,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         getYearValue();
         getModelValue();
         getMakeValue();
-    }, [paramValue, params]);
+    }, [paramValue, params, carModels, carMakes]);
 
     const handleSearch = async (e) => {
         const data = {
@@ -266,7 +266,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         dispatch(fetchMore(filterValue, datas));
         setDefaultModel(e);
     };
-    const handleMake = (e) => {
+    const handleMake = async (e) => {
+        setDefaultModel();
         var data;
         if (e) {
             data = e.value;
@@ -279,7 +280,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: 1,
         };
-        setDefaultModel();
         setDefaultMake(e);
         setParam((prev) => ({
             model: "",
@@ -384,15 +384,35 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         );
         return paginationRender;
     }
-    const removeItem = (val) => {
+    const removeItem = async (val) => {
         let data = paramValue;
         for (var f in data) {
-            if (data[f] == val) {
+            if (data[f] === val) {
                 delete data[f];
                 setParam({ ...data });
+                fetchPage(pageIndex);
+                break;
+            } else {
+                const dataWithArrays = Object.fromEntries(
+                    Object.entries(data).map(([key, value]) => [
+                        key,
+                        ...value
+                            .split(",")
+                            .filter(
+                                (ele) => ele.toLowerCase() != val.toLowerCase()
+                            ),
+                    ])
+                );
+                setParam(dataWithArrays);
+                const datas = {
+                    make: dataWithArrays?.make || "",
+                    model: dataWithArrays?.model || "",
+                    year: dataWithArrays?.year || "",
+                    page: pageIndex,
+                };
+                dispatch(fetchMore(filterValue, datas));
             }
         }
-        fetchPage(pageIndex);
     };
     const handleFilter = async (info) => {
         function buildFilter(filter) {
@@ -579,6 +599,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultModel();
         }
     };
 
@@ -608,6 +630,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     };
                 })
             );
+        } else {
+            setDefaultYear(null);
         }
     };
 
@@ -740,6 +764,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     Make
                                                 </div>
                                             }
+                                            getDropdownButtonLabel={({
+                                                placeholderButtonLabel,
+                                                value,
+                                            }) => {
+                                                return (
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Make
+                                                    </div>
+                                                );
+                                            }}
                                             value={defaultMake}
                                             width="100%"
                                             onChange={(e) => handleMake(e)}
@@ -766,6 +800,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Model
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-full self-center	">
+                                                            Model
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 value={defaultModel}
                                                 onChange={(e) => handleModel(e)}
@@ -791,6 +835,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Year
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Year
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 value={defaultYear}
                                                 onChange={(e) => handleYear(e)}
@@ -849,6 +903,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Body type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Body type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -875,6 +939,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Transmission type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Transmission type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -900,6 +974,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         External Colour
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            External Colour
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -925,6 +1009,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Fuel type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Fuel type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -946,9 +1040,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
-                                                        Facilitation Location
+                                                        Pickup Location
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Pickup Location
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -973,6 +1077,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Colour
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Interior Colour
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -997,6 +1111,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Interior Type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -1021,6 +1145,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Engine Type
                                                     </div>
                                                 }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Engine Type
+                                                        </div>
+                                                    );
+                                                }}
                                                 width="100%"
                                                 onChange={(e) => {
                                                     setFilterValue((prev) => ({
@@ -1435,11 +1569,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         </div>
                                                                         <div className="flex pt-4">
                                                                             <div className="flex justify-end w-full">
-                                                                                {Object.entries(
+                                                                                {parseInt(
                                                                                     ele.buyNowPrice
-                                                                                )
-                                                                                    .length >
-                                                                                2 ? (
+                                                                                ) ? (
                                                                                     <div className="flex w-full justify-between items-center">
                                                                                         <p className="sec-black text-base ml-1 font-normal">
                                                                                             $
