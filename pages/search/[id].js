@@ -204,8 +204,8 @@ const CarDetails = ({
     useEffect(() => {
         fetch(
             enviroment.BASE_URL +
-                "collections/owner/collections/" +
-                `${userId}`,
+            "collections/owner/collections/" +
+            `${userId}`,
             {
                 method: "GET",
                 redirect: "follow",
@@ -562,7 +562,6 @@ const CarDetails = ({
             console.log(error);
         }
     };
-
     function renderCounter(e) {
         if (e !== null && distance > 0) {
             return (
@@ -1029,9 +1028,8 @@ const CarDetails = ({
                                 <a
                                     href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
                                         cardD?.vehicleName
-                                    )}%20%20www.buylikedealers.com/${
-                                        cardD?.VIN
-                                    }`}
+                                    )}%20%20www.buylikedealers.com/${cardD?.VIN
+                                        }`}
                                     data-action="share/whatsapp/share"
                                     target="_blank"
                                 >
@@ -1073,7 +1071,7 @@ const CarDetails = ({
                                 </div>
                                 <div className="ml-auto">
                                     <p className="primary-color text-base font-extrabold">
-                                        {}
+                                        { }
                                     </p>
                                 </div>
                             </div>
@@ -1089,7 +1087,7 @@ const CarDetails = ({
                                     <div
                                         className={
                                             page >=
-                                            (window.innerWidth < 760 ? 3 : 8)
+                                                (window.innerWidth < 760 ? 3 : 8)
                                                 ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
                                                 : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
                                         }
@@ -1123,9 +1121,9 @@ const CarDetails = ({
                                             </div>
                                         ))}
                                     {imageD &&
-                                    imageD.length ===
+                                        imageD.length ===
                                         (window.innerWidth <= 760 ? 3 : 8) &&
-                                    count > 0 ? (
+                                        count > 0 ? (
                                         <div
                                             className="rounded-md w-1/6 flex items-center text-xs font-mono justify-center relative shadow-sm"
                                             style={{
@@ -1163,8 +1161,8 @@ const CarDetails = ({
                                             {cardD?.odometer.length <= 2
                                                 ? ""
                                                 : dollarFormatter.format(
-                                                      cardD?.odometer
-                                                  )}{" "}
+                                                    cardD?.odometer
+                                                )}{" "}
                                             mi
                                             <img
                                                 src="../assets/img/dot.svg"
@@ -1769,7 +1767,7 @@ const CarDetails = ({
                                 {token ? (
                                     <>
                                         {carDetails?.buyNowPrice?.length >=
-                                        1 ? (
+                                            1 ? (
                                             <button
                                                 onClick={() => {
                                                     initializePayment(
@@ -2292,8 +2290,8 @@ const CarDetails = ({
                                             <td className="turncate text-sm sec-black font-normal py-2">
                                                 $
                                                 {dollarFormatter.format(
-                                                    cardD?.mmrPrice
-                                                )}
+                                                cardD?.mmrPrice
+                                            )}
                                             </td>
                                         </tr>
                                         <tr className="detail-row mb-2">
@@ -2323,8 +2321,8 @@ const CarDetails = ({
                                             <td className="turncate text-sm sec-black font-normal py-2">
                                                 $
                                                 {dollarFormatter.format(
-                                                    cardD?.buyNowPrice
-                                                ) || "Not specified"}
+                                                cardD?.buyNowPrice
+                                            ) || "Not specified"}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2552,11 +2550,11 @@ const CarDetails = ({
                                                         $
                                                         {ele?.buyNowPrice
                                                             ? dollarFormatter.format(
-                                                                  ele?.buyNowPrice
-                                                              )
+                                                                ele?.buyNowPrice
+                                                            )
                                                             : dollarFormatter.format(
-                                                                  ele?.mmrPrice
-                                                              )}
+                                                                ele?.mmrPrice
+                                                            )}
                                                     </p>
                                                     <div className="ml-auto  self-center">
                                                         <button

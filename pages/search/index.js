@@ -16,6 +16,9 @@ import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
+import Collapsible from "react-collapsible";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
     FuelType,
     BodyType,
@@ -25,6 +28,8 @@ import {
     InteriorType,
     ExternalColour,
     FacilitationLocation,
+    MAX,
+    MIN,
 } from "../../src/components/data";
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //
@@ -73,7 +78,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [filterValue, setFilterValue] = useState({
         transmission: "",
         bodyType: "",
+        saleDate: "",
         engineType: "",
+        min: "",
+        max: "",
         exterior_color: "",
         interior_color: "",
         interior_type: "",
@@ -92,6 +100,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
+    const [startDate, setStartDate] = useState(new Date());
     const [years, setYears] = useState(() => {
         let year = 2005;
         const currentYear = new Date().getFullYear();
@@ -1170,6 +1179,234 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 options={EngineType}
                                             />
                                         </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <Collapsible
+                                                overflowWhenOpen="visible"
+                                                contentOuterClassName="px-4"
+                                                trigger={
+                                                    <div className="font-semibold flex justify-between text-xs w-full self-center">
+                                                        <span
+                                                            style={{
+                                                                color: "#515151",
+                                                            }}
+                                                        >
+                                                            Sale Date
+                                                        </span>{" "}
+                                                        <span className="font-bold ">
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "-6px",
+                                                                }}
+                                                                viewBox="0 0 24 24"
+                                                                focusable="false"
+                                                                role="presentation"
+                                                            >
+                                                                <path
+                                                                    d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                                                    fill="currentColor"
+                                                                    fillRule="evenodd"
+                                                                ></path>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                }
+                                            >
+                                                <DatePicker
+                                                    minDate={new Date()}
+                                                    onChange={(e) => {
+                                                        setFilterValue(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                saleDate: e,
+                                                            })
+                                                        ),
+                                                            setAdvance(true),
+                                                            setStartDate(e);
+                                                    }}
+                                                    selected={startDate}
+                                                    className="border-2 w-full p-1 rounded text-xs font-bold"
+                                                    dateFormat="MMMM d, yyyy"
+                                                />
+                                            </Collapsible>
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black  font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Sale Condition
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Sale Condition
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                options={EngineType}
+                                            />
+                                        </div>
+                                        <div className="tab border-bt h-full py-4 ">
+                                            <Collapsible
+                                                overflowWhenOpen="visible"
+                                                contentOuterClassName="px-4"
+                                                trigger={
+                                                    <div className="font-semibold flex justify-between text-xs w-full self-center">
+                                                        <span
+                                                            style={{
+                                                                color: "#515151",
+                                                            }}
+                                                        >
+                                                            Mileage
+                                                        </span>{" "}
+                                                        <span className="font-bold ">
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "-6px",
+                                                                }}
+                                                                viewBox="0 0 24 24"
+                                                                focusable="false"
+                                                                role="presentation"
+                                                            >
+                                                                <path
+                                                                    d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                                                    fill="currentColor"
+                                                                    fillRule="evenodd"
+                                                                ></path>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                }
+                                            >
+                                                <div className="tab border-bt py-4 ">
+                                                    <ReactMultiSelectCheckboxes
+                                                        className="primary-black  font-semibold font-11  "
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        placeholderButtonLabel={
+                                                            <div className="font-semibold text-xs w-full self-center	">
+                                                                Min.
+                                                            </div>
+                                                        }
+                                                        getDropdownButtonLabel={({
+                                                            placeholderButtonLabel,
+                                                            value,
+                                                        }) => {
+                                                            return (
+                                                                <div className="font-semibold text-xs w-96 self-center">
+                                                                    Min.
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        width="100%"
+                                                        onChange={(e) => {
+                                                            setFilterValue(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    min: e.value,
+                                                                })
+                                                            ),
+                                                                setAdvance(
+                                                                    true
+                                                                );
+                                                        }}
+                                                        options={MIN}
+                                                    />
+                                                </div>
+                                                <div className="tab border-bt py-4">
+                                                    <ReactMultiSelectCheckboxes
+                                                        className="primary-black  font-semibold font-11"
+                                                        styles={customStyles}
+                                                        isMulti={false}
+                                                        placeholderButtonLabel={
+                                                            <div className="font-semibold text-xs w-full self-center">
+                                                                Max.
+                                                            </div>
+                                                        }
+                                                        getDropdownButtonLabel={({
+                                                            placeholderButtonLabel,
+                                                            value,
+                                                        }) => {
+                                                            return (
+                                                                <div className="font-semibold text-xs w-96 self-center">
+                                                                    Max.
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        width="100%"
+                                                        onChange={(e) => {
+                                                            setFilterValue(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    max: e.value,
+                                                                })
+                                                            ),
+                                                                setAdvance(
+                                                                    true
+                                                                );
+                                                        }}
+                                                        options={MAX}
+                                                    />
+                                                </div>
+                                            </Collapsible>
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black  font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Equipment
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Equipment
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                options={EngineType}
+                                            />
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -1501,15 +1738,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     </a>
                                                                     <div className="mt-3">
                                                                         <p className="text-sm primary-black font-medium">
-                                                                            {ele?.make &&
-                                                                            ele?.model
-                                                                                ? [
-                                                                                      ele?.make,
-                                                                                      ele.model,
-                                                                                  ].join(
-                                                                                      " "
-                                                                                  )
-                                                                                : ele?.vehicleName}
+                                                                            {`${
+                                                                                ele.make
+                                                                                    ? ele.make +
+                                                                                      ","
+                                                                                    : ""
+                                                                            } ${
+                                                                                ele?.model
+                                                                            }`}
                                                                         </p>
                                                                         <p className="sec-black text-sm flex items-center mt-2 font-medium">
                                                                             {" "}
@@ -1693,14 +1929,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         {/* <!-- Details here --> */}
                                                                         <div className="w-1/2 py-4">
                                                                             <p className="text-base font-semibold primary-black ">
-                                                                                {ele?.vehicleName
-                                                                                    ? ele?.vehicleName
-                                                                                    : [
-                                                                                          ele?.make,
-                                                                                          ele.model,
-                                                                                      ].join(
-                                                                                          " "
-                                                                                      )}
+                                                                                {`${ele?.make} - ${ele?.model} - ${ele?.year}`}
                                                                             </p>
 
                                                                             {/* <!-- location to mileage here  --> */}
@@ -1813,15 +2042,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     </span>
                                                                                     {
                                                                                         ele?.sourceSellerName
-                                                                                    }
-                                                                                </p>
-                                                                                <p className="flex font-medium items-center text-xs primary-black">
-                                                                                    <span className="font-semibold mr-2">
-                                                                                        Seller's
-                                                                                        Phone:
-                                                                                    </span>
-                                                                                    {
-                                                                                        ele?.sellerPhone
                                                                                     }
                                                                                 </p>
                                                                             </div>
