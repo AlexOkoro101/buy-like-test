@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
 import {
@@ -69,6 +69,11 @@ export function useWindowDimensions() {
 const Search = ({ cars, params, loading, getMakes, makes }) => {
     var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
+    let inputEl = useRef([]);
+    inputEl.current = [...Array(11)].map(
+        (ref, index) => (inputEl.current[index] = React.createRef())
+    );
+
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
@@ -448,24 +453,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         const result = filterData(cars.data, query);
         setData(result);
     };
-    const clearForm = () => {
-        // setFilterValue({
-        //     transmission: "",
-        //     bodyType: "",
-        //     engineType: "",
-        //     exterior_color: "",
-        //     interior_color: "",
-        //     interior_type: "",
-        //     fuel_type: "",
-        //     location: "",
-        // });
-        // document
-        //     .querySelectorAll("input[type=checkbox]")
-        //     .forEach((el) => (el.checked = false));
-
-        //
-        //
-        console.log("clear");
+    const clearForm = async () => {
+        setFilterValue({
+            transmission: "",
+            bodyType: "",
+            engineType: "",
+            exterior_color: "",
+            interior_color: "",
+            interior_type: "",
+            fuel_type: "",
+            location: "",
+        });
+        inputEl.current.map((ele, id) => {
+            inputEl.current[id].current.state.value = null;
+        });
     };
     const activateGrid = () => {
         setgrid(true);
@@ -669,9 +670,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 });
             });
         }
-        // data.map((ele) => {
 
-        // })
         return data.map((ele, id) => {
             return (
                 <span
@@ -901,7 +900,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                     </div>
 
-                                    <div className="tabWrapper h-full relative">
+                                    <div className="tabWrapper  h-full relative">
                                         {/* <!--Body Type  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
@@ -912,6 +911,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Body type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[0]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -948,6 +948,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Transmission type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[1]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -983,6 +984,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         External Colour
                                                     </div>
                                                 }
+                                                ref={inputEl.current[2]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -1013,6 +1015,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                ref={inputEl.current[3]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Fuel type
@@ -1046,6 +1049,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
+                                                ref={inputEl.current[4]}
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1081,6 +1085,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                ref={inputEl.current[5]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Interior Colour
@@ -1120,6 +1125,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[6]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -1148,6 +1154,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black  font-semibold font-11  "
+                                                ref={inputEl.current[7]}
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1241,6 +1248,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Sale Condition
                                                     </div>
                                                 }
+                                                ref={inputEl.current[8]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -1311,6 +1319,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                 Min.
                                                             </div>
                                                         }
+                                                        ref={inputEl.current[9]}
                                                         getDropdownButtonLabel={({
                                                             placeholderButtonLabel,
                                                             value,
@@ -1340,6 +1349,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     <ReactMultiSelectCheckboxes
                                                         className="primary-black  font-semibold font-11"
                                                         styles={customStyles}
+                                                        ref={
+                                                            inputEl.current[10]
+                                                        }
                                                         isMulti={false}
                                                         placeholderButtonLabel={
                                                             <div className="font-semibold text-xs w-full self-center">
