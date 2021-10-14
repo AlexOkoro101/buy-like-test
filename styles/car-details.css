@@ -491,6 +491,10 @@ tbody .max-bid-dropdown {
     padding-bottom: 0 !important;
     width: 100%;
 }
+.currency-flags ul {
+    left: -163px !important;
+}
+
 .currency-flags-button {
     border: none !important;
     padding: 0 !important;
@@ -499,5 +503,40 @@ tbody .max-bid-dropdown {
 .currency-flags-button span {
     padding: 0;
     margin: 0;
+}
+.displayLargeimage {
+    height: 588px;
+}
+.smallDisplay {
+    width: 9%;
+}
+.loadMore {
+    width: 9%;
+}
+@media (max-width: 480px) {
+    .displayLargeimage {
+        height: 211px;
+    }
+    .smallDisplay {
+        width: 19%;
+    }
+    .loadMore {
+        width: 19%;
+    }
+    #offer-amount table {
+        width: 100%;
+    }
+    .overview-section .overview-table {
+        width: 100%;
+    }
+    .car-details-holder {
+        width: 100%;
+    }
+
+}
+@media (max-width: 360px) {
+    .buy-now-tab {
+        width: 110px;
+    }
 }
 
