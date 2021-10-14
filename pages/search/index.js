@@ -1374,7 +1374,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 </div>
                                             </Collapsible>
                                         </div>
-                                        <div className="tab border-bt py-4 ">
+                                        {/* <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black  font-semibold font-11  "
                                                 styles={customStyles}
@@ -1407,7 +1407,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 }}
                                                 options={EngineType}
                                             />
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </form>
                             </div>
