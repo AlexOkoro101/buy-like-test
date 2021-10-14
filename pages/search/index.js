@@ -114,6 +114,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
+
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
             fetchPage(pageIndex);
@@ -1714,7 +1715,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             ele.VIN,
                                                                                     }
                                                                                 );
+
                                                                         }}
+                                                                        href={
+                                                                            "/search/" +
+                                                                            ele.VIN
+                                                                        }
                                                                         style={{
                                                                             width:
                                                                                 width >=
@@ -1868,6 +1874,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </a>
                                                                                     </div>
                                                                                 )}
+
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1909,6 +1916,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             }
                                                                                         );
                                                                                 }}
+
                                                                             >
                                                                                 <img
                                                                                     className="img-fluid"
