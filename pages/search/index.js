@@ -114,7 +114,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [carModels, setcarModels] = useState([]);
     useEffect(() => {
         if (paramValue && cars.data === []) {
-
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
             fetchPage(pageIndex);
@@ -1715,7 +1714,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             ele.VIN,
                                                                                     }
                                                                                 );
-
                                                                         }}
                                                                         href={
                                                                             "/search/" +
@@ -1853,7 +1851,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
-                                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                            className="focus:outline-none rounded text-white bg-blue-700 py-1.5 font-10 fonr-semibold px-5"
                                                                                             onClick={() => {
                                                                                                 dispatch(
                                                                                                     carDetail(
@@ -1874,7 +1872,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </a>
                                                                                     </div>
                                                                                 )}
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1916,7 +1913,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             }
                                                                                         );
                                                                                 }}
-
                                                                             >
                                                                                 <img
                                                                                     className="img-fluid"
@@ -2037,19 +2033,28 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             <div className="flex w-full justify-between border-t mt-5 pt-8">
                                                                                 <p className="flex font-medium items-center text-xs primary-black">
                                                                                     <span className="font-semibold mr-2">
-                                                                                        Rating:
+                                                                                        Body
+                                                                                        type:
                                                                                     </span>
                                                                                     {
-                                                                                        ele?.sellerRating
+                                                                                        ele?.bodyType
                                                                                     }
                                                                                 </p>
                                                                                 <p className="flex  font-medium items-center text-xs primary-black">
                                                                                     <span className="font-semibold mr-2">
-                                                                                        Seller's
-                                                                                        Name:
+                                                                                        Transmission
                                                                                     </span>
                                                                                     {
-                                                                                        ele?.sourceSellerName
+                                                                                        ele?.transmission
+                                                                                    }
+                                                                                </p>
+                                                                                <p className="flex  font-medium items-center text-xs primary-black">
+                                                                                    <span className="font-semibold mr-2">
+                                                                                        Passenger
+                                                                                        Capacity
+                                                                                    </span>
+                                                                                    {
+                                                                                        ele?.passengerCapacity
                                                                                     }
                                                                                 </p>
                                                                             </div>
@@ -2122,7 +2127,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         </p>
                                                                                         <a
                                                                                             type="button"
-                                                                                            className="focus:outline-none text-white primary-btn mt-3 py-1.5 font-10 font-semibold px-5"
+                                                                                            className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
                                                                                             onClick={() => {
                                                                                                 dispatch(
                                                                                                     carDetail(
