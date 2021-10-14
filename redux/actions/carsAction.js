@@ -414,8 +414,15 @@ export const fetchMore = (event, main) => async (dispatch) => {
             Object.entries(event.transmission).length > 0
                 ? event.transmission
                 : "",
+        odometer: `${event.min ? event.min : 0}-${
+            event.max ? event.max : 1000000
+        }`,
         bodyType:
             Object.entries(event.bodyType).length > 0 ? event.bodyType : "",
+        saleDate:
+            Object.entries(event.saleDate).length > 0
+                ? event.saleDate
+                : event.saleDate,
         engineType:
             Object.entries(event.engineType).length > 0 ? event.engineType : "",
         exterior_color:
@@ -435,9 +442,11 @@ export const fetchMore = (event, main) => async (dispatch) => {
         location:
             Object.entries(event.location).length > 0 ? event.location : "",
     };
+    console.log(data);
+
     try {
         fetch(
-            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
+            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},

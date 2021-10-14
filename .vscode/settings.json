@@ -1,0 +1,7 @@
+{
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.fontLigatures": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
