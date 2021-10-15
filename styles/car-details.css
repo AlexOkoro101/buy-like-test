@@ -267,32 +267,43 @@ input.detail:checked~span:after {
 .css-2b097c-container {
     height: 24px !important;
 }
+
 .css-yk16xz-control  {
-    min-height: 24px !important;
-    height: 24px !important;
+    min-height: 26px !important;
+    height: 26px !important;
     align-content: center !important;
+    border-radius: 3px !important;
 }
+
 .css-yk16xz-control .css-1wa3eu0-placeholder {
     top: 50% !important;
 }
+
 .css-1pahdxg-control {
-    min-height: 24px !important;
-    height: 24px !important;
+    min-height: 26px !important;
+    height: 26px !important;
     align-content: center !important;
+    border-color: rgba(13, 16, 27, 0.25) !important;
     box-shadow: none !important;
+    font-size: 0.75rem !important;
+    border-radius: 3px !important;
 }
+
 .css-1pahdxg-control .css-1wa3eu0-placeholder {
     top: 50% !important;
 
 }
+
 .css-g1d714-ValueContainer {
     height: 24px !important;
     align-content: center !important;
 }
+
 .css-1wa3eu0-placeholder {
     font-size: 10px !important;
     color: rgba(13, 16, 27, 0.75) !important;
 }
+
 .css-1pahdxg-control:hover {
     border-color: rgba(13, 16, 27, 0.25) !important;
 }
@@ -323,7 +334,8 @@ input.detail:checked~span:after {
 .clearfilter {
     background-color: transparent;
     border-radius: 3px;
-    color: cadetblue;
+    color: #0C74D4;
+    font-size: 0.688rem;
 }
 
 @media (min-width: 1024px) {

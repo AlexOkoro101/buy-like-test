@@ -423,18 +423,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     style={{
                         width:
                             open && width >= 900
-                                ? "273px"
+                                ? ""
                                 : !open && width >= 900
-                                ? "247px"
+                                ? ""
                                 : "100%",
-                        height: "164px",
+                        height: "203px",
                     }}
-                    className="bg-black bg-opacity-20 rounded-md"
+                    className=" bg-opacity-20 rounded-md"
                 >
                     <img
                         src={params.images[0].image_largeUrl}
                         alt="hello"
-                        className="w-full object-contain h-full rounded-md object-center"
+                        className="w-full object-cover h-full rounded-md object-center"
                     />
                 </div>
             );
@@ -790,7 +790,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <button
                                                 type="button"
                                                 className={
-                                                    "clearfilter focus:outline-none font-10 font-semibold px-3.5 py-1.5"
+                                                    "clearfilter focus:outline-none  font-medium px-3.5 py-1.5"
                                                 }
                                                 value="all"
                                                 onClick={() => clearForm()}
@@ -800,7 +800,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                     </div>
 
-                                    <div className="tabWrapper h-full relative">
+                                    <div className="tabWrapper pb-8 h-full relative">
                                         {/* <!--Body Type  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
@@ -988,9 +988,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between px-3">
+                        <div className="search-results-holder flex items-center justify-between px-4">
                             {/* <!-- first section here --> */}
-                            <div>
+                            <div className="w-1/3 flex items-center">
                                 {!open && (
                                     <button
                                         type="button"
@@ -1016,6 +1016,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 >
                                     All Cars
                                 </button>
+
                                 <button
                                     type="button"
                                     className={
@@ -1043,11 +1044,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Second section here --> */}
-                            <div className="hidden lg:block h-6">
+                            <div className="hidden lg:block w-1/3">
                                 <Select
-                                    className=" px-3 w-80 cursor-pointer focus:outline-none "
+                                    className=" px-3 w-full cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Search ${dollarFormatter.format(
+                                    placeholder={`Enter make, model or VIN to search ${dollarFormatter.format(
                                         cars.total
                                     )} cars`}
                                     isClearable={false}
@@ -1058,7 +1059,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Third section here --> */}
-                            <div className="flex">
+                            <div className="flex  ml-auto">
                                 {/* <!-- grid view tab here --> */}
                                 <button
                                     type="button"
@@ -1245,8 +1246,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     className={
                                                                         open ==
                                                                         true
-                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-md  p-4 mb-4"
-                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-md p-4 mb-4"
+                                                                            ? " car-display-holder flex flex-col justify-between box-border   p-4 mb-5"
+                                                                            : " car-display-holder flex flex-col justify-between box-border  p-4 mb-5"
                                                                     }
                                                                     style={{
                                                                         height: "auto",
@@ -1254,11 +1255,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             open &&
                                                                             width >=
                                                                                 900
-                                                                                ? "305px"
+                                                                                ? "31.5%"
                                                                                 : !open &&
                                                                                   width >=
                                                                                       900
-                                                                                ? "280px"
+                                                                                ? "24%"
                                                                                 : "100%",
                                                                     }}
                                                                 >
@@ -1283,21 +1284,23 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 open &&
                                                                                 width >=
                                                                                     900
-                                                                                    ? "273px"
+                                                                                    ? ""
                                                                                     : !open &&
                                                                                       width >=
                                                                                           900
-                                                                                    ? "247px"
+                                                                                    ? ""
                                                                                     : "100%",
-                                                                            height: "164px",
+                                                                            height: "203px",
                                                                         }}
                                                                     >
                                                                         {addImage(
                                                                             ele
                                                                         )}
                                                                     </a>
+
                                                                     <div className="mt-3">
-                                                                        <p className="text-sm primary-black font-medium">
+                                                                        {/* Vehicle Name here */}
+                                                                        <p className="text-xs tertiary-black font-medium">
                                                                             {ele?.make &&
                                                                             ele?.model
                                                                                 ? [
@@ -1308,30 +1311,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                   )
                                                                                 : ele?.vehicleName}
                                                                         </p>
-                                                                        <p className="sec-black text-sm flex items-center mt-2 font-medium">
-                                                                            {" "}
-                                                                            {
-                                                                                ele?.year
-                                                                            }{" "}
-                                                                            <span className="ml-6">
-                                                                                {/* {Object.entries(
-                                                                                    ele?.mileage
-                                                                                )
-                                                                                    .length <=
-                                                                                2
-                                                                                    ? ""
-                                                                                    : ele?.mileage.replace(
-                                                                                          "/",
-                                                                                          "."
-                                                                                      )} */}
-                                                                                {dollarFormatter.format(
-                                                                                    ele?.odometer
-                                                                                )}{" "}
-                                                                                miles
-                                                                            </span>
-                                                                        </p>
-                                                                        <div className="flex justify-between">
-                                                                            <p className="flex items-center sec-black text-sm font-normal">
+
+                                                                                  {/* Vehicle Location here */}
+                                                                        <div className="flex justify-between pt-1.5">
+                                                                            <p className="flex items-center sec-black font-10 font-normal car-location">
                                                                                 {" "}
                                                                                 <span className="mr-1">
                                                                                     <img
@@ -1345,7 +1328,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             </p>
                                                                             <div className="ml-auto flex self-center">
                                                                                 <img
-                                                                                    className="img-fluid"
+                                                                          
                                                                                     src="../../assets/img/vectors/red-date.svg"
                                                                                     alt="date"
                                                                                 />
@@ -1364,7 +1347,33 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 </p>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="flex pt-4">
+
+                                                                        {/* Vehicle Year here */}
+                                                                        <p className="sec-black font-11 flex justify-between w-full lg:w-5/12 items-center pt-1.5 ">
+                                                                            {" "}
+                                                                            {
+                                                                                ele?.year
+                                                                            }{" "}
+                                                                            <span className="">
+                                                                                {/* {Object.entries(
+                                                                                    ele?.mileage
+                                                                                )
+                                                                                    .length <=
+                                                                                2
+                                                                                    ? ""
+                                                                                    : ele?.mileage.replace(
+                                                                                          "/",
+                                                                                          "."
+                                                                                      )} */}
+                                                                                {dollarFormatter.format(
+                                                                                    ele?.odometer
+                                                                                )}{" "}
+                                                                                miles
+                                                                            </span>
+                                                                        </p>
+                                                                     
+                                                                     {/* Vehicle Price */}
+                                                                        <div className="flex pt-3">
                                                                             <div className="flex justify-end w-full">
                                                                                 {Object.entries(
                                                                                     ele.buyNowPrice
@@ -1372,7 +1381,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     .length >
                                                                                 2 ? (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-normal">
+                                                                                        <p className="sec-black text-base font-normal">
                                                                                             $
                                                                                             {dollarFormatter.format(
                                                                                                 ele.buyNowPrice
@@ -1402,7 +1411,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-normal">
+                                                                                        <p className="sec-black text-base  font-normal">
                                                                                             $
                                                                                             {dollarFormatter.format(
                                                                                                 ele.mmrPrice

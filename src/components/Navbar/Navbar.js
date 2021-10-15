@@ -104,7 +104,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
 
     return (
         <header className="">
-            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-2 lg:px-16">
+            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-2 lg:px-20">
                 <div className="flex flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
                     <Link href="/">
                         {/* <span className="font-semibold text-xs ">BUY LIKE DEALERS</span> */}
@@ -266,9 +266,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                             router.push("/auth/signup");
                                         }}
                                         type="button"
-                                        className="signup-btn bg-red-700  py-1.5 rounded-md focus:outline-none font-semibold font-10 flex items-center text-center text-white px-4 sign"
+                                        className="signup-btn focus:outline-none font-semibold font-10 flex items-center justify-center text-white"
                                     >
-                                        REGISTER
+                                        SIGN UP
                                     </button>
                                 </li>
 
@@ -278,7 +278,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                             router.push("/auth/login");
                                         }}
                                         type="button"
-                                        className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center px-4 sign"
+                                        className="login-btn primary-red focus:outline-none py-3 font-semibold font-10 flex items-center px-4"
                                     >
                                         LOGIN
                                     </button>
