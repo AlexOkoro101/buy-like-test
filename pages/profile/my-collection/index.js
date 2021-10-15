@@ -225,6 +225,7 @@ const MyCollection = ({
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
                         console.log(formatCollection.data)
+
                         setcarCollection(formatCollection.data);
                     }
                 }
@@ -471,6 +472,7 @@ const MyCollection = ({
                                             </div>
                                         </div>
                                         <div className="flex flex-col mx-auxo items-end">
+
                                             <h4 className="text-base font-normal gray-text">
                                             {nairaFormatter.format(vehicle.vehicle?.bidAmount)}
                                             </h4>
@@ -532,6 +534,7 @@ const MyCollection = ({
                         ))}
                     </section>
                 )}
+
 
             </main>
         </div>

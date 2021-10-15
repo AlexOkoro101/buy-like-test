@@ -338,6 +338,33 @@ input.detail:checked~span:after {
     font-size: 0.688rem;
 }
 
+@media (max-width: 1021px) {
+    .css-g1d714-ValueContainer {
+        height: 36px !important;
+    }
+    .css-yk16xz-control  {
+        min-height: 36px !important;
+        border-radius: 3px !important;
+    }
+    .css-1pahdxg-control {
+        min-height: 36px !important;
+        border-radius: 3px !important;
+    }
+    .css-2b097c-container {
+        height: 36px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    
+    .search-results-holder {
+        background: transparent;
+        box-shadow: none;
+        border-radius: unset;
+    }
+   
+}
+
 @media (min-width: 1024px) {
     #carDeets{
         padding-left: 69px;
@@ -402,7 +429,7 @@ input.detail:checked~span:after {
 }
 @media (min-width: 1024px) {
     .car-details-holder {
-        width: 32%;
+        width: 26%;
     }
 
 }
@@ -410,5 +437,118 @@ input.detail:checked~span:after {
 .overview-section .overview-table {
     width: 450px;
 }
+.buy-now-tab {
+    border: 1px solid #E3E7EA;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    width: 150px;
+    height: 72px;
+}
+.buy-now-tab.active {
+    border: 1px solid #D80739;
+}
+.buy-now-active-tab-text {
+    font-weight: 600;
+    font-size: 10px;
+    color: #D80739;
+    margin-top: 6px;
+    text-transform: uppercase;
+}
+.place-bid-tab-text {
+    font-weight: 600;
+    font-size: 10px;
+    color: #7F8791;
+    margin-top: 6px;
+    text-transform: uppercase;
+}
+.whatsapp-proceed {
+    background: #2CB742;
+    box-shadow: 0px 4px 10px rgba(73, 165, 198, 0.1);
+    border-radius: 3px;
+    padding: 10px 15px;
+    font-weight: 600;
+    font-size: 9px;
+    color: #FFFFFF;
+}
+tbody .destination-row {
+    border-radius: 5px;
+    border: 1px solid #E1E1E1;
+}
+tbody .destination, tbody .max-bid {
+    background: #F8F8F8;
+    border: 1px solid #E1E1E1;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+tbody .destination-content, tbody .max-bid-content {
+    border: 1px solid #E1E1E1;
+    border-right: none;
+    padding-left: 13px;
+}
+tbody .destination-dropdown {
+    border: 1px solid #E1E1E1;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+tbody .max-bid-dropdown {
+    background: #F8F8F8;
+    border: 1px solid #E1E1E1;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.currency-flags {
+    padding-bottom: 0 !important;
+    width: 100%;
+}
+.currency-flags ul {
+    left: -163px !important;
+}
 
+.currency-flags-button {
+    border: none !important;
+    padding: 0 !important;
+    justify-content: space-evenly !important;
+}
+.currency-flags-button span {
+    padding: 0;
+    margin: 0;
+}
+.displayLargeimage {
+    height: 588px;
+}
+.smallDisplay {
+    width: 9%;
+}
+.loadMore {
+    width: 9%;
+}
+@media (max-width: 480px) {
+    .displayLargeimage {
+        height: 211px;
+    }
+    .smallDisplay {
+        width: 19%;
+    }
+    .loadMore {
+        width: 19%;
+    }
+    #offer-amount table {
+        width: 100%;
+    }
+    .overview-section .overview-table {
+        width: 100%;
+    }
+    .car-details-holder {
+        width: 100%;
+    }
+
+}
+@media (max-width: 360px) {
+    .buy-now-tab {
+        width: 110px;
+    }
+}
 

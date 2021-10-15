@@ -1,4 +1,3 @@
-import axios from "axios";
 import { enviroment } from "../../src/components/enviroment";
 import {
     FETCHING_CARS,
@@ -26,6 +25,7 @@ import {
     BUY_NOW_FAILED,
     BUY_NOW,
 } from "../types";
+import { RC, SC, RX, ES, NX, LS, IS, GS } from "../../src/components/data";
 const api = process.env.cars_api;
 
 export const getCars = () => (dispatch) => {
@@ -327,13 +327,13 @@ export const filterTabAction = (event, type) => async (dispatch) => {
 };
 
 export const getCategory = (data) => (dispatch) => {
-    let body = { make: data.bodyType, model: "", year: "" };
+    let body = { bodyType: data.bodyType, model: "", year: "" };
     dispatch({
         type: SEARCHING,
         payload: body,
     });
 
-    let url = `${api}?bodyType=${data.bodyType}&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    let url = `${api}?bodyType=${data.bodyType}&make=&model=&year=&page=1&apiKey=Switch!2020`;
     fetch(url.trim(), {
         method: "GET",
         headers: {},
@@ -367,7 +367,40 @@ export const getCategory = (data) => (dispatch) => {
 //
 //
 export const fetchMore = (event, main) => async (dispatch) => {
-    console.log(main);
+    let arrStr = [...main.model.split(",")];
+    if (main.make == "Lexus") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "RC":
+                    arrStr[i] = RC.map((ele) => ele.value);
+                    break;
+                case "RX":
+                    arrStr[i] = RX.map((ele) => ele.value);
+                    break;
+                case "ES":
+                    arrStr[i] = ES.map((ele) => ele.value);
+                    break;
+                case "GS":
+                    arrStr[i] = GS.map((ele) => ele.value);
+                    break;
+                case "IS":
+                    arrStr[i] = IS.map((ele) => ele.value);
+                    break;
+                case "LS":
+                    arrStr[i] = LS.map((ele) => ele.value);
+                    break;
+                case "NX":
+                    arrStr[i] = NX.map((ele) => ele.value);
+                    break;
+                case "SC":
+                    arrStr[i] = NX.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     dispatch({
         type: FETCHING,
         payload: {
@@ -381,8 +414,14 @@ export const fetchMore = (event, main) => async (dispatch) => {
             Object.entries(event.transmission).length > 0
                 ? event.transmission
                 : "",
+        odometer: `${event.min ? event.min : 0}-${
+            event.max ? event.max : 1000000
+        }`,
         bodyType:
             Object.entries(event.bodyType).length > 0 ? event.bodyType : "",
+        auctionenddate: event.saleDate
+            ? new Date(event.saleDate).toISOString()
+            : "",
         engineType:
             Object.entries(event.engineType).length > 0 ? event.engineType : "",
         exterior_color:
@@ -404,7 +443,7 @@ export const fetchMore = (event, main) => async (dispatch) => {
     };
     try {
         fetch(
-            `${api}?year=${main.year}&make=${main.make}&model=${main.model}&page=${main.page}&transmission=${data.transmission}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
+            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
