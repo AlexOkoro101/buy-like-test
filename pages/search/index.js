@@ -1650,20 +1650,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
-                        {data && data.length >= 1 ? (
+                        {loading ? (
+                            <div className="flex justify-center items-center w-full h-80">
+                                <FadeLoader
+                                    color="#BFC1C6"
+                                    width={5}
+                                    radius={2}
+                                    margin={2}
+                                    height={5}
+                                    loading={loading}
+                                />
+                            </div>
+                        ) : (
                             <>
-                                {loading ? (
-                                    <div className="flex justify-center items-center w-full h-80">
-                                        <FadeLoader
-                                            color="#BFC1C6"
-                                            width={5}
-                                            radius={2}
-                                            margin={2}
-                                            height={5}
-                                            loading={loading}
-                                        />
-                                    </div>
-                                ) : (
+                                {data && data.length >= 1 ? (
                                     <>
                                         {grid && (
                                             <div
@@ -1678,7 +1678,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 {data?.length > 0 &&
                                                     data?.map(
                                                         (ele, id) =>
-                                                            ele && (
+                                                            ele.images.length >
+                                                                0 && (
                                                                 <div
                                                                     key={id}
                                                                     className={
@@ -1902,7 +1903,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 {data &&
                                                     data?.map(
                                                         (ele, id) =>
-                                                            ele.vehicleName && (
+                                                            ele.images.length >
+                                                                0 && (
                                                                 <div
                                                                     key={id}
                                                                     className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
@@ -2169,12 +2171,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             </div>
                                         )}
                                     </>
+                                ) : (
+                                    <div className="w-full flex items center justify-center py-40">
+                                        <h1>
+                                            No Vehicle matches this parameters
+                                        </h1>
+                                    </div>
                                 )}
                             </>
-                        ) : (
-                            <div className="w-full flex items center justify-center py-40">
-                                <h1>No Vehicle matches this parameters</h1>
-                            </div>
                         )}
                         {data && data.length >= 1 && (
                             <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
