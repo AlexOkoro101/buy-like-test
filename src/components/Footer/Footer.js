@@ -29,11 +29,18 @@ const Footer = () => {
                             Whatsapp
                         </a>
                     </div>
+                    <div className="mt-3">
+                        Buylikedealers
+                        <br />
+                        No 1 Nike Art Gallery Rd Ikate, <br />
+                        Lekki, Lagos state. Nigeria.
+                    </div>
                 </div>
 
                 <div className="w-full flex flex-col lg:w-1/3 mb-10">
-                    <p className="footer-header pb-4">FOLLOW US ON SOCIAL MEDIA</p>
-
+                    <p className="footer-header pb-4">
+                        FOLLOW US ON SOCIAL MEDIA
+                    </p>
 
                     <div className="flex items-center pb-4">
                         <span>
