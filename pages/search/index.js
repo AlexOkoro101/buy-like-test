@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
 import {
@@ -16,6 +16,9 @@ import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
+import Collapsible from "react-collapsible";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   FuelType,
   BodyType,
@@ -25,6 +28,8 @@ import {
   InteriorType,
   ExternalColour,
   FacilitationLocation,
+  MAX,
+  MIN,
 } from "../../src/components/data";
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //
@@ -64,15 +69,24 @@ export function useWindowDimensions() {
 const Search = ({ cars, params, loading, getMakes, makes }) => {
   var dollarFormatter = new Intl.NumberFormat();
   const { height, width } = useWindowDimensions();
+  let inputEl = useRef([]);
+  inputEl.current = [...Array(11)].map(
+    (ref, index) => (inputEl.current[index] = React.createRef())
+  );
+
   // console.log("Search page makes", cars)
   const [grid, setgrid] = useState(true);
   const [open, setOpen] = useState(true);
+  const [advance, setAdvance] = useState(false);
   const [paramValue, setParam] = useState(params);
   const [makeValue, setmake] = useState({});
   const [filterValue, setFilterValue] = useState({
     transmission: "",
     bodyType: "",
+    saleDate: "",
     engineType: "",
+    min: "",
+    max: "",
     exterior_color: "",
     interior_color: "",
     interior_type: "",
@@ -91,6 +105,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector(selectToken);
+  const [startDate, setStartDate] = useState(new Date());
   const [years, setYears] = useState(() => {
     let year = 2005;
     const currentYear = new Date().getFullYear();
@@ -104,11 +119,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
   const [carModels, setcarModels] = useState([]);
   useEffect(() => {
     if (paramValue && cars.data === []) {
-      console.log("ooooo");
       fetchPage(pageIndex);
     } else if (cars.data === {}) {
-      console.log("mmmm");
-      console.log(cars);
       fetchPage(pageIndex);
     } else {
       setData(cars.data);
@@ -122,7 +134,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     }
   }, []);
   useEffect(() => {
-    handleTransmission();
+    if (advance === true) {
+      handleTransmission();
+    }
   }, [filterValue]);
   useEffect(() => {
     if (carMakes && carMakes.length <= 0) {
@@ -146,10 +160,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
   }, [paramValue, params]);
 
   useEffect(() => {
+    let data = params;
+    for (var f in data) {
+      if (data[f] === "") {
+        delete data[f];
+        setParam({ ...data });
+      }
+    }
+  }, [params]);
+
+  useEffect(() => {
     getYearValue();
     getModelValue();
     getMakeValue();
-  }, [paramValue, params]);
+  }, [paramValue, params, carModels, carMakes]);
 
   const handleSearch = async (e) => {
     const data = {
@@ -184,7 +208,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
   const handleYear = (e) => {
     var data;
     if (e[0]) {
-      data = e[0].value;
+      data = e.map((el) => {
+        return el.value;
+      });
     } else {
       data = "";
     }
@@ -192,7 +218,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const datas = {
       make: paramValue?.make || "",
       model: paramValue?.model || "",
-      year: data,
+      year: data.toString(),
       page: 1,
     };
     setParam((prev) => ({
@@ -206,60 +232,79 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
   const handleModel = (e) => {
     var data;
-    var MakeData = "";
+    var MakeData;
+    var datas;
     if (e[0]) {
       data = e.map((el) => {
         return el.value;
       });
+    } else {
+      data = "";
+    }
+    if (paramValue.make === undefined || paramValue === null) {
       MakeData = makes.find((ele) =>
         ele.models.map(
           (el) => el.name.toLowerCase() === e[0].value.toLowerCase()
         )
       );
+      setDefaultMake({ label: MakeData.name, value: MakeData.name });
+      datas = {
+        make: MakeData.name || "",
+        model: data.toString(),
+        year: paramValue?.year || "",
+        page: 1,
+      };
+      setParam((prev) => ({
+        ...prev,
+        make: MakeData.name,
+        model: data,
+      }));
     } else {
-      data = "";
+      setDefaultMake(e);
+      datas = {
+        make: paramValue?.make || "",
+        model: data.toString(),
+        year: paramValue?.year || "",
+        page: 1,
+      };
+      setParam((prev) => ({
+        ...prev,
+        model: data,
+      }));
     }
-
-    const datas = {
-      make: MakeData.name || "",
-      model: data.toString(),
-      year: paramValue?.year || "",
-      page: 1,
-    };
-    setDefaultMake({ label: MakeData.name, value: MakeData.name });
-    setParam((prev) => ({
-      ...prev,
-      make: MakeData.name,
-      model: data,
-    }));
     setPageIndex(1);
     dispatch(fetchMore(filterValue, datas));
     setDefaultModel(e);
   };
-  const handleMake = (e) => {
+  const handleMake = async (e) => {
+    setDefaultModel();
     var data;
-    if (e[0]) {
-      data = e[0].value;
+    if (e) {
+      data = e.value;
     } else {
       data = "";
     }
     const datas = {
       make: data,
-      model: paramValue?.model || "",
+      model: "",
       year: paramValue?.year || "",
       page: 1,
     };
-    setDefaultModel();
     setDefaultMake(e);
     setParam((prev) => ({
+      model: "",
       ...prev,
       make: data,
     }));
     setPageIndex(1);
     let dat = makes.find(
-      (ele) => ele.name.toLowerCase() === e[0].value.toLowerCase()
+      (ele) => ele.name.toLowerCase() === e.value.toLowerCase()
     );
-    setcarModels(dat.models);
+    if (dat) {
+      setcarModels(dat.models);
+    } else {
+      setcarModels(makes[0].models);
+    }
     dispatch(fetchMore(filterValue, datas));
   };
   //
@@ -278,7 +323,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
   const getVehicleModels = (e) => {
     if (e) {
       let dat = makes.find((ele) => ele.name.toLowerCase() === e.toLowerCase());
-      setcarModels(dat.models);
+      if (dat) {
+        setcarModels(dat.models);
+      }
     } else {
       setcarModels(makes[0].models);
     }
@@ -343,15 +390,33 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     );
     return paginationRender;
   }
-  const removeItem = (val) => {
+  const removeItem = async (val) => {
     let data = paramValue;
     for (var f in data) {
-      if (data[f] == val) {
+      if (data[f] === val) {
         delete data[f];
         setParam({ ...data });
+        fetchPage(pageIndex);
+        break;
+      } else {
+        const dataWithArrays = Object.fromEntries(
+          Object.entries(data).map(([key, value]) => [
+            key,
+            ...value
+              .split(",")
+              .filter((ele) => ele.toLowerCase() != val.toLowerCase()),
+          ])
+        );
+        setParam(dataWithArrays);
+        const datas = {
+          make: dataWithArrays?.make || "",
+          model: dataWithArrays?.model || "",
+          year: dataWithArrays?.year || "",
+          page: pageIndex,
+        };
+        dispatch(fetchMore(filterValue, datas));
       }
     }
-    fetchPage(pageIndex);
   };
   const handleFilter = async (info) => {
     function buildFilter(filter) {
@@ -363,7 +428,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
       }
       return query;
     }
-    console.log(info);
     function filterData(arr, query) {
       const filteredData = arr.filter((item) => {
         for (let key in query) {
@@ -379,24 +443,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const result = filterData(cars.data, query);
     setData(result);
   };
-  const clearForm = () => {
-    // setFilterValue({
-    //     transmission: "",
-    //     bodyType: "",
-    //     engineType: "",
-    //     exterior_color: "",
-    //     interior_color: "",
-    //     interior_type: "",
-    //     fuel_type: "",
-    //     location: "",
-    // });
-    // document
-    //     .querySelectorAll("input[type=checkbox]")
-    //     .forEach((el) => (el.checked = false));
-
-    //
-    //
-    console.log("clear");
+  const clearForm = async () => {
+    setFilterValue({
+      transmission: "",
+      bodyType: "",
+      engineType: "",
+      exterior_color: "",
+      interior_color: "",
+      interior_type: "",
+      fuel_type: "",
+      location: "",
+    });
+    inputEl.current.map((ele, id) => {
+      inputEl.current[id].current.state.value = null;
+    });
   };
   const activateGrid = () => {
     setgrid(true);
@@ -529,6 +589,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
           };
         })
       );
+    } else {
+      setDefaultModel();
     }
   };
 
@@ -556,10 +618,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
           };
         })
       );
+    } else {
+      setDefaultYear(null);
     }
   };
 
-  function getChips() {
+  const getChips = () => {
     let data = [];
     let mat = [];
     for (const key in paramValue) {
@@ -571,7 +635,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             data.push(ele);
           }
         } else {
-          if (element !== "") {
+          if (element !== undefined && element !== null) {
             mat.push(element.split(","));
           }
         }
@@ -584,6 +648,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         });
       });
     }
+
     return data.map((ele, id) => {
       return (
         <span
@@ -603,7 +668,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         </span>
       );
     });
-  }
+  };
   const customStyles = {
     menuList: (provided, state) => ({
       ...provided,
@@ -611,8 +676,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
       width: "100%",
       borderRadius: "5px",
       zIndex: 0,
+      justifyContent: "space-between",
     }),
-
     control: () => ({
       // none of react-select's styles are passed to <Control />
       minWidth: "100%",
@@ -643,7 +708,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         >
           {/* <!-- filter tab here --> */}
           {open && (
-            <div className="filter-holder hidden  h-full lg:block p-3 w-1/5 ">
+            <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 xl:w-2/12">
               {/* <!-- Filter icon --> */}
               <div className="flex pb-2">
                 <div>
@@ -685,6 +750,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                           Make
                         </div>
                       }
+                      getDropdownButtonLabel={({
+                        placeholderButtonLabel,
+                        value,
+                      }) => {
+                        return (
+                          <div className="font-semibold text-xs w-full self-center	">
+                            Make
+                          </div>
+                        );
+                      }}
                       value={defaultMake}
                       width="100%"
                       onChange={(e) => handleMake(e)}
@@ -711,6 +786,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             Model
                           </div>
                         }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-full self-center	">
+                              Model
+                            </div>
+                          );
+                        }}
                         width="100%"
                         value={defaultModel}
                         onChange={(e) => handleModel(e)}
@@ -726,29 +811,40 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                       />
                     </div>
                   </div>
-                  {/* <!-- Year Here --> */}
-                  <div className="tab border-bt py-4  ">
-                    <ReactMultiSelectCheckboxes
-                      className="primary-black font-semibold font-11 placeholder-gray-900 "
-                      styles={customStyles}
-                      placeholderButtonLabel={
-                        <div className="font-semibold text-xs w-full self-center	">
-                          Year
-                        </div>
-                      }
-                      width="100%"
-                      value={defaultYear}
-                      onChange={(e) => handleYear(e)}
-                      options={
-                        years &&
-                        years.map((ele) => {
-                          return {
-                            label: ele,
-                            value: ele,
-                          };
-                        })
-                      }
-                    />
+                  <div>
+                    <div className="tab border-bt py-4">
+                      <ReactMultiSelectCheckboxes
+                        className="primary-black font-semibold font-11 placeholder-gray-900 "
+                        styles={customStyles}
+                        placeholderButtonLabel={
+                          <div className="font-semibold text-xs w-96 self-center">
+                            Year
+                          </div>
+                        }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Year
+                            </div>
+                          );
+                        }}
+                        width="100%"
+                        value={defaultYear}
+                        onChange={(e) => handleYear(e)}
+                        options={
+                          years &&
+                          years.map((ele) => {
+                            return {
+                              label: ele,
+                              value: ele,
+                            };
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -772,7 +868,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                       <button
                         type="button"
                         className={
-                          "clearfilter focus:outline-none  font-medium px-3.5 py-1.5"
+                          "clearfilter focus:outline-none font-10 font-semibold px-3.5 py-1.5"
                         }
                         value="all"
                         onClick={() => clearForm()}
@@ -782,7 +878,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     </div>
                   </div>
 
-                  <div className="tabWrapper pb-8 h-full relative">
+                  <div className="tabWrapper  h-full relative">
                     {/* <!--Body Type  Here --> */}
                     <div className="tab border-bt py-4  ">
                       <ReactMultiSelectCheckboxes
@@ -793,12 +889,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             Body type
                           </div>
                         }
+                        ref={inputEl.current[0]}
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Body type
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            bodyType: e[0].value,
-                          }));
+                            bodyType: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={BodyType}
                       />
@@ -814,12 +924,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             Transmission type
                           </div>
                         }
+                        ref={inputEl.current[1]}
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Transmission type
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            transmission: e[0].value,
-                          }));
+                            transmission: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={TransmissionType}
                       />
@@ -834,12 +958,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             External Colour
                           </div>
                         }
+                        ref={inputEl.current[2]}
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              External Colour
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            exterior_color: e[0].value,
-                          }));
+                            exterior_color: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={ExternalColour}
                       />
@@ -849,17 +987,31 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                       <ReactMultiSelectCheckboxes
                         className="primary-black font-semibold font-11  "
                         styles={customStyles}
+                        ref={inputEl.current[3]}
                         placeholderButtonLabel={
                           <div className="font-semibold text-xs w-full self-center	">
                             Fuel type
                           </div>
                         }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Fuel type
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            fuel_type: e[0].value,
-                          }));
+                            fuel_type: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={FuelType}
                       />
@@ -867,18 +1019,32 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     <div className="tab border-bt py-4 ">
                       <ReactMultiSelectCheckboxes
                         className="primary-black font-semibold font-11  "
+                        ref={inputEl.current[4]}
                         styles={customStyles}
                         placeholderButtonLabel={
                           <div className="font-semibold text-xs w-full self-center	">
-                            Facilitation Location
+                            Pickup Location
                           </div>
                         }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Pickup Location
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            location: e[0].value,
-                          }));
+                            location: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={FacilitationLocation}
                       />
@@ -887,17 +1053,31 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                       <ReactMultiSelectCheckboxes
                         className="primary-black font-semibold font-11  "
                         styles={customStyles}
+                        ref={inputEl.current[5]}
                         placeholderButtonLabel={
                           <div className="font-semibold text-xs w-full self-center	">
                             Interior Colour
                           </div>
                         }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Interior Colour
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            interior_color: e[0].value,
-                          }));
+                            interior_color: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={InteriorColour}
                       />
@@ -911,12 +1091,26 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             Interior Type
                           </div>
                         }
+                        ref={inputEl.current[6]}
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Interior Type
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            interior_type: e[0].value,
-                          }));
+                            interior_type: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={InteriorType}
                       />
@@ -924,22 +1118,253 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     <div className="tab border-bt py-4 ">
                       <ReactMultiSelectCheckboxes
                         className="primary-black  font-semibold font-11  "
+                        ref={inputEl.current[7]}
                         styles={customStyles}
                         placeholderButtonLabel={
                           <div className="font-semibold text-xs w-full self-center	">
                             Engine Type
                           </div>
                         }
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Engine Type
+                            </div>
+                          );
+                        }}
                         width="100%"
                         onChange={(e) => {
                           setFilterValue((prev) => ({
                             ...prev,
-                            engineType: e[0].value,
-                          }));
+                            engineType: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
                         }}
                         options={EngineType}
                       />
                     </div>
+                    <div className="tab border-bt py-4 ">
+                      <Collapsible
+                        overflowWhenOpen="visible"
+                        contentOuterClassName="px-4"
+                        trigger={
+                          <div className="font-semibold flex justify-between text-xs w-full self-center">
+                            <span
+                              style={{
+                                color: "#515151",
+                              }}
+                            >
+                              Sale Date
+                            </span>{" "}
+                            <span className="font-bold ">
+                              <svg
+                                width="24"
+                                height="24"
+                                style={{
+                                  marginRight: "-6px",
+                                }}
+                                viewBox="0 0 24 24"
+                                focusable="false"
+                                role="presentation"
+                              >
+                                <path
+                                  d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                  fill="currentColor"
+                                  fillRule="evenodd"
+                                ></path>
+                              </svg>
+                            </span>
+                          </div>
+                        }
+                      >
+                        <DatePicker
+                          minDate={new Date()}
+                          onChange={(e) => {
+                            setFilterValue((prev) => ({
+                              ...prev,
+                              saleDate: e,
+                            })),
+                              setAdvance(true),
+                              setStartDate(e);
+                          }}
+                          selected={startDate}
+                          className="border-2 w-full p-1 rounded text-xs font-bold"
+                          dateFormat="MMMM d, yyyy"
+                        />
+                      </Collapsible>
+                    </div>
+                    <div className="tab border-bt py-4 ">
+                      <ReactMultiSelectCheckboxes
+                        className="primary-black  font-semibold font-11  "
+                        styles={customStyles}
+                        placeholderButtonLabel={
+                          <div className="font-semibold text-xs w-full self-center	">
+                            Sale Condition
+                          </div>
+                        }
+                        ref={inputEl.current[8]}
+                        getDropdownButtonLabel={({
+                          placeholderButtonLabel,
+                          value,
+                        }) => {
+                          return (
+                            <div className="font-semibold text-xs w-96 self-center">
+                              Sale Condition
+                            </div>
+                          );
+                        }}
+                        width="100%"
+                        onChange={(e) => {
+                          setFilterValue((prev) => ({
+                            ...prev,
+                            engineType: e.map((el) => {
+                              return el.value;
+                            }),
+                          })),
+                            setAdvance(true);
+                        }}
+                        options={EngineType}
+                      />
+                    </div>
+                    <div className="tab border-bt h-full py-4 ">
+                      <Collapsible
+                        overflowWhenOpen="visible"
+                        contentOuterClassName="px-4"
+                        trigger={
+                          <div className="font-semibold flex justify-between text-xs w-full self-center">
+                            <span
+                              style={{
+                                color: "#515151",
+                              }}
+                            >
+                              Mileage
+                            </span>{" "}
+                            <span className="font-bold ">
+                              <svg
+                                width="24"
+                                height="24"
+                                style={{
+                                  marginRight: "-6px",
+                                }}
+                                viewBox="0 0 24 24"
+                                focusable="false"
+                                role="presentation"
+                              >
+                                <path
+                                  d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                  fill="currentColor"
+                                  fillRule="evenodd"
+                                ></path>
+                              </svg>
+                            </span>
+                          </div>
+                        }
+                      >
+                        <div className="tab border-bt py-4 ">
+                          <ReactMultiSelectCheckboxes
+                            className="primary-black  font-semibold font-11  "
+                            isMulti={false}
+                            styles={customStyles}
+                            placeholderButtonLabel={
+                              <div className="font-semibold text-xs w-full self-center	">
+                                Min.
+                              </div>
+                            }
+                            ref={inputEl.current[9]}
+                            getDropdownButtonLabel={({
+                              placeholderButtonLabel,
+                              value,
+                            }) => {
+                              return (
+                                <div className="font-semibold text-xs w-96 self-center">
+                                  Min.
+                                </div>
+                              );
+                            }}
+                            width="100%"
+                            onChange={(e) => {
+                              setFilterValue((prev) => ({
+                                ...prev,
+                                min: e.value,
+                              })),
+                                setAdvance(true);
+                            }}
+                            options={MIN}
+                          />
+                        </div>
+                        <div className="tab border-bt py-4">
+                          <ReactMultiSelectCheckboxes
+                            className="primary-black  font-semibold font-11"
+                            styles={customStyles}
+                            ref={inputEl.current[10]}
+                            isMulti={false}
+                            placeholderButtonLabel={
+                              <div className="font-semibold text-xs w-full self-center">
+                                Max.
+                              </div>
+                            }
+                            getDropdownButtonLabel={({
+                              placeholderButtonLabel,
+                              value,
+                            }) => {
+                              return (
+                                <div className="font-semibold text-xs w-96 self-center">
+                                  Max.
+                                </div>
+                              );
+                            }}
+                            width="100%"
+                            onChange={(e) => {
+                              setFilterValue((prev) => ({
+                                ...prev,
+                                max: e.value,
+                              })),
+                                setAdvance(true);
+                            }}
+                            options={MAX}
+                          />
+                        </div>
+                      </Collapsible>
+                    </div>
+                    {/* <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black  font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Equipment
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Equipment
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                options={EngineType}
+                                            />
+                                        </div> */}
                   </div>
                 </form>
               </div>
@@ -947,13 +1372,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
           )}
 
           {/* <!--  Display region here  --> */}
-          <div className="display-holder w-full  relative px-5  ">
+          <div className="display-holder w-full  relative px-5  lg:px-0 lg:pl-5">
             {/* <!-- Filter and search for mobile here --> */}
-            <div className="mb-3 px-3 block lg:hidden ">
-              <div className="w-full">
-                <div className="w-full">
+            <div className="mb-3 px-3 block lg:hidden h-9">
+              <div className="w-full h-full">
+                <div className="w-full h-full">
                   <Select
-                    className="w-full cursor-pointer focus:outline-none"
+                    className="w-full h-full cursor-pointer focus:outline-none"
                     type="text"
                     placeholder={`Search ${cars.total} cars`}
                     isClearable
@@ -966,9 +1391,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             </div>
 
             {/* <!-- Search tabs here --> */}
-            <div className="search-results-holder flex items-center justify-between px-4">
+            <div className="search-results-holder flex items-center justify-between px-3">
               {/* <!-- first section here --> */}
-              <div className="w-1/3 flex items-center">
+              <div>
                 {!open && (
                   <button
                     type="button"
@@ -986,21 +1411,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                   type="button"
                   className={
                     active === "all"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                   }
                   value="all"
                   onClick={() => filterTab("all")}
                 >
                   All Cars
                 </button>
-
                 <button
                   type="button"
                   className={
                     active === "now"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                   }
                   value="now"
                   onClick={() => filterTab("now")}
@@ -1011,8 +1435,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                   type="button"
                   className={
                     active === "bid"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
                   }
                   value="bid"
                   onClick={() => filterTab("bid")}
@@ -1022,11 +1446,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
               </div>
 
               {/* <!-- Second section here --> */}
-              <div className="hidden lg:block w-1/3">
+              <div className="hidden lg:block h-6">
                 <Select
-                  className=" px-3 w-full cursor-pointer focus:outline-none "
+                  className=" px-3 w-80 cursor-pointer focus:outline-none "
                   type="text"
-                  placeholder={`Enter make, model or VIN to search ${dollarFormatter.format(
+                  placeholder={`Search ${dollarFormatter.format(
                     cars.total
                   )} cars`}
                   isClearable={false}
@@ -1037,7 +1461,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
               </div>
 
               {/* <!-- Third section here --> */}
-              <div className="flex  ml-auto">
+              <div className="flex">
                 {/* <!-- grid view tab here --> */}
                 <button
                   type="button"
@@ -1168,42 +1592,24 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
             {/* <!-- Filter pills here --> */}
             <div className="flex w-full flex-wrap my-4 text-white">
-              {paramValue &&
-                Object.entries(paramValue).length > 0 &&
-                Object.values(paramValue).map((ele, id) => (
-                  <span
-                    key={id}
-                    className="filter-pill mr-3 mb-2 lg:mb-0  flex items-center font-10 font-semibold px-2.5"
-                  >
-                    {ele && ele}
-                    <span className="ml-1.5">
-                      {" "}
-                      <img
-                        src="../../assets/img/vectors/white-close.svg"
-                        alt="close"
-                        className="cursor-pointer"
-                        onClick={() => removeItem(ele)}
-                      />{" "}
-                    </span>
-                  </span>
-                ))}
+              {getChips()}
             </div>
 
             {/* <!-- Car Grid displays here --> */}
-            {data && data.length >= 1 ? (
+            {loading ? (
+              <div className="flex justify-center items-center w-full h-80">
+                <FadeLoader
+                  color="#BFC1C6"
+                  width={5}
+                  radius={2}
+                  margin={2}
+                  height={5}
+                  loading={loading}
+                />
+              </div>
+            ) : (
               <>
-                {loading ? (
-                  <div className="flex justify-center items-center w-full h-80">
-                    <FadeLoader
-                      color="#BFC1C6"
-                      width={5}
-                      radius={2}
-                      margin={2}
-                      height={5}
-                      loading={loading}
-                    />
-                  </div>
-                ) : (
+                {data && data.length >= 1 ? (
                   <>
                     {grid && (
                       <div
@@ -1370,6 +1776,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                           )}
                       </div>
                     )}
+
                     {/* <!-- Car List displays here --> */}
                     {!grid && (
                       <div
@@ -1380,13 +1787,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         {data &&
                           data?.map(
                             (ele, id) =>
-                              ele.vehicleName && (
+                              ele.images.length > 0 && (
                                 <div
                                   key={id}
                                   className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
                                 >
                                   {/* <!-- image to details here --> */}
-                                  <div className="flex w-4/5 flex-col md:flex-row justify-between flex-wrap">
+                                  <div className="flex w-5/6 flex-col md:flex-row justify-between flex-wrap">
                                     <div className="1/2">
                                       <a
                                         onClick={() => {
@@ -1410,18 +1817,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
                                     {/* <!-- Details here --> */}
                                     <div className="w-1/2 py-4">
-                                      <p className="text-base primary-black ">
-                                        {ele?.vehicleName
-                                          ? ele?.vehicleName
-                                          : [ele?.make, ele.model].join(" ")}
+                                      <p className="text-base font-semibold primary-black ">
+                                        {`${ele?.make} - ${ele?.model} - ${ele?.year}`}
                                       </p>
 
                                       {/* <!-- location to mileage here  --> */}
                                       <table className="min-w-full ">
                                         <tbody>
-                                          <tr>
-                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black ">
+                                          <tr className="py-8">
+                                            <td className="py-5  whitespace-no-wrap">
+                                              <p className="flex items-center text-xs font-medium primary-black ">
                                                 {" "}
                                                 <span className="mr-1">
                                                   <img
@@ -1433,8 +1838,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                               </p>
                                             </td>
 
-                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black ">
+                                            <td className="py-1.5 mx-2  whitespace-no-wrap">
+                                              <p className="flex items-center text-xs font-medium primary-black ">
                                                 {" "}
                                                 <span className="mr-1">
                                                   <img
@@ -1442,18 +1847,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     alt="beacon"
                                                   />
                                                 </span>{" "}
-                                                {Object.entries(ele?.mileage)
-                                                  .length <= 2
-                                                  ? ""
-                                                  : ele?.mileage.replace(
-                                                      "/",
-                                                      "."
-                                                    )}
+                                                {dollarFormatter.format(
+                                                  ele?.odometer
+                                                )}{" "}
+                                                miles
                                               </p>
                                             </td>
 
                                             <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black">
+                                              <p className="flex items-center text-xs font-medium primary-black">
                                                 {" "}
                                                 <span className="mr-1">
                                                   <img
@@ -1463,91 +1865,133 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 </span>
                                                 {new Date(
                                                   ele?.auctionEndTime
-                                                ).toLocaleDateString()}
+                                                ).toLocaleDateString("en-NG", {
+                                                  year: "numeric",
+                                                  day: "numeric",
+                                                  month: "long",
+                                                })}
                                               </p>
                                             </td>
                                           </tr>
 
                                           <tr>
                                             <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black">
-                                                Exterior: {""}
-                                                {""}
+                                              <p className="flex font-medium items-center text-xs primary-black">
+                                                <span className="font-semibold mr-2">
+                                                  Exterior:
+                                                </span>
                                                 {ele?.sourceExteriorColor}
                                               </p>
                                             </td>
 
                                             <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black">
-                                                Interior {""}
+                                              <p className="flex font-medium items-center text-xs primary-black">
+                                                <span className="font-semibold mr-2">
+                                                  Interior:
+                                                </span>
                                                 {ele?.interiorColor}
                                               </p>
                                             </td>
 
                                             <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                              <p className="flex items-center text-xs primary-black">
-                                                VIN: {""}
+                                              <p className="flex font-medium items-center text-xs primary-black">
+                                                <span className="font-semibold mr-2">
+                                                  VIN:
+                                                </span>
                                                 {ele?.VIN}
                                               </p>
                                             </td>
                                           </tr>
                                         </tbody>
                                       </table>
-
-                                      {/* <!-- others here --> */}
-                                      <div className="flex border-t my-3 py-3">
-                                        <p className="flex items-center font-11 primary-black mr-6">
-                                          Vehicle Type: {""}
-                                          {""}
-                                          {ele?.vehicleType}
+                                      <div className="flex w-full justify-between border-t mt-5 pt-8">
+                                        <p className="flex font-medium items-center text-xs primary-black">
+                                          <span className="font-semibold mr-2">
+                                            Body type:
+                                          </span>
+                                          {ele?.bodyType}
                                         </p>
-                                        <p className="flex items-center font-11 primary-black mr-6">
-                                          {ele?.exteriorColor}
+                                        <p className="flex  font-medium items-center text-xs primary-black">
+                                          <span className="font-semibold mr-2">
+                                            Transmission
+                                          </span>
+                                          {ele?.transmission}
                                         </p>
-                                        <p className="flex items-center font-11 primary-black mr-6">
-                                          {" "}
-                                          Fully Loaded
+                                        <p className="flex  font-medium items-center text-xs primary-black">
+                                          <span className="font-semibold mr-2">
+                                            Passenger Capacity
+                                          </span>
+                                          {ele?.passengerCapacity}
                                         </p>
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="w-1/5 py-4 items-end flex flex-col">
-                                    <div className="relative pt-1.5">
-                                      {ele.buyNowPrice.length > 0 && (
-                                        <>
-                                          <img
-                                            src="../../assets/img/vectors/buy.svg"
-                                            alt="buy"
-                                          />
-                                          <button
-                                            type="button"
-                                            className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                          >
-                                            BUY NOW
-                                          </button>
-                                        </>
-                                      )}
-                                    </div>
-
-                                    <div>
-                                      <button
-                                        type="button"
-                                        className="focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1 px-2.5 -m-1.5"
-                                        onClick={() => {
-                                          dispatch(carDetail(ele));
-                                        }}
-                                      >
-                                        <a
-                                          onClick={() => {
-                                            dispatch(carDetail(ele)),
-                                              router.push({
-                                                pathname: "/search/" + ele.VIN,
-                                              });
-                                          }}
-                                        >
-                                          View Details
-                                        </a>
-                                      </button>
+                                  <div className="w-1/6 py-4 items-end flex flex-col">
+                                    <div className="flex pt-4">
+                                      <div className="flex justify-end w-full">
+                                        {Object.entries(ele.buyNowPrice)
+                                          .length > 2 ? (
+                                          <div className="flex flex-col w-full justify-between items-center">
+                                            <p className="sec-black text-base ml-1 font-medium">
+                                              $
+                                              {dollarFormatter.format(
+                                                ele.buyNowPrice
+                                              )}
+                                            </p>
+                                            <div className="relative my-3">
+                                              {ele.buyNowPrice.length > 0 && (
+                                                <>
+                                                  <img
+                                                    src="../../assets/img/vectors/buy.svg"
+                                                    alt="buy"
+                                                  />
+                                                  <button
+                                                    type="button"
+                                                    className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                  >
+                                                    BUY NOW
+                                                  </button>
+                                                </>
+                                              )}
+                                            </div>
+                                            <a
+                                              type="button"
+                                              className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
+                                              onClick={() => {
+                                                dispatch(carDetail(ele)),
+                                                  router.push({
+                                                    pathname:
+                                                      "/search/" + ele.VIN,
+                                                  });
+                                              }}
+                                            >
+                                              Buy Now
+                                            </a>
+                                          </div>
+                                        ) : (
+                                          <div className="flex flex-col w-full justify-between items-center">
+                                            <p className="sec-black text-base ml-1 font-medium">
+                                              $
+                                              {dollarFormatter.format(
+                                                ele.mmrPrice
+                                              )}
+                                            </p>
+                                            <a
+                                              type="button"
+                                              className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
+                                              onClick={() => {
+                                                dispatch(carDetail(ele)),
+                                                  router.push({
+                                                    pathname:
+                                                      "/search/" + ele.VIN,
+                                                  });
+                                              }}
+                                            >
+                                              Place Bid
+                                            </a>
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1556,12 +2000,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                       </div>
                     )}
                   </>
+                ) : (
+                  <div className="w-full flex items center justify-center py-40">
+                    <h1>No Vehicle matches this parameters</h1>
+                  </div>
                 )}
               </>
-            ) : (
-              <div className="w-full flex items center justify-center py-40">
-                <h1>No Vehicle matches this parameters</h1>
-              </div>
             )}
             {data && data.length >= 1 && (
               <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
