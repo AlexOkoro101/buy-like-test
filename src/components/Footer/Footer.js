@@ -17,7 +17,7 @@ const Footer = () => {
             </a>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center pb-3">
             <span>
               <img src="../../img/whatsapp.svg" alt="mail-icon" />
             </span>
@@ -29,11 +29,18 @@ const Footer = () => {
               Whatsapp
             </a>
           </div>
-          <div className="mt-3 text-sm leading-loose">
-            Buylikedealers
-            <br />
-            No 1 Nike Art Gallery Rd Ikate, <br />
-            Lekki, Lagos state. Nigeria.
+
+          <div className=" flex items-start">
+            <img
+              src="../../img/location.svg"
+              alt="location-icon"
+              className="pt-1.5"
+            />
+
+            <div className="ml-2.5  text-sm leading-loose">
+              Nike Art Gallery Road, Ikate <br />
+              Lekki, Lagos state
+            </div>
           </div>
         </div>
 
