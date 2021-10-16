@@ -325,6 +325,8 @@ input.detail:checked~span:after {
     border-color: transparent !important;
 }
 .css-1vr111p-option {
+    display: flex !important;
+    align-items:center;
     min-width: auto !important;
 }
 .css-hppqp6 {

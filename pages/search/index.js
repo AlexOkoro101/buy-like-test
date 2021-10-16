@@ -1391,9 +1391,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             </div>
 
             {/* <!-- Search tabs here --> */}
-            <div className="search-results-holder flex items-center justify-between px-3">
+            <div className="search-results-holder flex items-center justify-between px-4">
               {/* <!-- first section here --> */}
-              <div>
+              <div className="w-1/3 flex items-center">
                 {!open && (
                   <button
                     type="button"
@@ -1411,20 +1411,21 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                   type="button"
                   className={
                     active === "all"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                   }
                   value="all"
                   onClick={() => filterTab("all")}
                 >
                   All Cars
                 </button>
+
                 <button
                   type="button"
                   className={
                     active === "now"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                   }
                   value="now"
                   onClick={() => filterTab("now")}
@@ -1435,8 +1436,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                   type="button"
                   className={
                     active === "bid"
-                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                      : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                      ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                      : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                   }
                   value="bid"
                   onClick={() => filterTab("bid")}
@@ -1446,11 +1447,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
               </div>
 
               {/* <!-- Second section here --> */}
-              <div className="hidden lg:block h-6">
+              <div className="hidden lg:block w-1/3">
                 <Select
-                  className=" px-3 w-80 cursor-pointer focus:outline-none "
+                  className=" px-3 w-full cursor-pointer focus:outline-none "
                   type="text"
-                  placeholder={`Search ${dollarFormatter.format(
+                  placeholder={`Enter make, model or VIN to search ${dollarFormatter.format(
                     cars.total
                   )} cars`}
                   isClearable={false}
@@ -1461,7 +1462,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
               </div>
 
               {/* <!-- Third section here --> */}
-              <div className="flex">
+              <div className="flex  ml-auto">
                 {/* <!-- grid view tab here --> */}
                 <button
                   type="button"
