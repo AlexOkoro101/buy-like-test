@@ -11,7 +11,7 @@ const Footer = () => {
                         </span>
                         <a
                             href="mailto:test@gmail.com"
-                            className="text-base text-white ml-2.5 font-medium pt-0.5"
+                            className="text-sm text-white ml-2.5 font-medium pt-0.5"
                         >
                             Email
                         </a>
@@ -24,7 +24,7 @@ const Footer = () => {
                         <a
                             href="whatsapp.com"
                             target="_blank"
-                            className="text-base text-white ml-2.5 font-medium pt-0.5"
+                            className="text-sm text-white ml-2.5 font-medium pt-0.5"
                         >
                             Whatsapp
                         </a>
@@ -49,7 +49,7 @@ const Footer = () => {
                         <a
                             href="whatsapp.com"
                             target="_blank"
-                            className="text-base text-white ml-2.5 font-medium pt-0.5"
+                            className="text-sm text-white ml-2.5 font-medium pt-0.5"
                         >
                             Facebook
                         </a>
@@ -62,7 +62,7 @@ const Footer = () => {
                         <a
                             href="whatsapp.com"
                             target="_blank"
-                            className="text-base text-white ml-2.5 font-medium pt-0.5"
+                            className="text-sm text-white ml-2.5 font-medium pt-0.5"
                         >
                             Twitter
                         </a>
@@ -75,7 +75,7 @@ const Footer = () => {
                         <a
                             href="whatsapp.com"
                             target="_blank"
-                            className="text-base text-white ml-2.5 font-medium pt-0.5"
+                            className="text-sm text-white ml-2.5 font-medium pt-0.5"
                         >
                             Instagram
                         </a>
@@ -88,7 +88,7 @@ const Footer = () => {
                     <div className="flex items-center pb-4">
                         <a
                             href=""
-                            className="text-base text-white font-medium pt-0.5"
+                            className="text-sm text-white font-medium pt-0.5"
                         >
                             About us{" "}
                         </a>
@@ -97,7 +97,7 @@ const Footer = () => {
                     <div className="flex items-center pb-4">
                         <a
                             href=""
-                            className="text-base text-white font-medium pt-0.5"
+                            className="text-sm text-white font-medium pt-0.5"
                         >
                             Terms of use{" "}
                         </a>
@@ -106,7 +106,7 @@ const Footer = () => {
                     <div className="flex items-center pb-4">
                         <a
                             href=""
-                            className="text-base text-white font-medium pt-0.5"
+                            className="text-sm text-white font-medium pt-0.5"
                         >
                             Financial Privacy Policy{" "}
                         </a>
@@ -115,7 +115,7 @@ const Footer = () => {
                     <div className="flex items-center pb-4">
                         <a
                             href=""
-                            className="text-base text-white font-medium pt-0.5"
+                            className="text-sm text-white font-medium pt-0.5"
                         >
                             Accessibility{" "}
                         </a>
