@@ -30,9 +30,10 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
-.car-location{
+.car-location {
     max-width: 10rem;
 }
 
@@ -42,6 +43,8 @@
 
 .paginate-ctn {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .round-effect {
@@ -249,7 +252,7 @@ a:link {
     font-weight: normal;
 }
 
-.css-1g6gooi{
+.css-1g6gooi {
     color: #0D101B !important;
 }
 

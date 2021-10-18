@@ -1064,7 +1064,7 @@ const CarDetails = ({
                     <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
                         <div className="py-1 block lg:hidden hidden-header">
                             <p className="text-sm font-bold primary-color">
-                                {`${cardD?.make}, ${cardD?.model}`}
+                                {`${cardD?.make}, ${cardD?.model} - ${cardD?.year}`}
                             </p>
 
                             <div className="flex mt-1.5 flex-col">
@@ -1176,7 +1176,7 @@ const CarDetails = ({
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
                                 <p className="text-sm font-bold primary-color">
-                                    {`${cardD?.make}, ${cardD?.model}`}
+                                    {`${cardD?.make}, ${cardD?.model} - ${cardD?.year}`}
                                 </p>
 
                                 <div className="mt-1.5">
