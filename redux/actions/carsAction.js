@@ -368,7 +368,7 @@ export const getCategory = (data) => (dispatch) => {
 //
 export const fetchMore = (event, main, sortValue) => async (dispatch) => {
     let arrStr = [...main.model.split(",")];
-    var sortType ="";
+    var sortType = "";
     var sortPattern = "";
     if (main.make == "Lexus") {
         for (var i = 0; i < arrStr.length; i++) {
@@ -403,7 +403,7 @@ export const fetchMore = (event, main, sortValue) => async (dispatch) => {
             }
         }
     }
-    switch (sortValue) {
+    switch (sortValue.value) {
         case 1:
             sortType = "price";
             sortPattern = "asc";
