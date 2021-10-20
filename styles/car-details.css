@@ -484,10 +484,16 @@ tbody .destination, tbody .max-bid {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-tbody .destination-content, tbody .max-bid-content {
+tbody .max-bid-content {
     border: 1px solid #E1E1E1;
     border-right: none;
     padding-left: 13px;
+}
+tbody .destination-content {
+    border: 1px solid #E1E1E1;
+    padding-left: 13px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 tbody .destination-dropdown {
     border: 1px solid #E1E1E1;
@@ -506,7 +512,7 @@ tbody .max-bid-dropdown {
     width: 100%;
 }
 .currency-flags ul {
-    left: -163px !important;
+    left: -47px !important;
 }
 
 .currency-flags-button {
@@ -552,5 +558,19 @@ tbody .max-bid-dropdown {
     .buy-now-tab {
         width: 110px;
     }
+}
+#buynow-destination {
+    background: url('../public/assets/img/vectors/arrow-down2.svg') no-repeat right #f3f7f980;
+    outline: none;
+}
+#placebid-destination {
+    background: url('../public/assets/img/vectors/arrow-down2.svg') no-repeat right #fff;
+    outline: none;
+}
+#sendSheetModal {
+    z-index: 9999;
+}
+.send-sheet-phone-number {
+    height: 30px !important;
 }
 
