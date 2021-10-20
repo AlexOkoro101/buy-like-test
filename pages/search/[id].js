@@ -16,6 +16,7 @@ import IntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
+
 const Url = "https://buylikepoint.us/json.php/view.php";
 
 //
@@ -270,7 +271,7 @@ const CarDetails = ({
         let array = [];
         if (size === 12) {
             router.push("/search");
-            return;
+            return
         }
 
         if (cars) {
@@ -303,6 +304,7 @@ const CarDetails = ({
         setbodyStyle(carDetails.bodyType);
         setzip(carDetails.locationFullZipcode);
         setbidAmount(carDetails.buyNowPrice);
+
         setfacilitationLocation(carDetails.facilitationLocation);
         setvehicleLocation(carDetails.pickupLocation);
         setcarImages(carDetails.images);
@@ -405,6 +407,7 @@ const CarDetails = ({
             fetchLocalTrucking();
         }
     }, []);
+
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
@@ -684,6 +687,7 @@ const CarDetails = ({
                 passengerCapacity: "",
                 sellerCity: "",
                 description: "",
+
                 Zip: zip,
                 bidAmount: bidAmount,
                 owner: userId,
@@ -744,6 +748,7 @@ const CarDetails = ({
                 const currentCollection = replaceCollections[index];
                 if (currentCollection.vehicles.length < 10) {
                     filterCollection = currentCollection._id; // console.log(filterCollection)
+
                     break;
                 }
             }
@@ -769,6 +774,7 @@ const CarDetails = ({
             })
                 .then((response) => {
                     setisLoading(false);
+
                     if (!response.ok) {
                         // toastError()
                         // throw Error("Could not create collection")
@@ -1279,13 +1285,16 @@ const CarDetails = ({
                     <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
                         <div className="py-1 block lg:hidden hidden-header">
                             <p className="text-sm font-bold primary-color">
-                                {`${cardD?.make}, ${cardD?.model}`}
+                                {`${cardD?.make}, ${cardD?.model} - ${cardD?.year}`}
                             </p>
 
                             <div className="flex mt-1.5 flex-col">
                                 <div className="flex">
                                     <p className="font-11 primary-gray font-medium">
-                                        {dollarFormatter.format(cardD?.odometer)} mi
+                                        {dollarFormatter.format(
+                                            cardD?.odometer
+                                        )}{" "}
+                                        mi
                                     </p>
                                     <p className="font-11 ml-2 primary-gray font-medium">
                                         {cardD?.year}
@@ -1315,7 +1324,9 @@ const CarDetails = ({
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
-                            <div className="w-full displayLargeimage">{displayLargeimage()}</div>
+                            <div className="w-full displayLargeimage">
+                                {displayLargeimage()}
+                            </div>
 
                             <div className="overflow-hidden">
                                 <div
@@ -1344,7 +1355,6 @@ const CarDetails = ({
                                                 key={id}
                                                 onClick={() => setId(page + id)}
                                                 className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
-                                                
                                             >
                                                 <img
                                                     src={ele?.image_largeUrl}
@@ -1366,7 +1376,6 @@ const CarDetails = ({
                                                 height: "60.3px",
                                                 backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
                                                 backgroundSize: "cover",
-                                                
                                             }}
                                         >
                                             <div
@@ -1501,10 +1510,13 @@ const CarDetails = ({
                                         className="tabcontent"
                                         id="offer-amount"
                                     >
-                                        <table className="w-full border-separate detail-table table-fixed">
+                                        <table className="min-w-full border-separate detail-table">
                                             <tbody>
                                                 <tr className="detail-row">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold p-2 ">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold p-2 "
+                                                    >
                                                         Destination
                                                     </td>
                                                     <td colSpan="3" className="font-11 sec-black font-normal py-2 pr-4">
@@ -1517,10 +1529,16 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td  colSpan="2" className="sec-black font-11 font-semibold w-28 p-2">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold w-28 p-2"
+                                                    >
                                                         Auction Fee
                                                     </td>
-                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="font-11 sec-black font-normal py-2"
+                                                    >
                                                         $300
                                                     </td>
                                                     <td className="text-right px-2">
@@ -1533,10 +1551,16 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                    >
                                                         Tax and Reg
                                                     </td>
-                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                    >
                                                         Not Applicable
                                                     </td>
                                                     <td className="text-right px-2 border-b border-gray-200">
@@ -1548,14 +1572,19 @@ const CarDetails = ({
                                                     </td>
                                                 </tr>
 
-
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold py-2"
+                                                    >
                                                         Trucking
                                                     </td>
 
                                                     {noZipValue ? (
-                                                        <td colSpan="2" className="font-11 sec-black font-normal py-2">
+                                                        <td
+                                                            colSpan="2"
+                                                            className="font-11 sec-black font-normal py-2"
+                                                        >
                                                             <>Contact Support</>
                                                             <a
                                                                 onClick={(e) => sendSheet(e)}
@@ -1593,7 +1622,10 @@ const CarDetails = ({
                                                         </td>
                                                     ) : (
                                                         <>
-                                                            <td colSpan="2" className="font-11 sec-black font-normal py-2">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="font-11 sec-black font-normal py-2"
+                                                            >
                                                                 {truckingPrice
                                                                     ? `${truckingPrice}`
                                                                     : "Loading..."}
@@ -1614,7 +1646,10 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold py-2"
+                                                    >
                                                         Shipping
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2">
@@ -1634,7 +1669,10 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                    >
                                                         Clearing
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
@@ -1650,17 +1688,25 @@ const CarDetails = ({
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-semibold py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                    >
                                                         Service Fee
                                                     </td>
-                                                    <td colSpan="3" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
+                                                    <td
+                                                        colSpan="3"
+                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                    >
                                                         $400
                                                     </td>
-                                                  
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td colSpan="2" className="sec-black font-11 font-bold py-2">
+                                                    <td
+                                                        colSpan="2"
+                                                        className="sec-black font-11 font-bold py-2"
+                                                    >
                                                         Total
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-bold py-2">
@@ -2085,6 +2131,7 @@ const CarDetails = ({
                                                 TIME LEFT
                                                 <p>
                                                     {car.data[0].auctionEndTime}
+
                                                     used the data this way
                                                 </p>
                                             </p>

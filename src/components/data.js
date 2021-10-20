@@ -102,6 +102,38 @@ export const EngineType = [
     { value: "Rotary", label: "Rotary" },
     { value: "Not Specified", label: "Not Specified" },
 ];
+export const MIN = [
+    { value: 10000, label: "10,000" },
+    { value: 20000, label: "20,000" },
+    { value: 30000, label: "30,000" },
+    { value: 40000, label: "40,000" },
+    { value: 50000, label: "50,000" },
+    { value: 60000, label: "60,000" },
+    { value: 70000, label: "70,000" },
+    { value: 80000, label: "80,000" },
+    { value: 90000, label: "90,000" },
+    { value: 100000, label: "100,000" },
+    { value: 110000, label: "110,000" },
+    { value: 120000, label: "120,000" },
+    { value: 130000, label: "130,000" },
+    { value: 140000, label: "140,000" },
+];
+export const MAX = [
+    { value: 140000, label: "140,000" },
+    { value: 130000, label: "130,000" },
+    { value: 120000, label: "120,000" },
+    { value: 110000, label: "110,000" },
+    { value: 100000, label: "100,000" },
+    { value: 90000, label: "90,000" },
+    { value: 80000, label: "80,000" },
+    { value: 70000, label: "70,000" },
+    { value: 60000, label: "60,000" },
+    { value: 50000, label: "50,000" },
+    { value: 40000, label: "40,000" },
+    { value: 30000, label: "30,000" },
+    { value: 20000, label: "20,000" },
+    { value: 10000, label: "10,000" },
+];
 export const InteriorColour = [
     { value: "White", label: "White" },
     { value: "Brown", label: "Brown" },

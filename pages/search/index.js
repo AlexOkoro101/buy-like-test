@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Meta from "../../src/components/Head/Meta";
 import { connect } from "react-redux";
 import {
@@ -16,6 +16,9 @@ import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
+import Collapsible from "react-collapsible";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
     FuelType,
     BodyType,
@@ -25,6 +28,8 @@ import {
     InteriorType,
     ExternalColour,
     FacilitationLocation,
+    MAX,
+    MIN,
 } from "../../src/components/data";
 // const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //
@@ -64,6 +69,11 @@ export function useWindowDimensions() {
 const Search = ({ cars, params, loading, getMakes, makes }) => {
     var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
+    let inputEl = useRef([]);
+    inputEl.current = [...Array(11)].map(
+        (ref, index) => (inputEl.current[index] = React.createRef())
+    );
+
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
     const [open, setOpen] = useState(true);
@@ -73,7 +83,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [filterValue, setFilterValue] = useState({
         transmission: "",
         bodyType: "",
+        saleDate: "",
         engineType: "",
+        min: "",
+        max: "",
         exterior_color: "",
         interior_color: "",
         interior_type: "",
@@ -92,6 +105,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(selectToken);
+    const [startDate, setStartDate] = useState(new Date());
     const [years, setYears] = useState(() => {
         let year = 2005;
         const currentYear = new Date().getFullYear();
@@ -369,15 +383,186 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
         const paginationRender = (
             <div className="flex-container">
-                <div className="paginate-ctn">
-                    <div className="round-effect" onClick={prevPage}>
-                        {" "}
-                        &lsaquo;{" "}
+                <div className="paginate-ctn w-full">
+                    <div className="flex items-center">
+                        <button
+                            className=" text-sm px-2 py-1 h-9  rounded-sm mr-1 text-white"
+                            onClick={() => {
+                                setPageIndex(pageIndex - 2);
+                                fetchPage(pageIndex - 2);
+                            }}
+                            style={{
+                                backgroundColor: "#d80739",
+                                pointerEvents: pageIndex > 2 ? "" : "none",
+                                opacity: pageIndex > 2 ? 1 : 0.4,
+                            }}
+                        >
+                            <span className="mr-2">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    x="0px"
+                                    y="0px"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 172 172"
+                                >
+                                    <g
+                                        fill="none"
+                                        fillRule="nonzero"
+                                        stroke="none"
+                                        strokeWidth="1"
+                                        strokeLinecap="butt"
+                                        strokeLinejoin="miter"
+                                        strokeMiterlimit="10"
+                                        strokeDasharray=""
+                                        strokeDashoffset="0"
+                                        fontFamily="none"
+                                        fontWeight="none"
+                                        fontSize="none"
+                                        textAnchor="none"
+                                    >
+                                        <path
+                                            d="M0,172v-172h172v172z"
+                                            fill="none"
+                                        ></path>
+                                        <g fill="#ffffff">
+                                            <path d="M93.02669,21.43001c-1.86189,0.05548 -3.62905,0.83363 -4.92708,2.1696l-57.33333,57.33333c-2.79764,2.7988 -2.79764,7.33531 0,10.13411l57.33333,57.33333c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-52.26627,-52.26628l52.26627,-52.26628c2.11962,-2.06035 2.75694,-5.21064 1.60486,-7.93287c-1.15207,-2.72224 -3.85719,-4.45797 -6.81189,-4.37084zM136.02669,21.43001c-1.86189,0.05548 -3.62905,0.83363 -4.92708,2.1696l-57.33333,57.33333c-2.79764,2.7988 -2.79764,7.33531 0,10.13411l57.33333,57.33333c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-52.26628,-52.26628l52.26628,-52.26628c2.11962,-2.06035 2.75694,-5.21064 1.60486,-7.93287c-1.15207,-2.72224 -3.85719,-4.45797 -6.81189,-4.37084z"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </span>
+                        </button>
+                        <button
+                            className="px-6 flex items-center rounded-sm  py-1 h-9  text-white"
+                            style={{ backgroundColor: "#d80739" }}
+                            onClick={prevPage}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                x="0px"
+                                y="0px"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 172 172"
+                            >
+                                <g
+                                    fill="none"
+                                    fillRule="nonzero"
+                                    stroke="none"
+                                    strokeWidth="1"
+                                    strokeLinecap="butt"
+                                    strokeLinejoin="miter"
+                                    strokeMiterlimit="10"
+                                    strokeDasharray=""
+                                    strokeDashoffset="0"
+                                    fontFamily="none"
+                                    fontWeight="none"
+                                    fontSize="none"
+                                    textAnchor="none"
+                                >
+                                    <path
+                                        d="M0,172v-172h172v172z"
+                                        fill="none"
+                                    ></path>
+                                    <g fill="#ffffff">
+                                        <path d="M93.02669,21.43001c-1.86189,0.05548 -3.62905,0.83363 -4.92708,2.1696l-57.33333,57.33333c-2.79764,2.7988 -2.79764,7.33531 0,10.13411l57.33333,57.33333c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-52.26627,-52.26628l52.26627,-52.26628c2.11962,-2.06035 2.75694,-5.21064 1.60486,-7.93287c-1.15207,-2.72224 -3.85719,-4.45797 -6.81189,-4.37084zM136.02669,21.43001c-1.86189,0.05548 -3.62905,0.83363 -4.92708,2.1696l-57.33333,57.33333c-2.79764,2.7988 -2.79764,7.33531 0,10.13411l57.33333,57.33333c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-52.26628,-52.26628l52.26628,-52.26628c2.11962,-2.06035 2.75694,-5.21064 1.60486,-7.93287c-1.15207,-2.72224 -3.85719,-4.45797 -6.81189,-4.37084z"></path>
+                                    </g>
+                                </g>
+                            </svg>{" "}
+                            <span className="ml-2">Prev</span>
+                        </button>
                     </div>
-                    {items}
-                    <div className="round-effect" onClick={nextPage}>
-                        {" "}
-                        &rsaquo;{" "}
+                    <div className="text-sm ">
+                        Page {pageIndex} of {maxPages}
+                    </div>
+                    <div className="flex items-center">
+                        <button
+                            className="flex items-center px-6 py-1 h-9  rounded-sm text-white"
+                            onClick={nextPage}
+                            style={{ backgroundColor: "#d80739" }}
+                        >
+                            <span className="mr-2">Next</span>{" "}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                x="0px"
+                                y="0px"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 172 172"
+                            >
+                                <g
+                                    fill="none"
+                                    fill-rule="nonzero"
+                                    stroke="none"
+                                    stroke-width="1"
+                                    stroke-linecap="butt"
+                                    stroke-linejoin="miter"
+                                    stroke-miterlimit="10"
+                                    stroke-dasharray=""
+                                    stroke-dashoffset="0"
+                                    font-family="none"
+                                    font-weight="none"
+                                    font-size="none"
+                                    text-anchor="none"
+                                >
+                                    <path
+                                        d="M0,172v-172h172v172z"
+                                        fill="none"
+                                    ></path>
+                                    <g fill="#ffffff">
+                                        <path d="M39.40267,21.76595l-10.05013,10.2181l54.8138,54.00195l-55.13575,54.01595l10.02214,10.2461l65.5638,-64.23405zM81.22689,21.82194l-10.16211,10.10612l53.80599,54.11393l-52.95215,54.07194l10.2461,10.02214l62.84831,-64.17806z"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <button
+                            className=" text-sm ml-1 px-2 py-1 h-9  rounded-sm text-white"
+                            onClick={() => {
+                                setPageIndex(pageIndex + 2);
+                                fetchPage(pageIndex + 2);
+                            }}
+                            style={{
+                                backgroundColor: "#d80739",
+                                pointerEvents:
+                                    maxPages > pageIndex + 2 ? "" : "none",
+                                opacity: maxPages > pageIndex + 2 ? 1 : 0.4,
+                            }}
+                        >
+                            <span className="mr-2">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    x="0px"
+                                    y="0px"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 172 172"
+                                >
+                                    <g
+                                        fill="none"
+                                        fill-rule="nonzero"
+                                        stroke="none"
+                                        stroke-width="1"
+                                        stroke-linecap="butt"
+                                        stroke-linejoin="miter"
+                                        stroke-miterlimit="10"
+                                        stroke-dasharray=""
+                                        stroke-dashoffset="0"
+                                        font-family="none"
+                                        font-weight="none"
+                                        font-size="none"
+                                        text-anchor="none"
+                                    >
+                                        <path
+                                            d="M0,172v-172h172v172z"
+                                            fill="none"
+                                        ></path>
+                                        <g fill="#ffffff">
+                                            <path d="M39.40267,21.76595l-10.05013,10.2181l54.8138,54.00195l-55.13575,54.01595l10.02214,10.2461l65.5638,-64.23405zM81.22689,21.82194l-10.16211,10.10612l53.80599,54.11393l-52.95215,54.07194l10.2461,10.02214l62.84831,-64.17806z"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -411,6 +596,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     page: pageIndex,
                 };
                 dispatch(fetchMore(filterValue, datas));
+                break;
             }
         }
     };
@@ -439,24 +625,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         const result = filterData(cars.data, query);
         setData(result);
     };
-    const clearForm = () => {
-        // setFilterValue({
-        //     transmission: "",
-        //     bodyType: "",
-        //     engineType: "",
-        //     exterior_color: "",
-        //     interior_color: "",
-        //     interior_type: "",
-        //     fuel_type: "",
-        //     location: "",
-        // });
-        // document
-        //     .querySelectorAll("input[type=checkbox]")
-        //     .forEach((el) => (el.checked = false));
-
-        //
-        //
-        console.log("clear");
+    const clearForm = async () => {
+        setFilterValue({
+            transmission: "",
+            bodyType: "",
+            engineType: "",
+            exterior_color: "",
+            interior_color: "",
+            interior_type: "",
+            fuel_type: "",
+            location: "",
+        });
+        inputEl.current.map((ele, id) => {
+            inputEl.current[id].current.state.value = null;
+        });
     };
     const activateGrid = () => {
         setgrid(true);
@@ -474,21 +656,19 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div
                     style={{
                         width:
-                            width >= 900
-                                ? "100%"
-                                : open && width >= 900
-                                ? "273px"
+                            open && width >= 900
+                                ? ""
                                 : !open && width >= 900
-                                ? "247px"
+                                ? ""
                                 : "100%",
-                        height: "164px",
+                        height: "203px",
                     }}
-                    className="bg-black bg-opacity-20 rounded-md"
+                    className=" bg-opacity-20 rounded-md"
                 >
                     <img
                         src={params.images[0].image_largeUrl}
                         alt="hello"
-                        className="w-full object-contain h-full rounded-md object-center"
+                        className="w-full object-cover h-full rounded-md object-center"
                     />
                 </div>
             );
@@ -515,9 +695,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     ? "mmr_price=1"
                     : "";
             const datas = {
-                make: paramValue?.make || "",
-                model: paramValue?.model || "",
-                year: paramValue?.year || "",
+                make: "",
+                model: "",
+                year: "",
                 page: 1,
             };
             dispatch(filterTabAction(datas, data));
@@ -660,9 +840,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 });
             });
         }
-        // data.map((ele) => {
 
-        // })
         return data.map((ele, id) => {
             return (
                 <span
@@ -892,7 +1070,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                     </div>
 
-                                    <div className="tabWrapper h-full relative">
+                                    <div className="tabWrapper  h-full relative">
                                         {/* <!--Body Type  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
@@ -903,6 +1081,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Body type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[0]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -939,6 +1118,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Transmission type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[1]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -974,6 +1154,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         External Colour
                                                     </div>
                                                 }
+                                                ref={inputEl.current[2]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -1004,6 +1185,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                ref={inputEl.current[3]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Fuel type
@@ -1037,6 +1219,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
+                                                ref={inputEl.current[4]}
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1072,6 +1255,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                ref={inputEl.current[5]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Interior Colour
@@ -1111,6 +1295,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                         Interior Type
                                                     </div>
                                                 }
+                                                ref={inputEl.current[6]}
                                                 getDropdownButtonLabel={({
                                                     placeholderButtonLabel,
                                                     value,
@@ -1139,6 +1324,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black  font-semibold font-11  "
+                                                ref={inputEl.current[7]}
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1170,6 +1356,239 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                 options={EngineType}
                                             />
                                         </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <Collapsible
+                                                overflowWhenOpen="visible"
+                                                contentOuterClassName="px-4"
+                                                trigger={
+                                                    <div className="font-semibold flex justify-between text-xs w-full self-center">
+                                                        <span
+                                                            style={{
+                                                                color: "#515151",
+                                                            }}
+                                                        >
+                                                            Sale Date
+                                                        </span>{" "}
+                                                        <span className="font-bold ">
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "-6px",
+                                                                }}
+                                                                viewBox="0 0 24 24"
+                                                                focusable="false"
+                                                                role="presentation"
+                                                            >
+                                                                <path
+                                                                    d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                                                    fill="currentColor"
+                                                                    fillRule="evenodd"
+                                                                ></path>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                }
+                                            >
+                                                <DatePicker
+                                                    minDate={new Date()}
+                                                    onChange={(e) => {
+                                                        setFilterValue(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                saleDate: e,
+                                                            })
+                                                        ),
+                                                            setAdvance(true),
+                                                            setStartDate(e);
+                                                    }}
+                                                    selected={startDate}
+                                                    className="border-2 w-full p-1 rounded text-xs font-bold"
+                                                    dateFormat="MMMM d, yyyy"
+                                                />
+                                            </Collapsible>
+                                        </div>
+                                        {/* <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black  font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Sale Condition
+                                                    </div>
+                                                }
+                                                ref={inputEl.current[8]}
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Sale Condition
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                options={EngineType}
+                                            />
+                                        </div> */}
+                                        <div className="tab border-bt h-full py-4 ">
+                                            <Collapsible
+                                                overflowWhenOpen="visible"
+                                                contentOuterClassName="px-4"
+                                                trigger={
+                                                    <div className="font-semibold flex justify-between text-xs w-full self-center">
+                                                        <span
+                                                            style={{
+                                                                color: "#515151",
+                                                            }}
+                                                        >
+                                                            Mileage
+                                                        </span>{" "}
+                                                        <span className="font-bold ">
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "-6px",
+                                                                }}
+                                                                viewBox="0 0 24 24"
+                                                                focusable="false"
+                                                                role="presentation"
+                                                            >
+                                                                <path
+                                                                    d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                                                    fill="currentColor"
+                                                                    fillRule="evenodd"
+                                                                ></path>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                }
+                                            >
+                                                <div className="tab border-bt py-4 ">
+                                                    <ReactMultiSelectCheckboxes
+                                                        className="primary-black  font-semibold font-11  "
+                                                        isMulti={false}
+                                                        styles={customStyles}
+                                                        placeholderButtonLabel={
+                                                            <div className="font-semibold text-xs w-full self-center	">
+                                                                Min.
+                                                            </div>
+                                                        }
+                                                        ref={inputEl.current[9]}
+                                                        getDropdownButtonLabel={({
+                                                            placeholderButtonLabel,
+                                                            value,
+                                                        }) => {
+                                                            return (
+                                                                <div className="font-semibold text-xs w-96 self-center">
+                                                                    Min.
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        width="100%"
+                                                        onChange={(e) => {
+                                                            setFilterValue(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    min: e.value,
+                                                                })
+                                                            ),
+                                                                setAdvance(
+                                                                    true
+                                                                );
+                                                        }}
+                                                        options={MIN}
+                                                    />
+                                                </div>
+                                                <div className="tab border-bt py-4">
+                                                    <ReactMultiSelectCheckboxes
+                                                        className="primary-black  font-semibold font-11"
+                                                        styles={customStyles}
+                                                        ref={
+                                                            inputEl.current[10]
+                                                        }
+                                                        isMulti={false}
+                                                        placeholderButtonLabel={
+                                                            <div className="font-semibold text-xs w-full self-center">
+                                                                Max.
+                                                            </div>
+                                                        }
+                                                        getDropdownButtonLabel={({
+                                                            placeholderButtonLabel,
+                                                            value,
+                                                        }) => {
+                                                            return (
+                                                                <div className="font-semibold text-xs w-96 self-center">
+                                                                    Max.
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        width="100%"
+                                                        onChange={(e) => {
+                                                            setFilterValue(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    max: e.value,
+                                                                })
+                                                            ),
+                                                                setAdvance(
+                                                                    true
+                                                                );
+                                                        }}
+                                                        options={MAX}
+                                                    />
+                                                </div>
+                                            </Collapsible>
+                                        </div>
+                                        {/* <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black  font-semibold font-11  "
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Equipment
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Equipment
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        engineType: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                options={EngineType}
+                                            />
+                                        </div> */}
                                     </div>
                                 </form>
                             </div>
@@ -1177,7 +1596,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder w-full  relative px-5  lg:px-0 lg:pl-5">
+                    <div className="display-holder min-h-screen  h-full w-full  relative px-5  lg:px-0 lg:pl-5">
                         {/* <!-- Filter and search for mobile here --> */}
                         <div className="mb-3 px-3 block lg:hidden h-9">
                             <div className="w-full h-full">
@@ -1196,9 +1615,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between px-3">
+                        <div className="search-results-holder flex items-center justify-between px-4">
                             {/* <!-- first section here --> */}
-                            <div>
+                            <div className="w-1/3 flex items-center">
                                 {!open && (
                                     <button
                                         type="button"
@@ -1216,20 +1635,21 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     type="button"
                                     className={
                                         active === "all"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                                     }
                                     value="all"
                                     onClick={() => filterTab("all")}
                                 >
                                     All Cars
                                 </button>
+
                                 <button
                                     type="button"
                                     className={
                                         active === "now"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                                     }
                                     value="now"
                                     onClick={() => filterTab("now")}
@@ -1240,8 +1660,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     type="button"
                                     className={
                                         active === "bid"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-1.5 md:px-3.5 py-1.5"
-                                            : "focus:outline-none primary-black text-black font-10  px-1.5 md:px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                                     }
                                     value="bid"
                                     onClick={() => filterTab("bid")}
@@ -1251,11 +1671,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Second section here --> */}
-                            <div className="hidden lg:block h-6">
+                            <div className="hidden lg:block w-1/3">
                                 <Select
-                                    className=" px-3 w-80 cursor-pointer focus:outline-none "
+                                    className=" px-3 w-full cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Search ${dollarFormatter.format(
+                                    placeholder={`Enter make, model or VIN to search ${dollarFormatter.format(
                                         cars.total
                                     )} cars`}
                                     isClearable={false}
@@ -1266,7 +1686,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             </div>
 
                             {/* <!-- Third section here --> */}
-                            <div className="flex">
+                            <div className="flex  ml-auto">
                                 {/* <!-- grid view tab here --> */}
                                 <button
                                     type="button"
@@ -1401,123 +1821,152 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Car Grid displays here --> */}
-                        {data && data.length >= 1 ? (
-                            <>
-                                {loading ? (
-                                    <div className="flex justify-center items-center w-full h-80">
-                                        <FadeLoader
-                                            color="#BFC1C6"
-                                            width={5}
-                                            radius={2}
-                                            margin={2}
-                                            height={5}
-                                            loading={loading}
-                                        />
-                                    </div>
-                                ) : (
-                                    <>
-                                        {grid && (
-                                            <div
-                                                className={
-                                                    "flex box-border flex-wrap justify-center w-full lg:justify-start display-type " +
-                                                    (open
-                                                        ? " gap-x-6 xl:gap-x-4"
-                                                        : " gap-x-4 xl:gap-x-2")
-                                                }
-                                                id="car-grid"
-                                            >
-                                                {data?.length > 0 &&
-                                                    data?.map(
-                                                        (ele, id) =>
-                                                            ele && (
-                                                                <div
-                                                                    key={id}
-                                                                    className={
-                                                                        open ==
-                                                                        true
-                                                                            ? " car-display-holder flex flex-col justify-between box-border rounded-md  p-4 mb-4"
-                                                                            : " car-display-holder flex flex-col justify-between box-border rounded-md p-4 mb-4"
-                                                                    }
-                                                                    style={{
-                                                                        height: "auto",
-                                                                        width:
-                                                                            width >
-                                                                                900 &&
-                                                                            width <
-                                                                                1024
-                                                                                ? "280px"
-                                                                                : open &&
-                                                                                  width >
-                                                                                      1024
-                                                                                ? "305px"
-                                                                                : !open &&
-                                                                                  width >=
-                                                                                      900
-                                                                                ? "280px"
-                                                                                : width <
-                                                                                      1300 &&
-                                                                                  width >
-                                                                                      625
-                                                                                ? "280px"
-                                                                                : "100%",
-                                                                    }}
-                                                                >
-                                                                    <a
-                                                                        className="cursor-pointer"
-                                                                        onClick={() => {
-                                                                            dispatch(
-                                                                                carDetail(
-                                                                                    ele
-                                                                                )
-                                                                            ),
-                                                                                router.push(
-                                                                                    {
-                                                                                        pathname:
-                                                                                            "/search/" +
-                                                                                            ele.VIN,
-                                                                                    }
-                                                                                );
-                                                                        }}
+                        {loading ? (
+                            <div className="flex justify-center items-center w-full h-80">
+                                <FadeLoader
+                                    color="#BFC1C6"
+                                    width={5}
+                                    radius={2}
+                                    margin={2}
+                                    height={5}
+                                    loading={loading}
+                                />
+                            </div>
+                        ) : (
+                            <div className="flex flex-col justify-between min-h-screen">
+                                <>
+                                    {data && data.length >= 1 ? (
+                                        <>
+                                            {grid && (
+                                                <div
+                                                    className={
+                                                        "flex box-border flex-wrap justify-center w-full lg:justify-start display-type " +
+                                                        (open
+                                                            ? " gap-x-6"
+                                                            : " gap-x-4")
+                                                    }
+                                                    id="car-grid"
+                                                >
+                                                    {data?.length > 0 &&
+                                                        data?.map(
+                                                            (ele, id) =>
+                                                                ele.images
+                                                                    .length >
+                                                                    0 && (
+                                                                    <div
+                                                                        key={id}
+                                                                        className={
+                                                                            open ==
+                                                                            true
+                                                                                ? " car-display-holder flex flex-col justify-between box-border   p-4 mb-5"
+                                                                                : " car-display-holder flex flex-col justify-between box-border  p-4 mb-5"
+                                                                        }
                                                                         style={{
+                                                                            height: "auto",
                                                                             width:
+                                                                                open &&
                                                                                 width >=
-                                                                                900
-                                                                                    ? "100%"
-                                                                                    : open &&
-                                                                                      width >=
-                                                                                          900
-                                                                                    ? "273px"
+                                                                                    900
+                                                                                    ? "31.5%"
                                                                                     : !open &&
                                                                                       width >=
                                                                                           900
-                                                                                    ? "247px"
+                                                                                    ? "24%"
                                                                                     : "100%",
-                                                                            height: "164px",
                                                                         }}
                                                                     >
-                                                                        {addImage(
-                                                                            ele
-                                                                        )}
-                                                                    </a>
-                                                                    <div className="mt-3">
-                                                                        <p className="text-sm primary-black font-medium">
-                                                                            {ele?.make &&
-                                                                            ele?.model
-                                                                                ? [
-                                                                                      ele?.make,
-                                                                                      ele.model,
-                                                                                  ].join(
-                                                                                      " "
-                                                                                  )
-                                                                                : ele?.vehicleName}
-                                                                        </p>
-                                                                        <p className="sec-black text-sm flex items-center mt-2 font-medium">
-                                                                            {" "}
-                                                                            {
-                                                                                ele?.year
-                                                                            }{" "}
-                                                                            <span className="ml-6">
-                                                                                {/* {Object.entries(
+                                                                        <a
+                                                                            className="cursor-pointer "
+                                                                            onClick={() => {
+                                                                                dispatch(
+                                                                                    carDetail(
+                                                                                        ele
+                                                                                    )
+                                                                                ),
+                                                                                    router.push(
+                                                                                        {
+                                                                                            pathname:
+                                                                                                "/search/" +
+                                                                                                ele.VIN,
+                                                                                        }
+                                                                                    );
+                                                                            }}
+                                                                            style={{
+                                                                                width:
+                                                                                    open &&
+                                                                                    width >=
+                                                                                        900
+                                                                                        ? ""
+                                                                                        : !open &&
+                                                                                          width >=
+                                                                                              900
+                                                                                        ? ""
+                                                                                        : "100%",
+                                                                                height: "203px",
+                                                                            }}
+                                                                        >
+                                                                            {addImage(
+                                                                                ele
+                                                                            )}
+                                                                        </a>
+
+                                                                        <div className="mt-3">
+                                                                            {/* Vehicle Name here */}
+                                                                            <p className="text-xs tertiary-black font-medium">
+                                                                                {ele?.make &&
+                                                                                ele?.model
+                                                                                    ? [
+                                                                                          ele?.make,
+                                                                                          ele.model,
+                                                                                      ].join(
+                                                                                          " "
+                                                                                      )
+                                                                                    : ele?.vehicleName}
+                                                                            </p>
+
+                                                                            {/* Vehicle Location here */}
+                                                                            <div className="flex justify-between pt-1.5">
+                                                                                <p className="flex items-center sec-black font-10 font-normal car-location">
+                                                                                    {" "}
+                                                                                    <span className="mr-1">
+                                                                                        <img
+                                                                                            src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                            alt="location"
+                                                                                        />
+                                                                                    </span>{" "}
+                                                                                    {
+                                                                                        ele?.pickupLocation
+                                                                                    }
+                                                                                </p>
+                                                                                <div className="ml-auto flex self-center">
+                                                                                    <img
+                                                                                        src="../../assets/img/vectors/red-date.svg"
+                                                                                        alt="date"
+                                                                                    />
+                                                                                    <p className="sec-black font-10 ml-1 font-normal">
+                                                                                        {" "}
+                                                                                        {new Date(
+                                                                                            ele?.auctionEndTime
+                                                                                        ).toLocaleDateString(
+                                                                                            "en-NG",
+                                                                                            {
+                                                                                                year: "numeric",
+                                                                                                day: "numeric",
+                                                                                                month: "long",
+                                                                                            }
+                                                                                        )}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            {/* Vehicle Year here */}
+                                                                            <p className="sec-black font-11 flex justify-between w-full lg:w-5/12 items-center pt-1.5 ">
+                                                                                {" "}
+                                                                                {
+                                                                                    ele?.year
+                                                                                }{" "}
+                                                                                <span className="">
+                                                                                    {/* {Object.entries(
                                                                                     ele?.mileage
                                                                                 )
                                                                                     .length <=
@@ -1527,413 +1976,383 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                           "/",
                                                                                           "."
                                                                                       )} */}
-                                                                                {dollarFormatter.format(
-                                                                                    ele?.odometer
-                                                                                )}{" "}
-                                                                                miles
-                                                                            </span>
-                                                                        </p>
-                                                                        <div className="flex justify-between">
-                                                                            <p className="flex items-center sec-black text-sm font-normal">
-                                                                                {" "}
-                                                                                <span className="mr-1">
-                                                                                    <img
-                                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                                        alt="location"
-                                                                                    />
-                                                                                </span>{" "}
-                                                                                {
-                                                                                    ele?.pickupLocation
-                                                                                }
-                                                                            </p>
-                                                                            <div className="ml-auto flex self-center">
-                                                                                <img
-                                                                                    className="img-fluid"
-                                                                                    src="../../assets/img/vectors/red-date.svg"
-                                                                                    alt="date"
-                                                                                />
-                                                                                <p className="sec-black font-10 ml-1 font-normal">
-                                                                                    {" "}
-                                                                                    {new Date(
-                                                                                        ele?.auctionEndTime
-                                                                                    ).toLocaleDateString(
-                                                                                        "en-NG",
-                                                                                        {
-                                                                                            year: "numeric",
-                                                                                            day: "numeric",
-                                                                                            month: "long",
-                                                                                        }
-                                                                                    )}
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="flex pt-4">
-                                                                            <div className="flex justify-end w-full">
-                                                                                {parseInt(
-                                                                                    ele.buyNowPrice
-                                                                                ) ? (
-                                                                                    <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-normal">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.buyNowPrice
-                                                                                            )}
-                                                                                        </p>
-                                                                                        <a
-                                                                                            type="button"
-                                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                            onClick={() => {
-                                                                                                dispatch(
-                                                                                                    carDetail(
-                                                                                                        ele
-                                                                                                    )
-                                                                                                ),
-                                                                                                    router.push(
-                                                                                                        {
-                                                                                                            pathname:
-                                                                                                                "/search/" +
-                                                                                                                ele.VIN,
-                                                                                                        }
-                                                                                                    );
-                                                                                            }}
-                                                                                        >
-                                                                                            Buy
-                                                                                            Now
-                                                                                        </a>
-                                                                                    </div>
-                                                                                ) : (
-                                                                                    <div className="flex w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-normal">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.mmrPrice
-                                                                                            )}
-                                                                                        </p>
-                                                                                        <a
-                                                                                            type="button"
-                                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                            onClick={() => {
-                                                                                                dispatch(
-                                                                                                    carDetail(
-                                                                                                        ele
-                                                                                                    )
-                                                                                                ),
-                                                                                                    router.push(
-                                                                                                        {
-                                                                                                            pathname:
-                                                                                                                "/search/" +
-                                                                                                                ele.VIN,
-                                                                                                        }
-                                                                                                    );
-                                                                                            }}
-                                                                                        >
-                                                                                            Place
-                                                                                            Bid
-                                                                                        </a>
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                    )}
-                                            </div>
-                                        )}
-                                        {/* <!-- Car List displays here --> */}
-                                        {!grid && (
-                                            <div
-                                                className="flex flex-wrap display-type w-full justify-between"
-                                                id="car-list"
-                                            >
-                                                {/* <!-- Car 1 --> */}
-                                                {data &&
-                                                    data?.map(
-                                                        (ele, id) =>
-                                                            ele.vehicleName && (
-                                                                <div
-                                                                    key={id}
-                                                                    className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
-                                                                >
-                                                                    {/* <!-- image to details here --> */}
-                                                                    <div className="flex w-5/6 flex-col md:flex-row justify-between flex-wrap">
-                                                                        <div className="1/2">
-                                                                            <a
-                                                                                onClick={() => {
-                                                                                    dispatch(
-                                                                                        carDetail(
-                                                                                            ele
-                                                                                        )
-                                                                                    ),
-                                                                                        router.push(
-                                                                                            {
-                                                                                                pathname:
-                                                                                                    "/search/" +
-                                                                                                    ele.VIN,
-                                                                                            }
-                                                                                        );
-                                                                                }}
-                                                                            >
-                                                                                <img
-                                                                                    className="img-fluid"
-                                                                                    src={
-                                                                                        ele
-                                                                                            ?.images[0]
-                                                                                            ?.image_largeUrl
-                                                                                    }
-                                                                                    alt=""
-                                                                                    style={{
-                                                                                        width: "340px",
-                                                                                        height: "250px",
-                                                                                    }}
-                                                                                />
-                                                                            </a>
-                                                                        </div>
-
-                                                                        {/* <!-- Details here --> */}
-                                                                        <div className="w-1/2 py-4">
-                                                                            <p className="text-base font-semibold primary-black ">
-                                                                                {ele?.vehicleName
-                                                                                    ? ele?.vehicleName
-                                                                                    : [
-                                                                                          ele?.make,
-                                                                                          ele.model,
-                                                                                      ].join(
-                                                                                          " "
-                                                                                      )}
+                                                                                    {dollarFormatter.format(
+                                                                                        ele?.odometer
+                                                                                    )}{" "}
+                                                                                    miles
+                                                                                </span>
                                                                             </p>
 
-                                                                            {/* <!-- location to mileage here  --> */}
-                                                                            <table className="min-w-full ">
-                                                                                <tbody>
-                                                                                    <tr className="py-8">
-                                                                                        <td className="py-5  whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs font-medium primary-black ">
-                                                                                                {" "}
-                                                                                                <span className="mr-1">
-                                                                                                    <img
-                                                                                                        src="../../assets/img/vectors/red-location-beacon.svg"
-                                                                                                        alt="beacon"
-                                                                                                    />
-                                                                                                </span>{" "}
-                                                                                                {
-                                                                                                    ele?.pickupLocation
-                                                                                                }
-                                                                                            </p>
-                                                                                        </td>
-
-                                                                                        <td className="py-1.5 mx-2  whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs font-medium primary-black ">
-                                                                                                {" "}
-                                                                                                <span className="mr-1">
-                                                                                                    <img
-                                                                                                        src="../../assets/img/vectors/speedometer.svg"
-                                                                                                        alt="beacon"
-                                                                                                    />
-                                                                                                </span>{" "}
+                                                                            {/* Vehicle Price */}
+                                                                            <div className="flex pt-3">
+                                                                                <div className="flex justify-end w-full">
+                                                                                    {Object.entries(
+                                                                                        ele.buyNowPrice
+                                                                                    )
+                                                                                        .length >
+                                                                                    2 ? (
+                                                                                        <div className="flex w-full justify-between items-center">
+                                                                                            <p className="sec-black text-base font-normal">
+                                                                                                $
                                                                                                 {dollarFormatter.format(
-                                                                                                    ele?.odometer
-                                                                                                )}{" "}
-                                                                                                miles
-                                                                                            </p>
-                                                                                        </td>
-
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex items-center text-xs font-medium primary-black">
-                                                                                                {" "}
-                                                                                                <span className="mr-1">
-                                                                                                    <img
-                                                                                                        src="../../assets/img/vectors/red-date.svg"
-                                                                                                        alt="beacon"
-                                                                                                    />
-                                                                                                </span>
-                                                                                                {new Date(
-                                                                                                    ele?.auctionEndTime
-                                                                                                ).toLocaleDateString(
-                                                                                                    "en-NG",
-                                                                                                    {
-                                                                                                        year: "numeric",
-                                                                                                        day: "numeric",
-                                                                                                        month: "long",
-                                                                                                    }
+                                                                                                    ele.buyNowPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                        </td>
-                                                                                    </tr>
-
-                                                                                    <tr>
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex font-medium items-center text-xs primary-black">
-                                                                                                <span className="font-semibold mr-2">
-                                                                                                    Exterior:
-                                                                                                </span>
-                                                                                                {
-                                                                                                    ele?.sourceExteriorColor
-                                                                                                }
-                                                                                            </p>
-                                                                                        </td>
-
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex font-medium items-center text-xs primary-black">
-                                                                                                <span className="font-semibold mr-2">
-                                                                                                    Interior:
-                                                                                                </span>
-                                                                                                {
-                                                                                                    ele?.interiorColor
-                                                                                                }
-                                                                                            </p>
-                                                                                        </td>
-
-                                                                                        <td className="py-1.5 pr-20 whitespace-no-wrap">
-                                                                                            <p className="flex font-medium items-center text-xs primary-black">
-                                                                                                <span className="font-semibold mr-2">
-                                                                                                    VIN:
-                                                                                                </span>
-                                                                                                {
-                                                                                                    ele?.VIN
-                                                                                                }
-                                                                                            </p>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                            <div className="flex w-full justify-between border-t mt-5 pt-8">
-                                                                                <p className="flex font-medium items-center text-xs primary-black">
-                                                                                    <span className="font-semibold mr-2">
-                                                                                        Rating:
-                                                                                    </span>
-                                                                                    {
-                                                                                        ele?.sellerRating
-                                                                                    }
-                                                                                </p>
-                                                                                <p className="flex  font-medium items-center text-xs primary-black">
-                                                                                    <span className="font-semibold mr-2">
-                                                                                        Seller's
-                                                                                        Name:
-                                                                                    </span>
-                                                                                    {
-                                                                                        ele?.sourceSellerName
-                                                                                    }
-                                                                                </p>
-                                                                                <p className="flex font-medium items-center text-xs primary-black">
-                                                                                    <span className="font-semibold mr-2">
-                                                                                        Seller's
-                                                                                        Phone:
-                                                                                    </span>
-                                                                                    {
-                                                                                        ele?.sellerPhone
-                                                                                    }
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="w-1/6 py-4 items-end flex flex-col">
-                                                                        <div className="flex pt-4">
-                                                                            <div className="flex justify-end w-full">
-                                                                                {Object.entries(
-                                                                                    ele.buyNowPrice
-                                                                                )
-                                                                                    .length >
-                                                                                2 ? (
-                                                                                    <div className="flex flex-col w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-medium">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.buyNowPrice
-                                                                                            )}
-                                                                                        </p>
-                                                                                        <div className="relative my-3">
-                                                                                            {ele
-                                                                                                .buyNowPrice
-                                                                                                .length >
-                                                                                                0 && (
-                                                                                                <>
-                                                                                                    <img
-                                                                                                        src="../../assets/img/vectors/buy.svg"
-                                                                                                        alt="buy"
-                                                                                                    />
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
-                                                                                                    >
-                                                                                                        BUY
-                                                                                                        NOW
-                                                                                                    </button>
-                                                                                                </>
-                                                                                            )}
+                                                                                            <a
+                                                                                                type="button"
+                                                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                                onClick={() => {
+                                                                                                    dispatch(
+                                                                                                        carDetail(
+                                                                                                            ele
+                                                                                                        )
+                                                                                                    ),
+                                                                                                        router.push(
+                                                                                                            {
+                                                                                                                pathname:
+                                                                                                                    "/search/" +
+                                                                                                                    ele.VIN,
+                                                                                                            }
+                                                                                                        );
+                                                                                                }}
+                                                                                            >
+                                                                                                Buy
+                                                                                                Now
+                                                                                            </a>
                                                                                         </div>
-                                                                                        <a
-                                                                                            type="button"
-                                                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
-                                                                                            onClick={() => {
-                                                                                                dispatch(
-                                                                                                    carDetail(
-                                                                                                        ele
-                                                                                                    )
-                                                                                                ),
-                                                                                                    router.push(
-                                                                                                        {
-                                                                                                            pathname:
-                                                                                                                "/search/" +
-                                                                                                                ele.VIN,
-                                                                                                        }
-                                                                                                    );
-                                                                                            }}
-                                                                                        >
-                                                                                            Buy
-                                                                                            Now
-                                                                                        </a>
-                                                                                    </div>
-                                                                                ) : (
-                                                                                    <div className="flex flex-col w-full justify-between items-center">
-                                                                                        <p className="sec-black text-base ml-1 font-medium">
-                                                                                            $
-                                                                                            {dollarFormatter.format(
-                                                                                                ele.mmrPrice
-                                                                                            )}
-                                                                                        </p>
-                                                                                        <a
-                                                                                            type="button"
-                                                                                            className="focus:outline-none text-white primary-btn mt-3 py-1.5 font-10 font-semibold px-5"
-                                                                                            onClick={() => {
-                                                                                                dispatch(
-                                                                                                    carDetail(
-                                                                                                        ele
-                                                                                                    )
-                                                                                                ),
-                                                                                                    router.push(
-                                                                                                        {
-                                                                                                            pathname:
-                                                                                                                "/search/" +
-                                                                                                                ele.VIN,
-                                                                                                        }
-                                                                                                    );
-                                                                                            }}
-                                                                                        >
-                                                                                            Place
-                                                                                            Bid
-                                                                                        </a>
-                                                                                    </div>
-                                                                                )}
+                                                                                    ) : (
+                                                                                        <div className="flex w-full justify-between items-center">
+                                                                                            <p className="sec-black text-base  font-normal">
+                                                                                                $
+                                                                                                {dollarFormatter.format(
+                                                                                                    ele.mmrPrice
+                                                                                                )}
+                                                                                            </p>
+                                                                                            <a
+                                                                                                type="button"
+                                                                                                className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5"
+                                                                                                onClick={() => {
+                                                                                                    dispatch(
+                                                                                                        carDetail(
+                                                                                                            ele
+                                                                                                        )
+                                                                                                    ),
+                                                                                                        router.push(
+                                                                                                            {
+                                                                                                                pathname:
+                                                                                                                    "/search/" +
+                                                                                                                    ele.VIN,
+                                                                                                            }
+                                                                                                        );
+                                                                                                }}
+                                                                                            >
+                                                                                                Place
+                                                                                                Bid
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            )
-                                                    )}
-                                            </div>
-                                        )}
-                                    </>
+                                                                )
+                                                        )}
+                                                </div>
+                                            )}
+
+                                            {/* <!-- Car List displays here --> */}
+                                            {!grid && (
+                                                <div
+                                                    className="flex flex-wrap display-type w-full justify-between"
+                                                    id="car-list"
+                                                >
+                                                    {/* <!-- Car 1 --> */}
+                                                    {data &&
+                                                        data?.map(
+                                                            (ele, id) =>
+                                                                ele.images
+                                                                    .length >
+                                                                    0 && (
+                                                                    <div
+                                                                        key={id}
+                                                                        className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
+                                                                    >
+                                                                        {/* <!-- image to details here --> */}
+                                                                        <div className="flex w-5/6 flex-col md:flex-row justify-between flex-wrap">
+                                                                            <div className="1/2">
+                                                                                <a
+                                                                                    onClick={() => {
+                                                                                        dispatch(
+                                                                                            carDetail(
+                                                                                                ele
+                                                                                            )
+                                                                                        ),
+                                                                                            router.push(
+                                                                                                {
+                                                                                                    pathname:
+                                                                                                        "/search/" +
+                                                                                                        ele.VIN,
+                                                                                                }
+                                                                                            );
+                                                                                    }}
+                                                                                >
+                                                                                    <img
+                                                                                        className="img-fluid"
+                                                                                        src={
+                                                                                            ele
+                                                                                                ?.images[0]
+                                                                                                ?.image_largeUrl
+                                                                                        }
+                                                                                        alt=""
+                                                                                        style={{
+                                                                                            width: "340px",
+                                                                                            height: "250px",
+                                                                                        }}
+                                                                                    />
+                                                                                </a>
+                                                                            </div>
+
+                                                                            {/* <!-- Details here --> */}
+                                                                            <div className="w-1/2 py-4">
+                                                                                <p className="text-base font-semibold primary-black ">
+                                                                                    {`${ele?.make} - ${ele?.model} - ${ele?.year}`}
+                                                                                </p>
+
+                                                                                {/* <!-- location to mileage here  --> */}
+                                                                                <table className="min-w-full ">
+                                                                                    <tbody>
+                                                                                        <tr className="py-8">
+                                                                                            <td className="py-5  whitespace-no-wrap">
+                                                                                                <p className="flex items-center text-xs font-medium primary-black ">
+                                                                                                    {" "}
+                                                                                                    <span className="mr-1">
+                                                                                                        <img
+                                                                                                            src="../../assets/img/vectors/red-location-beacon.svg"
+                                                                                                            alt="beacon"
+                                                                                                        />
+                                                                                                    </span>{" "}
+                                                                                                    {
+                                                                                                        ele?.pickupLocation
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </td>
+
+                                                                                            <td className="py-1.5 mx-2  whitespace-no-wrap">
+                                                                                                <p className="flex items-center text-xs font-medium primary-black ">
+                                                                                                    {" "}
+                                                                                                    <span className="mr-1">
+                                                                                                        <img
+                                                                                                            src="../../assets/img/vectors/speedometer.svg"
+                                                                                                            alt="beacon"
+                                                                                                        />
+                                                                                                    </span>{" "}
+                                                                                                    {dollarFormatter.format(
+                                                                                                        ele?.odometer
+                                                                                                    )}{" "}
+                                                                                                    miles
+                                                                                                </p>
+                                                                                            </td>
+
+                                                                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                                <p className="flex items-center text-xs font-medium primary-black">
+                                                                                                    {" "}
+                                                                                                    <span className="mr-1">
+                                                                                                        <img
+                                                                                                            src="../../assets/img/vectors/red-date.svg"
+                                                                                                            alt="beacon"
+                                                                                                        />
+                                                                                                    </span>
+                                                                                                    {new Date(
+                                                                                                        ele?.auctionEndTime
+                                                                                                    ).toLocaleDateString(
+                                                                                                        "en-NG",
+                                                                                                        {
+                                                                                                            year: "numeric",
+                                                                                                            day: "numeric",
+                                                                                                            month: "long",
+                                                                                                        }
+                                                                                                    )}
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                        <tr>
+                                                                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                                <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                    <span className="font-semibold mr-2">
+                                                                                                        Exterior:
+                                                                                                    </span>
+                                                                                                    {
+                                                                                                        ele?.sourceExteriorColor
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </td>
+
+                                                                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                                <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                    <span className="font-semibold mr-2">
+                                                                                                        Interior:
+                                                                                                    </span>
+                                                                                                    {
+                                                                                                        ele?.interiorColor
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </td>
+
+                                                                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                                <p className="flex font-medium items-center text-xs primary-black">
+                                                                                                    <span className="font-semibold mr-2">
+                                                                                                        VIN:
+                                                                                                    </span>
+                                                                                                    {
+                                                                                                        ele?.VIN
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <div className="flex w-full justify-between border-t mt-5 pt-8">
+                                                                                    <p className="flex font-medium items-center text-xs primary-black">
+                                                                                        <span className="font-semibold mr-2">
+                                                                                            Body
+                                                                                            type:
+                                                                                        </span>
+                                                                                        {
+                                                                                            ele?.bodyType
+                                                                                        }
+                                                                                    </p>
+                                                                                    <p className="flex  font-medium items-center text-xs primary-black">
+                                                                                        <span className="font-semibold mr-2">
+                                                                                            Transmission
+                                                                                        </span>
+                                                                                        {
+                                                                                            ele?.transmission
+                                                                                        }
+                                                                                    </p>
+                                                                                    <p className="flex  font-medium items-center text-xs primary-black">
+                                                                                        <span className="font-semibold mr-2">
+                                                                                            Passenger
+                                                                                            Capacity
+                                                                                        </span>
+                                                                                        {
+                                                                                            ele?.passengerCapacity
+                                                                                        }
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="w-1/6 py-4 items-end flex flex-col">
+                                                                            <div className="flex pt-4">
+                                                                                <div className="flex justify-end w-full">
+                                                                                    {Object.entries(
+                                                                                        ele.buyNowPrice
+                                                                                    )
+                                                                                        .length >
+                                                                                    2 ? (
+                                                                                        <div className="flex flex-col w-full justify-between items-center">
+                                                                                            <p className="sec-black text-base ml-1 font-medium">
+                                                                                                $
+                                                                                                {dollarFormatter.format(
+                                                                                                    ele.buyNowPrice
+                                                                                                )}
+                                                                                            </p>
+                                                                                            <div className="relative my-3">
+                                                                                                {ele
+                                                                                                    .buyNowPrice
+                                                                                                    .length >
+                                                                                                    0 && (
+                                                                                                    <>
+                                                                                                        <img
+                                                                                                            src="../../assets/img/vectors/buy.svg"
+                                                                                                            alt="buy"
+                                                                                                        />
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                                                                        >
+                                                                                                            BUY
+                                                                                                            NOW
+                                                                                                        </button>
+                                                                                                    </>
+                                                                                                )}
+                                                                                            </div>
+                                                                                            <a
+                                                                                                type="button"
+                                                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
+                                                                                                onClick={() => {
+                                                                                                    dispatch(
+                                                                                                        carDetail(
+                                                                                                            ele
+                                                                                                        )
+                                                                                                    ),
+                                                                                                        router.push(
+                                                                                                            {
+                                                                                                                pathname:
+                                                                                                                    "/search/" +
+                                                                                                                    ele.VIN,
+                                                                                                            }
+                                                                                                        );
+                                                                                                }}
+                                                                                            >
+                                                                                                Buy
+                                                                                                Now
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="flex flex-col w-full justify-between items-center">
+                                                                                            <p className="sec-black text-base ml-1 font-medium">
+                                                                                                $
+                                                                                                {dollarFormatter.format(
+                                                                                                    ele.mmrPrice
+                                                                                                )}
+                                                                                            </p>
+                                                                                            <a
+                                                                                                type="button"
+                                                                                                className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
+                                                                                                onClick={() => {
+                                                                                                    dispatch(
+                                                                                                        carDetail(
+                                                                                                            ele
+                                                                                                        )
+                                                                                                    ),
+                                                                                                        router.push(
+                                                                                                            {
+                                                                                                                pathname:
+                                                                                                                    "/search/" +
+                                                                                                                    ele.VIN,
+                                                                                                            }
+                                                                                                        );
+                                                                                                }}
+                                                                                            >
+                                                                                                Place
+                                                                                                Bid
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                        )}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className="w-full flex items center justify-center py-40">
+                                            <h1>
+                                                No Vehicle matches this
+                                                parameters
+                                            </h1>
+                                        </div>
+                                    )}
+                                </>
+                                {data && data.length >= 1 && (
+                                    <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
+                                        {Paginate()}
+                                    </div>
                                 )}
-                            </>
-                        ) : (
-                            <div className="w-full flex items center justify-center py-40">
-                                <h1>No Vehicle matches this parameters</h1>
-                            </div>
-                        )}
-                        {data && data.length >= 1 && (
-                            <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
-                                {Paginate()}
                             </div>
                         )}
                     </div>
