@@ -518,10 +518,10 @@ select#make option:checked, select#model option:checked, select#year option:chec
     background: #FFFFFF;
     box-shadow: 0px 0px 10px 5px rgba(73, 165, 198, 0.05);
     border-radius: 10px;
-    /* width: 290px; */
+    width: 290px;
     /* width: 25%; */
     height: 18.75rem;
-    width: 23%;
+    /* width: 23%; */
 }
 
 /* Car features styles here */

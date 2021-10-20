@@ -377,7 +377,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
         {/* Request Section Here */}
         <section className="relative request__estimate px-2 lg:px-28 w-full">
-          <div className=" request__holder relative w-full p-12  ">
+          <div className=" request__holder relative w-full p-12 mt-8 lg:mt-0">
             {/* FOrm Here */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-wrap md:flex-nowrap  justify-between ml-7">
@@ -437,7 +437,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                 </div>
 
                 {/* Select Model Here */}
-                <div className="relative flex flex-col ml-4  pb-5 w-full ">
+                <div className="relative flex flex-col ml-0 lg:ml-4  pb-5 w-full ">
                   <svg
                     class=" absolute top-6 right-0 m-4 pointer-events-none"
                     width="15"
@@ -503,7 +503,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                 </div>
 
                 {/* Select Year Here */}
-                <div className="relative flex flex-col ml-4 pb-5 w-full ">
+                <div className="relative flex flex-col ml-0 lg:ml-4 pb-5 w-full ">
                   <label className="primary-black font-semibold text-sm ">
                     Select Year
                   </label>
@@ -554,10 +554,10 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                 </div>
 
                 {/* Search Btn  Here */}
-                <div className="flex flex-col mt-5 ml-5 pb-5 w-full ">
+                <div className="flex flex-col mt-5 ml-0 lg:ml-5 pb-5 w-full ">
                   <button
                     type="submit"
-                    className="w-60 estimate__btn uppercase focus:outline-none font-semibold flex items-center justify-center mt-1"
+                    className="lg:w-60 estimate__btn uppercase focus:outline-none font-semibold flex items-center justify-center mt-1 w-full"
                   >
                     search
                   </button>
@@ -673,7 +673,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
           <div className="flex flex-wrap md:flex-nowrap md:justify-around 2xl:justify-center mt-12 ">
             {/* <!-- Hatchback here --> */}
-            <div className="car__holder w-52 px-6 mb-5 md:mb-0 pt-6 ">
+            <div className="car__holder w-52 px-6 mb-5 md:mb-0 pt-6 mr-4 lg:mr-0">
               <div className="h-12 m-auto">
                 <img
                   src="./assets/img/hatchback.svg "
@@ -715,7 +715,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             </div>
 
             {/* <!-- Vans here --> */}
-            <div className="car__holder w-52 px-6 mb-5 md:mb-0 pt-6 ">
+            <div className="car__holder w-52 px-6 mb-5 md:mb-0 pt-6 mr-4 lg:mr-0">
               <div className="h-12 m-auto">
                 <img
                   src="./assets/img/van.svg "
