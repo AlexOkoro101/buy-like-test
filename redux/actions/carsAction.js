@@ -403,33 +403,35 @@ export const fetchMore = (event, main, sortValue) => async (dispatch) => {
             }
         }
     }
-    switch (sortValue.value) {
-        case 1:
-            sortType = "price";
-            sortPattern = "asc";
-            break;
-        case 2:
-            sortType = "price";
-            sortPattern = "desc";
-            break;
-        case 3:
-            sortType = "mileage";
-            sortPattern = "asc";
-            break;
-        case 4:
-            sortType = "mileage";
-            sortPattern = "desc";
-            break;
-        case 5:
-            sortType = "auctiondate";
-            sortPattern = "asc";
-            break;
-        case 6:
-            sortType = "auctiondate";
-            sortPattern = "desc";
-            break;
-        default:
-            break;
+    if (sortValue) {
+        switch (sortValue.value) {
+            case 1:
+                sortType = "price";
+                sortPattern = "asc";
+                break;
+            case 2:
+                sortType = "price";
+                sortPattern = "desc";
+                break;
+            case 3:
+                sortType = "mileage";
+                sortPattern = "asc";
+                break;
+            case 4:
+                sortType = "mileage";
+                sortPattern = "desc";
+                break;
+            case 5:
+                sortType = "auctiondate";
+                sortPattern = "asc";
+                break;
+            case 6:
+                sortType = "auctiondate";
+                sortPattern = "desc";
+                break;
+            default:
+                break;
+        }
     }
     dispatch({
         type: FETCHING,
