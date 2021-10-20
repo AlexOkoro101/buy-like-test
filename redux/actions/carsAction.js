@@ -368,7 +368,8 @@ export const getCategory = (data) => (dispatch) => {
 //
 export const fetchMore = (event, main, sortValue) => async (dispatch) => {
     let arrStr = [...main.model.split(",")];
-    let sortType, sortPatter;
+    var sortType ="";
+    var sortPattern = "";
     if (main.make == "Lexus") {
         for (var i = 0; i < arrStr.length; i++) {
             var supp = arrStr[i];
