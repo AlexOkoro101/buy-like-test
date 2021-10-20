@@ -235,6 +235,9 @@ const LoginOptions = ({ beginLogin }) => {
                                 </span>
                                 Log in with Email
                             </button>
+                            <div className="text-center">
+                                <p onClick={() => router.push('/auth/signup')} style={{color: "#0C74D4"}} className="font-11 cursor-pointer mt-8">Or create an account</p>
+                            </div>
                         </div>
                     </div>
                 </div>

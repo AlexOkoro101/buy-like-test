@@ -12,7 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { usePaystackPayment } from "react-paystack";
-import { Ng } from "react-flags-select";
+import IntlTelInput from 'react-intl-tel-input';
+import 'react-intl-tel-input/dist/main.css';
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
 const Url = "https://buylikepoint.us/json.php/view.php";
@@ -93,7 +94,7 @@ const CarDetails = ({
     var dollarFormatter = new Intl.NumberFormat();
 
     const [selectedCountryCurrency, setSelectedCountryCurrency] =
-        useState("NG");
+        useState(carDestination === "Nigeria" ? "US" : "NG");
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [amount, setAmount] = useState(0);
@@ -164,7 +165,7 @@ const CarDetails = ({
     const [bodyStyle, setbodyStyle] = useState("");
     const [zip, setzip] = useState("");
     const [bidAmount, setbidAmount] = useState("");
-    const [totalAmount, setTotalAmount] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(123);
     const [collection, setcollection] = useState("");
     const [facilitationLocation, setfacilitationLocation] = useState("");
     const [vehicleLocation, setvehicleLocation] = useState("");
@@ -174,6 +175,14 @@ const CarDetails = ({
     const [addTrucking, setaddTrucking] = useState(false);
     const [buyNowPrice, setbuyNowPrice] = useState(null);
     const [overview, setoverview] = useState(true);
+    const [carDestination, setcarDestination] = useState("Nigeria");
+    const [deliveryDuration, setdeliveryDuration] = useState(36288e5);
+    const [NGN, setNGN] = useState(true)
+    const dollarPrice = Number(totalAmount) / parseInt(usd);
+    const [maxBidAmount, setmaxBidAmount] = useState('');
+    const [sendSheetModal, setsendSheetModal] = useState(false);
+    const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState('')
+    const [sendSheetEmail, setsendSheetEmail] = useState('')
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -238,6 +247,7 @@ const CarDetails = ({
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 8);
     const [count, setCount] = useState(0);
     const [naira, setNaira] = useState(0);
+    const [usd, setUsd] = useState(0);
     const user = useSelector(selectToken);
     const [size, setsize] = useState(4);
 
@@ -302,6 +312,7 @@ const CarDetails = ({
 
         getSimilarVehicles();
         getRate();
+        getLocalRate();
         getSecondRate();
         displaySmall();
 
@@ -311,6 +322,7 @@ const CarDetails = ({
         // if(carDetails.buyNowPrice && !carDetails.mmrPrice) {
         //     setOffer(true)
         // }
+        console.log(cardD)
     }, [carDetails, cardD]);
 
     const getTrucking = {
@@ -396,9 +408,15 @@ const CarDetails = ({
     useEffect(() => {
         clearTimer(getDeadTime());
     }, []);
+    
+    useEffect(() => {
+        setTotalAmount((Number(carDetails.buyNowPrice) + 300) * Number(usd));
+        
+        console.log("naira", usd)
+        console.log("total", totalAmount)
+    }, [usd])
 
     const openForm = (evt, status) => {
-        setTotalAmount(parseInt(carDetails.buyNowPrice * naira));
         if (status !== offer) {
             setOffer(status);
             let i, tabcontent, tablinks;
@@ -414,6 +432,7 @@ const CarDetails = ({
                     " active",
                     ""
                 );
+                
             }
 
             evt.currentTarget.className += " active";
@@ -526,9 +545,7 @@ const CarDetails = ({
                 })
                 .then((data) => {
                     setNaira(data.data.rate);
-                    setTotalAmount(
-                        parseInt(carDetails.buyNowPrice * data.data.rate)
-                    );
+                    setTotalAmount((Number(carDetails.buyNowPrice) + 300) * Number(naira));
                     setAmount(carDetails.buyNowPrice * data.data.rate);
                     setbidAmount(carDetails.buyNowPrice);
                 })
@@ -550,11 +567,35 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
+                    console.log(data)
                     if (data.success !== false) {
                         setNaira(data.rates.NGN);
                     }
                 })
                 .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getLocalRate = () => {
+        let id = "613b98b1e28f970016362ae3";
+        try {
+            fetch(enviroment.BASE_URL + "rates/" + `${id}`, {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("local rate", data)
+                    if (data.error === false) {
+                        setUsd(data.data.rate);
+                    }
+                })
+                .catch(function (error) {   
                     console.log(error);
                 });
         } catch (error) {
@@ -900,6 +941,7 @@ const CarDetails = ({
 
     const setFees = (e, type, value) => {
         switch (type) {
+            
             case "truck":
                 if (e.target.checked === true) {
                     setaddTrucking(true);
@@ -929,6 +971,17 @@ const CarDetails = ({
                     setTotalAmount(parseInt(totalAmount) + parseInt(value));
                 } else {
                     setTotalAmount(parseInt(totalAmount) - parseInt(value));
+                }
+                break;
+            case "serviceFee":
+                if (e.target.checked === true) {
+                    setTotalAmount(
+                        parseInt(totalAmount) + parseInt(value) * naira
+                    );
+                } else {
+                    setTotalAmount(
+                        parseInt(totalAmount) - parseInt(value) * naira
+                    );
                 }
                 break;
             case "bidClear":
@@ -973,17 +1026,181 @@ const CarDetails = ({
     const bidAmountRef = useRef("");
     const formatbidAmount= () => {
         
-        bidAmountRef.current.value = dollarFormatter.format(bidAmountRef.current.value)
+        setmaxBidAmount(dollarFormatter.format(maxBidAmount)) 
+        console.log(maxBidAmount)
         
     } 
+    const removeComma = () => {
+        setmaxBidAmount(bidAmountRef.current.value.replace(/\,/g,''))
+    }
 
-    const sendSheet = () => {
+    const removeAlpha = () => {
+        const re = /^[0-9\b]+$/;
+
+        // if value is not blank, then test the regex
+
+        if (re.test(bidAmountRef.current.value)) {
+            setmaxBidAmount(bidAmountRef.current.value)
+        }
+       
         
+    }
+    const [bidval, setbidval] = useState(0)
+    const [totalAmountPlusBid, settotalAmountPlusBid] = useState(0)
+    const includeMaxBid = (e) => {
+        setmaxBidAmount(e.target.value)
+        console.log(Number(maxBidAmount))
+
+        // setbidval(maxBidAmount || 0);
+        // settotalAmountPlusBid(Number(bidval));
+
+        // console.log("bidval", bidval)
+        // console.log("total", totalAmountPlusBid)
+
+    }
+
+    useEffect(() => {
+        if(carDestination === 'Nigeria') {
+            setdeliveryDuration(36288e5)
+        } else {
+            setdeliveryDuration(12096e5)
+        }
+    }, [carDestination])
+
+    const convertCurrency = (code) => {
+        console.log(parseInt(dollarPrice))
+
+        if (code === 'NG') {
+            setNGN(true)
+        } else {
+            setNGN(false)
+        }
+    }
+
+    const OpenSendSheetModal = () => {
+        if(token) {
+            window.open(`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`, '_blank')
+            return;
+        }
+        setsendSheetModal(true)
+    }
+
+    const sheetNumberRef = useRef(null)
+    const phoneNumberChange = () => {
+        
+        // setsendSheetPhoneNumber()
+        setsendSheetPhoneNumber(
+            `${sheetNumberRef.current.selectedCountryData.dialCode}` +
+                `${sheetNumberRef.current.state.value}`
+        );
     }
 
 
+
+
+    const sendSheet = (e) => {
+        
+
+        e.preventDefault()
+        
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const sendSheetObj = JSON.stringify({
+            "email":sendSheetEmail,
+            "name":cardD.vehicleName || `${cardD.year} ${cardD.make} ${cardD.model}`,
+            "phone":sendSheetPhoneNumber,
+            "vin":cardD.VIN,
+            "url":"https://buylike-web-git-ts-buylike-web.vercel.app/search/" + cardD.VIN,
+            "amount":cardD?.buyNowPrice || cardD?.mmrPrice,
+            "make":cardD.make,
+            "model":cardD.model,
+            "year":cardD.year
+        })
+
+        console.log(sendSheetObj)
+
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: sendSheetObj,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+
+        setsendSheetModal(false)
+        window.open(`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`, '_blank')
+    }
+
+
+    
     //
-    //
+        const [truckAccessory, settruckAccessory] = useState(false)
+        const [shipAccessory, setshipAccessory] = useState(false)
+
+        const accessories = () => {
+            var carPrice = Number(carDetails.buyNowPrice);
+            var outstanding = 700;
+            var truck = 0;
+            var ship = 0;
+            
+            if (truckAccessory === true) {
+                // setaddTrucking(true);
+                truck = Number(truckingPrice.slice(1));
+            } else {
+                // setaddTrucking(false);
+                truck = 0;
+            }
+            
+            if (shipAccessory === true) {
+                // setaddTrucking(true);
+                ship = 1150
+            } else {
+                // setaddTrucking(false);
+                ship = 0;
+            }
+            
+            // console.log(outstanding, truck, ship)
+            return carPrice + outstanding + truck + ship;
+        }
+
+        const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false)
+        const [placebidShipAccessory, setplacebidShipAccessory] = useState(false)
+
+        const placebidAccessories = () => {
+            // console.log(Number(maxBidAmount))
+            var outstanding = 700;
+            var truck = 0;
+            var ship = 0;
+            
+            if (placebidTruckAccessory === true) {
+                // setaddTrucking(true);
+                truck = Number(truckingPrice.slice(1));
+            } else {
+                // setaddTrucking(false);
+                truck = 0;
+            }
+            
+            if (placebidShipAccessory === true) {
+                // setaddTrucking(true);
+                ship = 1150
+            } else {
+                // setaddTrucking(false);
+                ship = 0;
+            }
+            
+            // console.log(outstanding, truck, ship)
+            return outstanding + truck + ship;
+        }
+
+        const [placebidTotal, setplacebidTotal] = useState(0)
+    // 
     //
     if (!cardD) {
         // reRender();
@@ -1171,7 +1388,7 @@ const CarDetails = ({
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
                                 <p className="text-sm font-bold primary-color">
-                                    {`${cardD?.make}, ${cardD?.model}`}
+                                    {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
                                 </p>
 
                                 <div className="mt-1.5">
@@ -1194,9 +1411,9 @@ const CarDetails = ({
                                         </p>
                                     </div>
                                     <div>
-                                        {cardD.buyNowPrice.length > 2 ? (
+                                        {offer ? (
                                             <p className="sec-black font-11 font-bold">
-                                                EST PRICE {""}$
+                                                BUY NOW AT {""}$
                                                 {dollarFormatter.format(
                                                     carDetails.buyNowPrice
                                                 )}
@@ -1290,14 +1507,12 @@ const CarDetails = ({
                                                     <td colSpan="2" className="sec-black font-11 font-semibold p-2 ">
                                                         Destination
                                                     </td>
-                                                    <td colSpan="2" className="font-11 sec-black font-normal py-2">
-                                                        Nigeria
-                                                    </td>
-                                                    <td className="px-2 mt-2">
-                                                        <img
-                                                            src="../assets/img/vectors/arrow-down2.svg"
-                                                            alt="tooltip"
-                                                        />
+                                                    <td colSpan="3" className="font-11 sec-black font-normal py-2 pr-4">
+                                                        <select className="w-full" name="destination" id="buynow-destination" value={carDestination} onChange={(e) => setcarDestination(e.target.value)}>
+                                                            <option value="Nigeria">Nigeria</option>
+                                                            <option value="USA">USA</option>
+                                                            <option value="Ghana">Ghana</option>
+                                                        </select>
                                                     </td>
                                                 </tr>
 
@@ -1308,8 +1523,9 @@ const CarDetails = ({
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                         $300
                                                     </td>
-                                                    <td className="px-2">
+                                                    <td className="text-right px-2">
                                                         <img
+                                                            className="inline"
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
                                                         />
@@ -1323,8 +1539,9 @@ const CarDetails = ({
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
                                                         Not Applicable
                                                     </td>
-                                                    <td className="px-2 border-b border-gray-200">
+                                                    <td className="text-right px-2 border-b border-gray-200">
                                                         <img
+                                                            className="inline"
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
                                                         />
@@ -1341,7 +1558,7 @@ const CarDetails = ({
                                                         <td colSpan="2" className="font-11 sec-black font-normal py-2">
                                                             <>Contact Support</>
                                                             <a
-                                                                onClick={() => sendSheet()}
+                                                                onClick={(e) => sendSheet(e)}
                                                                 href="https://api.whatsapp.com/send?phone=+17135130111"
                                                                 style={{
                                                                     margin: "0 10px",
@@ -1381,22 +1598,13 @@ const CarDetails = ({
                                                                     ? `${truckingPrice}`
                                                                     : "Loading..."}
                                                             </td>
-                                                            <td className="px-2">
+                                                            <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
+                                                                        value={truckAccessory}
                                                                         type="checkbox"
                                                                         className="focus:outline-none detail self-center"
-                                                                        onChange={(
-                                                                            e
-                                                                        ) =>
-                                                                            setFees(
-                                                                                e,
-                                                                                "truck",
-                                                                                truckingPrice.slice(
-                                                                                    1
-                                                                                )
-                                                                            )
-                                                                        }
+                                                                        onChange={() => settruckAccessory(!truckAccessory)}
                                                                     />
                                                                     <span className="detail"></span>
                                                                 </label>
@@ -1410,20 +1618,15 @@ const CarDetails = ({
                                                         Shipping
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2">
-                                                        $1,050
+                                                        $1,150
                                                     </td>
-                                                    <td className="px-2">
+                                                    <td className="text-right px-2">
                                                         <label className="detail">
                                                             <input
+                                                            value={shipAccessory}
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "ship",
-                                                                        1050
-                                                                    )
-                                                                }
+                                                                onChange={() => setshipAccessory(!shipAccessory)}
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1435,23 +1638,14 @@ const CarDetails = ({
                                                         Clearing
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
-                                                        N2,000,000
+                                                        N/A
                                                     </td>
-                                                    <td className="px-2 border-b border-gray-200">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "clear",
-                                                                        2000000
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
+                                                    <td className="text-right px-2 border-b border-gray-200">
+                                                        <img
+                                                            className="inline"
+                                                            src="../assets/img/vectors/tool-tip.svg"
+                                                            alt="tooltip"
+                                                        />
                                                     </td>
                                                 </tr>
 
@@ -1470,24 +1664,40 @@ const CarDetails = ({
                                                         Total
                                                     </td>
                                                     <td colSpan="2" className="font-11 sec-black font-bold py-2">
-                                                        N
-                                                        {totalAmount.toLocaleString()}
+                                                        {NGN ? (
+                                                            <>
+                                                                N
+                                                                {(accessories() * Number(usd)).toLocaleString()}
+                                                            
+                                                            </>
+
+                                                        ) : (
+                                                            <>
+                                                                $
+                                                                {accessories().toLocaleString()}
+                                                            </>
+                                                        )}
+                                                        
                                                     </td>
                                                     <td className="font-11 w-16 font-normal sec-black">
                                                         
                                                             <ReactFlagsSelect
                                                                 selected={selectedCountryCurrency}
-                                                                searchable={true}
+                                                                countries={["NG","US"]}
                                                                 searchPlaceholder="Search countries"
                                                                 selectedSize={10}
                                                                 optionsSize={10}
                                                                 showSelectedLabel={false}
                                                                 fullWidth={false}
                                                                 onSelect={code => {
-                                                                    console.log(code)
+                                                                    convertCurrency(code)
                                                                     setSelectedCountryCurrency(code)}}
                                                                 className="currency-flags"
                                                                 selectButtonClassName="currency-flags-button"
+                                                                customLabels={{
+                                                                    "NG": { primary: "NGN" },
+                                                                    "US": { primary: "USD" }
+                                                                }}
                                                             />
                                                         
                                                     </td>
@@ -1505,17 +1715,16 @@ const CarDetails = ({
                                                         Destination
                                                     </td>
                                                     <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal py-2 destination-content"
+                                                        colSpan="4"
+                                                        className="font-11 sec-black font-normal py-2 destination-content pr-4"
                                                     >
-                                                        Nigeria
+                                                        <select className="w-full " name="destination" id="placebid-destination" value={carDestination} onChange={(e) => setcarDestination(e.target.value)}>
+                                                            <option value="Nigeria">Nigeria</option>
+                                                            <option value="USA">USA</option>
+                                                            <option value="Ghana">Ghana</option>
+                                                        </select>
                                                     </td>
-                                                    <td className="px-2 destination-dropdown">
-                                                        <img
-                                                            src="../assets/img/vectors/arrow-down2.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
+                                                    
                                                 </tr>
 
                                                 <tr className="max-bid-row">
@@ -1529,45 +1738,21 @@ const CarDetails = ({
                                                         <input
                                                             ref={bidAmountRef}
                                                             id="budget"
-                                                            className="bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
+                                                            className="font-11 bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
                                                             type="text"
-                                                            placeholder="N8,000"
                                                             onBlur={() =>
                                                                 formatbidAmount()
                                                             }
+                                                            onFocus={() => {removeComma()}}
+                                                            onChange={(e) => {
+                                                                includeMaxBid(e)
+                                                                removeAlpha()
+                                                                }}
+                                                            value={maxBidAmount}
                                                         />
                                                     </td>
-                                                    <td className="font-11 font-normal sec-black max-bid-dropdown">
-                                                        <div className="">
-                                                            <ReactFlagsSelect
-                                                                selected={
-                                                                    selectedCountryCurrency
-                                                                }
-                                                                searchable={
-                                                                    true
-                                                                }
-                                                                searchPlaceholder="Search countries"
-                                                                selectedSize={
-                                                                    10
-                                                                }
-                                                                optionsSize={10}
-                                                                showSelectedLabel={
-                                                                    false
-                                                                }
-                                                                fullWidth={
-                                                                    false
-                                                                }
-                                                                onSelect={(
-                                                                    code
-                                                                ) => {
-                                                                    setSelectedCountryCurrency(
-                                                                        code
-                                                                    );
-                                                                }}
-                                                                className="currency-flags"
-                                                                selectButtonClassName="currency-flags-button"
-                                                            />
-                                                        </div>
+                                                    <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
+                                                        USD
                                                     </td>
                                                 </tr>
 
@@ -1581,8 +1766,9 @@ const CarDetails = ({
                                                     >
                                                         $300
                                                     </td>
-                                                    <td className=" px-2">
+                                                    <td className=" px-2 text-right">
                                                         <img
+                                                            className="inline"
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
                                                         />
@@ -1599,8 +1785,9 @@ const CarDetails = ({
                                                     >
                                                         Not Applicable
                                                     </td>
-                                                    <td className="px-2 border-b border-gray-200">
+                                                    <td className="px-2 border-b border-gray-200 text-right">
                                                         <img
+                                                            className="inline"
                                                             src="../assets/img/vectors/tool-tip.svg"
                                                             alt="tooltip"
                                                         />
@@ -1622,17 +1809,10 @@ const CarDetails = ({
                                                     <td className="text-right px-2">
                                                         <label className="detail">
                                                             <input
+                                                                value={placebidTruckAccessory}
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "truck",
-                                                                        truckingPrice.slice(
-                                                                            1
-                                                                        )
-                                                                    )
-                                                                }
+                                                                onChange={() => setplacebidTruckAccessory(!placebidTruckAccessory)}
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1647,20 +1827,15 @@ const CarDetails = ({
                                                         colSpan="3"
                                                         className="font-11 sec-black font-normal pr-20 py-2"
                                                     >
-                                                        $950
+                                                        $1,150
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
                                                             <input
+                                                                value={placebidShipAccessory}
                                                                 type="checkbox"
                                                                 className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "ship",
-                                                                        950
-                                                                    )
-                                                                }
+                                                                onChange={() => setplacebidShipAccessory(!placebidShipAccessory)}
                                                             />
                                                             <span className="detail"></span>
                                                         </label>
@@ -1675,44 +1850,23 @@ const CarDetails = ({
                                                         colSpan="3"
                                                         className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
                                                     >
-                                                        $950
+                                                        N/A
                                                     </td>
                                                     <td className="text-right px-2 border-b border-gray-200">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "bidClear",
-                                                                        950
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
+                                                        <img
+                                                            className="inline"
+                                                            src="../assets/img/vectors/tool-tip.svg"
+                                                            alt="tooltip"
+                                                        />
                                                     </td>
                                                 </tr>
 
                                                 <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                    <td colSpan="1" className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                         Service Fee
                                                     </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
-                                                    >
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2 border-b border-gray-200">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
+                                                    <td colSpan="4" className="font-11 sec-black font-normal py-2 border-b border-gray-200">
+                                                        $400
                                                     </td>
                                                 </tr>
 
@@ -1724,31 +1878,39 @@ const CarDetails = ({
                                                         colSpan="3"
                                                         className="font-11 sec-black font-bold pr-8 py-2"
                                                     >
-                                                        N
-                                                        {totalAmount.toLocaleString()}
+                                                        {NGN ? (
+                                                            <>
+                                                                N
+                                                                {/* {(placebidAccessories() * Number(usd)).toLocaleString()} */}
+                                                                {((Number(maxBidAmount.replace(/\,/g,'')) + Number(placebidAccessories())) * Number(usd)).toLocaleString()}
+                                                            
+                                                            </>
+
+                                                        ) : (
+                                                            <>
+                                                                $
+                                                                {(Number(maxBidAmount.replace(/\,/g,'')) + Number(placebidAccessories())).toLocaleString()}
+                                                            </>
+                                                        )}
                                                     </td>
                                                     <td className="font-11 font-normal sec-black">
                                                         <ReactFlagsSelect
-                                                            selected={
-                                                                selectedCountryCurrency
-                                                            }
-                                                            searchable={true}
+                                                            selected={selectedCountryCurrency}
+                                                            countries={["NG","US"]}
                                                             searchPlaceholder="Search countries"
                                                             selectedSize={10}
                                                             optionsSize={10}
-                                                            showSelectedLabel={
-                                                                false
-                                                            }
+                                                            showSelectedLabel={false}
                                                             fullWidth={false}
-                                                            onSelect={(
-                                                                code
-                                                            ) => {
-                                                                setSelectedCountryCurrency(
-                                                                    code
-                                                                );
-                                                            }}
+                                                            onSelect={(code) => {
+                                                                convertCurrency(code)
+                                                                setSelectedCountryCurrency(code)}}
                                                             className="currency-flags"
                                                             selectButtonClassName="currency-flags-button"
+                                                            customLabels={{
+                                                                "NG": { primary: "NGN" },
+                                                                "US": { primary: "USD" }
+                                                            }}
                                                         />
                                                     </td>
                                                 </tr>
@@ -1805,7 +1967,7 @@ const CarDetails = ({
                                                         loading
                                                     />
                                                 ) : (
-                                                    "Buy Now"
+                                                    "SUBMIT A REQUEST"
                                                 )}
                                             </button>
                                         ) : (
@@ -1825,10 +1987,27 @@ const CarDetails = ({
                                                         loading
                                                     />
                                                 ) : (
-                                                    "Place Bid"
+                                                    "SUBMIT A REQUEST"
                                                 )}
                                             </button>
+
                                         )}
+                                        <p className="font-11 sec-black mx-2 mt-2">
+                                            OR
+                                        </p>
+
+                                        <button
+                                            type="button"
+                                            className="whatsapp-proceed"
+                                            onClick={() => {OpenSendSheetModal()}}
+                                        >
+                                            <img
+                                                src="../assets/img/whatsapp-btn.svg"
+                                                className="inline"
+                                                alt=""
+                                            />{" "}
+                                            WHATSAPP US
+                                        </button>
                                     </>
                                 ) : (
                                     <>
@@ -1845,19 +2024,20 @@ const CarDetails = ({
                                             OR
                                         </p>
 
-                                        <Link href="">
-                                            <button
-                                                type="button"
-                                                className="whatsapp-proceed"
-                                            >
-                                                <img
-                                                    src="../assets/img/whatsapp-btn.svg"
-                                                    className="inline"
-                                                    alt=""
-                                                />{" "}
-                                                WHATSAPP US
-                                            </button>
-                                        </Link>
+                                        <button
+                                            type="button"
+                                            className="whatsapp-proceed"
+                                            onClick={() => {OpenSendSheetModal()}}
+                                        >
+                                            <img
+                                                src="../assets/img/whatsapp-btn.svg"
+                                                className="inline"
+                                                alt=""
+                                            />{" "}
+                                            WHATSAPP US
+                                        </button>
+                                        
+                                        
                                     </>
                                 )}
                             </div>
@@ -1986,7 +2166,7 @@ const CarDetails = ({
                                 </p>
                                 <p className="pt-0.5 primary-gray font-medium font-11 text-center">
                                     {new Date(
-                                        +new Date() + 36288e5
+                                        +new Date(carDetails?.auctionEndTime) + deliveryDuration
                                     ).toLocaleDateString("en-NG", {
                                         weekday: "long",
                                         year: "numeric",
@@ -2307,7 +2487,7 @@ const CarDetails = ({
                                                 $
                                                 {dollarFormatter.format(
                                                     cardD?.mmrPrice
-                                                )}
+                                                ) || "Not Specified"}
                                             </td>
                                         </tr>
                                         <tr className="detail-row mb-2">
@@ -2323,10 +2503,16 @@ const CarDetails = ({
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Auction End Time
+                                                Auction Date
                                             </td>
                                             <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.auctionEndTime}
+                                            {new Date(
+                                                    cardD?.auctionEndTime
+                                                ).toLocaleDateString("en-NG", {
+                                                    year: "numeric",
+                                                    day: "numeric",
+                                                    month: "long",
+                                                })}
                                             </td>
                                         </tr>
 
@@ -2615,6 +2801,49 @@ const CarDetails = ({
                     </section>
                 </>
             )}
+            {/* <!-- The Modal --> */}
+            {
+                sendSheetModal && (
+
+                <div id="sendSheetModal" className="modal">
+                    {/* <!-- Modal content --> */}
+                    <div className="modal-content relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                        <span onClick={() => {setsendSheetModal(false)}} className="close absolute right-5 top-1 text-4xl text-gray-500">&times;</span>
+                        {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
+                        <form onSubmit={(e) => sendSheet(e)} className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
+                            <div className="col-span-6 mb-2">
+                                <label className="block pb-1.5 font-10 primary-black" htmlFor="card_number"> Email </label>
+                                <input id="card_number" className="profile-control focus:outline-none p-2 w-full" type="email"
+                                    placeholder="Enter your email address" value={sendSheetEmail} onChange={(e) => setsendSheetEmail(e.target.value)} />
+                            </div>
+                            <div className="col-span-6  ">
+
+                            </div>
+
+                            
+                            <div className="col-span-6 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Phone Number </label>
+                                <IntlTelInput
+                                    ref={sheetNumberRef}
+                                    placeholder="xxxx-xxxx-xxxx"
+                                    containerClassName="intl-tel-input send-sheet-phone-number"
+                                    inputClassName="form-control"
+                                    preferredCountries={["ng"]}
+                                    defaultValue={sendSheetPhoneNumber}
+                                    onPhoneNumberChange={(e) => phoneNumberChange(e)}
+                                />
+                            </div>
+                            <div className="col-span-6 place-self-center mt-4">
+                                <button type="submit"
+                                    className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8">SUBMIT
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                )
+            }
+            {/* <!-- end of modal --> */}
         </main>
     );
 };
