@@ -97,6 +97,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [active, setActive] = useState("all");
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
+    const [sortValue, setSortValue] = useState(null);
+    const [sortOptions, setSortOptions] = useState([
+        { label: "Price: Low - High", value: 1 },
+        { label: "Price: High - Low", value: 2 },
+        { label: "Mileage: Low - High", value: 3 },
+        { label: "Mileage: High - Low", value: 4 },
+        { label: "Auction Date: Latest", value: 5 },
+        { label: "Auction Date: Earliest", value: 6 },
+    ]);
     const [data, setData] = useState(cars.data);
     const [total, setTotal] = useState(cars.total);
     const [defaultMake, setDefaultMake] = useState();
@@ -170,6 +179,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     }, [params]);
 
     useEffect(() => {
+        if (sortValue) {
+            const datas = {
+                make: paramValue?.make || "",
+                model: paramValue?.model || "",
+                year: paramValue?.year || "",
+                page: pageIndex,
+            };
+            dispatch(fetchMore(filterValue, datas, sortValue));
+        }
+    }, [sortValue]);
+
+    useEffect(() => {
         getYearValue();
         getModelValue();
         getMakeValue();
@@ -192,7 +213,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 year: paramValue?.year || "",
                 page: i,
             };
-            dispatch(fetchMore(filterValue, datas));
+            dispatch(fetchMore(filterValue, datas, sortValue));
         } else {
             let data =
                 active === "now"
@@ -230,7 +251,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: data,
         }));
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas));
+        dispatch(fetchMore(filterValue, datas, sortValue));
         setPageIndex(1);
     };
 
@@ -277,7 +298,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }));
         }
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas));
+        dispatch(fetchMore(filterValue, datas, sortValue));
         setDefaultModel(e);
     };
     const handleMake = async (e) => {
@@ -309,7 +330,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         } else {
             setcarModels(makes[0].models);
         }
-        dispatch(fetchMore(filterValue, datas));
+        dispatch(fetchMore(filterValue, datas, sortValue));
     };
     //
     // Filter actions
@@ -320,7 +341,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: pageIndex,
         };
-        dispatch(fetchMore(filterValue, datas));
+        dispatch(fetchMore(filterValue, datas, sortValue));
     };
     //
     //
@@ -394,7 +415,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             style={{
                                 backgroundColor: "#d80739",
                                 pointerEvents: pageIndex > 2 ? "" : "none",
-                                opacity: pageIndex > 2 ? 1 : 0.4,
+                                opacity: pageIndex > 2 ? 1 : 0.7,
                             }}
                         >
                             <span className="mr-2">
@@ -492,17 +513,17 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             >
                                 <g
                                     fill="none"
-                                    fill-rule="nonzero"
+                                    fillRule="nonzero"
                                     stroke="none"
-                                    stroke-width="1"
-                                    stroke-linecap="butt"
-                                    stroke-linejoin="miter"
-                                    stroke-miterlimit="10"
-                                    stroke-dasharray=""
-                                    stroke-dashoffset="0"
-                                    font-family="none"
-                                    font-weight="none"
-                                    font-size="none"
+                                    strokeWidth="1"
+                                    strokeLinecap="butt"
+                                    strokeLinejoin="miter"
+                                    strokeMiterlimit="10"
+                                    strokeDasharray=""
+                                    strokeDashoffset="0"
+                                    fontFamily="none"
+                                    fontWeight="none"
+                                    fontSize="none"
                                     text-anchor="none"
                                 >
                                     <path
@@ -525,7 +546,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 backgroundColor: "#d80739",
                                 pointerEvents:
                                     maxPages > pageIndex + 2 ? "" : "none",
-                                opacity: maxPages > pageIndex + 2 ? 1 : 0.4,
+                                opacity: maxPages > pageIndex + 2 ? 1 : 0.7,
                             }}
                         >
                             <span className="mr-2">
@@ -539,18 +560,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 >
                                     <g
                                         fill="none"
-                                        fill-rule="nonzero"
+                                        fillRule="nonzero"
                                         stroke="none"
-                                        stroke-width="1"
-                                        stroke-linecap="butt"
-                                        stroke-linejoin="miter"
-                                        stroke-miterlimit="10"
-                                        stroke-dasharray=""
-                                        stroke-dashoffset="0"
-                                        font-family="none"
-                                        font-weight="none"
-                                        font-size="none"
-                                        text-anchor="none"
+                                        strokeWidth="1"
+                                        strokeLinecap="butt"
+                                        strokeLinejoin="miter"
+                                        strokeMiterlimit="10"
+                                        strokeDasharray=""
+                                        strokeDashoffset="0"
+                                        fontFamily="none"
+                                        fontWeight="none"
+                                        fontSize="none"
+                                        textAnchor="none"
                                     >
                                         <path
                                             d="M0,172v-172h172v172z"
@@ -595,7 +616,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     year: dataWithArrays?.year || "",
                     page: pageIndex,
                 };
-                dispatch(fetchMore(filterValue, datas));
+                dispatch(fetchMore(filterValue, datas, sortValue));
                 break;
             }
         }
@@ -1613,6 +1634,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
                             </div>
                         </div>
+                        <div className="flex lg:hidden items-center justify-between px-3 w-full mb-3">
+                            <p className="primary-black text-black font-10  lg:py-1.5">
+                                Sort by:
+                            </p>
+                            <Select
+                                className=" lg:w-56 w-5/6 cursor-pointer focus:outline-none "
+                                type="text"
+                                placeholder={`Default`}
+                                isClearable={false}
+                                onChange={(e) => setSortValue(e)}
+                                value={sortValue}
+                                options={sortOptions}
+                            />
+                        </div>
 
                         {/* <!-- Search tabs here --> */}
                         <div className="search-results-holder flex items-center justify-between px-4">
@@ -1675,7 +1710,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 <Select
                                     className=" px-3 w-full cursor-pointer focus:outline-none "
                                     type="text"
-                                    placeholder={`Enter make, model or VIN to search ${dollarFormatter.format(
+                                    placeholder={`VIN to search ${dollarFormatter.format(
                                         cars.total
                                     )} cars`}
                                     isClearable={false}
@@ -1684,7 +1719,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     options={options}
                                 />
                             </div>
-
+                            <div className="hidden lg:flex ml-5 w-1/3">
+                                <p className="primary-black text-black font-10  py-1.5">
+                                    Sort by:
+                                </p>
+                                <Select
+                                    className=" px-3 w-56 cursor-pointer focus:outline-none "
+                                    type="text"
+                                    placeholder={`Default`}
+                                    isClearable={false}
+                                    value={sortValue}
+                                    onChange={(e) => setSortValue(e)}
+                                    options={sortOptions}
+                                />
+                            </div>
                             {/* <!-- Third section here --> */}
                             <div className="flex  ml-auto">
                                 {/* <!-- grid view tab here --> */}

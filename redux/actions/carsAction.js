@@ -366,8 +366,9 @@ export const getCategory = (data) => (dispatch) => {
 
 //
 //
-export const fetchMore = (event, main) => async (dispatch) => {
+export const fetchMore = (event, main, sortValue) => async (dispatch) => {
     let arrStr = [...main.model.split(",")];
+    let sortType, sortPatter;
     if (main.make == "Lexus") {
         for (var i = 0; i < arrStr.length; i++) {
             var supp = arrStr[i];
@@ -400,6 +401,34 @@ export const fetchMore = (event, main) => async (dispatch) => {
                     break;
             }
         }
+    }
+    switch (sortValue) {
+        case 1:
+            sortType = "price";
+            sortPattern = "asc";
+            break;
+        case 2:
+            sortType = "price";
+            sortPattern = "desc";
+            break;
+        case 3:
+            sortType = "mileage";
+            sortPattern = "asc";
+            break;
+        case 4:
+            sortType = "mileage";
+            sortPattern = "desc";
+            break;
+        case 5:
+            sortType = "auctiondate";
+            sortPattern = "asc";
+            break;
+        case 6:
+            sortType = "auctiondate";
+            sortPattern = "desc";
+            break;
+        default:
+            break;
     }
     dispatch({
         type: FETCHING,
@@ -443,7 +472,7 @@ export const fetchMore = (event, main) => async (dispatch) => {
     };
     try {
         fetch(
-            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&apiKey=Switch!2020`,
+            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},
