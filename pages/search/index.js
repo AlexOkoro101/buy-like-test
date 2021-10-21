@@ -693,11 +693,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             className="w-full object-cover h-full rounded-md object-center"
                         />
                     ) : (
-                        <img
-                            src={params.images}
-                            alt="hello"
-                            className="w-full object-cover h-full rounded-md object-center"
-                        />
+                        <div className="w-full bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center">
+                            Coming soon
+                        </div>
                     )}
                 </div>
             );
