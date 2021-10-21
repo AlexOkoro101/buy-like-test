@@ -62,6 +62,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     const handleLogout = () => {
         dispatch(logOut());
         window.localStorage.clear();
+        router.reload()
         beginLogout();
         settoken(null)
 
