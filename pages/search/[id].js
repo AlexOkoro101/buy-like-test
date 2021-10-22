@@ -1085,10 +1085,44 @@ const CarDetails = ({
 
     const OpenSendSheetModal = () => {
         if(token) {
+
+
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const sendSheetObj = JSON.stringify({
+                "email":userEmail,
+                "name":cardD.vehicleName || `${cardD.year} ${cardD.make} ${cardD.model}`,
+                "phone":userPhone,
+                "vin":cardD.VIN,
+                "url":"https://buylike-web-git-ts-buylike-web.vercel.app/search/" + cardD.VIN,
+                "amount":cardD?.buyNowPrice || cardD?.mmrPrice,
+                "make":cardD.make,
+                "model":cardD.model,
+                "year":cardD.year
+            })
+
+            console.log(sendSheetObj)
+
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: sendSheetObj,
+                redirect: 'follow'
+            };
+
+            fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+
+
             window.open(`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`, '_blank')
-            return;
+        } else {
+            setsendSheetModal(true)
+
         }
-        setsendSheetModal(true)
     }
 
     const sheetNumberRef = useRef(null)
@@ -2362,13 +2396,13 @@ const CarDetails = ({
                             }
                         >
                             <div className="w-full lg:w-auto">
-                                <table className="lg:w-auto w-full border-separate overview-table">
+                                <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Make
                                             </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                            <td className="turncate text-sm sec-black font-normal py-2 w-1/2">
                                                 {cardD?.make}
                                             </td>
                                         </tr>
