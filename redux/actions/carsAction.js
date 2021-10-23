@@ -366,151 +366,156 @@ export const getCategory = (data) => (dispatch) => {
 
 //
 //
-export const fetchMore = (event, main, sortValue) => async (dispatch) => {
-    let arrStr = [...main.model.split(",")];
-    var sortType = "";
-    var sortPattern = "";
-    if (main.make == "Lexus") {
-        for (var i = 0; i < arrStr.length; i++) {
-            var supp = arrStr[i];
-            switch (supp) {
-                case "RC":
-                    arrStr[i] = RC.map((ele) => ele.value);
+export const fetchMore =
+    (event, main, sortValue, active) => async (dispatch) => {
+        let arrStr = [...main.model.split(",")];
+        var sortType = "";
+        var sortPattern = "";
+        if (main.make == "Lexus") {
+            for (var i = 0; i < arrStr.length; i++) {
+                var supp = arrStr[i];
+                switch (supp) {
+                    case "RC":
+                        arrStr[i] = RC.map((ele) => ele.value);
+                        break;
+                    case "RX":
+                        arrStr[i] = RX.map((ele) => ele.value);
+                        break;
+                    case "ES":
+                        arrStr[i] = ES.map((ele) => ele.value);
+                        break;
+                    case "GS":
+                        arrStr[i] = GS.map((ele) => ele.value);
+                        break;
+                    case "IS":
+                        arrStr[i] = IS.map((ele) => ele.value);
+                        break;
+                    case "LS":
+                        arrStr[i] = LS.map((ele) => ele.value);
+                        break;
+                    case "NX":
+                        arrStr[i] = NX.map((ele) => ele.value);
+                        break;
+                    case "SC":
+                        arrStr[i] = NX.map((ele) => ele.value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if (sortValue) {
+            switch (sortValue.value) {
+                case 1:
+                    sortType = active === "now" ? "buyprice" : "price";
+                    sortPattern = "asc";
                     break;
-                case "RX":
-                    arrStr[i] = RX.map((ele) => ele.value);
+                case 2:
+                    sortType = active === "now" ? "buyprice" : "price";
+                    sortPattern = "desc";
                     break;
-                case "ES":
-                    arrStr[i] = ES.map((ele) => ele.value);
+                case 3:
+                    sortType = "mileage";
+                    sortPattern = "asc";
                     break;
-                case "GS":
-                    arrStr[i] = GS.map((ele) => ele.value);
+                case 4:
+                    sortType = "mileage";
+                    sortPattern = "desc";
                     break;
-                case "IS":
-                    arrStr[i] = IS.map((ele) => ele.value);
+                case 5:
+                    sortType = "auctiondate";
+                    sortPattern = "asc";
                     break;
-                case "LS":
-                    arrStr[i] = LS.map((ele) => ele.value);
-                    break;
-                case "NX":
-                    arrStr[i] = NX.map((ele) => ele.value);
-                    break;
-                case "SC":
-                    arrStr[i] = NX.map((ele) => ele.value);
+                case 6:
+                    sortType = "auctiondate";
+                    sortPattern = "desc";
                     break;
                 default:
                     break;
             }
         }
-    }
-    if (sortValue) {
-        switch (sortValue.value) {
-            case 1:
-                sortType = "price";
-                sortPattern = "asc";
-                break;
-            case 2:
-                sortType = "price";
-                sortPattern = "desc";
-                break;
-            case 3:
-                sortType = "mileage";
-                sortPattern = "asc";
-                break;
-            case 4:
-                sortType = "mileage";
-                sortPattern = "desc";
-                break;
-            case 5:
-                sortType = "auctiondate";
-                sortPattern = "asc";
-                break;
-            case 6:
-                sortType = "auctiondate";
-                sortPattern = "desc";
-                break;
-            default:
-                break;
-        }
-    }
-    dispatch({
-        type: FETCHING,
-        payload: {
-            make: main.make || "",
-            model: main.model || "",
-            year: main.year || "",
-        },
-    });
-    let data = {
-        transmission:
-            Object.entries(event.transmission).length > 0
-                ? event.transmission
+        dispatch({
+            type: FETCHING,
+            payload: {
+                make: main.make || "",
+                model: main.model || "",
+                year: main.year || "",
+            },
+        });
+        let data = {
+            transmission:
+                Object.entries(event.transmission).length > 0
+                    ? event.transmission
+                    : "",
+            odometer: `${event.min ? event.min : 0}-${
+                event.max ? event.max : 1000000
+            }`,
+            bodyType:
+                Object.entries(event.bodyType).length > 0 ? event.bodyType : "",
+            auctionenddate: event.saleDate
+                ? new Date(event.saleDate).toISOString()
                 : "",
-        odometer: `${event.min ? event.min : 0}-${
-            event.max ? event.max : 1000000
-        }`,
-        bodyType:
-            Object.entries(event.bodyType).length > 0 ? event.bodyType : "",
-        auctionenddate: event.saleDate
-            ? new Date(event.saleDate).toISOString()
-            : "",
-        engineType:
-            Object.entries(event.engineType).length > 0 ? event.engineType : "",
-        exterior_color:
-            Object.entries(event.exterior_color).length > 0
-                ? event.exterior_color
-                : "",
-        interior_color:
-            Object.entries(event.interior_color).length > 0
-                ? event.interior_color
-                : "",
-        interior_type:
-            Object.entries(event.interior_type).length > 0
-                ? event.interior_type
-                : "",
-        fuel_type:
-            Object.entries(event.fuel_type).length > 0 ? event.fuel_type : "",
-        location:
-            Object.entries(event.location).length > 0 ? event.location : "",
-    };
-    try {
-        fetch(
-            `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
-            {
-                method: "GET",
-                headers: {},
-                credentials: "same-origin",
-            }
-        )
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (res) {
-                if (JSON.parse(res)) {
-                    const response = JSON.parse(res);
-                    dispatch({
-                        type: SEARCHING_SUCCESS,
-                        payload: response,
-                    });
-                } else {
+            engineType:
+                Object.entries(event.engineType).length > 0
+                    ? event.engineType
+                    : "",
+            exterior_color:
+                Object.entries(event.exterior_color).length > 0
+                    ? event.exterior_color
+                    : "",
+            interior_color:
+                Object.entries(event.interior_color).length > 0
+                    ? event.interior_color
+                    : "",
+            interior_type:
+                Object.entries(event.interior_type).length > 0
+                    ? event.interior_type
+                    : "",
+            fuel_type:
+                Object.entries(event.fuel_type).length > 0
+                    ? event.fuel_type
+                    : "",
+            location:
+                Object.entries(event.location).length > 0 ? event.location : "",
+        };
+        try {
+            fetch(
+                `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
+                {
+                    method: "GET",
+                    headers: {},
+                    credentials: "same-origin",
+                }
+            )
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (res) {
+                    if (JSON.parse(res)) {
+                        const response = JSON.parse(res);
+                        dispatch({
+                            type: SEARCHING_SUCCESS,
+                            payload: response,
+                        });
+                    } else {
+                        dispatch({
+                            type: FETCHING_FAILED,
+                            payload: "No vehicle matches parameters",
+                        });
+                    }
+                })
+                .catch(function (error) {
                     dispatch({
                         type: FETCHING_FAILED,
-                        payload: "No vehicle matches parameters",
+                        payload: error.message,
                     });
-                }
-            })
-            .catch(function (error) {
-                dispatch({
-                    type: FETCHING_FAILED,
-                    payload: error.message,
+                    console.log(error);
                 });
-                console.log(error);
+        } catch (error) {
+            dispatch({
+                type: FETCHING_FAILED,
+                payload: error.message,
             });
-    } catch (error) {
-        dispatch({
-            type: FETCHING_FAILED,
-            payload: error.message,
-        });
-        console.log(error);
-    }
-};
+            console.log(error);
+        }
+    };

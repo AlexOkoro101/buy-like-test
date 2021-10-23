@@ -186,7 +186,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 year: paramValue?.year || "",
                 page: pageIndex,
             };
-            dispatch(fetchMore(filterValue, datas, sortValue));
+            dispatch(fetchMore(filterValue, datas, sortValue, active));
         }
     }, [sortValue]);
 
@@ -214,7 +214,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 year: paramValue?.year || "",
                 page: i,
             };
-            dispatch(fetchMore(filterValue, datas, sortValue));
+            dispatch(fetchMore(filterValue, datas, sortValue, active));
         } else {
             let data =
                 active === "now"
@@ -252,7 +252,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: data,
         }));
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas, sortValue));
+        dispatch(fetchMore(filterValue, datas, sortValue, active));
         setPageIndex(1);
     };
 
@@ -299,7 +299,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             }));
         }
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas, sortValue));
+        dispatch(fetchMore(filterValue, datas, sortValue, active));
         setDefaultModel(e);
     };
     const handleMake = async (e) => {
@@ -331,7 +331,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         } else {
             setcarModels(makes[0].models);
         }
-        dispatch(fetchMore(filterValue, datas, sortValue));
+        dispatch(fetchMore(filterValue, datas, sortValue, active));
     };
     //
     // Filter actions
@@ -342,7 +342,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             year: paramValue?.year || "",
             page: pageIndex,
         };
-        dispatch(fetchMore(filterValue, datas, sortValue));
+        dispatch(fetchMore(filterValue, datas, sortValue, active));
     };
     //
     //
@@ -363,7 +363,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     function Paginate() {
-        let num = parseInt(cars.total) / 20;
+        let num = parseInt(cars.total) / 28;
         let maxPages = Math.round(num);
         let items = [];
         let leftSide = pageIndex - 2;
@@ -453,6 +453,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </svg>
                             </span>
                         </button>
+
                         <button
                             className="px-6 flex items-center rounded-sm  py-1 h-9  text-white"
                             style={{ backgroundColor: "#d80739" }}
@@ -493,6 +494,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             <span className="ml-2">Prev</span>
                         </button>
                     </div>
+
                     <div className="text-sm ">
                         Page {pageIndex} of {maxPages}
                     </div>
@@ -536,54 +538,56 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </g>
                             </svg>
                         </button>
-                        <button
-                            className=" text-sm ml-1 px-2 py-1 h-9  rounded-sm text-white"
-                            onClick={() => {
-                                setPageIndex(pageIndex + 2);
-                                fetchPage(pageIndex + 2);
-                            }}
-                            style={{
-                                backgroundColor: "#d80739",
-                                pointerEvents:
-                                    maxPages > pageIndex + 2 ? "" : "none",
-                                opacity: maxPages > pageIndex + 2 ? 1 : 0.7,
-                            }}
-                        >
-                            <span className="mr-2">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    x="0px"
-                                    y="0px"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 172 172"
-                                >
-                                    <g
-                                        fill="none"
-                                        fillRule="nonzero"
-                                        stroke="none"
-                                        strokeWidth="1"
-                                        strokeLinecap="butt"
-                                        strokeLinejoin="miter"
-                                        strokeMiterlimit="10"
-                                        strokeDasharray=""
-                                        strokeDashoffset="0"
-                                        fontFamily="none"
-                                        fontWeight="none"
-                                        fontSize="none"
-                                        textAnchor="none"
+                        {pageIndex < maxPages && (
+                            <button
+                                className=" text-sm ml-1 px-2 py-1 h-9  rounded-sm text-white"
+                                onClick={() => {
+                                    setPageIndex(maxPages);
+                                    fetchPage(maxPages);
+                                }}
+                                style={{
+                                    backgroundColor: "#d80739",
+                                    pointerEvents:
+                                        maxPages > pageIndex + 2 ? "" : "none",
+                                    opacity: maxPages > pageIndex + 2 ? 1 : 0.7,
+                                }}
+                            >
+                                <span className="mr-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        x="0px"
+                                        y="0px"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 172 172"
                                     >
-                                        <path
-                                            d="M0,172v-172h172v172z"
+                                        <g
                                             fill="none"
-                                        ></path>
-                                        <g fill="#ffffff">
-                                            <path d="M39.40267,21.76595l-10.05013,10.2181l54.8138,54.00195l-55.13575,54.01595l10.02214,10.2461l65.5638,-64.23405zM81.22689,21.82194l-10.16211,10.10612l53.80599,54.11393l-52.95215,54.07194l10.2461,10.02214l62.84831,-64.17806z"></path>
+                                            fillRule="nonzero"
+                                            stroke="none"
+                                            strokeWidth="1"
+                                            strokeLinecap="butt"
+                                            strokeLinejoin="miter"
+                                            strokeMiterlimit="10"
+                                            strokeDasharray=""
+                                            strokeDashoffset="0"
+                                            fontFamily="none"
+                                            fontWeight="none"
+                                            fontSize="none"
+                                            textAnchor="none"
+                                        >
+                                            <path
+                                                d="M0,172v-172h172v172z"
+                                                fill="none"
+                                            ></path>
+                                            <g fill="#ffffff">
+                                                <path d="M39.40267,21.76595l-10.05013,10.2181l54.8138,54.00195l-55.13575,54.01595l10.02214,10.2461l65.5638,-64.23405zM81.22689,21.82194l-10.16211,10.10612l53.80599,54.11393l-52.95215,54.07194l10.2461,10.02214l62.84831,-64.17806z"></path>
+                                            </g>
                                         </g>
-                                    </g>
-                                </svg>
-                            </span>
-                        </button>
+                                    </svg>
+                                </span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -616,7 +620,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     year: dataWithArrays?.year || "",
                     page: pageIndex,
                 };
-                dispatch(fetchMore(filterValue, datas, sortValue));
+                dispatch(fetchMore(filterValue, datas, sortValue, active));
                 break;
             }
         }
@@ -665,9 +669,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         setgrid(true);
     };
     const addImage = (params) => {
-        if (params.images && params.images.length <= 0) {
-            return null;
-        }
         if (
             params.images &&
             params.images.length > 0 &&
@@ -699,6 +700,25 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
                 </div>
             );
+        } else {
+            return (
+                <div
+                    style={{
+                        width:
+                            open && width >= 900
+                                ? ""
+                                : !open && width >= 900
+                                ? ""
+                                : "100%",
+                        height: "203px",
+                    }}
+                    className=" bg-opacity-20 rounded-md"
+                >
+                    <div className="w-full bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center">
+                        Coming soon
+                    </div>
+                </div>
+            );
         }
     };
     const handleChange = (newValue) => {
@@ -715,6 +735,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         setDefaultMake(null);
         setDefaultModel(null);
         setDefaultYear(null);
+        setSortValue(null);
         console.log(defaultYear);
         if (event !== active) {
             setPageIndex(1);
@@ -1917,9 +1938,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     {data?.length > 0 &&
                                                         data?.map(
                                                             (ele, id) =>
-                                                                ele.images
-                                                                    .length >
-                                                                    0 && (
+                                                                ele && (
                                                                     <div
                                                                         key={id}
                                                                         className={
@@ -2137,9 +2156,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                     {data &&
                                                         data?.map(
                                                             (ele, id) =>
-                                                                ele.images
-                                                                    .length >
-                                                                    0 && (
+                                                                ele && (
                                                                     <div
                                                                         key={id}
                                                                         className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
@@ -2163,19 +2180,35 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             );
                                                                                     }}
                                                                                 >
-                                                                                    <img
-                                                                                        className="img-fluid"
-                                                                                        src={
-                                                                                            ele
-                                                                                                ?.images[0]
-                                                                                                ?.image_largeUrl
-                                                                                        }
-                                                                                        alt=""
-                                                                                        style={{
-                                                                                            width: "340px",
-                                                                                            height: "250px",
-                                                                                        }}
-                                                                                    />
+                                                                                    {ele
+                                                                                        .images
+                                                                                        .length >
+                                                                                    0 ? (
+                                                                                        <img
+                                                                                            className="img-fluid"
+                                                                                            src={
+                                                                                                ele
+                                                                                                    ?.images[0]
+                                                                                                    ?.image_largeUrl
+                                                                                            }
+                                                                                            alt=""
+                                                                                            style={{
+                                                                                                width: "340px",
+                                                                                                height: "250px",
+                                                                                            }}
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <div
+                                                                                            className="w-full img-fluid bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center"
+                                                                                            style={{
+                                                                                                width: "340px",
+                                                                                                height: "250px",
+                                                                                            }}
+                                                                                        >
+                                                                                            Coming
+                                                                                            soon
+                                                                                        </div>
+                                                                                    )}
                                                                                 </a>
                                                                             </div>
 
@@ -2415,11 +2448,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                     )}
                                 </>
-                                {data && data.length >= 1 && (
-                                    <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
-                                        {Paginate()}
-                                    </div>
-                                )}
+                                <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
+                                    {Paginate()}
+                                </div>
                             </div>
                         )}
                     </div>
