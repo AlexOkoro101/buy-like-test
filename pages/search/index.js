@@ -206,6 +206,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     const fetchPage = (i) => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         if (active === "" || active === "all") {
             const datas = {
                 make: paramValue?.make || "",
@@ -362,7 +363,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     function Paginate() {
-        window.scrollTo({ top: 0, behavior: "smooth" });
         let num = parseInt(cars.total) / 20;
         let maxPages = Math.round(num);
         let items = [];
@@ -686,11 +686,17 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     }}
                     className=" bg-opacity-20 rounded-md"
                 >
-                    <img
-                        src={params.images[0].image_largeUrl}
-                        alt="hello"
-                        className="w-full object-cover h-full rounded-md object-center"
-                    />
+                    {params.images[0] ? (
+                        <img
+                            src={params.images[0].image_largeUrl}
+                            alt="hello"
+                            className="w-full object-cover h-full rounded-md object-center"
+                        />
+                    ) : (
+                        <div className="w-full bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center">
+                            Coming soon
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -706,6 +712,10 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
 
     const filterTab = (event) => {
+        setDefaultMake(null);
+        setDefaultModel(null);
+        setDefaultYear(null);
+        console.log(defaultYear);
         if (event !== active) {
             setPageIndex(1);
             setActive(event);
@@ -881,6 +891,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 </span>
             );
         });
+    };
+    const customStyles2 = {
+        option: (provided, state) => ({
+            ...provided,
+            fontSize: "12px",
+            cursor: "pointer",
+        }),
     };
     const customStyles = {
         menuList: (provided, state) => ({
@@ -1646,6 +1663,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 onChange={(e) => setSortValue(e)}
                                 value={sortValue}
                                 options={sortOptions}
+                                styles={customStyles2}
                             />
                         </div>
 
@@ -1731,6 +1749,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     value={sortValue}
                                     onChange={(e) => setSortValue(e)}
                                     options={sortOptions}
+                                    styles={customStyles2}
                                 />
                             </div>
                             {/* <!-- Third section here --> */}
