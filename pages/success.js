@@ -3,7 +3,7 @@ const success = () => {
   return (
     <>
       {/* Confirmation section here */}
-      <section className="confirmation__section mt-1 pt-20 pb-32 px-2 lg:px-20 ">
+      <section className="w-full confirmation__section mt-1 pt-20 pb-32 px-2 lg:px-20 ">
         <div className="confirmation__holder w-full md:w-4/6 lg:w-4/6 m-auto py-16">
           <div className="flex justify-center flex-col ">
             
@@ -28,7 +28,7 @@ const success = () => {
               <p className="confirmation__message ">
                 when we launch our website
               </p>
-              <Link href="/">
+              <Link href="/search">
                 <button
                   type="button"
                   className="estimate__btn focus:outline-none font-semibold px-7 mt-7"

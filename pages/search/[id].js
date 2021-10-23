@@ -1114,11 +1114,17 @@ const CarDetails = ({
 
             fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                const returnData = JSON.parse(result)
+                if (returnData.error === false) {
+                    router.push('/success')
+                }
+            })
             .catch(error => console.log('error', error));
 
 
-            window.open(`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`, '_blank')
+            // window.open(`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(cardD?.vehicleName)}%20%20www.buylikedealers.com/${cardD?.VIN}`, '_blank')
         } else {
             setsendSheetModal(true)
 
@@ -1170,7 +1176,13 @@ const CarDetails = ({
 
         fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result)
+            const returnData = JSON.parse(result)
+            if (returnData.error === false) {
+                router.push('/success')
+            }
+        })
         .catch(error => console.log('error', error));
 
 
@@ -2027,12 +2039,13 @@ const CarDetails = ({
                                         {carDetails?.buyNowPrice?.length >=
                                         1 ? (
                                             <button
-                                                onClick={() => {
-                                                    initializePayment(
-                                                        onSuccess,
-                                                        onClose
-                                                    );
-                                                }}
+                                                // onClick={() => {
+                                                //     initializePayment(
+                                                //         onSuccess,
+                                                //         onClose
+                                                //     );
+                                                // }}
+                                                onClick={OpenSendSheetModal}
                                                 className={
                                                     `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
                                                     (!terms &&
@@ -2052,7 +2065,8 @@ const CarDetails = ({
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={placeBid}
+                                                // onClick={placeBid}
+                                                onClick={OpenSendSheetModal}
                                                 className={
                                                     `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
                                                     (!terms &&
@@ -2761,7 +2775,17 @@ const CarDetails = ({
                         <div className="text-center py-3">
                             <hr className="red-underline2 w-20 m-auto pb-4" />
                             <h4 className="font-bold primary-color text-xl ">
-                                SIMILAR VEHICLES
+                                {data?.length ? (
+                                    <>
+                                        SIMILAR VEHICLES
+                                    </>
+
+                                ): (
+                                    <>
+                                        OTHER VECHICLES
+
+                                    </>
+                                )}
                             </h4>
                         </div>
                         <div
@@ -2870,14 +2894,28 @@ const CarDetails = ({
                         </div>
 
                         <div className="text-center my-5">
-                            <p
-                                onClick={() => {
-                                    showMoreVehicles();
-                                }}
-                                className="primary-blue font-semibold text-sm cursor-pointer"
-                            >
-                                Show More Vehicles
-                            </p>
+                            {!data?.length ? (
+                                <>
+                                    <p
+                                        onClick={() => {
+                                            router.push('/search');
+                                        }}
+                                        className="primary-blue font-semibold text-sm cursor-pointer"
+                                    >
+                                        View Other Vehicles
+                                    </p>
+                                </>
+                            ) : (
+                                <p
+                                    onClick={() => {
+                                        showMoreVehicles();
+                                    }}
+                                    className="primary-blue font-semibold text-sm cursor-pointer"
+                                >
+                                    Show More Vehicles
+                                </p>
+
+                            )}
                         </div>
                     </section>
                 </>
