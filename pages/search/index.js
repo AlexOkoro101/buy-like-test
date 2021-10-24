@@ -1691,7 +1691,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         {/* <!-- Search tabs here --> */}
                         <div className="search-results-holder flex items-center justify-between px-4">
                             {/* <!-- first section here --> */}
-                            <div className="w-1/3 flex items-center">
+                            <div className="w-2/3 flex items-center">
                                 {!open && (
                                     <button
                                         type="button"
