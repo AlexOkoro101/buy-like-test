@@ -409,8 +409,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         <button
                             className=" text-sm px-2 py-1 h-9  rounded-sm mr-1 text-white"
                             onClick={() => {
-                                setPageIndex(pageIndex - 2);
-                                fetchPage(pageIndex - 2);
+                                setPageIndex(1);
+                                fetchPage(1);
                             }}
                             style={{
                                 backgroundColor: "#d80739",
