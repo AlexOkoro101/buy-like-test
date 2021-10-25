@@ -2926,7 +2926,7 @@ const CarDetails = ({
 
                 <div id="sendSheetModal" className="modal">
                     {/* <!-- Modal content --> */}
-                    <div className="modal-content relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                    <div className="modal-content sheetModal bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
                         <span onClick={() => {setsendSheetModal(false)}} className="close absolute right-5 top-1 text-4xl text-gray-500">&times;</span>
                         {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
                         <form onSubmit={(e) => sendSheet(e)} className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
