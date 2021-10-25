@@ -2209,21 +2209,22 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         />
                                                                                     ) : (
                                                                                         <div
-                                                                                            className="w-full img-fluid bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center"
+                                                                                            className="w-full img-fluid  font-semibold  h-full rounded-md object-center flex items-center justify-center"
                                                                                             style={{
                                                                                                 width: "340px",
                                                                                                 height: "250px",
                                                                                             }}
                                                                                         >
-                                                                                            <img
-                                                                                                className="img-fluid"
-                                                                                                src="../../img/Rectangle 120.png"
-                                                                                                alt=""
+                                                                                            <div
                                                                                                 style={{
-                                                                                                    width: "340px",
-                                                                                                    height: "250px",
+                                                                                                    backgroundImage: `url(/img/Rectangle.png)`,
                                                                                                 }}
-                                                                                            />
+                                                                                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                                                                                            >
+                                                                                                IMAGE
+                                                                                                COMING
+                                                                                                SOON
+                                                                                            </div>
                                                                                         </div>
                                                                                     )}
                                                                                 </a>
