@@ -918,14 +918,14 @@ details .content {
 }
 
 /* Modal Content */
-.modal-content {
+/* .modal-content {
     position: relative;
     background-color: #fefefe;
     margin: auto;
     padding: 0;
     width: 90%;
     max-width: 1200px;
-}
+} */
 
 /* The Close Button */
 .close-modal {
