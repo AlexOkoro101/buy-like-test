@@ -220,6 +220,7 @@ const LoginOptions = ({ beginLogin }) => {
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
                                 textButton="Log in with Facebook"
+                                authType="reauthenticate"
                             />
                             <button
                                 type="button"
