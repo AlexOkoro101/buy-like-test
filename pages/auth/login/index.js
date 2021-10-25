@@ -139,6 +139,7 @@ const LoginOptions = ({ beginLogin }) => {
                 return res.json();
             })
             .then((data) => {
+                console.log(data)
                 if (data?.error) {
                     seterror(data?.message);
                     toastError();
