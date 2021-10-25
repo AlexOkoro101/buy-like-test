@@ -70,6 +70,40 @@ export const searchTerm = (event) => async (dispatch) => {
         payload: event,
     });
 
+    let arrStr = [...event.model.split(",")];
+    if (event.make == "Lexus") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "RC":
+                    arrStr[i] = RC.map((ele) => ele.value);
+                    break;
+                case "RX":
+                    arrStr[i] = RX.map((ele) => ele.value);
+                    break;
+                case "ES":
+                    arrStr[i] = ES.map((ele) => ele.value);
+                    break;
+                case "GS":
+                    arrStr[i] = GS.map((ele) => ele.value);
+                    break;
+                case "IS":
+                    arrStr[i] = IS.map((ele) => ele.value);
+                    break;
+                case "LS":
+                    arrStr[i] = LS.map((ele) => ele.value);
+                    break;
+                case "NX":
+                    arrStr[i] = NX.map((ele) => ele.value);
+                    break;
+                case "SC":
+                    arrStr[i] = NX.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     let data = {
         year: event.year || "",
         make: event.make || "",
@@ -79,7 +113,7 @@ export const searchTerm = (event) => async (dispatch) => {
 
     try {
         let res = await fetch(
-            `${api}?year=${data.year}&make=${data.make}&model=${data.model}&vin=${data.vin}&page=1&apiKey=Switch!2020`,
+            `${api}?year=${data.year}&make=${data.make}&model=${arrStr}&vin=${data.vin}&page=1&apiKey=Switch!2020`,
             {
                 method: "GET",
                 headers: {},

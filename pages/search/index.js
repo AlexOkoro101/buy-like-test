@@ -694,8 +694,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             className="w-full object-cover h-full rounded-md object-center"
                         />
                     ) : (
-                        <div className="w-full bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center">
-                            Coming soon
+                        <div
+                            style={{
+                                backgroundImage: `url(/img/Rectangle.png)`,
+                            }}
+                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                        >
+                            IMAGE COMING SOON
                         </div>
                     )}
                 </div>
@@ -714,8 +719,13 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     }}
                     className=" bg-opacity-20 rounded-md"
                 >
-                    <div className="w-full bg-gray-400 font-semibold  h-full rounded-md object-center flex items-center justify-center">
-                        Coming soon
+                    <div
+                        style={{
+                            backgroundImage: `url(/img/Rectangle.png)`,
+                        }}
+                        className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                    >
+                        IMAGE COMING SOON
                     </div>
                 </div>
             );
@@ -2205,8 +2215,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 height: "250px",
                                                                                             }}
                                                                                         >
-                                                                                            Coming
-                                                                                            soon
+                                                                                            <img
+                                                                                                className="img-fluid"
+                                                                                                src="../../img/Rectangle 120.png"
+                                                                                                alt=""
+                                                                                                style={{
+                                                                                                    width: "340px",
+                                                                                                    height: "250px",
+                                                                                                }}
+                                                                                            />
                                                                                         </div>
                                                                                     )}
                                                                                 </a>
