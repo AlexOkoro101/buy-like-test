@@ -184,6 +184,7 @@ const CarDetails = ({
     const [sendSheetModal, setsendSheetModal] = useState(false);
     const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState('')
     const [sendSheetEmail, setsendSheetEmail] = useState('')
+    const [sheetError, setsheetError] = useState(false)
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -1136,7 +1137,7 @@ const CarDetails = ({
         
         // setsendSheetPhoneNumber()
         setsendSheetPhoneNumber(
-            `${sheetNumberRef.current.selectedCountryData.dialCode}` +
+            `+${sheetNumberRef.current.selectedCountryData.dialCode}` +
                 `${sheetNumberRef.current.state.value}`
         );
     }
@@ -1145,9 +1146,15 @@ const CarDetails = ({
 
 
     const sendSheet = (e) => {
+        setsheetError(false)
+        e.preventDefault()
+        if(sheetNumberRef.current.state.value === '' || sendSheetEmail === '') {
+            setsheetError(true)
+            return
+        }
+
         
 
-        e.preventDefault()
         
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -2932,7 +2939,7 @@ const CarDetails = ({
                         <form onSubmit={(e) => sendSheet(e)} className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
                             <div className="col-span-6 mb-2">
                                 <label className="block pb-1.5 font-10 primary-black" htmlFor="card_number"> Email </label>
-                                <input id="card_number" className="profile-control focus:outline-none p-2 w-full" type="email"
+                                <input id="card_number" className="profile-control focus:outline-none p-2 w-full" type="email" required
                                     placeholder="Enter your email address" value={sendSheetEmail} onChange={(e) => setsendSheetEmail(e.target.value)} />
                             </div>
                             <div className="col-span-6  ">
@@ -2950,8 +2957,14 @@ const CarDetails = ({
                                     preferredCountries={["ng"]}
                                     defaultValue={sendSheetPhoneNumber}
                                     onPhoneNumberChange={(e) => phoneNumberChange(e)}
+                                    
                                 />
                             </div>
+                            {sheetError && (
+                                <div className="col-span-6 mt-2">
+                                    <p className="text-red-500 font-10">Field can't be empty</p>
+                                </div>
+                            )}
                             <div className="col-span-6 place-self-center mt-4">
                                 <button type="submit"
                                     className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8">SUBMIT
