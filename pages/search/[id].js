@@ -453,14 +453,19 @@ const CarDetails = ({
         ) {
             return (
                 <div
-                    className=" bg-black bg-opacity-20 rounded-md"
+                    className={!params.images?.length ? "bg-white bg-opacity-20 rounded-md" : "bg-black bg-opacity-20 rounded-md"}
                     style={{ width: "240px", height: "178px" }}
                 >
-                    <img
-                        src={params.images[0].image_largeUrl}
-                        alt="hello"
-                        className="w-full h-full object-center rounded-md object-contain"
-                    />
+                    {params.images?.length ? (
+                        <img
+                            src={params.images[0].image_largeUrl}
+                            alt="hello"
+                            className="w-full h-full object-center rounded-md object-contain"
+                        />
+
+                    ): (
+                        <div className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center" style={{backgroundImage: "url('../../img/Rectangle.png')"}}>IMAGE COMING SOON</div>
+                    )}
                 </div>
             );
         }
@@ -1211,7 +1216,8 @@ const CarDetails = ({
             
             if (truckAccessory === true) {
                 // setaddTrucking(true);
-                truck = Number(truckingPrice.slice(1));
+                truck = (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) );
+                
             } else {
                 // setaddTrucking(false);
                 truck = 0;
@@ -1240,7 +1246,7 @@ const CarDetails = ({
             
             if (placebidTruckAccessory === true) {
                 // setaddTrucking(true);
-                truck = Number(truckingPrice.slice(1));
+                truck = (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) );
             } else {
                 // setaddTrucking(false);
                 truck = 0;
@@ -1338,7 +1344,7 @@ const CarDetails = ({
                     <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
                         <div className="py-1 block lg:hidden hidden-header">
                             <p className="text-sm font-bold primary-color">
-                                {`${cardD?.make}, ${cardD?.model} - ${cardD?.year}`}
+                                {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
                             </p>
 
                             <div className="flex mt-1.5 flex-col">
@@ -1377,75 +1383,92 @@ const CarDetails = ({
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
-                            <div className="w-full displayLargeimage">
-                                {displayLargeimage()}
-                            </div>
-
-                            <div className="overflow-hidden">
-                                <div
-                                    className="flex justify-start h-full transition-all mt-3
-                                "
-                                >
-                                    <div
-                                        className={
-                                            page >=
-                                            (window.innerWidth < 760 ? 3 : 8)
-                                                ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
-                                                : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
-                                        }
-                                        style={{
-                                            height: "60.03px",
-                                            width: "20px",
-                                        }}
-                                    >
-                                        <button onClick={() => prevPage(page)}>
-                                            <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
-                                        </button>
+                            {cardD?.images?.length ? (
+                                <>
+                                    <div className="w-full displayLargeimage">
+                                        {displayLargeimage()}
                                     </div>
-                                    {imageD &&
-                                        imageD.map((ele, id) => (
-                                            <div
-                                                key={id}
-                                                onClick={() => setId(page + id)}
-                                                className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
-                                            >
-                                                <img
-                                                    src={ele?.image_largeUrl}
-                                                    className="rounded-md shadow-sm"
-                                                    style={{
-                                                        height: "60.3px",
-                                                    }}
-                                                    alt=""
-                                                />
-                                            </div>
-                                        ))}
-                                    {imageD &&
-                                    imageD.length ===
-                                        (window.innerWidth <= 760 ? 3 : 8) &&
-                                    count > 0 ? (
+
+                                    <div className="overflow-hidden">
                                         <div
-                                            className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
-                                            style={{
-                                                height: "60.3px",
-                                                backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
-                                                backgroundSize: "cover",
-                                            }}
+                                            className="flex justify-start h-full transition-all mt-3
+                                        "
                                         >
                                             <div
-                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
-                        bg-opacity-40 text-white flex items-center justify-center
-                        "
-                                                style={{ fontSize: "10px" }}
-                                                onClick={() => nextPage(page)}
+                                                className={
+                                                    page >=
+                                                    (window.innerWidth < 760 ? 3 : 8)
+                                                        ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
+                                                        : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
+                                                }
+                                                style={{
+                                                    height: "60.03px",
+                                                    width: "20px",
+                                                }}
                                             >
-                                                load {count} more
+                                                <button onClick={() => prevPage(page)}>
+                                                    <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
+                                                </button>
                                             </div>
+                                            {imageD &&
+                                                imageD.map((ele, id) => (
+                                                    <div
+                                                        key={id}
+                                                        onClick={() => setId(page + id)}
+                                                        className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
+                                                    >
+                                                        <img
+                                                            src={ele?.image_largeUrl}
+                                                            className="rounded-md shadow-sm"
+                                                            style={{
+                                                                height: "60.3px",
+                                                            }}
+                                                            alt=""
+                                                        />
+                                                    </div>
+                                                ))}
+                                            {imageD &&
+                                            imageD.length ===
+                                                (window.innerWidth <= 760 ? 3 : 8) &&
+                                            count > 0 ? (
+                                                <div
+                                                    className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
+                                                    style={{
+                                                        height: "60.3px",
+                                                        backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
+                                                        backgroundSize: "cover",
+                                                    }}
+                                                >
+                                                    <div
+                                                        className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
+                                bg-opacity-40 text-white flex items-center justify-center
+                                "
+                                                        style={{ fontSize: "10px" }}
+                                                        onClick={() => nextPage(page)}
+                                                    >
+                                                        load {count} more
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                ""
+                                            )}
                                         </div>
-                                    ) : (
-                                        ""
-                                    )}
+                                    </div>
+
+                                </>
+                            ) : (
+                                <div className="text-center relative">
+                                    
+                                    <img
+                                        src="../../img/Rectangle.png"
+                                        loading="lazy"
+                                        className="br-5 w-full h-full object-contain object-center"
+                                        alt="Coming soon"
+                                    />
+                                    <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">Coming Soon</p>
+                                    <p className="text-2xl sec-black cursor-pointer hover:text-gray-900"> <a href="https://api.whatsapp.com/send?phone=+17135130111"> Contact Support</a> <i className="fa fa-whatsapp text-2xl"></i></p>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
@@ -1679,9 +1702,9 @@ const CarDetails = ({
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
                                                             >
-                                                                {truckingPrice
-                                                                    ? `${truckingPrice}`
-                                                                    : "Loading..."}
+                                                                ${truckingPrice
+                                                                    ? (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) )
+                                                                    : "0"}
                                                             </td>
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
@@ -1901,9 +1924,9 @@ const CarDetails = ({
                                                         colSpan="3"
                                                         className="font-11 sec-black font-normal pr-20 py-2"
                                                     >
-                                                        {truckingPrice
-                                                            ? `${truckingPrice}`
-                                                            : "Loading..."}
+                                                        ${truckingPrice
+                                                        ? (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) )
+                                                        : "0"}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -2815,7 +2838,21 @@ const CarDetails = ({
                                                         });
                                                 }}
                                             >
-                                                {addImage(ele)}
+                                                <div
+                                                    className={!ele.images?.length ? "bg-white bg-opacity-20 rounded-md" : "bg-black bg-opacity-20 rounded-md"}
+                                                    style={{ width: "240px", height: "178px" }}
+                                                >
+                                                    {ele.images?.length ? (
+                                                        <img
+                                                            src={ele.images[0].image_largeUrl}
+                                                            alt="hello"
+                                                            className="w-full h-full object-center rounded-md object-contain"
+                                                        />
+
+                                                    ): (
+                                                        <div className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center" style={{backgroundImage: "url('../../img/Rectangle.png')"}}>IMAGE COMING SOON</div>
+                                                    )}
+                                                </div>
                                                 <p className="pt-2 primary-black font-medium text-xs">
                                                     {ele?.make} {""}{" "}
                                                     {ele?.model}
