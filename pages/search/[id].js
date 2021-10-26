@@ -1200,33 +1200,6 @@ const CarDetails = ({
         );
     };
 
-    //
-    const [truckAccessory, settruckAccessory] = useState(false);
-    const [shipAccessory, setshipAccessory] = useState(false);
-
-    const accessories = () => {
-        var carPrice = Number(carDetails.buyNowPrice);
-        var outstanding = 700;
-        var truck = 0;
-        var ship = 0;
-
-        if (truckAccessory === true) {
-            // setaddTrucking(true);
-            truck = Number(truckingPrice.slice(1));
-        } else {
-            // setaddTrucking(false);
-            truck = 0;
-        }
-
-        if (shipAccessory === true) {
-            // setaddTrucking(true);
-            ship = 1150;
-        } else {
-            // setaddTrucking(false);
-            ship = 0;
-        }
-
-<<<<<<< HEAD
     
     //
         const [truckAccessory, settruckAccessory] = useState(false)
@@ -1286,40 +1259,7 @@ const CarDetails = ({
             
             // console.log(outstanding, truck, ship)
             return outstanding + truck + ship;
-=======
-        // console.log(outstanding, truck, ship)
-        return carPrice + outstanding + truck + ship;
-    };
-
-    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false);
-    const [placebidShipAccessory, setplacebidShipAccessory] = useState(false);
-
-    const placebidAccessories = () => {
-        // console.log(Number(maxBidAmount))
-        var outstanding = 700;
-        var truck = 0;
-        var ship = 0;
-
-        if (placebidTruckAccessory === true) {
-            // setaddTrucking(true);
-            truck = Number(truckingPrice.slice(1));
-        } else {
-            // setaddTrucking(false);
-            truck = 0;
         }
-
-        if (placebidShipAccessory === true) {
-            // setaddTrucking(true);
-            ship = 1150;
-        } else {
-            // setaddTrucking(false);
-            ship = 0;
->>>>>>> 6e90a5389cbd2554cbaa9bdb1f84b5b81e5e19c9
-        }
-
-        // console.log(outstanding, truck, ship)
-        return outstanding + truck + ship;
-    };
 
     const [placebidTotal, setplacebidTotal] = useState(0);
     //
