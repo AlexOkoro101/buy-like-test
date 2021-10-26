@@ -76,7 +76,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
     // console.log("Search page makes", cars)
     const [grid, setgrid] = useState(true);
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(width <= 900 ? false : true);
     const [advance, setAdvance] = useState(false);
     const [paramValue, setParam] = useState(params);
     const [makeValue, setmake] = useState({});
@@ -969,7 +969,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 >
                     {/* <!-- filter tab here --> */}
                     {open && (
-                        <div className="filter-holder hidden  h-full lg:block p-3 w-3/12 xl:w-2/12">
+                        <div
+                            className="filter-holder transition-all delay-300   h-full lg:block p-3 w-3/12 xl:w-2/12"
+                            style={{
+                                position: width <= 900 ? "absolute" : "",
+                                zIndex: 999,
+                                width: width <= 900 ? "100%" : "",
+                                top: 44,
+                                left: 0,
+                                right: 0,
+                                buttom: 0,
+                            }}
+                        >
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>
@@ -1978,15 +1989,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     carDetail(
                                                                                         ele
                                                                                     )
-                                                                                ),
-                                                                                    router.push(
-                                                                                        {
-                                                                                            pathname:
-                                                                                                "/search/" +
-                                                                                                ele.VIN,
-                                                                                        }
-                                                                                    );
+                                                                                );
                                                                             }}
+                                                                            href={`/search/${ele.VIN}`}
+                                                                            target={
+                                                                                "_blank"
+                                                                            }
                                                                             style={{
                                                                                 width:
                                                                                     open &&
@@ -2102,15 +2110,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         carDetail(
                                                                                                             ele
                                                                                                         )
-                                                                                                    ),
-                                                                                                        router.push(
-                                                                                                            {
-                                                                                                                pathname:
-                                                                                                                    "/search/" +
-                                                                                                                    ele.VIN,
-                                                                                                            }
-                                                                                                        );
+                                                                                                    );
                                                                                                 }}
+                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                target={
+                                                                                                    "_blank"
+                                                                                                }
                                                                                             >
                                                                                                 Buy
                                                                                                 Now
@@ -2132,15 +2137,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         carDetail(
                                                                                                             ele
                                                                                                         )
-                                                                                                    ),
-                                                                                                        router.push(
-                                                                                                            {
-                                                                                                                pathname:
-                                                                                                                    "/search/" +
-                                                                                                                    ele.VIN,
-                                                                                                            }
-                                                                                                        );
+                                                                                                    );
                                                                                                 }}
+                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                target={
+                                                                                                    "_blank"
+                                                                                                }
                                                                                             >
                                                                                                 Place
                                                                                                 Bid
@@ -2180,15 +2182,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             carDetail(
                                                                                                 ele
                                                                                             )
-                                                                                        ),
-                                                                                            router.push(
-                                                                                                {
-                                                                                                    pathname:
-                                                                                                        "/search/" +
-                                                                                                        ele.VIN,
-                                                                                                }
-                                                                                            );
+                                                                                        );
                                                                                     }}
+                                                                                    href={`/search/${ele.VIN}`}
+                                                                                    target={
+                                                                                        "_blank"
+                                                                                    }
                                                                                 >
                                                                                     {ele
                                                                                         .images
@@ -2403,15 +2402,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         carDetail(
                                                                                                             ele
                                                                                                         )
-                                                                                                    ),
-                                                                                                        router.push(
-                                                                                                            {
-                                                                                                                pathname:
-                                                                                                                    "/search/" +
-                                                                                                                    ele.VIN,
-                                                                                                            }
-                                                                                                        );
+                                                                                                    );
                                                                                                 }}
+                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                target={
+                                                                                                    "_blank"
+                                                                                                }
                                                                                             >
                                                                                                 Buy
                                                                                                 Now
@@ -2433,15 +2429,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         carDetail(
                                                                                                             ele
                                                                                                         )
-                                                                                                    ),
-                                                                                                        router.push(
-                                                                                                            {
-                                                                                                                pathname:
-                                                                                                                    "/search/" +
-                                                                                                                    ele.VIN,
-                                                                                                            }
-                                                                                                        );
+                                                                                                    );
                                                                                                 }}
+                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                target={
+                                                                                                    "_blank"
+                                                                                                }
                                                                                             >
                                                                                                 Place
                                                                                                 Bid
