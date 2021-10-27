@@ -206,6 +206,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
                                 textButton="Sign up with Facebook"
+                                authType="reauthenticate"
                             />
                             <button
                                 type="button"

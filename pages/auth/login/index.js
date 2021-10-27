@@ -139,6 +139,7 @@ const LoginOptions = ({ beginLogin }) => {
                 return res.json();
             })
             .then((data) => {
+                console.log(data)
                 if (data?.error) {
                     seterror(data?.message);
                     toastError();
@@ -219,6 +220,7 @@ const LoginOptions = ({ beginLogin }) => {
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
                                 textButton="Log in with Facebook"
+                                authType="reauthenticate"
                             />
                             <button
                                 type="button"
