@@ -25,7 +25,7 @@ import {
     BUY_NOW_FAILED,
     BUY_NOW,
 } from "../types";
-import { RC, SC, RX, ES, NX, LS, IS, GS } from "../../src/components/data";
+import { RC, SC, RX, ES, NX, LS, IS, GS, GX } from "../../src/components/data";
 const api = process.env.cars_api;
 
 export const getCars = () => (dispatch) => {
@@ -84,6 +84,9 @@ export const searchTerm = (event) => async (dispatch) => {
                 case "ES":
                     arrStr[i] = ES.map((ele) => ele.value);
                     break;
+                case "GX":
+                    arrStr[i] = GX.map((ele) => ele.value);
+                    break;
                 case "GS":
                     arrStr[i] = GS.map((ele) => ele.value);
                     break;
@@ -97,7 +100,7 @@ export const searchTerm = (event) => async (dispatch) => {
                     arrStr[i] = NX.map((ele) => ele.value);
                     break;
                 case "SC":
-                    arrStr[i] = NX.map((ele) => ele.value);
+                    arrStr[i] = SC.map((ele) => ele.value);
                     break;
                 default:
                     break;

@@ -54,6 +54,10 @@ export const ES = [
     { value: "ES 330", label: "ES 330" },
     { value: "ES 350", label: "ES 350" },
 ];
+export const GX = [
+    { value: "GX 460", label: "GX 460" },
+    { value: "GX 470", label: "GX 470" },
+];
 export const RX = [
     { value: "RX 450h", label: "RX 450h" },
     { value: "RX 400h", label: "RX 400h" },
