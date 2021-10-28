@@ -117,7 +117,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [years, setYears] = useState(() => {
         let year = 2005;
-        const currentYear = new Date().getFullYear();
+        const currentYear = new Date().getFullYear() + 2;
         let validVehicleYears = [];
         while (year <= currentYear) {
             validVehicleYears.push(year++);
@@ -1932,14 +1932,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         {/* <!-- Car Grid displays here --> */}
                         {loading ? (
                             <div className="flex justify-center items-center w-full h-80">
-                                <FadeLoader
-                                    color="#BFC1C6"
-                                    width={5}
-                                    radius={2}
-                                    margin={2}
-                                    height={5}
-                                    loading={loading}
-                                />
+                                <div className="relative">
+                                    <img src="/img/Tag.png" alt="loader" />
+                                    <img
+                                        className="absolute top-3.5 right-10 ease-in-out animate-pulse
+                                        delay-1000"
+                                        src="/img/Car.png"
+                                        alt="loader"
+                                    />
+                                </div>
                             </div>
                         ) : (
                             <div className="flex flex-col justify-between min-h-screen">
@@ -2451,10 +2452,18 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                             )}
                                         </>
                                     ) : (
-                                        <div className="w-full flex items center justify-center py-40">
-                                            <h1>
-                                                No Vehicle matches this
-                                                parameters
+                                        <div className="w-full flex flex-col items-center justify-center py-40">
+                                            <img
+                                                src="/img/nocar.png"
+                                                alt="loader"
+                                            />
+
+                                            <h1 className="text-lg font-semibold mt-5">
+                                                We could not find the car you
+                                                are looking for
+                                            </h1>
+                                            <h1 className="text-xs font-semibold mt-1">
+                                                Try searching for something else
                                             </h1>
                                         </div>
                                     )}
