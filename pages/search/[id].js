@@ -1463,7 +1463,11 @@ const CarDetails = ({
                                         alt="Coming soon"
                                     />
                                     <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">Coming Soon</p>
-                                    <p className="text-2xl sec-black cursor-pointer hover:text-gray-900"> <a href="https://api.whatsapp.com/send?phone=+17135130111"> Contact Support</a> <i className="fa fa-whatsapp text-2xl"></i></p>
+                                    <p className="text-2xl sec-black">  Contact Support</p>
+                                    <div className="flex gap-x-2 text-center items-center justify-center">
+                                        <a href="https://api.whatsapp.com/send?phone=+17135130111" className="sec-black hover:text-gray-900"><i className="fa fa-whatsapp text-2xl"></i></a>
+                                        <a href="mailto:buylikedealers@gmail.com" className="sec-black hover:text-gray-900"><i className="fa fa-envelope-o text-2xl"></i></a>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -1701,7 +1705,7 @@ const CarDetails = ({
                                                                 ></i>
                                                             </a>
                                                             <a
-                                                                href="mailto:test@example.com"
+                                                                href="mailto:buylikedealers@gmail.com"
                                                                 style={{
                                                                     margin: "0 10px",
                                                                 }}
