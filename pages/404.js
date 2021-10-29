@@ -35,7 +35,10 @@ export default function Custom404() {
                         router.push("/");
                     }}
                     type="button"
-                    className="signup-btn tracking-wider w-full lg:w-96 m-auto text-xs mt-4 py-3 focus:outline-none font-semibold flex items-center justify-center text-white"
+                    className="tracking-wider w-full lg:w-96 m-auto text-xs mt-4 py-3 focus:outline-none font-semibold flex items-center justify-center text-white"
+                    style={{
+                        color: "#d80739",
+                    }}
                 >
                     LET'S TAKE YOU HOME
                 </button>
