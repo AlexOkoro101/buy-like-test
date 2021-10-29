@@ -141,6 +141,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 getVehicleModels();
             }
         }
+        fetchPage(pageIndex);
     }, []);
     useEffect(() => {
         if (advance === true) {

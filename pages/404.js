@@ -13,7 +13,7 @@ export default function Custom404() {
                 minHeight: "480px",
             }}
         >
-            <div className="text-center">
+            <div className="text-center w-full">
                 <h1
                     style={{
                         fontWeight: 900,
@@ -35,7 +35,7 @@ export default function Custom404() {
                         router.push("/");
                     }}
                     type="button"
-                    className="signup-btn tracking-wider	 w-full lg:w-1/2 m-auto text-xs mt-4 py-3 focus:outline-none font-semibold flex items-center justify-center text-white"
+                    className="signup-btn tracking-wider w-full lg:w-96 m-auto text-xs mt-4 py-3 focus:outline-none font-semibold flex items-center justify-center text-white"
                 >
                     LET'S TAKE YOU HOME
                 </button>
