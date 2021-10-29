@@ -427,6 +427,9 @@ export const fetchMore =
                     case "IS":
                         arrStr[i] = IS.map((ele) => ele.value);
                         break;
+                    case "GX":
+                        arrStr[i] = GX.map((ele) => ele.value);
+                        break;
                     case "LS":
                         arrStr[i] = LS.map((ele) => ele.value);
                         break;

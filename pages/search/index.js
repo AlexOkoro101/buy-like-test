@@ -1676,9 +1676,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder min-h-screen  h-full w-full  relative px-5  lg:px-0 lg:pl-5">
+                    <div className="display-holder min-h-screen  h-full w-full  relative px-2  lg:px-0 lg:pl-5">
                         {/* <!-- Filter and search for mobile here --> */}
-                        <div className="mb-3 px-3 block lg:hidden h-9">
+                        <div className="mb-3  block lg:hidden h-9">
                             <div className="w-full h-full">
                                 <div className="w-full h-full">
                                     <Select
@@ -1693,7 +1693,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex lg:hidden items-center justify-between px-3 w-full mb-3">
+                        <div className="flex lg:hidden items-center justify-between w-full mb-3">
                             <p className="primary-black text-black font-10  lg:py-1.5">
                                 Sort by:
                             </p>
@@ -1710,7 +1710,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between px-4">
+                        <div className="search-results-holder flex items-center justify-between  lg:px-4">
                             {/* <!-- first section here --> */}
                             <div className="w-5/6 lg:w-1/3 flex items-center">
                                 {!open && (
@@ -1932,7 +1932,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         {/* <!-- Car Grid displays here --> */}
                         {loading ? (
                             <div className="flex justify-center items-center w-full h-80">
-                                <div className="relative">
+                                <div className="relative mt-5">
                                     <img src="/img/Tag.png" alt="loader" />
                                     <img
                                         className="absolute top-3.5 right-10 ease-in-out animate-pulse
@@ -1940,6 +1940,20 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         src="/img/Car.png"
                                         alt="loader"
                                     />
+                                    <h1 className="mt-5 text-lg font-semibold">
+                                        Loading
+                                        <span className=" ">
+                                            <span className="ml-2 ease-in-out tracking-widest delay-300	text-2xl animate-pulse ">
+                                                .
+                                            </span>
+                                            <span className="ml-2 ease-in-out tracking-widest delay-700 text-2xl	 animate-pulse ">
+                                                .
+                                            </span>
+                                            <span className="ml-2 ease-in-out tracking-widest text-2xl delay-100	 animate-pulse ">
+                                                .
+                                            </span>
+                                        </span>
+                                    </h1>
                                 </div>
                             </div>
                         ) : (
@@ -2175,8 +2189,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         className="car-display-list-holder flex flex-col md:flex-row flex-wrap w-full p-4 mb-4"
                                                                     >
                                                                         {/* <!-- image to details here --> */}
-                                                                        <div className="flex w-5/6 flex-col md:flex-row justify-between flex-wrap">
-                                                                            <div className="1/2">
+                                                                        <div className="flex w-full md:w-5/6 flex-col md:flex-row justify-between flex-wrap">
+                                                                            <div className="w-full md:w-1/3">
                                                                                 <a
                                                                                     onClick={() => {
                                                                                         dispatch(
@@ -2195,7 +2209,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         .length >
                                                                                     0 ? (
                                                                                         <img
-                                                                                            className="img-fluid"
+                                                                                            className="img-fluid rounded"
                                                                                             src={
                                                                                                 ele
                                                                                                     ?.images[0]
@@ -2229,9 +2243,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     )}
                                                                                 </a>
                                                                             </div>
-
                                                                             {/* <!-- Details here --> */}
-                                                                            <div className="w-1/2 py-4">
+                                                                            <div className="w-full md:w-2/3 py-4 pl-2">
                                                                                 <p className="text-base font-semibold primary-black ">
                                                                                     {`${ele?.make} - ${ele?.model} - ${ele?.year}`}
                                                                                 </p>
@@ -2360,7 +2373,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="w-1/6 py-4 items-end flex flex-col">
+                                                                        <div className="w-full md:w-1/6 py-4 items-end flex flex-col">
                                                                             <div className="flex pt-4">
                                                                                 <div className="flex justify-end w-full">
                                                                                     {Object.entries(
@@ -2468,7 +2481,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         </div>
                                     )}
                                 </>
-                                <div className="items-center w-full relative bottom-0 px-6   flex m-auto flex-row justify-end my-5">
+                                <div className="items-center w-full relative bottom-0 lg:px-6   flex m-auto flex-row justify-end my-5">
                                     {Paginate()}
                                 </div>
                             </div>
