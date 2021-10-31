@@ -37,7 +37,7 @@ export default function Custom404() {
                     type="button"
                     className="tracking-wider w-full lg:w-96 m-auto text-xs mt-4 py-3 focus:outline-none font-semibold flex items-center justify-center text-white"
                     style={{
-                        color: "#d80739",
+                        background: "#d80739",
                     }}
                 >
                     LET'S TAKE YOU HOME
