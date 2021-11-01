@@ -7,7 +7,7 @@ export default class MyDocument extends Document {
             <Head>
                 <script
                     async
-                    src="https://www.googletagmanager.com/gtag/js?id=G-NR7X96TBJ4"
+                    src="https://www.googletagmanager.com/gtag/js?id=G-77J3ZBF0M5"
                 />
 
                 <script
@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-NR7X96TBJ4', { page_path: window.location.pathname });
+              gtag('config', 'G-77J3ZBF0M5', { page_path: window.location.pathname });
             `,
                     }}
                 />
