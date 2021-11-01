@@ -2,7 +2,11 @@ import Head from "next/head";
 const Meta = ({ title, keywords, description }) => {
     return (
         <Head>
-        <script type="module" async src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"></script>
+            <script
+                type="module"
+                async
+                src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"
+            ></script>
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1"
@@ -11,48 +15,37 @@ const Meta = ({ title, keywords, description }) => {
             <meta name="description" content={description} />
             <meta charSet="utf-8" />
             <meta
-            name="google-site-verification"
-            content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
+                name="google-site-verification"
+                content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
             />
             <meta
                 property="og:title"
-                content={
-                    title === null
-                    ? "BuyLike Dealers"
-                    : title
-                }
-                />
+                content={title === null ? "BuyLike Dealers" : title}
+            />
             <meta
                 name="description"
                 content={
-                    title === null
-                    ? "Buy cars like dealears with ease"
-                    : title
+                    title === null ? "Buy cars like dealears with ease" : title
                 }
             />
             <meta property="og:url" content={"http://localhost:3000"} />
-            <meta
-                property="og:description"
-                content={
-                    title
-                }
-            />
+            <meta property="og:description" content={title} />
             <meta name="twitter:site" content={"http://localhost:3000"} />
             <meta
                 name="twitter:card"
                 content={
-                "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
+                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
                 }
             />
             <meta
                 property="og:image"
                 content={
-                "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
+                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
                 }
             />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            
+
             <link rel="icon" href="../../public/favicon.ico" />
 
             {/* Fontawesome here */}
@@ -61,20 +54,18 @@ const Meta = ({ title, keywords, description }) => {
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
 
-            
-      <link
-        rel="stylesheet"
-        type="text/css"
-        charSet="UTF-8"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-      />
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-      />
-      
-      
+            <link
+                rel="stylesheet"
+                type="text/css"
+                charSet="UTF-8"
+                href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+            />
+            <link
+                rel="stylesheet"
+                type="text/css"
+                href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+            />
+
             <title>{title}</title>
         </Head>
     );

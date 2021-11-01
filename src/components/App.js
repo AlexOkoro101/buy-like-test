@@ -11,6 +11,11 @@ const App = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [auth, setAuth] = useState(false);
     const router = useRouter();
+    const handleRouteChange = (url) => {
+        window.gtag("config", "G-NR7X96TBJ4", {
+            page_path: url,
+        });
+    };
     const myFunction = () => {
         const user = localStorage.getItem("user");
         let token = JSON.parse(user)?.userToken;
@@ -19,8 +24,6 @@ const App = ({ children }) => {
                 if (router.pathname === "/search/[id]") {
                     return;
                 }
-
-
             }
 
             setLoggedIn(true);
@@ -31,13 +34,23 @@ const App = ({ children }) => {
                 return router.back();
             }
         }
-        if (router.pathname.includes("profile") || router.pathname === "/transaction/[id]") {
+        if (
+            router.pathname.includes("profile") ||
+            router.pathname === "/transaction/[id]"
+        ) {
             if (!token) {
                 dispatch(logOut());
                 router.push("/auth/login");
             }
         }
     };
+    useEffect(() => {
+        router.events.on("routeChangeComplete", handleRouteChange);
+        return () => {
+            router.events.off("routeChangeComplete", handleRouteChange);
+        };
+    }, [router.events]);
+
     useEffect(() => {
         myFunction();
         if (router.pathname.includes("auth")) {
