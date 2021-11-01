@@ -45,7 +45,21 @@ const Meta = ({ title, keywords, description }) => {
             />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
+            <script
+                async
+                src="https://www.googletagmanager.com/gtag/js?id=G-77J3ZBF0M5"
+            />
 
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-77J3ZBF0M5', { page_path: window.location.pathname });
+            `,
+                }}
+            />
             <link rel="icon" href="../../public/favicon.ico" />
 
             {/* Fontawesome here */}
