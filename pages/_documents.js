@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '[Tracking ID]', { page_path: window.location.pathname });
+              gtag('config', 'G-NR7X96TBJ4', { page_path: window.location.pathname });
             `,
                     }}
                 />
