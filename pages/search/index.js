@@ -393,14 +393,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             if (pageIndex < maxPages) {
                 await setPageIndex(pageIndex + 1);
             }
-            fetchPage(pageIndex);
+            fetchPage(pageIndex + 1);
         };
 
         const prevPage = async () => {
             if (pageIndex > 1) {
                 await setPageIndex(pageIndex - 1);
             }
-            fetchPage(pageIndex);
+            fetchPage(pageIndex - 1);
         };
 
         const paginationRender = (

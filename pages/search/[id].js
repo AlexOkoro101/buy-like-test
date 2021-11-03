@@ -453,7 +453,11 @@ const CarDetails = ({
         ) {
             return (
                 <div
-                    className={!params.images?.length ? "bg-white bg-opacity-20 rounded-md" : "bg-black bg-opacity-20 rounded-md"}
+                    className={
+                        !params.images?.length
+                            ? "bg-white bg-opacity-20 rounded-md"
+                            : "bg-black bg-opacity-20 rounded-md"
+                    }
                     style={{ width: "240px", height: "178px" }}
                 >
                     {params.images?.length ? (
@@ -462,9 +466,16 @@ const CarDetails = ({
                             alt="hello"
                             className="w-full h-full object-center rounded-md object-contain"
                         />
-
-                    ): (
-                        <div className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center" style={{backgroundImage: "url('../../img/Rectangle.png')"}}>IMAGE COMING SOON</div>
+                    ) : (
+                        <div
+                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                            style={{
+                                backgroundImage:
+                                    "url('../../img/Rectangle.png')",
+                            }}
+                        >
+                            IMAGE COMING SOON
+                        </div>
                     )}
                 </div>
             );
@@ -1200,66 +1211,76 @@ const CarDetails = ({
         );
     };
 
-    
     //
-        const [truckAccessory, settruckAccessory] = useState(false)
-        const [shipAccessory, setshipAccessory] = useState(false)
+    const [truckAccessory, settruckAccessory] = useState(false);
+    const [shipAccessory, setshipAccessory] = useState(false);
 
-        const accessories = () => {
-            var carPrice = Number(carDetails.buyNowPrice);
-            var outstanding = 700;
-            var truck = 0;
-            var ship = 0;
-            
-            if (truckAccessory === true) {
-                // setaddTrucking(true);
-                truck = (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) );
-                
-            } else {
-                // setaddTrucking(false);
-                truck = 0;
-            }
-            
-            if (shipAccessory === true) {
-                // setaddTrucking(true);
-                ship = 1150
-            } else {
-                // setaddTrucking(false);
-                ship = 0;
-            }
-            
-            // console.log(outstanding, truck, ship)
-            return carPrice + outstanding + truck + ship;
+    const accessories = () => {
+        var carPrice = Number(carDetails.buyNowPrice);
+        var outstanding = 700;
+        var truck = 0;
+        var ship = 0;
+
+        if (truckAccessory === true) {
+            // setaddTrucking(true);
+            truck =
+                Number(truckingPrice.slice(1)) > 1000
+                    ? Number(truckingPrice.slice(1)) / 3
+                    : Number(truckingPrice.slice(1)) > 400 &&
+                      Number(truckingPrice.slice(1)) < 1000
+                    ? Number(truckingPrice.slice(1)) / 2
+                    : Number(truckingPrice.slice(1));
+        } else {
+            // setaddTrucking(false);
+            truck = 0;
         }
 
-        const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false)
-        const [placebidShipAccessory, setplacebidShipAccessory] = useState(false)
-
-        const placebidAccessories = () => {
-            // console.log(Number(maxBidAmount))
-            var outstanding = 700;
-            var truck = 0;
-            var ship = 0;
-            
-            if (placebidTruckAccessory === true) {
-                // setaddTrucking(true);
-                truck = (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) );
-            } else {
-                // setaddTrucking(false);
-                truck = 0;
-            }
-            
-            if (placebidShipAccessory === true) {
-                // setaddTrucking(true);
-                ship = 1150
-            } else {
-                // setaddTrucking(false);
-                ship = 0;
-            }
-            
-            // console.log(outstanding, truck, ship)
-            return outstanding + truck + ship;
+        if (shipAccessory === true) {
+            // setaddTrucking(true);
+            ship = 1150;
+        } else {
+            // setaddTrucking(false);
+            ship = 0;
         }
+
+        // console.log(outstanding, truck, ship)
+        return carPrice + outstanding + truck + ship;
+    };
+
+    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false);
+    const [placebidShipAccessory, setplacebidShipAccessory] = useState(false);
+
+    const placebidAccessories = () => {
+        // console.log(Number(maxBidAmount))
+        var outstanding = 700;
+        var truck = 0;
+        var ship = 0;
+
+        if (placebidTruckAccessory === true) {
+            // setaddTrucking(true);
+            truck =
+                Number(truckingPrice.slice(1)) > 1000
+                    ? Number(truckingPrice.slice(1)) / 3
+                    : Number(truckingPrice.slice(1)) > 400 &&
+                      Number(truckingPrice.slice(1)) < 1000
+                    ? Number(truckingPrice.slice(1)) / 2
+                    : Number(truckingPrice.slice(1));
+        } else {
+            // setaddTrucking(false);
+            truck = 0;
+        }
+
+        if (placebidShipAccessory === true) {
+            // setaddTrucking(true);
+            ship = 1150;
+        } else {
+            // setaddTrucking(false);
+            ship = 0;
+        }
+
+        // console.log(outstanding, truck, ship)
+        return outstanding + truck + ship;
+    };
 
     const [placebidTotal, setplacebidTotal] = useState(0);
     //
@@ -1360,23 +1381,25 @@ const CarDetails = ({
                                         {cardD?.VIN}
                                     </p>
                                 </div>
-                                <div>
-                                    {cardD.buyNowPrice.length > 2 ? (
-                                        <p className="primary-color text-sm font-bold">
-                                            $
-                                            {dollarFormatter.format(
-                                                carDetails.buyNowPrice
-                                            )}
-                                        </p>
-                                    ) : (
-                                        <p className="primary-color text-base font-extrabold">
-                                            $
-                                            {dollarFormatter.format(
-                                                carDetails.mmrPrice
-                                            )}
-                                        </p>
-                                    )}
-                                </div>
+                                {cardD && (
+                                    <div>
+                                        {cardD?.buyNowPrice.length > 2 ? (
+                                            <p className="primary-color text-sm font-bold">
+                                                $
+                                                {dollarFormatter.format(
+                                                    carDetails.buyNowPrice
+                                                )}
+                                            </p>
+                                        ) : (
+                                            <p className="primary-color text-base font-extrabold">
+                                                $
+                                                {dollarFormatter.format(
+                                                    carDetails.mmrPrice
+                                                )}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
@@ -1394,7 +1417,9 @@ const CarDetails = ({
                                             <div
                                                 className={
                                                     page >=
-                                                    (window.innerWidth < 760 ? 3 : 8)
+                                                    (window.innerWidth < 760
+                                                        ? 3
+                                                        : 8)
                                                         ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
                                                         : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
                                                 }
@@ -1403,7 +1428,11 @@ const CarDetails = ({
                                                     width: "20px",
                                                 }}
                                             >
-                                                <button onClick={() => prevPage(page)}>
+                                                <button
+                                                    onClick={() =>
+                                                        prevPage(page)
+                                                    }
+                                                >
                                                     <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
                                                 </button>
                                             </div>
@@ -1411,11 +1440,15 @@ const CarDetails = ({
                                                 imageD.map((ele, id) => (
                                                     <div
                                                         key={id}
-                                                        onClick={() => setId(page + id)}
+                                                        onClick={() =>
+                                                            setId(page + id)
+                                                        }
                                                         className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
                                                     >
                                                         <img
-                                                            src={ele?.image_largeUrl}
+                                                            src={
+                                                                ele?.image_largeUrl
+                                                            }
                                                             className="rounded-md shadow-sm"
                                                             style={{
                                                                 height: "60.3px",
@@ -1426,7 +1459,9 @@ const CarDetails = ({
                                                 ))}
                                             {imageD &&
                                             imageD.length ===
-                                                (window.innerWidth <= 760 ? 3 : 8) &&
+                                                (window.innerWidth <= 760
+                                                    ? 3
+                                                    : 8) &&
                                             count > 0 ? (
                                                 <div
                                                     className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
@@ -1440,8 +1475,12 @@ const CarDetails = ({
                                                         className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
                                 bg-opacity-40 text-white flex items-center justify-center
                                 "
-                                                        style={{ fontSize: "10px" }}
-                                                        onClick={() => nextPage(page)}
+                                                        style={{
+                                                            fontSize: "10px",
+                                                        }}
+                                                        onClick={() =>
+                                                            nextPage(page)
+                                                        }
                                                     >
                                                         load {count} more
                                                     </div>
@@ -1451,22 +1490,35 @@ const CarDetails = ({
                                             )}
                                         </div>
                                     </div>
-
                                 </>
                             ) : (
                                 <div className="text-center relative">
-                                    
                                     <img
                                         src="../../img/Rectangle.png"
                                         loading="lazy"
                                         className="br-5 w-full h-full object-contain object-center"
                                         alt="Coming soon"
                                     />
-                                    <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">Coming Soon</p>
-                                    <p className="text-2xl sec-black">  Contact Support</p>
+                                    <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">
+                                        Coming Soon
+                                    </p>
+                                    <p className="text-2xl sec-black">
+                                        {" "}
+                                        Contact Support
+                                    </p>
                                     <div className="flex gap-x-2 text-center items-center justify-center">
-                                        <a href="https://api.whatsapp.com/send?phone=+17135130111" className="sec-black hover:text-gray-900"><i className="fa fa-whatsapp text-2xl"></i></a>
-                                        <a href="mailto:buylikedealers@gmail.com" className="sec-black hover:text-gray-900"><i className="fa fa-envelope-o text-2xl"></i></a>
+                                        <a
+                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                            className="sec-black hover:text-gray-900"
+                                        >
+                                            <i className="fa fa-whatsapp text-2xl"></i>
+                                        </a>
+                                        <a
+                                            href="mailto:buylikedealers@gmail.com"
+                                            className="sec-black hover:text-gray-900"
+                                        >
+                                            <i className="fa fa-envelope-o text-2xl"></i>
+                                        </a>
                                     </div>
                                 </div>
                             )}
@@ -1727,8 +1779,40 @@ const CarDetails = ({
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
                                                             >
-                                                                ${truckingPrice
-                                                                    ? (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) )
+                                                                $
+                                                                {truckingPrice
+                                                                    ? Number(
+                                                                          truckingPrice.slice(
+                                                                              1
+                                                                          )
+                                                                      ) > 1000
+                                                                        ? Number(
+                                                                              truckingPrice.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) / 3
+                                                                        : Number(
+                                                                              truckingPrice.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) >
+                                                                              400 &&
+                                                                          Number(
+                                                                              truckingPrice.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) <
+                                                                              1000
+                                                                        ? Number(
+                                                                              truckingPrice.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) / 2
+                                                                        : Number(
+                                                                              truckingPrice.slice(
+                                                                                  1
+                                                                              )
+                                                                          )
                                                                     : "0"}
                                                             </td>
                                                             <td className="text-right px-2">
@@ -2010,9 +2094,39 @@ const CarDetails = ({
                                                         colSpan="3"
                                                         className="font-11 sec-black font-normal pr-20 py-2"
                                                     >
-                                                        ${truckingPrice
-                                                        ? (Number(truckingPrice.slice(1)) > 1000 ? Number(truckingPrice.slice(1))/3 : Number(truckingPrice.slice(1)) > 400 && Number(truckingPrice.slice(1)) < 1000 ? Number(truckingPrice.slice(1))/2 : Number(truckingPrice.slice(1)) )
-                                                        : "0"}
+                                                        $
+                                                        {truckingPrice
+                                                            ? Number(
+                                                                  truckingPrice.slice(
+                                                                      1
+                                                                  )
+                                                              ) > 1000
+                                                                ? Number(
+                                                                      truckingPrice.slice(
+                                                                          1
+                                                                      )
+                                                                  ) / 3
+                                                                : Number(
+                                                                      truckingPrice.slice(
+                                                                          1
+                                                                      )
+                                                                  ) > 400 &&
+                                                                  Number(
+                                                                      truckingPrice.slice(
+                                                                          1
+                                                                      )
+                                                                  ) < 1000
+                                                                ? Number(
+                                                                      truckingPrice.slice(
+                                                                          1
+                                                                      )
+                                                                  ) / 2
+                                                                : Number(
+                                                                      truckingPrice.slice(
+                                                                          1
+                                                                      )
+                                                                  )
+                                                            : "0"}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -2978,18 +3092,35 @@ const CarDetails = ({
                                                 }}
                                             >
                                                 <div
-                                                    className={!ele.images?.length ? "bg-white bg-opacity-20 rounded-md" : "bg-black bg-opacity-20 rounded-md"}
-                                                    style={{ width: "240px", height: "178px" }}
+                                                    className={
+                                                        !ele.images?.length
+                                                            ? "bg-white bg-opacity-20 rounded-md"
+                                                            : "bg-black bg-opacity-20 rounded-md"
+                                                    }
+                                                    style={{
+                                                        width: "240px",
+                                                        height: "178px",
+                                                    }}
                                                 >
                                                     {ele.images?.length ? (
                                                         <img
-                                                            src={ele.images[0].image_largeUrl}
+                                                            src={
+                                                                ele.images[0]
+                                                                    .image_largeUrl
+                                                            }
                                                             alt="hello"
                                                             className="w-full h-full object-center rounded-md object-contain"
                                                         />
-
-                                                    ): (
-                                                        <div className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center" style={{backgroundImage: "url('../../img/Rectangle.png')"}}>IMAGE COMING SOON</div>
+                                                    ) : (
+                                                        <div
+                                                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                                                            style={{
+                                                                backgroundImage:
+                                                                    "url('../../img/Rectangle.png')",
+                                                            }}
+                                                        >
+                                                            IMAGE COMING SOON
+                                                        </div>
                                                     )}
                                                 </div>
                                                 <p className="pt-2 primary-black font-medium text-xs">
