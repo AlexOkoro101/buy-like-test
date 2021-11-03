@@ -293,7 +293,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     //
     return (
         <>
-            <Meta />
+            <Meta title={"Buylike Dealers Home page"} />
 
             <main>
                 {/* Hero section here */}
@@ -431,7 +431,12 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             handleMake(e.target.value)
                                         }
                                     >
-                                        <option readOnly disabled selected>
+                                        <option
+                                            value=""
+                                            readOnly
+                                            disabled
+                                            selected
+                                        >
                                             Select
                                         </option>
                                         <option value="">All</option>

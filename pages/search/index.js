@@ -961,7 +961,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
     return (
         <div>
-            <Meta></Meta>
+            <Meta title="Buylike Dealers search page" />
             <main>
                 {/* <!-- Search region here --> */}
                 <div

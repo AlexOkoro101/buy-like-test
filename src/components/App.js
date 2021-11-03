@@ -12,9 +12,11 @@ const App = ({ children }) => {
     const [auth, setAuth] = useState(false);
     const router = useRouter();
     const handleRouteChange = (url) => {
-        window.gtag("config", "G-NR7X96TBJ4", {
-            page_path: url,
-        });
+        if (typeof window.gtag !== "undefined") {
+            window.gtag("config", "G-NR7X96TBJ4", {
+                page_path: url,
+            });
+        }
     };
     const myFunction = () => {
         const user = localStorage.getItem("user");
@@ -61,7 +63,6 @@ const App = ({ children }) => {
     }, [router.pathname]);
     return (
         <>
-            <Meta />
             <Navbar />
             {children}
             <Footer />

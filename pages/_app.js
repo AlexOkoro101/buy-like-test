@@ -21,9 +21,11 @@ import Meta from "../src/components/Head/Meta";
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter();
     const handleRouteChange = (url) => {
-        window.gtag("config", "G-NR7X96TBJ4", {
-            page_path: url,
-        });
+        if (typeof window.gtag !== "undefined") {
+            window.gtag("config", "G-NR7X96TBJ4", {
+                page_path: url,
+            });
+        }
     };
     useEffect(() => {
         router.events.on("routeChangeComplete", handleRouteChange);
@@ -36,7 +38,7 @@ const MyApp = ({ Component, pageProps }) => {
             <PersistGate loading={null} persistor={persistor}>
                 {" "}
                 <App>
-                    <Meta />
+                    <Meta title="Buylike dealers" />
 
                     <Component {...pageProps} />
                 </App>

@@ -1,4 +1,7 @@
 import Head from "next/head";
+
+import React from "react";
+
 const Meta = ({ title, keywords, description }) => {
     return (
         <Head>
@@ -50,6 +53,16 @@ const Meta = ({ title, keywords, description }) => {
                 src="https://www.googletagmanager.com/gtag/js?id=G-77J3ZBF0M5"
             />
 
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-77J3ZBF0M5', { page_path: window.location.pathname });
+            `,
+                }}
+            />
             <script
                 dangerouslySetInnerHTML={{
                     __html: `
@@ -112,7 +125,6 @@ const Meta = ({ title, keywords, description }) => {
 };
 
 Meta.defaultProps = {
-    title: "BuyLike Dealers",
     keywords: "cars, vechiles, motocycles",
     description: "Buy cars like dealears with ease",
 };

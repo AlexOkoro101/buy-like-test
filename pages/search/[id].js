@@ -6,6 +6,7 @@ import { selectToken } from "../../redux/reducers/userReducer";
 import { useDispatch } from "react-redux";
 import { carDetail, getCollection } from "../../redux/actions/carsAction";
 import Link from "next/link";
+import Meta from "../../src/components/Head/Meta";
 import { enviroment } from "../../src/components/enviroment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -1291,6 +1292,20 @@ const CarDetails = ({
 
     return (
         <main>
+            <Meta
+                title={
+                    cardD?.vehicleName +
+                    "" +
+                    "" +
+                    cardD?.model +
+                    "" +
+                    "" +
+                    cardD?.make +
+                    "" +
+                    "" +
+                    cardD?.year
+                }
+            />
             <ToastContainer />
             {cardD && (
                 <>
