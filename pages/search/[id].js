@@ -467,15 +467,12 @@ const CarDetails = ({
                             className="w-full h-full object-center rounded-md object-contain"
                         />
                     ) : (
-                        <div
-                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
-                            style={{
-                                backgroundImage:
-                                    "url('../../img/Rectangle.png')",
-                            }}
-                        >
-                            IMAGE COMING SOON
-                        </div>
+                        <img
+                            src="../../img/Rectangle.png"
+                            loading="lazy"
+                            className="br-5 w-full h-full object-contain object-center"
+                            alt="Coming soon"
+                        />
                     )}
                 </div>
             );
@@ -1403,7 +1400,7 @@ const CarDetails = ({
                             </div>
                         </div>
                         <div className="w-full lg:w-3/5">
-                            {cardD?.images?.length ? (
+                            {cardD.images.length ? (
                                 <>
                                     <div className="w-full displayLargeimage">
                                         {displayLargeimage()}
@@ -3079,17 +3076,14 @@ const CarDetails = ({
                                 data?.map(
                                     (ele, id) =>
                                         ele && (
-                                            <div
+                                            <a
                                                 key={id}
                                                 className="similar-cars-holder p-3 mr-4 my-5 lg:mb-0 cursor-pointer"
                                                 onClick={() => {
-                                                    dispatch(carDetail(ele)),
-                                                        router.push({
-                                                            pathname:
-                                                                "/search/" +
-                                                                ele.VIN,
-                                                        });
+                                                    dispatch(carDetail(ele));
                                                 }}
+                                                href={`/search/${ele.VIN}`}
+                                                target={"_blank"}
                                             >
                                                 <div
                                                     className={
@@ -3102,7 +3096,7 @@ const CarDetails = ({
                                                         height: "178px",
                                                     }}
                                                 >
-                                                    {ele.images?.length ? (
+                                                    {ele?.images?.length ? (
                                                         <img
                                                             src={
                                                                 ele.images[0]
@@ -3112,14 +3106,16 @@ const CarDetails = ({
                                                             className="w-full h-full object-center rounded-md object-contain"
                                                         />
                                                     ) : (
-                                                        <div
-                                                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
-                                                            style={{
-                                                                backgroundImage:
-                                                                    "url('../../img/Rectangle.png')",
-                                                            }}
-                                                        >
-                                                            IMAGE COMING SOON
+                                                        <div className="text-center relative">
+                                                            <img
+                                                                src="../../img/Rectangle.png"
+                                                                loading="lazy"
+                                                                className="br-5 w-full h-full object-contain object-center"
+                                                                alt="Coming soon"
+                                                            />
+                                                            <p className="absolute  text-lg font-semibold text-white lg:top-12 top-6  left-14 uppercase">
+                                                                Coming Soon
+                                                            </p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -3178,31 +3174,28 @@ const CarDetails = ({
                                                               )}
                                                     </p>
                                                     <div className="ml-auto  self-center">
-                                                        <button
-                                                            type="button"
-                                                            className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                            onClick={() => {
-                                                                dispatch(
-                                                                    carDetail(
-                                                                        ele
-                                                                    )
-                                                                ),
-                                                                    router.push(
-                                                                        {
-                                                                            pathname:
-                                                                                "/search/" +
-                                                                                ele.VIN,
-                                                                        }
-                                                                    );
-                                                            }}
+                                                        <a
+                                                            href={`/search/${ele.VIN}`}
                                                         >
-                                                            {ele?.buyNowPrice
-                                                                ? "Buy now"
-                                                                : "Place bid"}
-                                                        </button>
+                                                            <button
+                                                                type="button"
+                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                onClick={() => {
+                                                                    dispatch(
+                                                                        carDetail(
+                                                                            ele
+                                                                        )
+                                                                    );
+                                                                }}
+                                                            >
+                                                                {ele?.buyNowPrice
+                                                                    ? "Buy now"
+                                                                    : "Place bid"}
+                                                            </button>
+                                                        </a>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         )
                                 )}
                         </div>
