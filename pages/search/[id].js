@@ -327,7 +327,6 @@ const CarDetails = ({
         // if(carDetails.buyNowPrice && !carDetails.mmrPrice) {
         //     setOffer(true)
         // }
-        console.log(cardD);
     }, [carDetails, cardD]);
 
     const getTrucking = {
@@ -417,9 +416,6 @@ const CarDetails = ({
 
     useEffect(() => {
         setTotalAmount((Number(carDetails.buyNowPrice) + 300) * Number(usd));
-
-        console.log("naira", usd);
-        console.log("total", totalAmount);
     }, [usd]);
 
     const openForm = (evt, status) => {
@@ -587,7 +583,6 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     if (data.success !== false) {
                         setNaira(data.rates.NGN);
                     }
@@ -610,7 +605,6 @@ const CarDetails = ({
                     return response.json();
                 })
                 .then((data) => {
-                    console.log("local rate", data);
                     if (data.error === false) {
                         setUsd(data.data.rate);
                     }
@@ -622,6 +616,16 @@ const CarDetails = ({
             console.log(error);
         }
     };
+    const getTimeHours = (time) => ((time % 86400) / 3600) | 0;
+
+    const renderTime = (dimension, time) => {
+        return (
+            <div className="time-wrapper">
+                <div className="time">{time}</div>
+                <div>{dimension}</div>
+            </div>
+        );
+    };
 
     function renderCounter(e) {
         if (e !== null && distance > 0) {
@@ -632,13 +636,15 @@ const CarDetails = ({
                         strokeWidth={2}
                         strokeWidth={2}
                         isPlaying
-                        duration={distance}
+                        duration={86400}
                         colors={[["#0C74D4"], ["#F7B801"], ["#A30000"]]}
+                        initialRemainingTime={distance % 86400}
                     >
                         {/* {({ remainingTime }) =>
                             moment(carDetails.auctionEndTime)
                                 .endOf("seconds")
                                 .fromNow()
+
                         } */}
                     </CountdownCircleTimer>
                 </>
@@ -1048,7 +1054,6 @@ const CarDetails = ({
     const bidAmountRef = useRef("");
     const formatbidAmount = () => {
         setmaxBidAmount(dollarFormatter.format(maxBidAmount));
-        console.log(maxBidAmount);
     };
     const removeComma = () => {
         setmaxBidAmount(bidAmountRef.current.value.replace(/\,/g, ""));
@@ -1067,8 +1072,6 @@ const CarDetails = ({
     const [totalAmountPlusBid, settotalAmountPlusBid] = useState(0);
     const includeMaxBid = (e) => {
         setmaxBidAmount(e.target.value);
-        console.log(Number(maxBidAmount));
-
         // setbidval(maxBidAmount || 0);
         // settotalAmountPlusBid(Number(bidval));
 
@@ -1085,8 +1088,6 @@ const CarDetails = ({
     }, [carDestination]);
 
     const convertCurrency = (code) => {
-        console.log(parseInt(dollarPrice));
-
         if (code === "NG") {
             setNGN(true);
         } else {
@@ -1115,8 +1116,6 @@ const CarDetails = ({
                 year: cardD.year,
             });
 
-            console.log(sendSheetObj);
-
             var requestOptions = {
                 method: "POST",
                 headers: myHeaders,
@@ -1127,7 +1126,6 @@ const CarDetails = ({
             fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
-                    console.log(result);
                     const returnData = JSON.parse(result);
                     if (returnData.error === false) {
                         router.push("/success");
@@ -1180,8 +1178,6 @@ const CarDetails = ({
             year: cardD.year,
         });
 
-        console.log(sendSheetObj);
-
         var requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -1192,7 +1188,6 @@ const CarDetails = ({
         fetch(enviroment.BASE_URL + "bids/spreadsheet", requestOptions)
             .then((response) => response.text())
             .then((result) => {
-                console.log(result);
                 const returnData = JSON.parse(result);
                 if (returnData.error === false) {
                     router.push("/success");
