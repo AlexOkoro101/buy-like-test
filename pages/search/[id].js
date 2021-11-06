@@ -17,6 +17,7 @@ import IntlTelInput from "react-intl-tel-input";
 import "react-intl-tel-input/dist/main.css";
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
+import { searchCars } from "../../redux/actions/carsAction";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -30,7 +31,9 @@ const CarDetails = ({
     cars,
     getCollection,
     carCollection,
-    res, // const [article, setArticle] =  useState(props.res.data)
+    loading,
+    res,
+    carDetail,
 }) => {
     const buyNowError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
@@ -290,7 +293,6 @@ const CarDetails = ({
     };
 
     useEffect(() => {
-        setDetail(carDetails);
         setvin(carDetails.VIN);
         setname(carDetails.vehicleName);
         setprice(carDetails.mmrPrice);
@@ -324,10 +326,13 @@ const CarDetails = ({
         if (!carDetails.buyNowPrice && carDetails.mmrPrice) {
             setOffer(false);
         }
-        // if(carDetails.buyNowPrice && !carDetails.mmrPrice) {
-        //     setOffer(true)
-        // }
     }, [carDetails, cardD]);
+
+    useEffect(() => {
+        if (carDetail) {
+            setDetail(carDetail);
+        }
+    }, [carDetail]);
 
     const getTrucking = {
         packingCode: `${getZipLocation()}`,
@@ -1287,504 +1292,895 @@ const CarDetails = ({
 
     return (
         <main>
-            <Meta
-                title={
-                    cardD?.vehicleName +
-                    "" +
-                    "" +
-                    cardD?.model +
-                    "" +
-                    "" +
-                    cardD?.make +
-                    "" +
-                    "" +
-                    cardD?.year
-                }
-            />
-            <ToastContainer />
-            {cardD && (
-                <>
-                    <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
-                        <div className="flex gap-x-4">
-                            <p className="font-medium font-10 sec-black">
-                                Share via
-                            </p>
-                            <button>
-                                <Link
-                                    href={
-                                        "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" +
-                                        router.pathname
-                                    }
-                                >
-                                    <img
-                                        src="../assets/img/twitter.svg"
-                                        alt="twiter"
-                                    />
-                                </Link>
-                            </button>
-                            <button>
-                                <a
-                                    href={
-                                        "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" +
-                                        router.pathname
-                                    }
-                                    target="_blank"
-                                >
-                                    <img
-                                        src="../assets/img/facebook.svg"
-                                        alt="facebook"
-                                    />
-                                </a>
-                            </button>
-                            <button>
-                                <a
-                                    href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
-                                        cardD?.vehicleName
-                                    )}%20%20www.buylikedealers.com/${
-                                        cardD?.VIN
-                                    }`}
-                                    data-action="share/whatsapp/share"
-                                    target="_blank"
-                                >
-                                    <img
-                                        src="../assets/img/whatsapp-svg.svg"
-                                        alt="whatsapp"
-                                    />
-                                </a>
-                            </button>
-                            <button
-                                onClick={() =>
-                                    navigator.clipboard.writeText(
-                                        "www.buylikedealers.com/" + cardD?.VIN
-                                    )
-                                }
-                            >
-                                <img
-                                    src="../assets/img/copy-svg.svg"
-                                    alt="copy"
-                                />
-                            </button>
-                        </div>
+            {loading ? (
+                <div className="flex justify-center items-center w-full h-80">
+                    <div className="relative mt-5">
+                        <img src="/img/Tag.png" alt="loader" />
+                        <img
+                            className="absolute top-3.5 right-10 ease-in-out animate-pulse
+                        delay-1000"
+                            src="/img/Car.png"
+                            alt="loader"
+                        />
+                        <h1 className="mt-5 text-lg font-semibold">
+                            Loading
+                            <span className=" ">
+                                <span className="ml-2 ease-in-out tracking-widest delay-300	text-2xl animate-pulse ">
+                                    .
+                                </span>
+                                <span className="ml-2 ease-in-out tracking-widest delay-700 text-2xl	 animate-pulse ">
+                                    .
+                                </span>
+                                <span className="ml-2 ease-in-out tracking-widest text-2xl delay-100	 animate-pulse ">
+                                    .
+                                </span>
+                            </span>
+                        </h1>
                     </div>
-                    <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
-                        <div className="py-1 block lg:hidden hidden-header">
-                            <p className="text-sm font-bold primary-color">
-                                {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
-                            </p>
-
-                            <div className="flex mt-1.5 flex-col">
-                                <div className="flex">
-                                    <p className="font-11 primary-gray font-medium">
-                                        {dollarFormatter.format(
-                                            cardD?.odometer
-                                        )}{" "}
-                                        mi
+                </div>
+            ) : (
+                <div>
+                    <Meta
+                        title={
+                            cardD?.vehicleName +
+                            "" +
+                            "" +
+                            cardD?.model +
+                            "" +
+                            "" +
+                            cardD?.make +
+                            "" +
+                            "" +
+                            cardD?.year
+                        }
+                    />
+                    <ToastContainer />
+                    {cardD && (
+                        <>
+                            <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
+                                <div className="flex gap-x-4">
+                                    <p className="font-medium font-10 sec-black">
+                                        Share via
                                     </p>
-                                    <p className="font-11 ml-2 primary-gray font-medium">
-                                        {cardD?.year}
-                                    </p>
-                                    <p className="font-11 ml-2 primary-gray font-medium">
-                                        VIN: {""}
-                                        {cardD?.VIN}
-                                    </p>
+                                    <button>
+                                        <Link
+                                            href={
+                                                "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" +
+                                                router.pathname
+                                            }
+                                        >
+                                            <img
+                                                src="../assets/img/twitter.svg"
+                                                alt="twiter"
+                                            />
+                                        </Link>
+                                    </button>
+                                    <button>
+                                        <a
+                                            href={
+                                                "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" +
+                                                router.pathname
+                                            }
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src="../assets/img/facebook.svg"
+                                                alt="facebook"
+                                            />
+                                        </a>
+                                    </button>
+                                    <button>
+                                        <a
+                                            href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
+                                                cardD?.vehicleName
+                                            )}%20%20www.buylikedealers.com/${
+                                                cardD?.VIN
+                                            }`}
+                                            data-action="share/whatsapp/share"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src="../assets/img/whatsapp-svg.svg"
+                                                alt="whatsapp"
+                                            />
+                                        </a>
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            navigator.clipboard.writeText(
+                                                "www.buylikedealers.com/" +
+                                                    cardD?.VIN
+                                            )
+                                        }
+                                    >
+                                        <img
+                                            src="../assets/img/copy-svg.svg"
+                                            alt="copy"
+                                        />
+                                    </button>
                                 </div>
-                                {cardD && (
-                                    <div>
-                                        {cardD?.buyNowPrice.length > 2 ? (
-                                            <p className="primary-color text-sm font-bold">
-                                                $
+                            </div>
+                            <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
+                                <div className="py-1 block lg:hidden hidden-header">
+                                    <p className="text-sm font-bold primary-color">
+                                        {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
+                                    </p>
+
+                                    <div className="flex mt-1.5 flex-col">
+                                        <div className="flex">
+                                            <p className="font-11 primary-gray font-medium">
                                                 {dollarFormatter.format(
-                                                    carDetails.buyNowPrice
-                                                )}
+                                                    cardD?.odometer
+                                                )}{" "}
+                                                mi
                                             </p>
-                                        ) : (
-                                            <p className="primary-color text-base font-extrabold">
-                                                $
-                                                {dollarFormatter.format(
-                                                    carDetails.mmrPrice
-                                                )}
+                                            <p className="font-11 ml-2 primary-gray font-medium">
+                                                {cardD?.year}
                                             </p>
+                                            <p className="font-11 ml-2 primary-gray font-medium">
+                                                VIN: {""}
+                                                {cardD?.VIN}
+                                            </p>
+                                        </div>
+                                        {cardD && (
+                                            <div>
+                                                {cardD?.buyNowPrice.length >
+                                                2 ? (
+                                                    <p className="primary-color text-sm font-bold">
+                                                        $
+                                                        {dollarFormatter.format(
+                                                            carDetails.buyNowPrice
+                                                        )}
+                                                    </p>
+                                                ) : (
+                                                    <p className="primary-color text-base font-extrabold">
+                                                        $
+                                                        {dollarFormatter.format(
+                                                            carDetails.mmrPrice
+                                                        )}
+                                                    </p>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="w-full lg:w-3/5">
-                            {cardD.images.length ? (
-                                <>
-                                    <div className="w-full displayLargeimage">
-                                        {displayLargeimage()}
-                                    </div>
-
-                                    <div className="overflow-hidden">
-                                        <div
-                                            className="flex justify-start h-full transition-all mt-3
-                                        "
-                                        >
-                                            <div
-                                                className={
-                                                    page >=
-                                                    (window.innerWidth < 760
-                                                        ? 3
-                                                        : 8)
-                                                        ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
-                                                        : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
-                                                }
-                                                style={{
-                                                    height: "60.03px",
-                                                    width: "20px",
-                                                }}
-                                            >
-                                                <button
-                                                    onClick={() =>
-                                                        prevPage(page)
-                                                    }
-                                                >
-                                                    <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
-                                                </button>
+                                </div>
+                                <div className="w-full lg:w-3/5">
+                                    {cardD.images.length ? (
+                                        <>
+                                            <div className="w-full displayLargeimage">
+                                                {displayLargeimage()}
                                             </div>
-                                            {imageD &&
-                                                imageD.map((ele, id) => (
+
+                                            <div className="overflow-hidden">
+                                                <div
+                                                    className="flex justify-start h-full transition-all mt-3
+                                    "
+                                                >
                                                     <div
-                                                        key={id}
-                                                        onClick={() =>
-                                                            setId(page + id)
+                                                        className={
+                                                            page >=
+                                                            (window.innerWidth <
+                                                            760
+                                                                ? 3
+                                                                : 8)
+                                                                ? "flex mr-2 md:mr-4 animate-bounce items-center text-xs font-mono justify-center  "
+                                                                : "flex mr-2 md:mr-4  opacity-20  pointer-events-none items-center text-xs font-mono justify-center  "
                                                         }
-                                                        className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
+                                                        style={{
+                                                            height: "60.03px",
+                                                            width: "20px",
+                                                        }}
                                                     >
-                                                        <img
-                                                            src={
-                                                                ele?.image_largeUrl
+                                                        <button
+                                                            onClick={() =>
+                                                                prevPage(page)
                                                             }
-                                                            className="rounded-md shadow-sm"
+                                                        >
+                                                            <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
+                                                        </button>
+                                                    </div>
+                                                    {imageD &&
+                                                        imageD.map(
+                                                            (ele, id) => (
+                                                                <div
+                                                                    key={id}
+                                                                    onClick={() =>
+                                                                        setId(
+                                                                            page +
+                                                                                id
+                                                                        )
+                                                                    }
+                                                                    className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
+                                                                >
+                                                                    <img
+                                                                        src={
+                                                                            ele?.image_largeUrl
+                                                                        }
+                                                                        className="rounded-md shadow-sm"
+                                                                        style={{
+                                                                            height: "60.3px",
+                                                                        }}
+                                                                        alt=""
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    {imageD &&
+                                                    imageD.length ===
+                                                        (window.innerWidth <=
+                                                        760
+                                                            ? 3
+                                                            : 8) &&
+                                                    count > 0 ? (
+                                                        <div
+                                                            className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
                                                             style={{
                                                                 height: "60.3px",
+                                                                backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
+                                                                backgroundSize:
+                                                                    "cover",
                                                             }}
-                                                            alt=""
-                                                        />
-                                                    </div>
-                                                ))}
-                                            {imageD &&
-                                            imageD.length ===
-                                                (window.innerWidth <= 760
-                                                    ? 3
-                                                    : 8) &&
-                                            count > 0 ? (
-                                                <div
-                                                    className="loadMore rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
-                                                    style={{
-                                                        height: "60.3px",
-                                                        backgroundImage: `url(${cardD.images[6].image_largeUrl})`,
-                                                        backgroundSize: "cover",
-                                                    }}
-                                                >
-                                                    <div
-                                                        className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
-                                bg-opacity-40 text-white flex items-center justify-center
-                                "
-                                                        style={{
-                                                            fontSize: "10px",
-                                                        }}
-                                                        onClick={() =>
-                                                            nextPage(page)
-                                                        }
-                                                    >
-                                                        load {count} more
-                                                    </div>
+                                                        >
+                                                            <div
+                                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
+                            bg-opacity-40 text-white flex items-center justify-center
+                            "
+                                                                style={{
+                                                                    fontSize:
+                                                                        "10px",
+                                                                }}
+                                                                onClick={() =>
+                                                                    nextPage(
+                                                                        page
+                                                                    )
+                                                                }
+                                                            >
+                                                                load {count}{" "}
+                                                                more
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        ""
+                                                    )}
                                                 </div>
-                                            ) : (
-                                                ""
-                                            )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center relative">
+                                            <img
+                                                src="../../img/Rectangle.png"
+                                                loading="lazy"
+                                                className="br-5 w-full h-full object-contain object-center"
+                                                alt="Coming soon"
+                                            />
+                                            <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">
+                                                Coming Soon
+                                            </p>
+                                            <p className="text-2xl sec-black">
+                                                {" "}
+                                                Contact Support
+                                            </p>
+                                            <div className="flex gap-x-2 text-center items-center justify-center">
+                                                <a
+                                                    href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                    className="sec-black hover:text-gray-900"
+                                                >
+                                                    <i className="fa fa-whatsapp text-2xl"></i>
+                                                </a>
+                                                <a
+                                                    href="mailto:buylikedealers@gmail.com"
+                                                    className="sec-black hover:text-gray-900"
+                                                >
+                                                    <i className="fa fa-envelope-o text-2xl"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="car-details-holder px-4 pt-4 pb-12">
+                                    <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
+                                        <p className="text-sm font-bold primary-color">
+                                            {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
+                                        </p>
+
+                                        <div className="mt-1.5">
+                                            <div className="flex gap-x-5">
+                                                <p className="font-11 sec-black font-bold">
+                                                    {cardD?.odometer.length <= 2
+                                                        ? ""
+                                                        : dollarFormatter.format(
+                                                              cardD?.odometer
+                                                          )}{" "}
+                                                    mi
+                                                    <img
+                                                        src="../assets/img/dot.svg"
+                                                        className="inline pl-1"
+                                                        alt=""
+                                                    />
+                                                </p>
+                                                <p className="font-11 sec-black font-bold">
+                                                    VIN: {cardD.VIN}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                {offer ? (
+                                                    <p className="sec-black font-11 font-bold">
+                                                        BUY NOW AT {""}$
+                                                        {dollarFormatter.format(
+                                                            carDetails.buyNowPrice
+                                                        )}
+                                                    </p>
+                                                ) : (
+                                                    <p className="sec-black font-11 font-bold">
+                                                        EST PRICE {""}$
+                                                        {dollarFormatter.format(
+                                                            carDetails.mmrPrice
+                                                        )}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </>
-                            ) : (
-                                <div className="text-center relative">
-                                    <img
-                                        src="../../img/Rectangle.png"
-                                        loading="lazy"
-                                        className="br-5 w-full h-full object-contain object-center"
-                                        alt="Coming soon"
-                                    />
-                                    <p className="absolute lg:text-5xl text-2xl font-semibold text-white lg:top-56 top-16 lg:left-52 left-12 uppercase">
-                                        Coming Soon
-                                    </p>
-                                    <p className="text-2xl sec-black">
-                                        {" "}
-                                        Contact Support
-                                    </p>
-                                    <div className="flex gap-x-2 text-center items-center justify-center">
-                                        <a
-                                            href="https://api.whatsapp.com/send?phone=+17135130111"
-                                            className="sec-black hover:text-gray-900"
-                                        >
-                                            <i className="fa fa-whatsapp text-2xl"></i>
-                                        </a>
-                                        <a
-                                            href="mailto:buylikedealers@gmail.com"
-                                            className="sec-black hover:text-gray-900"
-                                        >
-                                            <i className="fa fa-envelope-o text-2xl"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        <div className="car-details-holder px-4 pt-4 pb-12">
-                            <div className="px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
-                                <p className="text-sm font-bold primary-color">
-                                    {`${cardD?.year}  ${cardD?.make} ${cardD?.model}`}
-                                </p>
 
-                                <div className="mt-1.5">
-                                    <div className="flex gap-x-5">
-                                        <p className="font-11 sec-black font-bold">
-                                            {cardD?.odometer.length <= 2
-                                                ? ""
-                                                : dollarFormatter.format(
-                                                      cardD?.odometer
-                                                  )}{" "}
-                                            mi
-                                            <img
-                                                src="../assets/img/dot.svg"
-                                                className="inline pl-1"
-                                                alt=""
-                                            />
-                                        </p>
-                                        <p className="font-11 sec-black font-bold">
-                                            VIN: {cardD.VIN}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        {offer ? (
-                                            <p className="sec-black font-11 font-bold">
-                                                BUY NOW AT {""}$
-                                                {dollarFormatter.format(
-                                                    carDetails.buyNowPrice
-                                                )}
-                                            </p>
-                                        ) : (
-                                            <p className="sec-black font-11 font-bold">
-                                                EST PRICE {""}$
-                                                {dollarFormatter.format(
-                                                    carDetails.mmrPrice
-                                                )}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex mt-4 lg:mt-0 justify-between">
-                                <div
-                                    className={
-                                        "flex buy-now-tab cursor-pointer items-center justify-center " +
-                                        (!cardD?.buyNowPrice
-                                            ? "pointer-events-none"
-                                            : "active")
-                                    }
-                                    onClick={(e) => openForm(e, true)}
-                                >
-                                    <div className="text-center">
-                                        <img
-                                            src={
-                                                offer
-                                                    ? "../assets/img/buy-now-active.svg"
-                                                    : "../assets/img/buy-now.svg"
-                                            }
-                                            className="inline"
-                                            alt="bid"
-                                        />
-                                        <p
+                                    <div className="flex mt-4 lg:mt-0 justify-between">
+                                        <div
                                             className={
-                                                offer
-                                                    ? "buy-now-active-tab-text"
-                                                    : "place-bid-tab-text"
+                                                "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                                (!cardD?.buyNowPrice
+                                                    ? "pointer-events-none"
+                                                    : "active")
                                             }
+                                            onClick={(e) => openForm(e, true)}
                                         >
-                                            Buy Now
-                                        </p>
-                                    </div>
-                                </div>
+                                            <div className="text-center">
+                                                <img
+                                                    src={
+                                                        offer
+                                                            ? "../assets/img/buy-now-active.svg"
+                                                            : "../assets/img/buy-now.svg"
+                                                    }
+                                                    className="inline"
+                                                    alt="bid"
+                                                />
+                                                <p
+                                                    className={
+                                                        offer
+                                                            ? "buy-now-active-tab-text"
+                                                            : "place-bid-tab-text"
+                                                    }
+                                                >
+                                                    Buy Now
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                <div
-                                    className={
-                                        "flex buy-now-tab cursor-pointer items-center justify-center " +
-                                        (!cardD?.mmrPrice &&
-                                            "pointer-events-none ") +
-                                        (!cardD?.buyNowPrice && cardD?.mmrPrice
-                                            ? " active"
-                                            : "")
-                                    }
-                                    onClick={(e) => openForm(e, false)}
-                                >
-                                    <div className="text-center">
-                                        <img
-                                            src={
-                                                offer
-                                                    ? "../assets/img/bid.svg"
-                                                    : "../assets/img/bid-active.svg"
-                                            }
-                                            className="inline"
-                                            alt="bid"
-                                        />
-                                        <p
+                                        <div
                                             className={
-                                                offer
-                                                    ? "place-bid-tab-text"
-                                                    : "buy-now-active-tab-text"
+                                                "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                                (!cardD?.mmrPrice &&
+                                                    "pointer-events-none ") +
+                                                (!cardD?.buyNowPrice &&
+                                                cardD?.mmrPrice
+                                                    ? " active"
+                                                    : "")
                                             }
+                                            onClick={(e) => openForm(e, false)}
                                         >
-                                            Place Bid
-                                        </p>
+                                            <div className="text-center">
+                                                <img
+                                                    src={
+                                                        offer
+                                                            ? "../assets/img/bid.svg"
+                                                            : "../assets/img/bid-active.svg"
+                                                    }
+                                                    className="inline"
+                                                    alt="bid"
+                                                />
+                                                <p
+                                                    className={
+                                                        offer
+                                                            ? "place-bid-tab-text"
+                                                            : "buy-now-active-tab-text"
+                                                    }
+                                                >
+                                                    Place Bid
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="mt-3">
-                                {offer && (
-                                    <div
-                                        className="tabcontent"
-                                        id="offer-amount"
-                                    >
-                                        <table className="min-w-full border-separate detail-table">
-                                            <tbody>
-                                                <tr className="detail-row">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold p-2 "
-                                                    >
-                                                        Destination
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal py-2 pr-4"
-                                                    >
-                                                        <select
-                                                            className="w-full"
-                                                            name="destination"
-                                                            id="buynow-destination"
-                                                            value={
-                                                                carDestination
-                                                            }
-                                                            onChange={(e) =>
-                                                                setcarDestination(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        >
-                                                            <option value="Nigeria">
-                                                                Nigeria
-                                                            </option>
-                                                            <option value="USA">
-                                                                USA
-                                                            </option>
-                                                            <option value="Ghana">
-                                                                Ghana
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold w-28 p-2"
-                                                    >
-                                                        Auction Fee
-                                                    </td>
-                                                    <td
-                                                        colSpan="2"
-                                                        className="font-11 sec-black font-normal py-2"
-                                                    >
-                                                        $300
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
-                                                    >
-                                                        Tax and Reg
-                                                    </td>
-                                                    <td
-                                                        colSpan="2"
-                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                    >
-                                                        Not Applicable
-                                                    </td>
-                                                    <td className="text-right px-2 border-b border-gray-200">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold py-2"
-                                                    >
-                                                        Trucking
-                                                    </td>
-
-                                                    {noZipValue ? (
-                                                        <td
-                                                            colSpan="2"
-                                                            className="font-11 sec-black font-normal py-2"
-                                                        >
-                                                            <>Contact Support</>
-                                                            <a
-                                                                onClick={(e) =>
-                                                                    sendSheet(e)
-                                                                }
-                                                                href="https://api.whatsapp.com/send?phone=+17135130111"
-                                                                style={{
-                                                                    margin: "0 10px",
-                                                                }}
-                                                                target="_blank"
+                                    <div className="mt-3">
+                                        {offer && (
+                                            <div
+                                                className="tabcontent"
+                                                id="offer-amount"
+                                            >
+                                                <table className="min-w-full border-separate detail-table">
+                                                    <tbody>
+                                                        <tr className="detail-row">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold p-2 "
                                                             >
-                                                                <i
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "17px",
-                                                                        color: "green",
-                                                                    }}
-                                                                    className="fa fa-whatsapp"
-                                                                ></i>
-                                                            </a>
-                                                            <a
-                                                                href="mailto:buylikedealers@gmail.com"
-                                                                style={{
-                                                                    margin: "0 10px",
-                                                                }}
-                                                                target="_blank"
+                                                                Destination
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal py-2 pr-4"
                                                             >
-                                                                <i
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "17px",
-                                                                        color: "blue",
-                                                                    }}
-                                                                    className="fa fa-envelope-o"
-                                                                ></i>
-                                                            </a>
-                                                        </td>
-                                                    ) : (
-                                                        <>
+                                                                <select
+                                                                    className="w-full"
+                                                                    name="destination"
+                                                                    id="buynow-destination"
+                                                                    value={
+                                                                        carDestination
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
+                                                                        setcarDestination(
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <option value="Nigeria">
+                                                                        Nigeria
+                                                                    </option>
+                                                                    <option value="USA">
+                                                                        USA
+                                                                    </option>
+                                                                    <option value="Ghana">
+                                                                        Ghana
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold w-28 p-2"
+                                                            >
+                                                                Auction Fee
+                                                            </td>
                                                             <td
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
+                                                            >
+                                                                $300
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                            >
+                                                                Tax and Reg
+                                                            </td>
+                                                            <td
+                                                                colSpan="2"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                Not Applicable
+                                                            </td>
+                                                            <td className="text-right px-2 border-b border-gray-200">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold py-2"
+                                                            >
+                                                                Trucking
+                                                            </td>
+
+                                                            {noZipValue ? (
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2"
+                                                                >
+                                                                    <>
+                                                                        Contact
+                                                                        Support
+                                                                    </>
+                                                                    <a
+                                                                        onClick={(
+                                                                            e
+                                                                        ) =>
+                                                                            sendSheet(
+                                                                                e
+                                                                            )
+                                                                        }
+                                                                        href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                        style={{
+                                                                            margin: "0 10px",
+                                                                        }}
+                                                                        target="_blank"
+                                                                    >
+                                                                        <i
+                                                                            style={{
+                                                                                fontSize:
+                                                                                    "17px",
+                                                                                color: "green",
+                                                                            }}
+                                                                            className="fa fa-whatsapp"
+                                                                        ></i>
+                                                                    </a>
+                                                                    <a
+                                                                        href="mailto:buylikedealers@gmail.com"
+                                                                        style={{
+                                                                            margin: "0 10px",
+                                                                        }}
+                                                                        target="_blank"
+                                                                    >
+                                                                        <i
+                                                                            style={{
+                                                                                fontSize:
+                                                                                    "17px",
+                                                                                color: "blue",
+                                                                            }}
+                                                                            className="fa fa-envelope-o"
+                                                                        ></i>
+                                                                    </a>
+                                                                </td>
+                                                            ) : (
+                                                                <>
+                                                                    <td
+                                                                        colSpan="2"
+                                                                        className="font-11 sec-black font-normal py-2"
+                                                                    >
+                                                                        $
+                                                                        {truckingPrice
+                                                                            ? Number(
+                                                                                  truckingPrice.slice(
+                                                                                      1
+                                                                                  )
+                                                                              ) >
+                                                                              1000
+                                                                                ? Number(
+                                                                                      truckingPrice.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) /
+                                                                                  3
+                                                                                : Number(
+                                                                                      truckingPrice.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) >
+                                                                                      400 &&
+                                                                                  Number(
+                                                                                      truckingPrice.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) <
+                                                                                      1000
+                                                                                ? Number(
+                                                                                      truckingPrice.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) /
+                                                                                  2
+                                                                                : Number(
+                                                                                      truckingPrice.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  )
+                                                                            : "0"}
+                                                                    </td>
+                                                                    <td className="text-right px-2">
+                                                                        <label className="detail">
+                                                                            <input
+                                                                                value={
+                                                                                    truckAccessory
+                                                                                }
+                                                                                type="checkbox"
+                                                                                className="focus:outline-none detail self-center"
+                                                                                onChange={() =>
+                                                                                    settruckAccessory(
+                                                                                        !truckAccessory
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                            <span className="detail"></span>
+                                                                        </label>
+                                                                    </td>
+                                                                </>
+                                                            )}
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold py-2"
+                                                            >
+                                                                Shipping
+                                                            </td>
+                                                            <td
+                                                                colSpan="2"
+                                                                className="font-11 sec-black font-normal py-2"
+                                                            >
+                                                                $1,150
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <label className="detail">
+                                                                    <input
+                                                                        value={
+                                                                            shipAccessory
+                                                                        }
+                                                                        type="checkbox"
+                                                                        className="focus:outline-none detail self-center"
+                                                                        onChange={() =>
+                                                                            setshipAccessory(
+                                                                                !shipAccessory
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span className="detail"></span>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                            >
+                                                                Clearing
+                                                            </td>
+                                                            <td
+                                                                colSpan="2"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                N/A
+                                                            </td>
+                                                            <td className="text-right px-2 border-b border-gray-200">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                            >
+                                                                Service Fee
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                $400
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="2"
+                                                                className="sec-black font-11 font-bold py-2"
+                                                            >
+                                                                Total
+                                                            </td>
+                                                            <td
+                                                                colSpan="2"
+                                                                className="font-11 sec-black font-bold py-2"
+                                                            >
+                                                                {NGN ? (
+                                                                    <>
+                                                                        N
+                                                                        {(
+                                                                            accessories() *
+                                                                            Number(
+                                                                                usd
+                                                                            )
+                                                                        ).toLocaleString()}
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        $
+                                                                        {accessories().toLocaleString()}
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                            <td className="font-11 w-16 font-normal sec-black">
+                                                                <ReactFlagsSelect
+                                                                    selected={
+                                                                        selectedCountryCurrency
+                                                                    }
+                                                                    countries={[
+                                                                        "NG",
+                                                                        "US",
+                                                                    ]}
+                                                                    searchPlaceholder="Search countries"
+                                                                    selectedSize={
+                                                                        10
+                                                                    }
+                                                                    optionsSize={
+                                                                        10
+                                                                    }
+                                                                    showSelectedLabel={
+                                                                        false
+                                                                    }
+                                                                    fullWidth={
+                                                                        false
+                                                                    }
+                                                                    onSelect={(
+                                                                        code
+                                                                    ) => {
+                                                                        convertCurrency(
+                                                                            code
+                                                                        );
+                                                                        setSelectedCountryCurrency(
+                                                                            code
+                                                                        );
+                                                                    }}
+                                                                    className="currency-flags"
+                                                                    selectButtonClassName="currency-flags-button"
+                                                                    customLabels={{
+                                                                        NG: {
+                                                                            primary:
+                                                                                "NGN",
+                                                                        },
+                                                                        US: {
+                                                                            primary:
+                                                                                "USD",
+                                                                        },
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                        {!offer && (
+                                            <div
+                                                className="tabcontent"
+                                                id="budget"
+                                            >
+                                                <table className="w-full border-separate detail-table table-fixed">
+                                                    <tbody>
+                                                        <tr className="destination-row pb-2">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2 destination">
+                                                                Destination
+                                                            </td>
+                                                            <td
+                                                                colSpan="4"
+                                                                className="font-11 sec-black font-normal py-2 destination-content pr-4"
+                                                            >
+                                                                <select
+                                                                    className="w-full "
+                                                                    name="destination"
+                                                                    id="placebid-destination"
+                                                                    value={
+                                                                        carDestination
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
+                                                                        setcarDestination(
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <option value="Nigeria">
+                                                                        Nigeria
+                                                                    </option>
+                                                                    <option value="USA">
+                                                                        USA
+                                                                    </option>
+                                                                    <option value="Ghana">
+                                                                        Ghana
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="max-bid-row">
+                                                            <td className="font-semibold sec-black font-11 p-2 max-bid">
+                                                                Enter max. bid
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="text-sm font-medium sec-gray max-bid-content"
+                                                            >
+                                                                <input
+                                                                    ref={
+                                                                        bidAmountRef
+                                                                    }
+                                                                    id="budget"
+                                                                    className="font-11 bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
+                                                                    type="text"
+                                                                    onBlur={() =>
+                                                                        formatbidAmount()
+                                                                    }
+                                                                    onFocus={() => {
+                                                                        removeComma();
+                                                                    }}
+                                                                    onChange={(
+                                                                        e
+                                                                    ) => {
+                                                                        includeMaxBid(
+                                                                            e
+                                                                        );
+                                                                        removeAlpha();
+                                                                    }}
+                                                                    value={
+                                                                        maxBidAmount
+                                                                    }
+                                                                />
+                                                            </td>
+                                                            <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
+                                                                USD
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Auction Fee
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
+                                                            >
+                                                                $300
+                                                            </td>
+                                                            <td className=" px-2 text-right">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                                Tax and Reg
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                Not Applicable
+                                                            </td>
+                                                            <td className="px-2 border-b border-gray-200 text-right">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Trucking
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
                                                             >
                                                                 $
                                                                 {truckingPrice
@@ -1826,1180 +2222,745 @@ const CarDetails = ({
                                                                 <label className="detail">
                                                                     <input
                                                                         value={
-                                                                            truckAccessory
+                                                                            placebidTruckAccessory
                                                                         }
                                                                         type="checkbox"
                                                                         className="focus:outline-none detail self-center"
                                                                         onChange={() =>
-                                                                            settruckAccessory(
-                                                                                !truckAccessory
+                                                                            setplacebidTruckAccessory(
+                                                                                !placebidTruckAccessory
                                                                             )
                                                                         }
                                                                     />
                                                                     <span className="detail"></span>
                                                                 </label>
                                                             </td>
-                                                        </>
-                                                    )}
-                                                </tr>
+                                                        </tr>
 
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold py-2"
-                                                    >
-                                                        Shipping
-                                                    </td>
-                                                    <td
-                                                        colSpan="2"
-                                                        className="font-11 sec-black font-normal py-2"
-                                                    >
-                                                        $1,150
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                value={
-                                                                    shipAccessory
-                                                                }
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={() =>
-                                                                    setshipAccessory(
-                                                                        !shipAccessory
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Shipping
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
+                                                            >
+                                                                $1,150
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <label className="detail">
+                                                                    <input
+                                                                        value={
+                                                                            placebidShipAccessory
+                                                                        }
+                                                                        type="checkbox"
+                                                                        className="focus:outline-none detail self-center"
+                                                                        onChange={() =>
+                                                                            setplacebidShipAccessory(
+                                                                                !placebidShipAccessory
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span className="detail"></span>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
 
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
-                                                    >
-                                                        Clearing
-                                                    </td>
-                                                    <td
-                                                        colSpan="2"
-                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                    >
-                                                        N/A
-                                                    </td>
-                                                    <td className="text-right px-2 border-b border-gray-200">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                                Clearing
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
+                                                            >
+                                                                N/A
+                                                            </td>
+                                                            <td className="text-right px-2 border-b border-gray-200">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
 
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
-                                                    >
-                                                        Service Fee
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                    >
-                                                        $400
-                                                    </td>
-                                                </tr>
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="1"
+                                                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                            >
+                                                                Service Fee
+                                                            </td>
+                                                            <td
+                                                                colSpan="4"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                $400
+                                                            </td>
+                                                        </tr>
 
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="2"
-                                                        className="sec-black font-11 font-bold py-2"
-                                                    >
-                                                        Total
-                                                    </td>
-                                                    <td
-                                                        colSpan="2"
-                                                        className="font-11 sec-black font-bold py-2"
-                                                    >
-                                                        {NGN ? (
-                                                            <>
-                                                                N
-                                                                {(
-                                                                    accessories() *
-                                                                    Number(usd)
-                                                                ).toLocaleString()}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                $
-                                                                {accessories().toLocaleString()}
-                                                            </>
-                                                        )}
-                                                    </td>
-                                                    <td className="font-11 w-16 font-normal sec-black">
-                                                        <ReactFlagsSelect
-                                                            selected={
-                                                                selectedCountryCurrency
-                                                            }
-                                                            countries={[
-                                                                "NG",
-                                                                "US",
-                                                            ]}
-                                                            searchPlaceholder="Search countries"
-                                                            selectedSize={10}
-                                                            optionsSize={10}
-                                                            showSelectedLabel={
-                                                                false
-                                                            }
-                                                            fullWidth={false}
-                                                            onSelect={(
-                                                                code
-                                                            ) => {
-                                                                convertCurrency(
-                                                                    code
-                                                                );
-                                                                setSelectedCountryCurrency(
-                                                                    code
-                                                                );
-                                                            }}
-                                                            className="currency-flags"
-                                                            selectButtonClassName="currency-flags-button"
-                                                            customLabels={{
-                                                                NG: {
-                                                                    primary:
-                                                                        "NGN",
-                                                                },
-                                                                US: {
-                                                                    primary:
-                                                                        "USD",
-                                                                },
-                                                            }}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                                {!offer && (
-                                    <div className="tabcontent" id="budget">
-                                        <table className="w-full border-separate detail-table table-fixed">
-                                            <tbody>
-                                                <tr className="destination-row pb-2">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 destination">
-                                                        Destination
-                                                    </td>
-                                                    <td
-                                                        colSpan="4"
-                                                        className="font-11 sec-black font-normal py-2 destination-content pr-4"
-                                                    >
-                                                        <select
-                                                            className="w-full "
-                                                            name="destination"
-                                                            id="placebid-destination"
-                                                            value={
-                                                                carDestination
-                                                            }
-                                                            onChange={(e) =>
-                                                                setcarDestination(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        >
-                                                            <option value="Nigeria">
-                                                                Nigeria
-                                                            </option>
-                                                            <option value="USA">
-                                                                USA
-                                                            </option>
-                                                            <option value="Ghana">
-                                                                Ghana
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="max-bid-row">
-                                                    <td className="font-semibold sec-black font-11 p-2 max-bid">
-                                                        Enter max. bid
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="text-sm font-medium sec-gray max-bid-content"
-                                                    >
-                                                        <input
-                                                            ref={bidAmountRef}
-                                                            id="budget"
-                                                            className="font-11 bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
-                                                            type="text"
-                                                            onBlur={() =>
-                                                                formatbidAmount()
-                                                            }
-                                                            onFocus={() => {
-                                                                removeComma();
-                                                            }}
-                                                            onChange={(e) => {
-                                                                includeMaxBid(
-                                                                    e
-                                                                );
-                                                                removeAlpha();
-                                                            }}
-                                                            value={maxBidAmount}
-                                                        />
-                                                    </td>
-                                                    <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
-                                                        USD
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Auction Fee
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal pr-20 py-2"
-                                                    >
-                                                        $300
-                                                    </td>
-                                                    <td className=" px-2 text-right">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                                        Tax and Reg
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                    >
-                                                        Not Applicable
-                                                    </td>
-                                                    <td className="px-2 border-b border-gray-200 text-right">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Trucking
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal pr-20 py-2"
-                                                    >
-                                                        $
-                                                        {truckingPrice
-                                                            ? Number(
-                                                                  truckingPrice.slice(
-                                                                      1
-                                                                  )
-                                                              ) > 1000
-                                                                ? Number(
-                                                                      truckingPrice.slice(
-                                                                          1
-                                                                      )
-                                                                  ) / 3
-                                                                : Number(
-                                                                      truckingPrice.slice(
-                                                                          1
-                                                                      )
-                                                                  ) > 400 &&
-                                                                  Number(
-                                                                      truckingPrice.slice(
-                                                                          1
-                                                                      )
-                                                                  ) < 1000
-                                                                ? Number(
-                                                                      truckingPrice.slice(
-                                                                          1
-                                                                      )
-                                                                  ) / 2
-                                                                : Number(
-                                                                      truckingPrice.slice(
-                                                                          1
-                                                                      )
-                                                                  )
-                                                            : "0"}
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                value={
-                                                                    placebidTruckAccessory
-                                                                }
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={() =>
-                                                                    setplacebidTruckAccessory(
-                                                                        !placebidTruckAccessory
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Shipping
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal pr-20 py-2"
-                                                    >
-                                                        $1,150
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                value={
-                                                                    placebidShipAccessory
-                                                                }
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={() =>
-                                                                    setplacebidShipAccessory(
-                                                                        !placebidShipAccessory
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                                        Clearing
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
-                                                    >
-                                                        N/A
-                                                    </td>
-                                                    <td className="text-right px-2 border-b border-gray-200">
-                                                        <img
-                                                            className="inline"
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td
-                                                        colSpan="1"
-                                                        className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
-                                                    >
-                                                        Service Fee
-                                                    </td>
-                                                    <td
-                                                        colSpan="4"
-                                                        className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                    >
-                                                        $400
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="">
-                                                    <td className="sec-black font-11 font-bold p-2">
-                                                        Total
-                                                    </td>
-                                                    <td
-                                                        colSpan="3"
-                                                        className="font-11 sec-black font-bold pr-8 py-2"
-                                                    >
-                                                        {NGN ? (
-                                                            <>
-                                                                N
-                                                                {/* {(placebidAccessories() * Number(usd)).toLocaleString()} */}
-                                                                {(
-                                                                    (Number(
-                                                                        maxBidAmount.replace(
-                                                                            /\,/g,
-                                                                            ""
-                                                                        )
-                                                                    ) +
-                                                                        Number(
-                                                                            placebidAccessories()
-                                                                        )) *
-                                                                    Number(usd)
-                                                                ).toLocaleString()}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                $
-                                                                {(
-                                                                    Number(
-                                                                        maxBidAmount.replace(
-                                                                            /\,/g,
-                                                                            ""
-                                                                        )
-                                                                    ) +
-                                                                    Number(
-                                                                        placebidAccessories()
-                                                                    )
-                                                                ).toLocaleString()}
-                                                            </>
-                                                        )}
-                                                    </td>
-                                                    <td className="font-11 font-normal sec-black">
-                                                        <ReactFlagsSelect
-                                                            selected={
-                                                                selectedCountryCurrency
-                                                            }
-                                                            countries={[
-                                                                "NG",
-                                                                "US",
-                                                            ]}
-                                                            searchPlaceholder="Search countries"
-                                                            selectedSize={10}
-                                                            optionsSize={10}
-                                                            showSelectedLabel={
-                                                                false
-                                                            }
-                                                            fullWidth={false}
-                                                            onSelect={(
-                                                                code
-                                                            ) => {
-                                                                convertCurrency(
-                                                                    code
-                                                                );
-                                                                setSelectedCountryCurrency(
-                                                                    code
-                                                                );
-                                                            }}
-                                                            className="currency-flags"
-                                                            selectButtonClassName="currency-flags-button"
-                                                            customLabels={{
-                                                                NG: {
-                                                                    primary:
-                                                                        "NGN",
-                                                                },
-                                                                US: {
-                                                                    primary:
-                                                                        "USD",
-                                                                },
-                                                            }}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex justify-center my-3">
-                                <div className="flex">
-                                    <label className="detail">
-                                        <input
-                                            type="checkbox"
-                                            className="focus:outline-none detail self-center"
-                                            checked={terms}
-                                            onChange={(e) => {
-                                                setterms(!terms);
-                                            }}
-                                        />
-                                        <span className="detail"></span>
-                                    </label>
-                                    <label className="font-11 sec-black ml-1.5">
-                                        I agree with {""}
-                                        <span className="primary-blue">
-                                            terms and conditions
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="flex justify-center">
-                                {token ? (
-                                    <>
-                                        {carDetails?.buyNowPrice?.length >=
-                                        1 ? (
-                                            <button
-                                                // onClick={() => {
-                                                //     initializePayment(
-                                                //         onSuccess,
-                                                //         onClose
-                                                //     );
-                                                // }}
-                                                onClick={OpenSendSheetModal}
-                                                className={
-                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                    (!terms &&
-                                                        `opacity-50 cursor-not-allowed`)
-                                                }
-                                                disabled={!terms}
-                                            >
-                                                {isLoading ? (
-                                                    <ClipLoader
-                                                        color="#fff"
-                                                        size={20}
-                                                        loading
-                                                    />
-                                                ) : (
-                                                    "SUBMIT A REQUEST"
-                                                )}
-                                            </button>
-                                        ) : (
-                                            <button
-                                                // onClick={placeBid}
-                                                onClick={OpenSendSheetModal}
-                                                className={
-                                                    `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                    (!terms &&
-                                                        `opacity-50 cursor-not-allowed`)
-                                                }
-                                                disabled={!terms}
-                                            >
-                                                {isLoading ? (
-                                                    <ClipLoader
-                                                        color="#fff"
-                                                        size={20}
-                                                        loading
-                                                    />
-                                                ) : (
-                                                    "SUBMIT A REQUEST"
-                                                )}
-                                            </button>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-bold p-2">
+                                                                Total
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-bold pr-8 py-2"
+                                                            >
+                                                                {NGN ? (
+                                                                    <>
+                                                                        N
+                                                                        {/* {(placebidAccessories() * Number(usd)).toLocaleString()} */}
+                                                                        {(
+                                                                            (Number(
+                                                                                maxBidAmount.replace(
+                                                                                    /\,/g,
+                                                                                    ""
+                                                                                )
+                                                                            ) +
+                                                                                Number(
+                                                                                    placebidAccessories()
+                                                                                )) *
+                                                                            Number(
+                                                                                usd
+                                                                            )
+                                                                        ).toLocaleString()}
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        $
+                                                                        {(
+                                                                            Number(
+                                                                                maxBidAmount.replace(
+                                                                                    /\,/g,
+                                                                                    ""
+                                                                                )
+                                                                            ) +
+                                                                            Number(
+                                                                                placebidAccessories()
+                                                                            )
+                                                                        ).toLocaleString()}
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                            <td className="font-11 font-normal sec-black">
+                                                                <ReactFlagsSelect
+                                                                    selected={
+                                                                        selectedCountryCurrency
+                                                                    }
+                                                                    countries={[
+                                                                        "NG",
+                                                                        "US",
+                                                                    ]}
+                                                                    searchPlaceholder="Search countries"
+                                                                    selectedSize={
+                                                                        10
+                                                                    }
+                                                                    optionsSize={
+                                                                        10
+                                                                    }
+                                                                    showSelectedLabel={
+                                                                        false
+                                                                    }
+                                                                    fullWidth={
+                                                                        false
+                                                                    }
+                                                                    onSelect={(
+                                                                        code
+                                                                    ) => {
+                                                                        convertCurrency(
+                                                                            code
+                                                                        );
+                                                                        setSelectedCountryCurrency(
+                                                                            code
+                                                                        );
+                                                                    }}
+                                                                    className="currency-flags"
+                                                                    selectButtonClassName="currency-flags-button"
+                                                                    customLabels={{
+                                                                        NG: {
+                                                                            primary:
+                                                                                "NGN",
+                                                                        },
+                                                                        US: {
+                                                                            primary:
+                                                                                "USD",
+                                                                        },
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         )}
-                                        <p className="font-11 sec-black mx-2 mt-2">
-                                            OR
-                                        </p>
+                                    </div>
 
-                                        <button
-                                            type="button"
-                                            className="whatsapp-proceed"
-                                            onClick={() => {
-                                                OpenSendSheetModal();
-                                            }}
-                                        >
-                                            <img
-                                                src="../assets/img/whatsapp-btn.svg"
-                                                className="inline"
-                                                alt=""
-                                            />{" "}
-                                            WHATSAPP US
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link href="/auth/login">
-                                            <button
-                                                type="button"
-                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                                            >
-                                                SUBMIT A REQUEST TO PROCEED
-                                            </button>
-                                        </Link>
+                                    <div className="flex justify-center my-3">
+                                        <div className="flex">
+                                            <label className="detail">
+                                                <input
+                                                    type="checkbox"
+                                                    className="focus:outline-none detail self-center"
+                                                    checked={terms}
+                                                    onChange={(e) => {
+                                                        setterms(!terms);
+                                                    }}
+                                                />
+                                                <span className="detail"></span>
+                                            </label>
+                                            <label className="font-11 sec-black ml-1.5">
+                                                I agree with {""}
+                                                <span className="primary-blue">
+                                                    terms and conditions
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        {token ? (
+                                            <>
+                                                {carDetails?.buyNowPrice
+                                                    ?.length >= 1 ? (
+                                                    <button
+                                                        // onClick={() => {
+                                                        //     initializePayment(
+                                                        //         onSuccess,
+                                                        //         onClose
+                                                        //     );
+                                                        // }}
+                                                        onClick={
+                                                            OpenSendSheetModal
+                                                        }
+                                                        className={
+                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                            (!terms &&
+                                                                `opacity-50 cursor-not-allowed`)
+                                                        }
+                                                        disabled={!terms}
+                                                    >
+                                                        {isLoading ? (
+                                                            <ClipLoader
+                                                                color="#fff"
+                                                                size={20}
+                                                                loading
+                                                            />
+                                                        ) : (
+                                                            "SUBMIT A REQUEST"
+                                                        )}
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        // onClick={placeBid}
+                                                        onClick={
+                                                            OpenSendSheetModal
+                                                        }
+                                                        className={
+                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                            (!terms &&
+                                                                `opacity-50 cursor-not-allowed`)
+                                                        }
+                                                        disabled={!terms}
+                                                    >
+                                                        {isLoading ? (
+                                                            <ClipLoader
+                                                                color="#fff"
+                                                                size={20}
+                                                                loading
+                                                            />
+                                                        ) : (
+                                                            "SUBMIT A REQUEST"
+                                                        )}
+                                                    </button>
+                                                )}
+                                                <p className="font-11 sec-black mx-2 mt-2">
+                                                    OR
+                                                </p>
 
-                                        <p className="font-11 sec-black mx-2 mt-2">
-                                            OR
-                                        </p>
-
-                                        <button
-                                            type="button"
-                                            className="whatsapp-proceed"
-                                            onClick={() => {
-                                                OpenSendSheetModal();
-                                            }}
-                                        >
-                                            <img
-                                                src="../assets/img/whatsapp-btn.svg"
-                                                className="inline"
-                                                alt=""
-                                            />{" "}
-                                            WHATSAPP US
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <section className="w-full mt-20">
-                        <div className=" justify-center mb-10 block lg:hidden"></div>
-
-                        <div className="flex justify-around flex-col lg:flex-row flex-wrap items-center gap-y-8">
-                            <div className="flex flex-col self-center">
-                                <div className="items-center self-center">
-                                    <img
-                                        src="../assets/img/vectors/location.svg"
-                                        alt="location"
-                                    />
-                                </div>
-                                <p className="pt-5 primary-black font-semibold text-base text-center">
-                                    Vehicle location
-                                </p>
-                                <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    {cardD?.pickupLocation}
-                                </p>
-                            </div>
-                            <div className="flex flex-col relative  lg:block">
-                                <div
-                                    style={{ padding: "15px" }}
-                                    className="timer-container relative"
-                                >
-                                    {distance !== null && (
-                                        <div>{renderCounter(distance)}</div>
-                                    )}
-
-                                    <div className="timer text-center">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
-                                        >
-                                            Auction Day
-                                        </button>
-                                        {/* {car.data.length === 0 ? (
-                                            <></>
+                                                <button
+                                                    type="button"
+                                                    className="whatsapp-proceed"
+                                                    onClick={() => {
+                                                        OpenSendSheetModal();
+                                                    }}
+                                                >
+                                                    <img
+                                                        src="../assets/img/whatsapp-btn.svg"
+                                                        className="inline"
+                                                        alt=""
+                                                    />{" "}
+                                                    WHATSAPP US
+                                                </button>
+                                            </>
                                         ) : (
-                                            <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                                TIME LEFT
-                                                <p>
-                                                    {car.data[0].auctionEndTime}
+                                            <>
+                                                <Link href="/auth/login">
+                                                    <button
+                                                        type="button"
+                                                        className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                    >
+                                                        SUBMIT A REQUEST TO
+                                                        PROCEED
+                                                    </button>
+                                                </Link>
 
-                                                    used the data this way
+                                                <p className="font-11 sec-black mx-2 mt-2">
+                                                    OR
                                                 </p>
-                                            </p>
-                                        )} */}
 
-                                        <div className=" flex w-full justify-center mt-3">
-                                            <p className="sec-black font-medium font-11">
-                                                {new Date(
-                                                    carDetails?.auctionEndTime
-                                                ).toLocaleDateString("en-NG", {
-                                                    year: "numeric",
-                                                    day: "numeric",
-                                                    month: "long",
-                                                })}
-                                            </p>
-                                            <p className="sec-black font-medium font-11 ml-4">
-                                                {new Date(
-                                                    carDetails?.auctionEndTime
-                                                ).toLocaleString("en-US", {
-                                                    hour: "numeric",
-                                                    hour12: true,
-                                                })}
-                                            </p>
-                                        </div>
-
-                                        <p className="font-9 font-semibold text-center primary-gray pt-4">
-                                            TIME LEFT
-                                        </p>
-                                        <div className="flex mt-1.5 justify-center">
-                                            <div className="flex flex-col ml-2">
-                                                <p className="days font-13 sec-black font-semibold ">
-                                                    {days}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    DAYS
-                                                </p>
-                                            </div>
-
-                                            <div className=" ml-3.5">
-                                                <p className=" font-13 sec-black font-semibold hours">
-                                                    {hours}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    HOURS
-                                                </p>
-                                            </div>
-
-                                            <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold minutes">
-                                                    {minute}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    MINUTES
-                                                </p>
-                                            </div>
-
-                                            <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold seconds">
-                                                    {seconds}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    SECONDS
-                                                </p>
-                                            </div>
-                                        </div>
+                                                <button
+                                                    type="button"
+                                                    className="whatsapp-proceed"
+                                                    onClick={() => {
+                                                        OpenSendSheetModal();
+                                                    }}
+                                                >
+                                                    <img
+                                                        src="../assets/img/whatsapp-btn.svg"
+                                                        className="inline"
+                                                        alt=""
+                                                    />{" "}
+                                                    WHATSAPP US
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col self-center mt-14">
-                                <div className="items-center self-center">
-                                    <img
-                                        src="../assets/img/vectors/delivery.svg"
-                                        alt="location"
-                                    />
-                                </div>
-                                <p className="pt-5 primary-black font-semibold text-base text-center">
-                                    Est. Delivery
-                                </p>
-                                <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    {new Date(
-                                        +new Date(carDetails?.auctionEndTime) +
-                                            deliveryDuration
-                                    ).toLocaleDateString("en-NG", {
-                                        weekday: "long",
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                    })}
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-                    <section className="mt-14 pt-7 w-full px-5 vehicle-details">
-                        <div className="text-center py-3">
-                            <hr className="red-underline2 w-20 m-auto pb-4 " />
-                            <h4 className="font-bold primary-color text-xl ">
-                                VEHICLE DETAILS
-                            </h4>
-                            <p className="primary-blue pt-2 text-sm font-semibold">
-                                HIGHLIGHTS
-                            </p>
-                        </div>
+                            <section className="w-full mt-20">
+                                <div className=" justify-center mb-10 block lg:hidden"></div>
 
-                        <div className="flex flex-wrap justify-center w-full mt-8">
-                            <div className="flex flex-col w-1/2 lg:w-1/3 mb-10 lg:mb-20">
-                                <div className="self-center">
-                                    <img
-                                        src="../assets/img/vectors/clean-title.svg"
-                                        alt="clean-title"
-                                    />
+                                <div className="flex justify-around flex-col lg:flex-row flex-wrap items-center gap-y-8">
+                                    <div className="flex flex-col self-center">
+                                        <div className="items-center self-center">
+                                            <img
+                                                src="../assets/img/vectors/location.svg"
+                                                alt="location"
+                                            />
+                                        </div>
+                                        <p className="pt-5 primary-black font-semibold text-base text-center">
+                                            Vehicle location
+                                        </p>
+                                        <p className="pt-0.5 primary-gray font-medium font-11 text-center">
+                                            {cardD?.pickupLocation}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col relative  lg:block">
+                                        <div
+                                            style={{ padding: "15px" }}
+                                            className="timer-container relative"
+                                        >
+                                            {distance !== null && (
+                                                <div>
+                                                    {renderCounter(distance)}
+                                                </div>
+                                            )}
+
+                                            <div className="timer text-center">
+                                                <button
+                                                    type="button"
+                                                    className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
+                                                >
+                                                    Auction Day
+                                                </button>
+                                                {/* {car.data.length === 0 ? (
+                                        <></>
+                                    ) : (
+                                        <p className="font-9 font-semibold text-center primary-blue pt-4">
+                                            TIME LEFT
+                                            <p>
+                                                {car.data[0].auctionEndTime}
+
+                                                used the data this way
+                                            </p>
+                                        </p>
+                                    )} */}
+
+                                                <div className=" flex w-full justify-center mt-3">
+                                                    <p className="sec-black font-medium font-11">
+                                                        {new Date(
+                                                            carDetails?.auctionEndTime
+                                                        ).toLocaleDateString(
+                                                            "en-NG",
+                                                            {
+                                                                year: "numeric",
+                                                                day: "numeric",
+                                                                month: "long",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                    <p className="sec-black font-medium font-11 ml-4">
+                                                        {new Date(
+                                                            carDetails?.auctionEndTime
+                                                        ).toLocaleString(
+                                                            "en-US",
+                                                            {
+                                                                hour: "numeric",
+                                                                hour12: true,
+                                                            }
+                                                        )}
+                                                    </p>
+                                                </div>
+
+                                                <p className="font-9 font-semibold text-center primary-gray pt-4">
+                                                    TIME LEFT
+                                                </p>
+                                                <div className="flex mt-1.5 justify-center">
+                                                    <div className="flex flex-col ml-2">
+                                                        <p className="days font-13 sec-black font-semibold ">
+                                                            {days}
+                                                        </p>
+                                                        <p className="primary-gray font-6">
+                                                            DAYS
+                                                        </p>
+                                                    </div>
+
+                                                    <div className=" ml-3.5">
+                                                        <p className=" font-13 sec-black font-semibold hours">
+                                                            {hours}
+                                                        </p>
+                                                        <p className="primary-gray font-6">
+                                                            HOURS
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="flex flex-col ml-3.5">
+                                                        <p className="font-13 sec-black font-semibold minutes">
+                                                            {minute}
+                                                        </p>
+                                                        <p className="primary-gray font-6">
+                                                            MINUTES
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="flex flex-col ml-3.5">
+                                                        <p className="font-13 sec-black font-semibold seconds">
+                                                            {seconds}
+                                                        </p>
+                                                        <p className="primary-gray font-6">
+                                                            SECONDS
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col self-center mt-14">
+                                        <div className="items-center self-center">
+                                            <img
+                                                src="../assets/img/vectors/delivery.svg"
+                                                alt="location"
+                                            />
+                                        </div>
+                                        <p className="pt-5 primary-black font-semibold text-base text-center">
+                                            Est. Delivery
+                                        </p>
+                                        <p className="pt-0.5 primary-gray font-medium font-11 text-center">
+                                            {new Date(
+                                                +new Date(
+                                                    carDetails?.auctionEndTime
+                                                ) + deliveryDuration
+                                            ).toLocaleDateString("en-NG", {
+                                                weekday: "long",
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric",
+                                            })}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="pt-2.5 text-center">
-                                    <p className="primary-black font-semibold text-base">
-                                        Clean Title
+                            </section>
+                            <section className="mt-14 pt-7 w-full px-5 vehicle-details">
+                                <div className="text-center py-3">
+                                    <hr className="red-underline2 w-20 m-auto pb-4 " />
+                                    <h4 className="font-bold primary-color text-xl ">
+                                        VEHICLE DETAILS
+                                    </h4>
+                                    <p className="primary-blue pt-2 text-sm font-semibold">
+                                        HIGHLIGHTS
                                     </p>
-                                    <p className="primary-gray font-medium font-11">
-                                        Add a little note here about this
-                                        highlight
-                                    </p>
                                 </div>
-                            </div>
 
-                            <div className="flex flex-col w-1/2 lg:w-1/3 mb-10 lg:mb-20">
-                                <div className="self-center">
-                                    <img
-                                        src="../assets/img/vectors/loaded.svg"
-                                        alt="loaded"
-                                    />
+                                <div className="flex flex-wrap justify-center w-full mt-8">
+                                    <div className="flex flex-col w-1/2 lg:w-1/3 mb-10 lg:mb-20">
+                                        <div className="self-center">
+                                            <img
+                                                src="../assets/img/vectors/clean-title.svg"
+                                                alt="clean-title"
+                                            />
+                                        </div>
+                                        <div className="pt-2.5 text-center">
+                                            <p className="primary-black font-semibold text-base">
+                                                Clean Title
+                                            </p>
+                                            <p className="primary-gray font-medium font-11">
+                                                Add a little note here about
+                                                this highlight
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col w-1/2 lg:w-1/3 mb-10 lg:mb-20">
+                                        <div className="self-center">
+                                            <img
+                                                src="../assets/img/vectors/loaded.svg"
+                                                alt="loaded"
+                                            />
+                                        </div>
+                                        <div className="pt-2.5 text-center">
+                                            <p className="primary-black font-semibold text-base">
+                                                Fully Loaded
+                                            </p>
+                                            <p className="primary-gray font-medium font-11">
+                                                Add a little note here about
+                                                this highlight
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col  w-1/2 lg:w-1/3 mb-10 lg:mb-20">
+                                        <div className="self-center">
+                                            <img
+                                                src="../assets/img/vectors/great-deal.svg"
+                                                alt="deal"
+                                            />
+                                        </div>
+                                        <div className="pt-2.5 text-center">
+                                            <p className="primary-black font-semibold text-base">
+                                                Great Deal
+                                            </p>
+                                            <p className="primary-gray font-medium font-11">
+                                                Add a little note here about
+                                                this highlight
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col  w-1/2 lg:w-1/3 mb-10 lg:mb-20">
+                                        <div className="self-center">
+                                            <img
+                                                src="../assets/img/vectors/non-accident.svg"
+                                                alt="non-accident"
+                                            />
+                                        </div>
+                                        <div className="pt-2.5 text-center">
+                                            <p className="primary-black font-semibold text-base">
+                                                Non-Accident
+                                            </p>
+                                            <p className="primary-gray font-medium font-11">
+                                                Add a little note here about
+                                                this highlight
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col  w-full lg:w-1/3 mb-10 lg:mb-20">
+                                        <div className="self-center">
+                                            <img
+                                                src="../assets/img/vectors/green-light-car.svg"
+                                                alt="green"
+                                            />
+                                        </div>
+                                        <div className="pt-2.5 text-center">
+                                            <p className="primary-black font-semibold text-base">
+                                                Green Light car
+                                            </p>
+                                            <p className="primary-gray font-medium font-11">
+                                                Add a little note here about
+                                                this highlight
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="pt-2.5 text-center">
-                                    <p className="primary-black font-semibold text-base">
-                                        Fully Loaded
-                                    </p>
-                                    <p className="primary-gray font-medium font-11">
-                                        Add a little note here about this
-                                        highlight
-                                    </p>
+                            </section>
+
+                            <div className="py-4 overview-section">
+                                <div className="flex justify-center gap-x-8 lg:gap-x-0 px-5">
+                                    <div
+                                        onClick={() => {
+                                            setoverview(true);
+                                        }}
+                                        className={
+                                            "overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " +
+                                            (overview ? " active" : "")
+                                        }
+                                    >
+                                        <p className="lg:py-1.5 ">OVERVIEW</p>
+                                    </div>
+
+                                    <div
+                                        onClick={() => {
+                                            setoverview(false);
+                                        }}
+                                        className={
+                                            "overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " +
+                                            (!overview ? " active" : "")
+                                        }
+                                    >
+                                        <p className="lg:py-1.5">
+                                            AUCTION INFO
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="flex flex-col  w-1/2 lg:w-1/3 mb-10 lg:mb-20">
-                                <div className="self-center">
-                                    <img
-                                        src="../assets/img/vectors/great-deal.svg"
-                                        alt="deal"
-                                    />
-                                </div>
-                                <div className="pt-2.5 text-center">
-                                    <p className="primary-black font-semibold text-base">
-                                        Great Deal
-                                    </p>
-                                    <p className="primary-gray font-medium font-11">
-                                        Add a little note here about this
-                                        highlight
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col  w-1/2 lg:w-1/3 mb-10 lg:mb-20">
-                                <div className="self-center">
-                                    <img
-                                        src="../assets/img/vectors/non-accident.svg"
-                                        alt="non-accident"
-                                    />
-                                </div>
-                                <div className="pt-2.5 text-center">
-                                    <p className="primary-black font-semibold text-base">
-                                        Non-Accident
-                                    </p>
-                                    <p className="primary-gray font-medium font-11">
-                                        Add a little note here about this
-                                        highlight
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col  w-full lg:w-1/3 mb-10 lg:mb-20">
-                                <div className="self-center">
-                                    <img
-                                        src="../assets/img/vectors/green-light-car.svg"
-                                        alt="green"
-                                    />
-                                </div>
-                                <div className="pt-2.5 text-center">
-                                    <p className="primary-black font-semibold text-base">
-                                        Green Light car
-                                    </p>
-                                    <p className="primary-gray font-medium font-11">
-                                        Add a little note here about this
-                                        highlight
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <div className="py-4 overview-section">
-                        <div className="flex justify-center gap-x-8 lg:gap-x-0 px-5">
-                            <div
-                                onClick={() => {
-                                    setoverview(true);
-                                }}
-                                className={
-                                    "overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " +
-                                    (overview ? " active" : "")
-                                }
-                            >
-                                <p className="lg:py-1.5 ">OVERVIEW</p>
-                            </div>
-
-                            <div
-                                onClick={() => {
-                                    setoverview(false);
-                                }}
-                                className={
-                                    "overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " +
-                                    (!overview ? " active" : "")
-                                }
-                            >
-                                <p className="lg:py-1.5">AUCTION INFO</p>
-                            </div>
-                        </div>
-                        <div
-                            className={
-                                overview
-                                    ? "flex px-5 justify-center mt-6 w-full lg:w-auto flex-col lg:flex-row items-center"
-                                    : " hidden"
-                            }
-                        >
-                            <div className="w-full lg:w-auto">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Make
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2 w-1/2">
-                                                {cardD?.make}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Model
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.model}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Year
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.year || "Not Specified"}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Vehicle VIN
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {cardD?.VIN}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Exterior Color
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.sourceExteriorColor}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Interior Color
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {cardD?.sourceInteriorColor}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="lg:ml-3 w-full lg:w-auto">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Mileage
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {dollarFormatter.format(
-                                                    cardD?.odometer
-                                                )}
-                                                miles
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
-                                                Engine Fuel Type
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 w-1/2">
-                                                {cardD?.sourceEngineFuelType}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Transmission
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.transmission}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Drive train
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.driveTrain}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Body type
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.bodyType}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Doors
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.doors}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div
-                            className={
-                                !overview
-                                    ? "flex flex-wrap px-5 justify-center mt-6 "
-                                    : " hidden"
-                            }
-                        >
-                            <div>
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Facilitation Location
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.facilitationLocation}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Seller City
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {cardD?.sellerCity}
-                                                </span>
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Seller State
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {cardD?.sellerState}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="lg:ml-3">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Bidding Price
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                $
-                                                {dollarFormatter.format(
-                                                    cardD?.mmrPrice
-                                                ) || "Not Specified"}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Pickup Location
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {cardD?.pickupLocation}
-                                                </span>
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Auction Date
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {new Date(
-                                                    cardD?.auctionEndTime
-                                                ).toLocaleDateString("en-NG", {
-                                                    year: "numeric",
-                                                    day: "numeric",
-                                                    month: "long",
-                                                })}
-                                            </td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Buy Now Price
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                $
-                                                {dollarFormatter.format(
-                                                    cardD?.buyNowPrice
-                                                ) || "Not specified"}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div className="relative w-full flex flex-wrap px-5 justify-center mt-6">
-                            <details className="relative justify-center overflow-hidden">
-                                <div className="content mb-2 w-full h-full">
-                                    <div className="w-full flex flex-col md:flex-row items-start  justify-center mt-6">
-                                        <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
+                                <div
+                                    className={
+                                        overview
+                                            ? "flex px-5 justify-center mt-6 w-full lg:w-auto flex-col lg:flex-row items-center"
+                                            : " hidden"
+                                    }
+                                >
+                                    <div className="w-full lg:w-auto">
+                                        <table className="min-w-full border-separate overview-table">
                                             <tbody>
                                                 <tr className="detail-row mb-2">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Passenger Capacity
+                                                        Make
                                                     </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {
-                                                            cardD?.passengerCapacity
-                                                        }
+                                                    <td className="turncate text-sm sec-black font-normal py-2 w-1/2">
+                                                        {cardD?.make}
                                                     </td>
                                                 </tr>
 
                                                 <tr className="detail-row mb-2">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Vehicle Type
+                                                        Model
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.vehicleType}
+                                                        {cardD?.model}
                                                     </td>
                                                 </tr>
-
                                                 <tr className="detail-row mb-2">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Engine Type
+                                                        Year
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {
-                                                            cardD?.sourceEngineType
-                                                        }
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Body Type
-                                                    </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.bodyType}
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Odometer
-                                                    </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.odometer}
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Transmission
-                                                    </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.transmission ||
+                                                        {cardD?.year ||
                                                             "Not Specified"}
                                                     </td>
                                                 </tr>
 
                                                 <tr className="detail-row mb-2">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Buy Now Price
+                                                        Vehicle VIN
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.buyNowPrice ||
-                                                            "Not specified"}
+                                                        <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                            {cardD?.VIN}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Exterior Color
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {
+                                                            cardD?.sourceExteriorColor
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Interior Color
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                            {
+                                                                cardD?.sourceInteriorColor
+                                                            }
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table className="w-full md:w-1/2 overflow-hidden  border-separate">
+                                    </div>
+                                    <div className="lg:ml-3 w-full lg:w-auto">
+                                        <table className="min-w-full border-separate overview-table">
                                             <tbody>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Mileage
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {dollarFormatter.format(
+                                                            cardD?.odometer
+                                                        )}
+                                                        miles
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
+                                                        Engine Fuel Type
+                                                    </td>
+                                                    <td className="text-sm md:text-base sec-black font-normal py-2 w-1/2">
+                                                        {
+                                                            cardD?.sourceEngineFuelType
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Transmission
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {cardD?.transmission}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Drive train
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {cardD?.driveTrain}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Body type
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {cardD?.bodyType}
+                                                    </td>
+                                                </tr>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Doors
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {cardD?.doors}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div
+                                    className={
+                                        !overview
+                                            ? "flex flex-wrap px-5 justify-center mt-6 "
+                                            : " hidden"
+                                    }
+                                >
+                                    <div>
+                                        <table className="min-w-full border-separate overview-table">
+                                            <tbody>
+                                                <tr className="detail-row">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Facilitation Location
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {
+                                                            cardD?.facilitationLocation
+                                                        }
+                                                    </td>
+                                                </tr>
+
                                                 <tr className="detail-row">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Seller City
@@ -3019,310 +2980,520 @@ const CarDetails = ({
                                                         {cardD?.sellerState}
                                                     </td>
                                                 </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Facilitation Location
-                                                    </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {
-                                                            cardD?.facilitationLocation
-                                                        }
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Seller Phone
-                                                    </td>
-                                                    <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.sellerPhone}
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                        Seller Rating
-                                                    </td>
-                                                    <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
-                                                        {cardD?.sellerRating}
-                                                    </td>
-                                                </tr>
-
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="lg:ml-3">
+                                        <table className="min-w-full border-separate overview-table">
+                                            <tbody>
                                                 <tr className="detail-row">
                                                     <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                         Bidding Price
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
-                                                        {cardD?.mmrPrice}
+                                                        $
+                                                        {dollarFormatter.format(
+                                                            cardD?.mmrPrice
+                                                        ) || "Not Specified"}
+                                                    </td>
+                                                </tr>
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Pickup Location
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                            {
+                                                                cardD?.pickupLocation
+                                                            }
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Auction Date
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        {new Date(
+                                                            cardD?.auctionEndTime
+                                                        ).toLocaleDateString(
+                                                            "en-NG",
+                                                            {
+                                                                year: "numeric",
+                                                                day: "numeric",
+                                                                month: "long",
+                                                            }
+                                                        )}
+                                                    </td>
+                                                </tr>
+
+                                                <tr className="detail-row mb-2">
+                                                    <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                        Buy Now Price
+                                                    </td>
+                                                    <td className="turncate text-sm sec-black font-normal py-2">
+                                                        $
+                                                        {dollarFormatter.format(
+                                                            cardD?.buyNowPrice
+                                                        ) || "Not specified"}
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
-                                    Show More Details
-                                </summary>
-                            </details>
-                        </div>
-                    </div>
-                    <section className="overview-section w-full py-3 px-7">
-                        <div className="text-center py-3">
-                            <hr className="red-underline2 w-20 m-auto pb-4" />
-                            <h4 className="font-bold primary-color text-xl ">
-                                {data?.length ? (
-                                    <>SIMILAR VEHICLES</>
-                                ) : (
-                                    <>OTHER VECHICLES</>
-                                )}
-                            </h4>
-                        </div>
-                        <div
-                            className="flex w-11/12 mx-auto justify-center  flex-wrap my-4 display-type"
-                            id="car-grid"
-                        >
-                            {data?.length > 0 &&
-                                data?.map(
-                                    (ele, id) =>
-                                        ele && (
-                                            <a
-                                                key={id}
-                                                className="similar-cars-holder p-3 mr-4 my-5 lg:mb-0 cursor-pointer"
-                                                onClick={() => {
-                                                    dispatch(carDetail(ele));
-                                                }}
-                                                href={`/search/${ele.VIN}`}
-                                                target={"_blank"}
-                                            >
-                                                <div
-                                                    className={
-                                                        !ele.images?.length
-                                                            ? "bg-white bg-opacity-20 rounded-md"
-                                                            : "bg-black bg-opacity-20 rounded-md"
-                                                    }
-                                                    style={{
-                                                        width: "240px",
-                                                        height: "178px",
-                                                    }}
-                                                >
-                                                    {ele?.images?.length ? (
-                                                        <img
-                                                            src={
-                                                                ele.images[0]
-                                                                    .image_largeUrl
+                                <div className="relative w-full flex flex-wrap px-5 justify-center mt-6">
+                                    <details className="relative justify-center overflow-hidden">
+                                        <div className="content mb-2 w-full h-full">
+                                            <div className="w-full flex flex-col md:flex-row items-start  justify-center mt-6">
+                                                <table className="w-full md:w-1/2 overflow-hidden   border-separate ">
+                                                    <tbody>
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Passenger
+                                                                Capacity
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.passengerCapacity
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Vehicle Type
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.vehicleType
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Engine Type
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.sourceEngineType
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Body Type
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.bodyType
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Odometer
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.odometer
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Transmission
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {cardD?.transmission ||
+                                                                    "Not Specified"}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row mb-2">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Buy Now Price
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {cardD?.buyNowPrice ||
+                                                                    "Not specified"}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table className="w-full md:w-1/2 overflow-hidden  border-separate">
+                                                    <tbody>
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Seller City
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                                    {
+                                                                        cardD?.sellerCity
+                                                                    }
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Seller State
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.sellerState
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Facilitation
+                                                                Location
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.facilitationLocation
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Seller Phone
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.sellerPhone
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Seller Rating
+                                                            </td>
+                                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-8 w-1/2">
+                                                                {
+                                                                    cardD?.sellerRating
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr className="detail-row">
+                                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                                Bidding Price
+                                                            </td>
+                                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                                {
+                                                                    cardD?.mmrPrice
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <summary className="h-8 w-full text-center primary-blue font-semibold text-sm">
+                                            Show More Details
+                                        </summary>
+                                    </details>
+                                </div>
+                            </div>
+                            <section className="overview-section w-full py-3 px-7">
+                                <div className="text-center py-3">
+                                    <hr className="red-underline2 w-20 m-auto pb-4" />
+                                    <h4 className="font-bold primary-color text-xl ">
+                                        {data?.length ? (
+                                            <>SIMILAR VEHICLES</>
+                                        ) : (
+                                            <>OTHER VECHICLES</>
+                                        )}
+                                    </h4>
+                                </div>
+                                <div
+                                    className="flex w-11/12 mx-auto justify-center  flex-wrap my-4 display-type"
+                                    id="car-grid"
+                                >
+                                    {data?.length > 0 &&
+                                        data?.map(
+                                            (ele, id) =>
+                                                ele && (
+                                                    <div
+                                                        key={id}
+                                                        className="similar-cars-holder p-3 mr-4 my-5 lg:mb-0 cursor-pointer"
+                                                    >
+                                                        <a
+                                                            className={
+                                                                !ele.images
+                                                                    ?.length
+                                                                    ? "bg-white block bg-opacity-20 rounded-md"
+                                                                    : "bg-black block bg-opacity-20 rounded-md"
                                                             }
-                                                            alt="hello"
-                                                            className="w-full h-full object-center rounded-md object-contain"
-                                                        />
-                                                    ) : (
-                                                        <div className="text-center relative">
-                                                            <img
-                                                                src="../../img/Rectangle.png"
-                                                                loading="lazy"
-                                                                className="br-5 w-full h-full object-contain object-center"
-                                                                alt="Coming soon"
-                                                            />
-                                                            <p className="absolute  text-lg font-semibold text-white lg:top-12 top-6  left-14 uppercase">
-                                                                Coming Soon
+                                                            style={{
+                                                                width: "240px",
+                                                                height: "178px",
+                                                            }}
+                                                            href={`/search/${ele.VIN}`}
+                                                            target={"_blank"}
+                                                        >
+                                                            {ele?.images
+                                                                ?.length ? (
+                                                                <img
+                                                                    src={
+                                                                        ele
+                                                                            .images[0]
+                                                                            .image_largeUrl
+                                                                    }
+                                                                    alt="hello"
+                                                                    className="w-full h-full object-center rounded-md object-contain"
+                                                                />
+                                                            ) : (
+                                                                <div className="text-center relative">
+                                                                    <img
+                                                                        src="../../img/Rectangle.png"
+                                                                        loading="lazy"
+                                                                        className="br-5 w-full h-full object-contain object-center"
+                                                                        alt="Coming soon"
+                                                                    />
+                                                                    <p className="absolute  text-lg font-semibold text-white lg:top-12 top-6  left-14 uppercase">
+                                                                        Coming
+                                                                        Soon
+                                                                    </p>
+                                                                </div>
+                                                            )}
+                                                        </a>
+                                                        <p className="pt-2 primary-black font-medium text-xs">
+                                                            {ele?.make} {""}{" "}
+                                                            {ele?.model}
+                                                        </p>
+                                                        <div className="flex pt-2 justify-between">
+                                                            <p className="flex items-center sec-black font-10">
+                                                                <span className="mr-1">
+                                                                    <img
+                                                                        src="../assets/img/vectors/red-location-beacon.svg"
+                                                                        alt="location"
+                                                                    />
+                                                                </span>
+                                                                {
+                                                                    ele?.pickupLocation
+                                                                }
+                                                            </p>
+                                                            <div className="ml-auto flex self-center">
+                                                                <img
+                                                                    className="img-fluid"
+                                                                    src="../../assets/img/vectors/red-date.svg"
+                                                                    alt="date"
+                                                                />
+                                                                <p className="sec-black font-10">
+                                                                    {new Date(
+                                                                        ele?.auctionEndTime
+                                                                    ).toLocaleDateString(
+                                                                        "en-NG",
+                                                                        {
+                                                                            year: "numeric",
+                                                                            day: "numeric",
+                                                                            month: "long",
+                                                                        }
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex font-11 primary-gray pt-1">
+                                                            <p>{ele?.year}</p>
+                                                            <p className="ml-3.5">
+                                                                {dollarFormatter.format(
+                                                                    ele?.odometer
+                                                                )}
+                                                                miles
                                                             </p>
                                                         </div>
-                                                    )}
-                                                </div>
-                                                <p className="pt-2 primary-black font-medium text-xs">
-                                                    {ele?.make} {""}{" "}
-                                                    {ele?.model}
-                                                </p>
-                                                <div className="flex pt-2 justify-between">
-                                                    <p className="flex items-center sec-black font-10">
-                                                        <span className="mr-1">
-                                                            <img
-                                                                src="../assets/img/vectors/red-location-beacon.svg"
-                                                                alt="location"
-                                                            />
-                                                        </span>
-                                                        {ele?.pickupLocation}
-                                                    </p>
-                                                    <div className="ml-auto flex self-center">
-                                                        <img
-                                                            className="img-fluid"
-                                                            src="../../assets/img/vectors/red-date.svg"
-                                                            alt="date"
-                                                        />
-                                                        <p className="sec-black font-10">
-                                                            {new Date(
-                                                                ele?.auctionEndTime
-                                                            ).toLocaleDateString(
-                                                                "en-NG",
-                                                                {
-                                                                    year: "numeric",
-                                                                    day: "numeric",
-                                                                    month: "long",
-                                                                }
-                                                            )}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex font-11 primary-gray pt-1">
-                                                    <p>{ele?.year}</p>
-                                                    <p className="ml-3.5">
-                                                        {dollarFormatter.format(
-                                                            ele?.odometer
-                                                        )}
-                                                        miles
-                                                    </p>
-                                                </div>
-                                                <div className="flex pt-2">
-                                                    <p className=" sec-black text-base">
-                                                        $
-                                                        {ele?.buyNowPrice
-                                                            ? dollarFormatter.format(
-                                                                  ele?.buyNowPrice
-                                                              )
-                                                            : dollarFormatter.format(
-                                                                  ele?.mmrPrice
-                                                              )}
-                                                    </p>
-                                                    <div className="ml-auto  self-center">
-                                                        <a
-                                                            href={`/search/${ele.VIN}`}
-                                                        >
-                                                            <button
-                                                                type="button"
-                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                onClick={() => {
-                                                                    dispatch(
-                                                                        carDetail(
-                                                                            ele
-                                                                        )
-                                                                    );
-                                                                }}
-                                                            >
+                                                        <div className="flex pt-2">
+                                                            <p className=" sec-black text-base">
+                                                                $
                                                                 {ele?.buyNowPrice
-                                                                    ? "Buy now"
-                                                                    : "Place bid"}
-                                                            </button>
-                                                        </a>
+                                                                    ? dollarFormatter.format(
+                                                                          ele?.buyNowPrice
+                                                                      )
+                                                                    : dollarFormatter.format(
+                                                                          ele?.mmrPrice
+                                                                      )}
+                                                            </p>
+                                                            <div className="ml-auto  self-center">
+                                                                <a
+                                                                    href={`/search/${ele.VIN}`}
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                        onClick={() => {
+                                                                            dispatch(
+                                                                                carDetail(
+                                                                                    ele
+                                                                                )
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {ele?.buyNowPrice
+                                                                            ? "Buy now"
+                                                                            : "Place bid"}
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </a>
-                                        )
-                                )}
-                        </div>
-
-                        <div className="text-center my-5">
-                            {!data?.length ? (
-                                <>
-                                    <p
-                                        onClick={() => {
-                                            router.push("/search");
-                                        }}
-                                        className="primary-blue font-semibold text-sm cursor-pointer"
-                                    >
-                                        View Other Vehicles
-                                    </p>
-                                </>
-                            ) : (
-                                <p
-                                    onClick={() => {
-                                        showMoreVehicles();
-                                    }}
-                                    className="primary-blue font-semibold text-sm cursor-pointer"
-                                >
-                                    Show More Vehicles
-                                </p>
-                            )}
-                        </div>
-                    </section>
-                </>
-            )}
-            {/* <!-- The Modal --> */}
-            {sendSheetModal && (
-                <div id="sendSheetModal" className="modal">
-                    {/* <!-- Modal content --> */}
-                    <div className="modal-content sheetModal bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
-                        <span
-                            onClick={() => {
-                                setsendSheetModal(false);
-                            }}
-                            className="close absolute right-5 top-1 text-4xl text-gray-500"
-                        >
-                            &times;
-                        </span>
-                        {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
-                        <form
-                            onSubmit={(e) => sendSheet(e)}
-                            className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0"
-                        >
-                            <div className="col-span-6 mb-2">
-                                <label
-                                    className="block pb-1.5 font-10 primary-black"
-                                    htmlFor="card_number"
-                                >
-                                    {" "}
-                                    Email{" "}
-                                </label>
-                                <input
-                                    id="card_number"
-                                    className="profile-control focus:outline-none p-2 w-full"
-                                    type="email"
-                                    required
-                                    placeholder="Enter your email address"
-                                    value={sendSheetEmail}
-                                    onChange={(e) =>
-                                        setsendSheetEmail(e.target.value)
-                                    }
-                                />
-                            </div>
-                            <div className="col-span-6  "></div>
-
-                            <div className="col-span-6 mt-2">
-                                <label
-                                    className="block font-10 primary-black pb-1.5"
-                                    htmlFor="cardName"
-                                >
-                                    {" "}
-                                    Phone Number{" "}
-                                </label>
-                                <IntlTelInput
-                                    ref={sheetNumberRef}
-                                    placeholder="xxxx-xxxx-xxxx"
-                                    containerClassName="intl-tel-input send-sheet-phone-number"
-                                    inputClassName="form-control"
-                                    preferredCountries={["ng"]}
-                                    defaultValue={sendSheetPhoneNumber}
-                                    onPhoneNumberChange={(e) =>
-                                        phoneNumberChange(e)
-                                    }
-                                />
-                            </div>
-                            {sheetError && (
-                                <div className="col-span-6 mt-2">
-                                    <p className="text-red-500 font-10">
-                                        Field can't be empty
-                                    </p>
+                                                )
+                                        )}
                                 </div>
-                            )}
-                            <div className="col-span-6 place-self-center mt-4">
-                                <button
-                                    type="submit"
-                                    className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8"
+
+                                <div className="text-center my-5">
+                                    {!data?.length ? (
+                                        <>
+                                            <p
+                                                onClick={() => {
+                                                    router.push("/search");
+                                                }}
+                                                className="primary-blue font-semibold text-sm cursor-pointer"
+                                            >
+                                                View Other Vehicles
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <p
+                                            onClick={() => {
+                                                showMoreVehicles();
+                                            }}
+                                            className="primary-blue font-semibold text-sm cursor-pointer"
+                                        >
+                                            Show More Vehicles
+                                        </p>
+                                    )}
+                                </div>
+                            </section>
+                        </>
+                    )}
+                    {/* <!-- The Modal --> */}
+                    {sendSheetModal && (
+                        <div id="sendSheetModal" className="modal">
+                            {/* <!-- Modal content --> */}
+                            <div className="modal-content sheetModal bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                                <span
+                                    onClick={() => {
+                                        setsendSheetModal(false);
+                                    }}
+                                    className="close absolute right-5 top-1 text-4xl text-gray-500"
                                 >
-                                    SUBMIT
-                                </button>
+                                    &times;
+                                </span>
+                                {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
+                                <form
+                                    onSubmit={(e) => sendSheet(e)}
+                                    className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0"
+                                >
+                                    <div className="col-span-6 mb-2">
+                                        <label
+                                            className="block pb-1.5 font-10 primary-black"
+                                            htmlFor="card_number"
+                                        >
+                                            {" "}
+                                            Email{" "}
+                                        </label>
+                                        <input
+                                            id="card_number"
+                                            className="profile-control focus:outline-none p-2 w-full"
+                                            type="email"
+                                            required
+                                            placeholder="Enter your email address"
+                                            value={sendSheetEmail}
+                                            onChange={(e) =>
+                                                setsendSheetEmail(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-span-6  "></div>
+
+                                    <div className="col-span-6 mt-2">
+                                        <label
+                                            className="block font-10 primary-black pb-1.5"
+                                            htmlFor="cardName"
+                                        >
+                                            {" "}
+                                            Phone Number{" "}
+                                        </label>
+                                        <IntlTelInput
+                                            ref={sheetNumberRef}
+                                            placeholder="xxxx-xxxx-xxxx"
+                                            containerClassName="intl-tel-input send-sheet-phone-number"
+                                            inputClassName="form-control"
+                                            preferredCountries={["ng"]}
+                                            defaultValue={sendSheetPhoneNumber}
+                                            onPhoneNumberChange={(e) =>
+                                                phoneNumberChange(e)
+                                            }
+                                        />
+                                    </div>
+                                    {sheetError && (
+                                        <div className="col-span-6 mt-2">
+                                            <p className="text-red-500 font-10">
+                                                Field can't be empty
+                                            </p>
+                                        </div>
+                                    )}
+                                    <div className="col-span-6 place-self-center mt-4">
+                                        <button
+                                            type="submit"
+                                            className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8"
+                                        >
+                                            SUBMIT
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    )}
+                    {/* <!-- end of modal --> */}
                 </div>
             )}
-            {/* <!-- end of modal --> */}
         </main>
     );
 };
 
-const mapStateToProps = (state) => {
-    const { carDetails, cars, carCollection } = state.Cars;
-    return { carDetails, cars, carCollection };
+CarDetails.getInitialProps = async ({ query }) => {
+    let url = `https://buylikepoint.us/json.php/view.php?vin=${query.id}&apiKey=Switch!2020&apiKey=Switch!2020`;
+    let res = await fetch(url.trim(), {
+        method: "GET",
+        headers: {},
+        credentials: "same-origin",
+    })
+        .then(function (response) {
+            return response.text();
+        })
+        .then((res) => {
+            if (res) {
+                if (Object.entries(res).length >= 1) {
+                    const dada = JSON.parse(res);
+                    return dada.data[0];
+                }
+            }
+        });
+    return {
+        carDetail: res,
+    };
 };
 
-export default connect(mapStateToProps, { getCollection })(CarDetails);
+const mapStateToProps = (state) => {
+    const { carDetails, cars, carCollection, loading } = state.Cars;
+    return { carDetails, cars, carCollection, loading };
+};
+
+export default connect(mapStateToProps, { getCollection, searchCars })(
+    CarDetails
+);

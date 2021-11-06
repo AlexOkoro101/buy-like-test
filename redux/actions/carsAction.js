@@ -559,3 +559,38 @@ export const fetchMore =
             console.log(error);
         }
     };
+//
+//
+export const searchCars = (inputValue) => (dispatch) => {
+    dispatch({
+        type: FETCHING_CARS,
+    });
+
+    let url = `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`;
+    fetch(url.trim(), {
+        method: "GET",
+        headers: {},
+        credentials: "same-origin",
+    })
+        .then(function (response) {
+            return response.text();
+        })
+        .then((res) => {
+            if (res) {
+                if (Object.entries(res).length >= 1) {
+                    const dada = JSON.parse(res);
+                    dispatch({
+                        type: DETAIL,
+                        payload: dada.data,
+                    });
+                }
+            }
+        })
+        .catch(function (error) {
+            dispatch({
+                type: FETCHING_CARS_FAILED,
+                payload: error.message,
+            });
+            console.log(error);
+        });
+};

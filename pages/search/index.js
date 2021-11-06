@@ -734,8 +734,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     };
     const handleChange = (newValue) => {
         if (newValue && newValue.data) {
-            dispatch(carDetail(newValue.data));
-
             router.push({
                 pathname: "/search/" + newValue.value,
             });
@@ -2000,13 +1998,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     >
                                                                         <a
                                                                             className="cursor-pointer "
-                                                                            onClick={() => {
-                                                                                dispatch(
-                                                                                    carDetail(
-                                                                                        ele
-                                                                                    )
-                                                                                );
-                                                                            }}
                                                                             href={`/search/${ele.VIN}`}
                                                                             target={
                                                                                 "_blank"
@@ -2119,15 +2110,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 )}
                                                                                             </p>
                                                                                             <a
-                                                                                                type="button"
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                                onClick={() => {
-                                                                                                    dispatch(
-                                                                                                        carDetail(
-                                                                                                            ele
-                                                                                                        )
-                                                                                                    );
-                                                                                                }}
                                                                                                 href={`/search/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
@@ -2146,15 +2129,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 )}
                                                                                             </p>
                                                                                             <a
-                                                                                                type="button"
                                                                                                 className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5"
-                                                                                                onClick={() => {
-                                                                                                    dispatch(
-                                                                                                        carDetail(
-                                                                                                            ele
-                                                                                                        )
-                                                                                                    );
-                                                                                                }}
                                                                                                 href={`/search/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
@@ -2193,13 +2168,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         <div className="flex w-full md:w-5/6 flex-col md:flex-row justify-between flex-wrap">
                                                                             <div className="w-full md:w-1/3">
                                                                                 <a
-                                                                                    onClick={() => {
-                                                                                        dispatch(
-                                                                                            carDetail(
-                                                                                                ele
-                                                                                            )
-                                                                                        );
-                                                                                    }}
                                                                                     href={`/search/${ele.VIN}`}
                                                                                     target={
                                                                                         "_blank"
@@ -2412,13 +2380,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 type="button"
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
-                                                                                                onClick={() => {
-                                                                                                    dispatch(
-                                                                                                        carDetail(
-                                                                                                            ele
-                                                                                                        )
-                                                                                                    );
-                                                                                                }}
                                                                                                 href={`/search/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
@@ -2439,13 +2400,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 type="button"
                                                                                                 className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
-                                                                                                onClick={() => {
-                                                                                                    dispatch(
-                                                                                                        carDetail(
-                                                                                                            ele
-                                                                                                        )
-                                                                                                    );
-                                                                                                }}
                                                                                                 href={`/search/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"

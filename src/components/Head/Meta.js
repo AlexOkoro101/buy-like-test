@@ -5,6 +5,7 @@ import React from "react";
 const Meta = ({ title, keywords, description }) => {
     return (
         <Head>
+            <link rel="icon" href="/favicon.ico" />
             <script
                 type="module"
                 async

@@ -119,6 +119,7 @@ const Cars = (state = initialState, action) => {
             return {
                 ...state,
                 carDetails: action.payload,
+                loading: false,
             };
         default:
             return state;
