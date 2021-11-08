@@ -88,7 +88,7 @@ const ForgotPassword = ({ beginLogin }) => {
                             "userToken",
                             JSON.stringify(data.data._token)
                         );
-                        router.push("/search");
+                        router.push("/vin");
                     }
                     const now = new Date();
                     //save data to local storage
@@ -122,7 +122,8 @@ const ForgotPassword = ({ beginLogin }) => {
                         <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
                             <div className="text-center">
                                 <p className="text-sm primary-color font-medium">
-                                    Enter the email address associated with the account
+                                    Enter the email address associated with the
+                                    account
                                 </p>
                             </div>
 

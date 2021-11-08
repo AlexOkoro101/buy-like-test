@@ -22,7 +22,7 @@ const OnBoarding = () => {
     const token = useSelector(selectToken);
     useEffect(() => {
         if (token.login) {
-            router.push("/search");
+            router.push("/vin");
         }
     }, []);
 

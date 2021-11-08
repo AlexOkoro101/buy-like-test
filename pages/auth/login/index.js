@@ -20,7 +20,7 @@ const LoginOptions = ({ beginLogin }) => {
     const user = useSelector(selectToken);
     useEffect(() => {
         if (user.login) {
-            router.push("/search");
+            router.push("/vin");
         }
     }, []);
 
@@ -88,7 +88,7 @@ const LoginOptions = ({ beginLogin }) => {
                         expiry: now.getTime() + 3600000,
                     };
                     localStorage.setItem("user", JSON.stringify(item));
-                    router.push("/search");
+                    router.push("/vin");
                 }
                 //save data to store
                 beginLogin({
@@ -139,7 +139,7 @@ const LoginOptions = ({ beginLogin }) => {
                 return res.json();
             })
             .then((data) => {
-                console.log(data)
+                console.log(data);
                 if (data?.error) {
                     seterror(data?.message);
                     toastError();
@@ -156,7 +156,7 @@ const LoginOptions = ({ beginLogin }) => {
                         expiry: now.getTime() + 3600000,
                     };
                     localStorage.setItem("user", JSON.stringify(item));
-                    router.push("/search");
+                    router.push("/vin");
                 }
 
                 //save data to store
@@ -238,7 +238,13 @@ const LoginOptions = ({ beginLogin }) => {
                                 Log in with Email
                             </button>
                             <div className="text-center">
-                                <p onClick={() => router.push('/auth/signup')} style={{color: "#0C74D4"}} className="font-11 cursor-pointer mt-8">Or create an account</p>
+                                <p
+                                    onClick={() => router.push("/auth/signup")}
+                                    style={{ color: "#0C74D4" }}
+                                    className="font-11 cursor-pointer mt-8"
+                                >
+                                    Or create an account
+                                </p>
                             </div>
                         </div>
                     </div>

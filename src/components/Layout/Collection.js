@@ -116,7 +116,6 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
                 },
-
             }
         )
             .then(function (response) {
@@ -330,7 +329,6 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                             </button>
                                                         </div>
                                                     </>
-
                                                 </div>
                                             ))}
                                     </>
@@ -350,7 +348,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 )}
                             </>
                             <div className="px-20 py-3 flex justify-between items-center">
-                                <Link href="/search">
+                                <Link href="/vin">
                                     <p className="start-bid">
                                         {" "}
                                         Start a new bid

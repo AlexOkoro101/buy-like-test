@@ -53,7 +53,7 @@ const CollectionDetails = () => {
                 if (result) {
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
-                        console.log("formated", formatCollection)
+                        console.log("formated", formatCollection);
                         setcollection(formatCollection);
                     }
                 }
@@ -224,12 +224,11 @@ const CollectionDetails = () => {
                                             <div className="flex justify-between mb-1">
                                                 <h3 className="font-medium font-xs primary-blue uppercase">
                                                     Awaiting bid - April 22,2021
-                                                    
                                                 </h3>
                                                 <h3 className="font-medium font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
                                                     <Link
                                                         href={
-                                                            "/search/" +
+                                                            "/vin/" +
                                                             vehicle._id
                                                         }
                                                     >

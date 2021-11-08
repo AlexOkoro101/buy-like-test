@@ -408,7 +408,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                 <div className="paginate-ctn w-full">
                     <div className="flex items-center">
                         <button
-                            className=" text-sm px-2 py-1 h-9  rounded-sm mr-1 text-white"
+                            className="text-xs lg:text-sm px-1 lg:px-2 py-1 h-7 lg:9  rounded-sm mr-1 text-white"
                             onClick={() => {
                                 setPageIndex(1);
                                 fetchPage(1);
@@ -424,8 +424,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                     x="0px"
                                     y="0px"
-                                    width="24"
-                                    height="24"
+                                    width="22"
+                                    height="22"
                                     viewBox="0 0 172 172"
                                 >
                                     <g
@@ -456,7 +456,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </button>
 
                         <button
-                            className="px-6 flex items-center rounded-sm  py-1 h-9  text-white"
+                            className="md:px-6 px-1 flex text-xs md:text-sm items-center rounded-sm  py-1 h-7 lg:h-9  text-white"
                             style={{ backgroundColor: "#d80739" }}
                             onClick={prevPage}
                         >
@@ -464,8 +464,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 x="0px"
                                 y="0px"
-                                width="24"
-                                height="24"
+                                width="22"
+                                height="22"
                                 viewBox="0 0 172 172"
                             >
                                 <g
@@ -496,12 +496,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </button>
                     </div>
 
-                    <div className="text-sm ">
+                    <div className="text-xs lg:text-sm">
                         Page {pageIndex} of {maxPages}
                     </div>
                     <div className="flex items-center">
                         <button
-                            className="flex items-center px-6 py-1 h-9  rounded-sm text-white"
+                            className="md:px-6 px-1 mr-1 flex text-xs md:text-sm items-center rounded-sm  py-1 h-7 lg:h-9  text-white"
                             onClick={nextPage}
                             style={{ backgroundColor: "#d80739" }}
                         >
@@ -541,7 +541,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </button>
                         {pageIndex < maxPages && (
                             <button
-                                className=" text-sm ml-1 px-2 py-1 h-9  rounded-sm text-white"
+                                className="text-xs lg:text-sm px-1 lg:px-2 py-1 h-7 lg:9"
                                 onClick={() => {
                                     setPageIndex(maxPages);
                                     fetchPage(maxPages);
@@ -558,8 +558,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                         xmlns="http://www.w3.org/2000/svg"
                                         x="0px"
                                         y="0px"
-                                        width="24"
-                                        height="24"
+                                        width="22"
+                                        height="22"
                                         viewBox="0 0 172 172"
                                     >
                                         <g
@@ -735,7 +735,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     const handleChange = (newValue) => {
         if (newValue && newValue.data) {
             router.push({
-                pathname: "/search/" + newValue.value,
+                pathname: "/vin/" + newValue.value,
             });
         }
     };
@@ -1998,7 +1998,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     >
                                                                         <a
                                                                             className="cursor-pointer "
-                                                                            href={`/search/${ele.VIN}`}
+                                                                            href={`/vin/${ele.VIN}`}
                                                                             target={
                                                                                 "_blank"
                                                                             }
@@ -2111,7 +2111,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             </p>
                                                                                             <a
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                href={`/vin/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
                                                                                                 }
@@ -2130,7 +2130,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             </p>
                                                                                             <a
                                                                                                 className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5"
-                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                href={`/vin/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
                                                                                                 }
@@ -2168,7 +2168,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         <div className="flex w-full md:w-5/6 flex-col md:flex-row justify-between flex-wrap">
                                                                             <div className="w-full md:w-1/3">
                                                                                 <a
-                                                                                    href={`/search/${ele.VIN}`}
+                                                                                    href={`/vin/${ele.VIN}`}
                                                                                     target={
                                                                                         "_blank"
                                                                                     }
@@ -2380,7 +2380,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 type="button"
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
-                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                href={`/vin/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
                                                                                                 }
@@ -2400,7 +2400,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 type="button"
                                                                                                 className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
-                                                                                                href={`/search/${ele.VIN}`}
+                                                                                                href={`/vin/${ele.VIN}`}
                                                                                                 target={
                                                                                                     "_blank"
                                                                                                 }

@@ -276,7 +276,7 @@ const CarDetails = ({
     const getSimilarVehicles = (num) => {
         let array = [];
         if (size === 12) {
-            router.push("/search");
+            router.push("/vin");
             return;
         }
 
@@ -1113,7 +1113,7 @@ const CarDetails = ({
                 phone: userPhone,
                 vin: cardD.VIN,
                 url:
-                    "https://buylike-web-git-ts-buylike-web.vercel.app/search/" +
+                    "https://buylike-web-git-ts-buylike-web.vercel.app/vin/" +
                     cardD.VIN,
                 amount: cardD?.buyNowPrice || cardD?.mmrPrice,
                 make: cardD.make,
@@ -1175,7 +1175,7 @@ const CarDetails = ({
             phone: sendSheetPhoneNumber,
             vin: cardD.VIN,
             url:
-                "https://buylike-web-git-ts-buylike-web.vercel.app/search/" +
+                "https://buylike-web-git-ts-buylike-web.vercel.app/vin/" +
                 cardD.VIN,
             amount: cardD?.buyNowPrice || cardD?.mmrPrice,
             make: cardD.make,
@@ -1202,9 +1202,9 @@ const CarDetails = ({
 
         setsendSheetModal(false);
         window.open(
-            `https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
+            `https://api.whatsapp.com/send?phone=+17135130111&&text=check%20out%20this%20car%20%20${encodeURIComponent(
                 cardD?.vehicleName
-            )}%20%20www.buylikedealers.com/${cardD?.VIN}`,
+            )}%20%20www.buylikedealers.com/vin/${cardD?.VIN}`,
             "_blank"
         );
     };
@@ -3240,7 +3240,7 @@ const CarDetails = ({
                                                                 width: "240px",
                                                                 height: "178px",
                                                             }}
-                                                            href={`/search/${ele.VIN}`}
+                                                            href={`/vin/${ele.VIN}`}
                                                             target={"_blank"}
                                                         >
                                                             {ele?.images
@@ -3327,7 +3327,7 @@ const CarDetails = ({
                                                             </p>
                                                             <div className="ml-auto  self-center">
                                                                 <a
-                                                                    href={`/search/${ele.VIN}`}
+                                                                    href={`/vin/${ele.VIN}`}
                                                                 >
                                                                     <button
                                                                         type="button"
@@ -3357,7 +3357,7 @@ const CarDetails = ({
                                         <>
                                             <p
                                                 onClick={() => {
-                                                    router.push("/search");
+                                                    router.push("/vin");
                                                 }}
                                                 className="primary-blue font-semibold text-sm cursor-pointer"
                                             >

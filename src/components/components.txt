@@ -9,7 +9,7 @@ Hero Image here
                                         dispatch(carDetail(images[index])),
                                             router.push({
                                                 pathname:
-                                                    "/search/" +
+                                                    "/vin/" +
                                                     images[index].VIN,
                                             });
                                     }}

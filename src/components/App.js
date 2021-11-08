@@ -23,7 +23,7 @@ const App = ({ children }) => {
         let token = JSON.parse(user)?.userToken;
         if (router.pathname !== "/" && !router.pathname.includes("auth")) {
             if (!token) {
-                if (router.pathname === "/search/[id]") {
+                if (router.pathname === "/vin/[id]") {
                     return;
                 }
             }

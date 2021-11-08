@@ -268,13 +268,13 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
 
     const onSubmit = (data) => {
         dispatch(searchTerm(data));
-        router.push("/search");
+        router.push("/vin");
     };
 
     const onCategory = (data) => {
         let options = { bodyType: data };
         dispatch(getCategory(options));
-        router.push("/search");
+        router.push("/vin");
     };
 
     const addImage = (params) => {
@@ -624,7 +624,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                                         ),
                                                             router.push({
                                                                 pathname:
-                                                                    "/search/" +
+                                                                    "/vin/" +
                                                                     ele.VIN,
                                                             });
                                                     }}
@@ -657,7 +657,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                                             ),
                                                                 router.push({
                                                                     pathname:
-                                                                        "/search/" +
+                                                                        "/vin/" +
                                                                         ele.VIN,
                                                                 });
                                                         }}
@@ -813,7 +813,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         <button
                             type="button "
                             className="estimate__btn focus:outline-none font-semibold px-9 text-sm"
-                            onClick={() => router.push("/search")}
+                            onClick={() => router.push("/vin")}
                         >
                             SEE ALL VECHICLES
                         </button>
