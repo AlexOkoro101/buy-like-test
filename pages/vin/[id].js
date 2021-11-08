@@ -3241,7 +3241,6 @@ const CarDetails = ({
                                                                 height: "178px",
                                                             }}
                                                             href={`/vin/${ele.VIN}`}
-                                                            target={"_blank"}
                                                         >
                                                             {ele?.images
                                                                 ?.length ? (

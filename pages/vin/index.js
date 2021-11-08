@@ -365,7 +365,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
 
     function Paginate() {
         let num = parseInt(cars.total) / 28;
-        let maxPages = Math.round(num);
+        let maxPages = Math.ceil(num);
         let items = [];
         let leftSide = pageIndex - 2;
         if (leftSide <= 0) leftSide = 1;
@@ -1999,9 +1999,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                         <a
                                                                             className="cursor-pointer "
                                                                             href={`/vin/${ele.VIN}`}
-                                                                            target={
-                                                                                "_blank"
-                                                                            }
                                                                             style={{
                                                                                 width:
                                                                                     open &&
@@ -2112,9 +2109,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
-                                                                                                target={
-                                                                                                    "_blank"
-                                                                                                }
                                                                                             >
                                                                                                 Buy
                                                                                                 Now
@@ -2131,9 +2125,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             <a
                                                                                                 className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
-                                                                                                target={
-                                                                                                    "_blank"
-                                                                                                }
                                                                                             >
                                                                                                 Place
                                                                                                 Bid
@@ -2169,9 +2160,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             <div className="w-full md:w-1/3">
                                                                                 <a
                                                                                     href={`/vin/${ele.VIN}`}
-                                                                                    target={
-                                                                                        "_blank"
-                                                                                    }
                                                                                 >
                                                                                     {ele
                                                                                         .images
@@ -2381,9 +2369,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 type="button"
                                                                                                 className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
-                                                                                                target={
-                                                                                                    "_blank"
-                                                                                                }
                                                                                             >
                                                                                                 Buy
                                                                                                 Now
@@ -2401,9 +2386,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                 type="button"
                                                                                                 className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
-                                                                                                target={
-                                                                                                    "_blank"
-                                                                                                }
                                                                                             >
                                                                                                 Place
                                                                                                 Bid

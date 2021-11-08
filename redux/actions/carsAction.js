@@ -437,7 +437,7 @@ export const fetchMore =
                         arrStr[i] = NX.map((ele) => ele.value);
                         break;
                     case "SC":
-                        arrStr[i] = NX.map((ele) => ele.value);
+                        arrStr[i] = SC.map((ele) => ele.value);
                         break;
                     default:
                         break;
