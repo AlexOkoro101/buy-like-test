@@ -2101,7 +2101,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         ele.buyNowPrice
                                                                                     )
                                                                                         .length >
-                                                                                    2 ? (
+                                                                                        2 &&
+                                                                                    active !==
+                                                                                        "bid" ? (
                                                                                         <div className="flex w-full justify-between items-center">
                                                                                             <p className="sec-black text-base font-normal">
                                                                                                 $
