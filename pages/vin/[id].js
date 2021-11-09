@@ -26,15 +26,7 @@ const Url = "https://buylikepoint.us/json.php/view.php";
 
 //
 //
-const CarDetails = ({
-    carDetails,
-    cars,
-    getCollection,
-    carCollection,
-    loading,
-    res,
-    carDetail,
-}) => {
+const CarDetails = ({ cars, loading, res, carDetail }) => {
     const buyNowError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -261,8 +253,8 @@ const CarDetails = ({
     const getZipLocation = () => {
         let initialZip = null;
 
-        if (carDetails) {
-            initialZip = `${carDetails.locationFullZipcode}`.substring(0, 5);
+        if (carDetail) {
+            initialZip = `${carDetail.locationFullZipcode}`.substring(0, 5);
         }
         return initialZip;
     };
@@ -293,29 +285,29 @@ const CarDetails = ({
     };
 
     useEffect(() => {
-        setvin(carDetails.VIN);
-        setname(carDetails.vehicleName);
-        setprice(carDetails.mmrPrice);
-        setyear(carDetails.year);
-        setexteriorColor(carDetails.exteriorColor);
-        setvehicleType(carDetails.vehicleType);
-        setinteriorColor(carDetails.interiorColor);
-        settransmission(carDetails.transmission);
-        setodometer(carDetails.odometer);
-        setdriveTrain(carDetails.driveTrain);
-        setdoors(carDetails.doors);
-        setmodel(carDetails.model);
-        setmake(carDetails.make);
-        setbodyStyle(carDetails.bodyType);
-        setzip(carDetails.locationFullZipcode);
-        setbidAmount(carDetails.buyNowPrice);
+        setvin(carDetail.VIN);
+        setname(carDetail.vehicleName);
+        setprice(carDetail.mmrPrice);
+        setyear(carDetail.year);
+        setexteriorColor(carDetail.exteriorColor);
+        setvehicleType(carDetail.vehicleType);
+        setinteriorColor(carDetail.interiorColor);
+        settransmission(carDetail.transmission);
+        setodometer(carDetail.odometer);
+        setdriveTrain(carDetail.driveTrain);
+        setdoors(carDetail.doors);
+        setmodel(carDetail.model);
+        setmake(carDetail.make);
+        setbodyStyle(carDetail.bodyType);
+        setzip(carDetail.locationFullZipcode);
+        setbidAmount(carDetail.buyNowPrice);
 
-        setfacilitationLocation(carDetails.facilitationLocation);
-        setvehicleLocation(carDetails.pickupLocation);
-        setcarImages(carDetails.images);
+        setfacilitationLocation(carDetail.facilitationLocation);
+        setvehicleLocation(carDetail.pickupLocation);
+        setcarImages(carDetail.images);
         getZipLocation();
 
-        setbuyNowPrice(carDetails.buyNowPrice);
+        setbuyNowPrice(carDetail.buyNowPrice);
 
         getSimilarVehicles();
         getRate();
@@ -323,10 +315,10 @@ const CarDetails = ({
         getSecondRate();
         displaySmall();
 
-        if (!carDetails.buyNowPrice && carDetails.mmrPrice) {
+        if (!carDetail.buyNowPrice && carDetail.mmrPrice) {
             setOffer(false);
         }
-    }, [carDetails, cardD]);
+    }, [carDetail, cardD]);
 
     useEffect(() => {
         if (carDetail) {
@@ -420,7 +412,7 @@ const CarDetails = ({
     }, []);
 
     useEffect(() => {
-        setTotalAmount((Number(carDetails.buyNowPrice) + 300) * Number(usd));
+        setTotalAmount((Number(carDetail.buyNowPrice) + 300) * Number(usd));
     }, [usd]);
 
     const openForm = (evt, status) => {
@@ -565,10 +557,10 @@ const CarDetails = ({
                 .then((data) => {
                     setNaira(data.data.rate);
                     setTotalAmount(
-                        (Number(carDetails.buyNowPrice) + 300) * Number(naira)
+                        (Number(carDetail.buyNowPrice) + 300) * Number(naira)
                     );
-                    setAmount(carDetails.buyNowPrice * data.data.rate);
-                    setbidAmount(carDetails.buyNowPrice);
+                    setAmount(carDetail.buyNowPrice * data.data.rate);
+                    setbidAmount(carDetail.buyNowPrice);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -646,7 +638,7 @@ const CarDetails = ({
                         initialRemainingTime={distance % 86400}
                     >
                         {/* {({ remainingTime }) =>
-                            moment(carDetails.auctionEndTime)
+                            moment(carDetail.auctionEndTime)
                                 .endOf("seconds")
                                 .fromNow()
 
@@ -664,7 +656,7 @@ const CarDetails = ({
                     colors={[["#004777"], ["#F7B801"], ["#A30000"]]}
                 >
                     {/* {({ remainingTime }) =>
-                        moment(carDetails.auctionEndTime)
+                        moment(carDetail.auctionEndTime)
                             .endOf("seconds")
                             .fromNow()
                     } */}
@@ -1052,7 +1044,7 @@ const CarDetails = ({
     }
 
     function getDeadTime() {
-        let deadline = new Date(carDetails.auctionEndTime);
+        let deadline = new Date(carDetail.auctionEndTime);
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
@@ -1214,7 +1206,7 @@ const CarDetails = ({
     const [shipAccessory, setshipAccessory] = useState(false);
 
     const accessories = () => {
-        var carPrice = Number(carDetails.buyNowPrice);
+        var carPrice = Number(carDetail.buyNowPrice);
         var outstanding = 700;
         var truck = 0;
         var ship = 0;
@@ -1292,7 +1284,7 @@ const CarDetails = ({
 
     return (
         <main>
-            {loading ? (
+            {loading && distance === null ? (
                 <div className="flex justify-center items-center w-full h-80">
                     <div className="relative mt-5">
                         <img src="/img/Tag.png" alt="loader" />
@@ -1429,14 +1421,14 @@ const CarDetails = ({
                                                     <p className="primary-color text-sm font-bold">
                                                         $
                                                         {dollarFormatter.format(
-                                                            carDetails.buyNowPrice
+                                                            carDetail.buyNowPrice
                                                         )}
                                                     </p>
                                                 ) : (
                                                     <p className="primary-color text-base font-extrabold">
                                                         $
                                                         {dollarFormatter.format(
-                                                            carDetails.mmrPrice
+                                                            carDetail.mmrPrice
                                                         )}
                                                     </p>
                                                 )}
@@ -1607,14 +1599,14 @@ const CarDetails = ({
                                                     <p className="sec-black font-11 font-bold">
                                                         BUY NOW AT {""}$
                                                         {dollarFormatter.format(
-                                                            carDetails.buyNowPrice
+                                                            carDetail.buyNowPrice
                                                         )}
                                                     </p>
                                                 ) : (
                                                     <p className="sec-black font-11 font-bold">
                                                         EST PRICE {""}$
                                                         {dollarFormatter.format(
-                                                            carDetails.mmrPrice
+                                                            carDetail.mmrPrice
                                                         )}
                                                     </p>
                                                 )}
@@ -2421,7 +2413,7 @@ const CarDetails = ({
                                     <div className="flex justify-center">
                                         {token ? (
                                             <>
-                                                {carDetails?.buyNowPrice
+                                                {carDetail?.buyNowPrice
                                                     ?.length >= 1 ? (
                                                     <button
                                                         // onClick={() => {
@@ -2581,7 +2573,7 @@ const CarDetails = ({
                                                 <div className=" flex w-full justify-center mt-3">
                                                     <p className="sec-black font-medium font-11">
                                                         {new Date(
-                                                            carDetails?.auctionEndTime
+                                                            carDetail.auctionEndTime
                                                         ).toLocaleDateString(
                                                             "en-NG",
                                                             {
@@ -2593,7 +2585,7 @@ const CarDetails = ({
                                                     </p>
                                                     <p className="sec-black font-medium font-11 ml-4">
                                                         {new Date(
-                                                            carDetails?.auctionEndTime
+                                                            carDetail?.auctionEndTime
                                                         ).toLocaleString(
                                                             "en-US",
                                                             {
@@ -2661,7 +2653,7 @@ const CarDetails = ({
                                         <p className="pt-0.5 primary-gray font-medium font-11 text-center">
                                             {new Date(
                                                 +new Date(
-                                                    carDetails?.auctionEndTime
+                                                    carDetail?.auctionEndTime
                                                 ) + deliveryDuration
                                             ).toLocaleDateString("en-NG", {
                                                 weekday: "long",
@@ -3489,8 +3481,8 @@ CarDetails.getInitialProps = async ({ query }) => {
 };
 
 const mapStateToProps = (state) => {
-    const { carDetails, cars, carCollection, loading } = state.Cars;
-    return { carDetails, cars, carCollection, loading };
+    const { cars, carCollection, loading } = state.Cars;
+    return { cars, carCollection, loading };
 };
 
 export default connect(mapStateToProps, { getCollection, searchCars })(

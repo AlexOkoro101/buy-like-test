@@ -501,9 +501,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     </div>
                     <div className="flex items-center">
                         <button
-                            className="md:px-6 px-1 mr-1 flex text-xs md:text-sm items-center rounded-sm  py-1 h-7 lg:h-9  text-white"
+                            className="md:px-6 px-1 mr-1  text-xs md:text-sm items-center rounded-sm  py-1 h-7 lg:h-9  text-white"
                             onClick={nextPage}
-                            style={{ backgroundColor: "#d80739" }}
+                            style={{
+                                backgroundColor: "#d80739",
+                                display: maxPages === 1 ? "none" : "flex",
+                            }}
                         >
                             <span className="mr-2">Next</span>{" "}
                             <svg
@@ -541,7 +544,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                         </button>
                         {pageIndex < maxPages && (
                             <button
-                                className="text-xs lg:text-sm px-1 lg:px-2 py-1 h-7 lg:9"
+                                className="text-xs lg:text-sm rounded-sm px-1 lg:px-2 py-1 h-7 lg:9"
                                 onClick={() => {
                                     setPageIndex(maxPages);
                                     fetchPage(maxPages);
@@ -686,7 +689,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 : "100%",
                         height: "203px",
                     }}
-                    className=" bg-opacity-20 rounded-md"
+                    className=" bg-opacity-20 cursor-pointer rounded-md"
                 >
                     {params.images[0] ? (
                         <img
@@ -1996,8 +1999,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     : "100%",
                                                                         }}
                                                                     >
-                                                                        <a
-                                                                            className="cursor-pointer "
+                                                                        <Link
+                                                                            className="cursor-pointer  "
                                                                             href={`/vin/${ele.VIN}`}
                                                                             style={{
                                                                                 width:
@@ -2016,7 +2019,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             {addImage(
                                                                                 ele
                                                                             )}
-                                                                        </a>
+                                                                        </Link>
 
                                                                         <div className="mt-3">
                                                                             {/* Vehicle Name here */}
@@ -2106,29 +2109,31 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     ele.buyNowPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <a
-                                                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                                            <Link
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
-                                                                                                Buy
-                                                                                                Now
-                                                                                            </a>
+                                                                                                <div className="focus:outline-none cursor-pointer text-white primary-btn py-1.5 font-10 fonr-semibold px-5">
+                                                                                                    Buy
+                                                                                                    Now
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     ) : (
-                                                                                        <div className="flex w-full justify-between items-center">
+                                                                                        <div className="flex cursor-pointer w-full justify-between items-center">
                                                                                             <p className="sec-black text-base  font-normal">
                                                                                                 $
                                                                                                 {dollarFormatter.format(
                                                                                                     ele.mmrPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <a
-                                                                                                className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5"
+                                                                                            <Link
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
-                                                                                                Place
-                                                                                                Bid
-                                                                                            </a>
+                                                                                                <div className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5">
+                                                                                                    Place
+                                                                                                    Bid
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
@@ -2157,8 +2162,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     >
                                                                         {/* <!-- image to details here --> */}
                                                                         <div className="flex w-full md:w-5/6 flex-col md:flex-row justify-between flex-wrap">
-                                                                            <div className="w-full md:w-1/3">
-                                                                                <a
+                                                                            <div className="w-full cursor-pointer md:w-1/3">
+                                                                                <Link
                                                                                     href={`/vin/${ele.VIN}`}
                                                                                 >
                                                                                     {ele
@@ -2198,7 +2203,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             </div>
                                                                                         </div>
                                                                                     )}
-                                                                                </a>
+                                                                                </Link>
                                                                             </div>
                                                                             {/* <!-- Details here --> */}
                                                                             <div className="w-full md:w-2/3 py-4 pl-2">
@@ -2357,7 +2362,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                         />
                                                                                                         <button
                                                                                                             type="button"
-                                                                                                            className="focus:outline-none text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
+                                                                                                            className="focus:outline-none cursor-pointer text-white action-btn buy px-2 items-center flex font-bold font-7 absolute bottom-0 "
                                                                                                         >
                                                                                                             BUY
                                                                                                             NOW
@@ -2365,14 +2370,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     </>
                                                                                                 )}
                                                                                             </div>
-                                                                                            <a
+                                                                                            <Link
                                                                                                 type="button"
-                                                                                                className="focus:outline-none text-white primary-btn py-1.5 font-10 font-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
-                                                                                                Buy
-                                                                                                Now
-                                                                                            </a>
+                                                                                                <div className="focus:outline-none cursor-pointer text-white primary-btn py-1.5 font-10 font-semibold px-5">
+                                                                                                    Buy
+                                                                                                    Now
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div className="flex flex-col w-full justify-between items-center">
@@ -2382,14 +2388,15 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     ele.mmrPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <a
+                                                                                            <Link
                                                                                                 type="button"
-                                                                                                className="focus:outline-none rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5"
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
-                                                                                                Place
-                                                                                                Bid
-                                                                                            </a>
+                                                                                                <div className="focus:outline-none cursor-pointer rounded text-white bg-blue-700 mt-3 py-1.5 font-10 font-semibold px-5">
+                                                                                                    Place
+                                                                                                    Bid
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
