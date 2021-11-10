@@ -3,6 +3,7 @@ import Head from "next/head";
 import React from "react";
 
 const Meta = ({ title, keywords, description }) => {
+    console.log(title);
     return (
         <Head>
             <link rel="icon" href="/favicon.ico" />
@@ -12,48 +13,10 @@ const Meta = ({ title, keywords, description }) => {
                 async
                 src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"
             ></script>
-            <meta name="keywords" content={keywords} />
-            <meta
-                name="google-site-verification"
-                content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
-            />
-            <meta
-                property="og:title"
-                content={title === null ? "BuyLike Dealers" : title}
-            />
-            <meta
-                name="description"
-                content={
-                    description === null
-                        ? "Buy cars like dealears with ease"
-                        : description
-                }
-            />
-            <meta property="og:url" content="https://www.buylikedealers.com/" />
-            <meta
-                name="twitter:site"
-                content={"https://www.buylikedealers.com/"}
-            />
-            <meta
-                name="twitter:card"
-                property="og:image"
-                content={
-                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
-                }
-            />
-            <meta
-                property="og:image"
-                content={
-                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
-                }
-            />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
             <script
                 async
                 src="https://www.googletagmanager.com/gtag/js?id=G-77J3ZBF0M5"
             />
-
             <script
                 dangerouslySetInnerHTML={{
                     __html: `
