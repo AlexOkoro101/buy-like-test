@@ -12,15 +12,7 @@ const Meta = ({ title, keywords, description }) => {
                 async
                 src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"
             ></script>
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="Buylikedealers.com" />
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1"
-            />
             <meta name="keywords" content={keywords} />
-            <meta name="description" content={description} />
-            <meta charSet="utf-8" />
             <meta
                 name="google-site-verification"
                 content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
@@ -32,14 +24,12 @@ const Meta = ({ title, keywords, description }) => {
             <meta
                 name="description"
                 content={
-                    title === null ? "Buy cars like dealears with ease" : title
+                    description === null
+                        ? "Buy cars like dealears with ease"
+                        : description
                 }
             />
-            <meta
-                property="og:url"
-                content={"https://www.buylikedealers.com/"}
-            />
-            <meta property="og:description" content={title} />
+            <meta property="og:url" content="https://www.buylikedealers.com/" />
             <meta
                 name="twitter:site"
                 content={"https://www.buylikedealers.com/"}
