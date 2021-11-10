@@ -12,7 +12,8 @@ const Meta = ({ title, keywords, description }) => {
                 async
                 src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"
             ></script>
-
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="Buylikedealers.com" />
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1"
@@ -116,9 +117,7 @@ const Meta = ({ title, keywords, description }) => {
                 rel="stylesheet"
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="Buylikedealers.com" />
-            <meta property="og:description" content="Buy cars like dealers" />
+
             <link
                 rel="stylesheet"
                 type="text/css"
