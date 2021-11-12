@@ -6,6 +6,7 @@ import { login } from "../../../redux/features/userSlice";
 import { selectToken } from "../../../redux/reducers/userReducer";
 import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
+import Select from "react-select";
 
 const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     const navRef = useRef(null);
@@ -57,14 +58,17 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         }
     }
 
+    const [options, setoptions] = useState([]);
+
     // Dropdown functionality
     const [navDropdown, setnavDropdown] = useState(false);
+    const [home, setHome] = useState(true);
     const handleLogout = () => {
         dispatch(logOut());
         window.localStorage.clear();
-        router.reload()
+        router.reload();
         beginLogout();
-        settoken(null)
+        settoken(null);
 
         setnavDropdown(false);
     };
@@ -74,14 +78,23 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     };
 
     useEffect(() => {
+        if (router.pathname !== "/") {
+            setHome(false);
+        } else {
+            setHome(true);
+        }
         setnavDropdown(false);
-    }, [router.pathname])
+    }, [router.pathname]);
 
     //close drop down
     function closeDropdown(ref) {
         useEffect(() => {
             function handleClickOutside(event) {
-                if (event.target.matches('#data-dropdown-toggle, #data-dropdown-toggle *')) {
+                if (
+                    event.target.matches(
+                        "#data-dropdown-toggle, #data-dropdown-toggle *"
+                    )
+                ) {
                     return;
                 }
                 if (ref.current && !ref.current.contains(event.target)) {
@@ -90,7 +103,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                 } else {
                     setnavDropdown(true);
                 }
-
             }
 
             // Bind the event listener
@@ -102,6 +114,57 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         }, [ref]);
     }
     closeDropdown(navRef);
+
+    const handleInputChange = (inputValue) => {
+        if (inputValue !== "") {
+            try {
+                fetch(
+                    `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
+                    {
+                        method: "GET",
+                        headers: {},
+                        credentials: "same-origin",
+                    }
+                )
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (res) {
+                        const dada = JSON.parse(res);
+                        if (dada) {
+                            dada.data.map((ele) => {
+                                setoptions([
+                                    {
+                                        value: ele.VIN,
+                                        label: ele.VIN,
+                                        data: ele,
+                                    },
+                                ]);
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    const handleChange = (newValue) => {
+        if (newValue && newValue.data) {
+            router.push({
+                pathname: "/vin/" + newValue.value,
+            });
+        }
+    };
+
+    const renderSearchIcon = () => (
+        <svg {...svgProps}>
+            <path d={path} />
+        </svg>
+    );
 
     return (
         <header className="">
@@ -116,7 +179,20 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                         />
                     </Link>
                 </div>
-
+                {home && (
+                    <div className="flex">
+                        <Select
+                            className="lg:w-56 w-40 h-full cursor-pointer focus:outline-none"
+                            placeholder={`Search VIN number`}
+                            type="text"
+                            isClearable
+                            onChange={handleChange}
+                            onInputChange={handleInputChange}
+                            options={options}
+                            arrowRenderer={renderSearchIcon}
+                        />
+                    </div>
+                )}
                 <input
                     className="menu-btn hidden"
                     type="checkbox"
@@ -124,7 +200,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                 />
                 <label
                     onClick={toggleView}
-                    className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none" htmlFor="menu-btn"
+                    className="menu-icon block cursor-pointer md:hidden px-2 py-4 relative select-none"
+                    htmlFor="menu-btn"
                 >
                     <span className="navicon bg-grey-darkest flex items-center relative"></span>
                 </label>
@@ -165,7 +242,12 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                     </button>
                                 </div>
 
-                                <div ref={navRef} id="data-dropdown-toggle" className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown" onClick={toggleDropdown}>
+                                <div
+                                    ref={navRef}
+                                    id="data-dropdown-toggle"
+                                    className="font-10 sec-black font-medium ml-2 relative inline-block text-left dropdown"
+                                    onClick={toggleDropdown}
+                                >
                                     <span>
                                         <button
                                             className="uppercase inline-flex justify-center w-full px-4 py-2 leading-5 transition duration-150 ease-in-out focus:outline-none "
@@ -194,7 +276,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                         </button>
                                     </span>
                                     <div
-                                        
                                         className={
                                             !navDropdown
                                                 ? "opacity-0 invisible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10"
