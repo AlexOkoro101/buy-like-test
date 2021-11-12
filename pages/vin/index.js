@@ -14,7 +14,6 @@ import FadeLoader from "react-spinners/FadeLoader";
 import { useForm } from "react-hook-form";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
-import Link from "next/link";
 import { selectToken } from "../../redux/reducers/userReducer";
 import Collapsible from "react-collapsible";
 import DatePicker from "react-datepicker";
@@ -505,7 +504,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                             onClick={nextPage}
                             style={{
                                 backgroundColor: "#d80739",
-                                display: maxPages === 1 ? "none" : "flex",
+                                display: maxPages <= 1 ? "none" : "flex",
                             }}
                         >
                             <span className="mr-2">Next</span>{" "}
@@ -692,20 +691,48 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     className=" bg-opacity-20 cursor-pointer rounded-md"
                 >
                     {params.images[0] ? (
-                        <img
-                            src={params.images[0].image_largeUrl}
-                            alt="hello"
-                            className="w-full object-cover h-full rounded-md object-center"
-                        />
-                    ) : (
-                        <div
+                        <a
+                            className="cursor-pointer  "
+                            href={`/vin/${params.VIN}`}
                             style={{
-                                backgroundImage: `url(/img/Rectangle.png)`,
+                                width:
+                                    open && width >= 900
+                                        ? ""
+                                        : !open && width >= 900
+                                        ? ""
+                                        : "100%",
+                                height: "203px",
                             }}
-                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
                         >
-                            IMAGE COMING SOON
-                        </div>
+                            <img
+                                src={params.images[0].image_largeUrl}
+                                alt="hello"
+                                className="w-full object-cover h-full rounded-md object-center"
+                            />
+                        </a>
+                    ) : (
+                        <a
+                            className="cursor-pointer  "
+                            href={`/vin/${params.VIN}`}
+                            style={{
+                                width:
+                                    open && width >= 900
+                                        ? ""
+                                        : !open && width >= 900
+                                        ? ""
+                                        : "100%",
+                                height: "203px",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    backgroundImage: `url(/img/Rectangle.png)`,
+                                }}
+                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                            >
+                                IMAGE COMING SOON
+                            </div>
+                        </a>
                     )}
                 </div>
             );
@@ -1999,27 +2026,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     : "100%",
                                                                         }}
                                                                     >
-                                                                        <Link
-                                                                            className="cursor-pointer  "
-                                                                            href={`/vin/${ele.VIN}`}
-                                                                            style={{
-                                                                                width:
-                                                                                    open &&
-                                                                                    width >=
-                                                                                        900
-                                                                                        ? ""
-                                                                                        : !open &&
-                                                                                          width >=
-                                                                                              900
-                                                                                        ? ""
-                                                                                        : "100%",
-                                                                                height: "203px",
-                                                                            }}
-                                                                        >
-                                                                            {addImage(
-                                                                                ele
-                                                                            )}
-                                                                        </Link>
+                                                                        {addImage(
+                                                                            ele
+                                                                        )}
 
                                                                         <div className="mt-3">
                                                                             {/* Vehicle Name here */}
@@ -2111,14 +2120,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     ele.buyNowPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <Link
+                                                                                            <a
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
                                                                                                 <div className="focus:outline-none cursor-pointer text-white primary-btn py-1.5 font-10 fonr-semibold px-5">
                                                                                                     Buy
                                                                                                     Now
                                                                                                 </div>
-                                                                                            </Link>
+                                                                                            </a>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div className="flex cursor-pointer w-full justify-between items-center">
@@ -2128,14 +2137,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     ele.mmrPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <Link
+                                                                                            <a
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
                                                                                                 <div className="focus:outline-none text-white bg-blue-700 rounded py-1.5 font-10 fonr-semibold px-5">
                                                                                                     Place
                                                                                                     Bid
                                                                                                 </div>
-                                                                                            </Link>
+                                                                                            </a>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
@@ -2164,8 +2173,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                     >
                                                                         {/* <!-- image to details here --> */}
                                                                         <div className="flex w-full md:w-5/6 flex-col md:flex-row justify-between flex-wrap">
-                                                                            <div className="w-full cursor-pointer md:w-1/3">
-                                                                                <Link
+                                                                            <div className="w-full cursor-pointer md:w-1/3 py-4">
+                                                                                <a
                                                                                     href={`/vin/${ele.VIN}`}
                                                                                 >
                                                                                     {ele
@@ -2205,7 +2214,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                             </div>
                                                                                         </div>
                                                                                     )}
-                                                                                </Link>
+                                                                                </a>
                                                                             </div>
                                                                             {/* <!-- Details here --> */}
                                                                             <div className="w-full md:w-2/3 py-4 pl-2">
@@ -2327,12 +2336,12 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                     </p>
                                                                                     <p className="flex  font-medium items-center text-xs primary-black">
                                                                                         <span className="font-semibold mr-2">
-                                                                                            Passenger
-                                                                                            Capacity
+                                                                                            Fuel
+                                                                                            type
                                                                                         </span>
-                                                                                        {
-                                                                                            ele?.passengerCapacity
-                                                                                        }
+                                                                                        {ele?.sourceEngineFuelType
+                                                                                            ? ele?.sourceEngineFuelType
+                                                                                            : "Not specified"}
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -2344,7 +2353,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                         ele.buyNowPrice
                                                                                     )
                                                                                         .length >
-                                                                                    2 ? (
+                                                                                        2 &&
+                                                                                    active !==
+                                                                                        "bid" ? (
                                                                                         <div className="flex flex-col w-full justify-between items-center">
                                                                                             <p className="sec-black text-base ml-1 font-medium">
                                                                                                 $
@@ -2372,7 +2383,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     </>
                                                                                                 )}
                                                                                             </div>
-                                                                                            <Link
+                                                                                            <a
                                                                                                 type="button"
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
@@ -2380,7 +2391,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     Buy
                                                                                                     Now
                                                                                                 </div>
-                                                                                            </Link>
+                                                                                            </a>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div className="flex flex-col w-full justify-between items-center">
@@ -2390,7 +2401,16 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     ele.mmrPrice
                                                                                                 )}
                                                                                             </p>
-                                                                                            <Link
+                                                                                            <a
+                                                                                                type="button"
+                                                                                                href={`/vin/${ele.VIN}`}
+                                                                                            >
+                                                                                                <img
+                                                                                                    src="../../assets/img/vectors/bidTag.svg"
+                                                                                                    alt="buy"
+                                                                                                />
+                                                                                            </a>
+                                                                                            <a
                                                                                                 type="button"
                                                                                                 href={`/vin/${ele.VIN}`}
                                                                                             >
@@ -2398,7 +2418,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     Place
                                                                                                     Bid
                                                                                                 </div>
-                                                                                            </Link>
+                                                                                            </a>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
