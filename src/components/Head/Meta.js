@@ -3,6 +3,7 @@ import Head from "next/head";
 import React from "react";
 
 const Meta = ({ title, keywords, description }) => {
+    console.log(title);
     return (
         <Head>
             <link rel="icon" href="/favicon.ico" />
@@ -12,56 +13,22 @@ const Meta = ({ title, keywords, description }) => {
                 async
                 src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"
             ></script>
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="Buylikedealers.com" />
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1"
-            />
-            <meta name="keywords" content={keywords} />
-            <meta name="description" content={description} />
-            <meta charSet="utf-8" />
-            <meta
-                name="google-site-verification"
-                content="SKiiwV76yNqt-_QG-qhsmSV0MRVFoso0ZtCBckK817w"
-            />
-            <meta
-                property="og:title"
-                content={title === null ? "BuyLike Dealers" : title}
-            />
-            <meta
-                name="description"
-                content={
-                    title === null ? "Buy cars like dealears with ease" : title
-                }
-            />
-            <meta
-                property="og:url"
-                content={"https://www.buylikedealers.com/"}
-            />
-            <meta property="og:description" content={title} />
-            <meta
-                name="twitter:site"
-                content={"https://www.buylikedealers.com/"}
-            />
-            <meta
-                name="twitter:card"
-                property="og:image"
-                content={
-                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
-                }
-            />
-            <meta
-                property="og:image"
-                content={
-                    "https://res.cloudinary.com/codepally/image/upload/v1616584548/Ridora/png/Ridora_Logo_white-08_ifvjth.png"
-                }
-            />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
             <script
                 async
                 src="https://www.googletagmanager.com/gtag/js?id=G-77J3ZBF0M5"
+            />
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+                    (function(w,d,v3){
+                        w.chaportConfig = {
+                          appId : '61828b3b395e6219c372173e'
+                        };
+                        
+                        if(w.chaport)return;v3=w.chaport={};v3._q=[];v3._l={};v3.q=function(){v3._q.push(arguments)};v3.on=function(e,fn){if(!v3._l[e])v3._l[e]=[];v3._l[e].push(fn)};var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://app.chaport.com/javascripts/insert.js';var ss=d.getElementsByTagName('script')[0];ss.parentNode.insertBefore(s,ss)})(window, document);
+                        
+        `,
+                }}
             />
 
             <script

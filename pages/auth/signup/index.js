@@ -47,7 +47,7 @@ const SignupOptions = ({ beginLogin }) => {
 
     //Google Auth
     const googleClientId =
-        "347255442348-02v0vuvm7f9puqfa70m83c09vdbnigtt.apps.googleusercontent.com";
+        "134674760557-ond8201e5n9t9f3ri7akevf62ku6uruf.apps.googleusercontent.com";
 
     const onGoogleLoginSuccess = (res) => {
         const googleProfile = {
@@ -198,7 +198,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 Sign up with Facebook 
                             </button> */}
                             <FacebookLogin
-                                appId="1014302915998441"
+                                appId="348837593684517"
                                 autoLoad={false}
                                 fields="name,email,picture"
                                 onClick={facebookClicked}
