@@ -145,6 +145,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     useEffect(() => {
         if (advance === true) {
             handleTransmission();
+            setPageIndex(1);
         }
     }, [filterValue]);
     useEffect(() => {
