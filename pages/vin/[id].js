@@ -815,41 +815,48 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         addCar();
     };
+    const now = new Date();
+    const bidData = () => ( {
+        vin: vin,
+        link: "https://members.manheim.com/",
+        name: name,
+        site: "https://members.manheim.com/",
+        price: price,
+        year: year,
+        exterior_color: exteriorColor,
+        vehicle_type: vehicleType,
+        interior_color: interiorColor,
+        transmission: transmission,
+        odometer: odometer,
+        driveTrain: driveTrain,
+        doors: doors,
+        Model: model,
+        make: make,
+        equipment: "",
+        EngineType: "",
+        interior_type: "",
+        body_style: bodyStyle,
+        fuel_type: "",
+        passengerCapacity: "",
+        sellerCity: "",
+        description: "",
+        Zip: zip,
+        tilteImage: "",
+        bidAmount: bidAmount,
+        owner: userId,
+        facilitationLocation: facilitationLocation,
+        Vehicle_location: vehicleLocation,
+        images: carImages,
+        trucking: truckAccessory ? ( Number(truckingPrice.slice(1)) > 1000
+        ? Number(truckingPrice.slice(1)) / 3
+        : Number(truckingPrice.slice(1)) > 400 &&
+          Number(truckingPrice.slice(1)) < 1000
+        ? Number(truckingPrice.slice(1)) / 2
+        : Number(truckingPrice.slice(1))) : "",
+        shipping: shipAccessory ? "1150" : "",
+        expiry: now.getTime() + 3600000
+    });
     const buyNowFunction = () => {
-        const bidObject = {
-            vin: vin,
-            link: "https://members.manheim.com/",
-            name: name,
-            site: "https://members.manheim.com/",
-            price: price,
-            year: year,
-            exterior_color: exteriorColor,
-            vehicle_type: vehicleType,
-            interior_color: interiorColor,
-            transmission: transmission,
-            odometer: odometer,
-            driveTrain: driveTrain,
-            doors: doors,
-            Model: model,
-            make: make,
-            equipment: "",
-            EngineType: "",
-            interior_type: "",
-            body_style: bodyStyle,
-            fuel_type: "",
-            passengerCapacity: "",
-            sellerCity: "",
-            description: "",
-            Zip: zip,
-            tilteImage: "",
-            bidAmount: bidAmount,
-            owner: userId,
-            facilitationLocation: facilitationLocation,
-            Vehicle_location: vehicleLocation,
-            images: carImages,
-            trucking: addTrucking ? truckingPrice : "",
-            shipping: "",
-        };
 
         //Add car to buy now
         fetch(enviroment.BASE_URL + "bids/buy-now", {
@@ -1912,15 +1919,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
-                                                                        value={
+                                                                        defaultChecked={
                                                                             shipAccessory
                                                                         }
+
                                                                         type="checkbox"
                                                                         className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
+                                                                        onChange={(e) => {
                                                                             setshipAccessory(
-                                                                                !shipAccessory
+                                                                                e.target.checked
                                                                             )
+                                                                            console.log(shipAccessory)
+                                                                        }
                                                                         }
                                                                     />
                                                                     <span className="detail"></span>
@@ -2413,59 +2423,28 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <div className="flex justify-center">
                                         {token ? (
                                             <>
-                                                {carDetail?.buyNowPrice
-                                                    ?.length >= 1 ? (
-                                                    <button
-                                                        // onClick={() => {
-                                                        //     initializePayment(
-                                                        //         onSuccess,
-                                                        //         onClose
-                                                        //     );
-                                                        // }}
-                                                        onClick={
-                                                            OpenSendSheetModal
-                                                        }
-                                                        className={
-                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                            (!terms &&
-                                                                `opacity-50 cursor-not-allowed`)
-                                                        }
-                                                        disabled={!terms}
-                                                    >
-                                                        {isLoading ? (
-                                                            <ClipLoader
-                                                                color="#fff"
-                                                                size={20}
-                                                                loading
-                                                            />
-                                                        ) : (
-                                                            "SUBMIT A REQUEST"
-                                                        )}
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        // onClick={placeBid}
-                                                        onClick={
-                                                            OpenSendSheetModal
-                                                        }
-                                                        className={
-                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                            (!terms &&
-                                                                `opacity-50 cursor-not-allowed`)
-                                                        }
-                                                        disabled={!terms}
-                                                    >
-                                                        {isLoading ? (
-                                                            <ClipLoader
-                                                                color="#fff"
-                                                                size={20}
-                                                                loading
-                                                            />
-                                                        ) : (
-                                                            "SUBMIT A REQUEST"
-                                                        )}
-                                                    </button>
-                                                )}
+                                                <button
+                                                    onClick={
+                                                        OpenSendSheetModal
+                                                    }
+                                                    className={
+                                                        `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                        (!terms &&
+                                                            `opacity-50 cursor-not-allowed`)
+                                                    }
+                                                    disabled={!terms}
+                                                >
+                                                    {isLoading ? (
+                                                        <ClipLoader
+                                                            color="#fff"
+                                                            size={20}
+                                                            loading
+                                                        />
+                                                    ) : (
+                                                        "SUBMIT A REQUEST"
+                                                    )}
+                                                </button>
+                                                
                                                 <p className="font-11 sec-black mx-2 mt-2">
                                                     OR
                                                 </p>
@@ -2484,6 +2463,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     />{" "}
                                                     WHATSAPP US
                                                 </button>
+                                                
                                             </>
                                         ) : (
                                             <>
@@ -2516,6 +2496,25 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     WHATSAPP US
                                                 </button>
                                             </>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-center mt-5">
+                                        {token && offer ? (
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                onClick={() => {
+                                                    router.push('/transaction/' + vin)
+                                                    localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                    console.log(bidData())
+                                                }}
+                                            >
+                                                
+                                                BUY NOW
+                                            </button>
+
+                                        ) : (
+                                            <></>
                                         )}
                                     </div>
                                 </div>

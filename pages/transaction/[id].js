@@ -1,11 +1,245 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { enviroment } from "../../src/components/enviroment";
+import { usePaystackPayment } from "react-paystack";
+import { ToastContainer, toast } from "react-toastify";
 
 const Transaction = () => {
     const router = useRouter();
+    const buyNowInfo = () =>
+        toast.info("Car already bought by you", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    const buyNowSuccess = () =>
+        toast.success("Success", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+    const [token, settoken] = useState(null)
+    const [userEmail, setuserEmail] = useState(null);
+    const [userPhone, setuserPhone] = useState(null);
+    const [userName, setuserName] = useState(null);
+    const [userId, setuserId] = useState(null);
     const carId = router.query.id;
     const [carDetails, setcarDetails] = useState(null)
+    const [sectabActive, setsectabActive] = useState(false);
+    const [bidID, setbidID] = useState(null);
+    const [bnvehicleID, setbnvehicleID] = useState(null);
+    const referenceNumber = () => {
+        return "bld" + Math.floor(Math.random() * 1000000000 + 1);
+    };
+    const config = {
+        reference: referenceNumber(),
+        email: `${userEmail}`,
+        amount: /*amount * 100*/ 100000,
+        publicKey: "pk_test_c9e721436fd837814692c450db204c33326ff6d1",
+    };
+    
+    // you can call this function anything
+    const onSuccess = (reference) => {
+        // Implementation for whatever you want to do with reference and after success call.
+        verifyPaystackPayment(reference.trxref);
+        // openForm(reference, 3)
+        
+
+    };
+    
+    // you can call this function anything
+    const onClose = () => {
+        // implementation for  whatever you want to do when the Paystack dialog closed.
+        console.log("closed");
+    };
+    const initializePayment = usePaystackPayment(config);
+    const retrieveData = () => {
+        const userActive = localStorage.getItem("user");
+        if (!userActive) {
+            settoken(null);
+            return null;
+        }
+        const item = JSON.parse(userActive);
+        const now = new Date();
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            window.localStorage.clear();
+            return null;
+        }
+        // settoken(item?.userToken);
+        setuserName(item?.userName);
+        // setuserId(item?.userId);
+        setuserEmail(item?.email);
+        setuserPhone(item?.phone);
+    }; //Get Data from local Storage
+
+    useEffect(() => {
+        retrieveData();
+        return retrieveData;
+    }, [router.pathname, token]);
+
+    const verifyPaystackPayment = (ref) => {
+        fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
+            method: "GET",
+            redirect: "follow",
+        })
+            .then((res) => {
+                return res.text();
+            })
+            .then((data) => {
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatData = JSON.parse(data);
+                        // setcollection(formatData.data);
+                        if (formatData.data.status) {
+                            frontendPayment(ref, formatData);
+                        }
+                    }
+                }
+            })
+            .catch((error) => console.log("payment error", error));
+    };
+
+    const buyNowFunction = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const bidObject = {
+            vin: carDetails?.vin,
+            link: carDetails?.link,
+            name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
+            site: carDetails?.site,
+            price: carDetails?.buyNowPrice,
+            year: carDetails?.year,
+            exterior_color: carDetails?.exterior_color,
+            vehicle_type: carDetails?.vehicle_type,
+            interior_color: carDetails?.interior_color,
+            transmission: carDetails?.transmission,
+            odometer: carDetails?.odometer,
+            driveTrain: carDetails?.driveTrain,
+            doors: carDetails?.doors,
+            Model: carDetails?.model,
+            make: carDetails?.make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: carDetails?.body_style,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: carDetails?.Zip,
+            tilteImage: carDetails?.tilteImage,
+            bidAmount: carDetails?.bidAmount,
+            owner: carDetails?.owner,
+            facilitationLocation: carDetails?.facilitationLocation,
+            Vehicle_location: carDetails?.Vehicle_location,
+            images: carDetails?.images,
+            trucking: carDetails?.trucking,
+            shipping: carDetails?.shipping,
+        };
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(bidObject),
+            redirect: 'follow'
+          };
+
+        //Add car to buy now
+        fetch(enviroment.BASE_URL + "bids/buy-now", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            // console.log(result)
+            const resultFormat = JSON.parse(result)
+            console.log("bnf", resultFormat)
+            if(resultFormat.error === false) {
+                getBidId(resultFormat)
+                setbnvehicleID(resultFormat.data._id)
+                initializePayment(
+                    onSuccess,
+                    onClose
+                );
+            } else {
+                buyNowInfo();
+            }
+
+        })
+        .catch(error => console.log('error', error));
+    };
+
+    const frontendPayment = (ref, verifiedData) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            vin: carDetails?.vin,
+            number: `${userPhone}`,
+            fullname: `${userName}`,
+            email: `${userEmail}`,
+            buyNow: true,
+            username: "",
+            collection: "",
+            owner: carDetails?.owner,
+            vehicle: bnvehicleID,
+            bid: bidID,
+            amount: carDetails?.bidAmount,
+            amountBalance: Number(carDetails?.bidAmount) - 1000,
+            reference: ref,
+            currency: "",
+            metadata: "",
+            balance: Number(carDetails?.bidAmount) - 1000,
+            status: verifiedData.data.status,
+            statusTrans: verifiedData.data.data.status,
+        });
+
+        var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+        };
+
+        fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                const resultFormat = JSON.parse(result)
+                console.log("front end payment", resultFormat)
+                if(resultFormat.error === false) {
+                    buyNowSuccess();
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
+
+    const getBidId = (bnfResult) => {
+        const vehicleID = bnfResult.data._id;
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+        
+        fetch(enviroment.BASE_URL + "bids/vehicle/" + vehicleID, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log("gbID", result)
+            const resultFormat = JSON.parse(result)
+            setbidID(resultFormat.data._id)
+        })
+        .catch(error => console.log('error', error));
+    }
+
 
     const [state, setstate] = useState(1);
     const openForm = (evt, status) => {
@@ -27,38 +261,112 @@ const Transaction = () => {
         evt.currentTarget.className += " active";
     };
 
-    const getCarDetail = () => {
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            credentials: "same-origin",
-          };
-          
-          fetch(enviroment.BASE_URL + "vehicles/vin/" + carId, requestOptions)
-            .then(response => response.text())
-            .then((result) => {
-                console.log(result)
-                if (result) {
-                    if (Object.entries(result).length >= 1) {
-                        const formatCarDetails = JSON.parse(result);
-                        console.log("formated", formatCarDetails.data)
-                        setcarDetails(formatCarDetails.data.vehicle);
-                    }
-                }
-            })
-            .catch(error => console.log('error', error));
-    }
+
+    const retrieveCar = () => {
+        const activeCar = localStorage.getItem("buyNowData");
+        if (!activeCar) {
+            router.back()
+            return null;
+        }
+        
+        const now = new Date();
+        const item = JSON.parse(activeCar)
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            window.localStorage.clear();
+            return null;
+        }
+        setcarDetails(item);
+    }; //Get Data from local Storage
 
     useEffect(() => {
-        getCarDetail()
+        retrieveCar()
+        console.log("car detail", carDetails)
     }, [])
 
     return (
         <div>
+            <ToastContainer />
             <div className="flex justify-center pt-16">
                 <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder ">
 
-                    <section className="w-full px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28  ">
+                <aside className="deposit-holder lg:h-screen px-4 md:px-2 lg:pl-24 lg:pr-9 pt-9 pb-4">
+                    {
+                        carDetails ? (
+                            <>
+                                <p className="primary-color text-sm font-bold mb-3">Make Deposit</p>
+                                <div
+                                    className="grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1 car-holder py-2.5">
+                                    <span className="col-span-3 inline-block overflow-hidden rounded-md">
+                                        <img className="w-full" src={carDetails?.images[0]?.image_largeUrl} alt="" />
+                                    </span>
+                                    <div className="col-span-3">
+                                        <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
+                                            {carDetails?.year} {""} {carDetails?.make} {""} {carDetails?.Model}
+                                        </p>
+                                        <p className="primary-black font-medium py-1 font-11 uppercase">
+                                            {carDetails?.odometer.toLocaleString()} mi
+                                        </p>
+                                        <p className="primary-black font-medium font-11 uppercase">
+                                            vin: {carDetails?.vin}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <table className="min-w-full ">
+                                    <tbody>
+                                        {carDetails?.trucking && (
+                                            <tr className="detail-row mb-2">
+                                                <td className="sec-black font-10 font-semibold py-1.5">Trucking</td>
+                                                <td className="font-10 primary-black font-normal py-1.5">${carDetails?.trucking}</td>
+                                            </tr>
+
+                                        )}
+
+                                        {carDetails?.shipping && (
+                                            <tr className="detail-row mb-2">
+                                                <td className="sec-black font-10 font-semibold py-1.5">Shipping</td>
+                                                <td className="font-10 primary-black font-normal py-1.5">${carDetails?.shipping}</td>
+                                            </tr>
+
+                                        )}
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black font-10 font-semibold py-1.5">Clearing</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">N/A</td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black font-10 font-semibold py-1.5">Service Fee</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$800</td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2 ">
+                                            <td className="sec-black font-10 font-semibold py-1.5 total-border">Total</td>
+                                            <td className="font-10 primary-black font-normal py-1.5 total-border">${carDetails?.bidAmount}</td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black font-10 font-semibold py-1.5">Deposit</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$1,000</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                
+                            </>
+                        ) 
+                        : 
+                        (
+                            <>
+                                <p>Loading car details...</p>
+                            </>
+                        )
+                    }
+                </aside>
+
+                    <section className="px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28  ">
                         <div className="py-6 max-w-3xl mx-auto">
                             <div className="w-full flex uppercase ">
                                 <div
@@ -69,7 +377,7 @@ const Transaction = () => {
                                 </div>
                                 <div
                                     onClick={(e) => openForm(e, 2)}
-                                    className="details-tab cursor-pointer flex-1 flex justify-center font-semibold py-0.5 "
+                                    className={"details-tab cursor-pointer flex-1 flex justify-center font-semibold py-0.5 " + ( sectabActive ? "active" : "")}
                                 >
                                     <p className="py-2">2 deposit payment</p>
                                 </div>
@@ -240,6 +548,10 @@ const Transaction = () => {
                                         </div>
                                         <div className="flex justify-center">
                                             <button
+                                                onClick={(e) => {
+                                                    setsectabActive(true)
+                                                    openForm(e, 2)
+                                                    }}
                                                 type="button"
                                                 className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
                                             >
@@ -253,100 +565,18 @@ const Transaction = () => {
                                         className="tabcontent mt-5"
                                         id="deposit"
                                     >
-                                        <div className="info-holder font-10   py-4 pb-5 mb-3 ">
+                                        <div className="info-holder font-10 py-24 mb-3 ">
                                             <div className="flex justify-center px-4 ">
                                                 <form className="w-full">
-                                                    <p className="font-semibold primary-color ">
-                                                        Bank Details
-                                                    </p>
-                                                    <div className="flex flex-col mb-4  mt-3">
-                                                        <div className="col-span-6 lg:col-span-3 ">
-                                                            <label
-                                                                htmlFor="lga"
-                                                                className="block font-10 primary-color "
-                                                            >
-                                                                Bank Name
-                                                            </label>
-                                                            <select
-                                                                id="lga"
-                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                            >
-                                                                <option>
-                                                                    Select your
-                                                                    bank
-                                                                </option>
-                                                                <option>
-                                                                    GT bank
-                                                                </option>
-                                                                <option>
-                                                                    Kuda Bank
-                                                                </option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div className="col-span-6 lg:col-span-3  mt-3">
-                                                            <label
-                                                                htmlFor="phone"
-                                                                className="block font-10 primary-color "
-                                                            >
-                                                                Account number
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="Enter your account number"
-                                                                pattern="^[0-9]*$"
-                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="flex flex-col mb-4">
-                                                        <label
-                                                            htmlFor="card-number"
-                                                            className="font-10 primary-black pb-1.5"
-                                                        >
-                                                            Expiry Date
-                                                        </label>
-
-                                                        <div className="flex w-full">
-                                                            <select className="card-select px-3 mr-2 w-24 focus:outline-none">
-                                                                <option>
-                                                                    Month
-                                                                </option>
-                                                            </select>
-
-                                                            <select className="card-select px-3 mr-2 w-24 focus:outline-none">
-                                                                <option>
-                                                                    Year
-                                                                </option>
-                                                            </select>
-
-                                                            <input
-                                                                type="text"
-                                                                className="focus:outline-none px-3 card-input w-24 mr-2"
-                                                                pattern="^[0-9]*$"
-                                                                placeholder="CVV"
-                                                            />
-                                                            <img src="../assets/img/vectors/tool-tip.svg" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex justify-center mt-5">
-                                                        <button
-                                                            type="button"
-                                                            className="focus:outline-none primary-btn make-payment font-semibold tracking-wider  text-white font-10 "
-                                                        >
-                                                            SAVE DETAILS
-                                                        </button>
-                                                    </div>
-
-                                                    {/* <div className="text-center py-4">
-                                                        <p className="font-10 primary-black">
-                                                            OR
-                                                        </p>
-                                                    </div>
-
                                                     <div className="flex  justify-center items-center">
                                                         <button
+                                                            onClick={() => {
+                                                                // initializePayment(
+                                                                //     onSuccess,
+                                                                //     onClose
+                                                                // );
+                                                                buyNowFunction()
+                                                            }}
                                                             type="button"
                                                             className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
                                                         >
@@ -357,7 +587,7 @@ const Transaction = () => {
                                                                 alt="Paystack"
                                                             />
                                                         </button>
-                                                    </div> */}
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -405,7 +635,7 @@ const Transaction = () => {
                                         id="confirmation"
                                     >
                                         <div className="flex justify-center mt-16">
-                                            <img src="../assets/img/vectors/check.svg" />
+                                            <img src="../../assets/img/vectors/check.svg" />
                                         </div>
 
                                         <div className="text-center mt-8">
@@ -428,6 +658,9 @@ const Transaction = () => {
 
                                         <div className="flex justify-center mt-5 mb-16">
                                             <button
+                                                onClick={() => {
+                                                    router.push('/vin')
+                                                }}
                                                 type="button"
                                                 className="focus:outline-none primary-btn px-4 font-10 text-white font-medium py-1.5"
                                             >
