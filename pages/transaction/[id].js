@@ -46,6 +46,8 @@ const Transaction = () => {
     const [email, setemail] = useState("");
     const [street, setstreet] = useState("");
     const phoneNumberRef = useRef(null);
+    const [confimation, setconfimation] = useState(false);
+    const [refNumber, setrefNumber] = useState(null);
     const referenceNumber = () => {
         return "bld" + Math.floor(Math.random() * 1000000000 + 1);
     };
@@ -59,11 +61,23 @@ const Transaction = () => {
     // you can call this function anything
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
-        verifyPaystackPayment(reference.trxref);
+        setrefNumber(reference.trxref)
+        console.log("vehicle ID", bnvehicleID)
+        console.log("bid ID", bidID)
         setstate(3)
+    
         
-
+        
     };
+    useEffect(() => {
+        if(refNumber === null) {
+                return;
+        } else {
+            console.log("verify payment")
+            verifyPaystackPayment(refNumber);
+        }
+    }, [confimation, state, refNumber])
+
     
     // you can call this function anything
     const onClose = () => {
@@ -88,8 +102,8 @@ const Transaction = () => {
         // settoken(item?.userToken);
         setuserName(item?.userName);
         // setuserId(item?.userId);
-        setuserEmail(item?.email);
-        setuserPhone(item?.phone);
+        setuserEmail(item?.userEmail);
+        setuserPhone(item?.phoneNumber);
     }; //Get Data from local Storage
 
     useEffect(() => {
@@ -180,6 +194,7 @@ const Transaction = () => {
                     onSuccess,
                     onClose
                 );
+                setconfimation(true)
             } else {
                 buyNowInfo();
             }
@@ -212,6 +227,7 @@ const Transaction = () => {
             status: verifiedData.data.status,
             statusTrans: verifiedData.data.data.status,
         });
+        console.log("frontend data", raw)
 
         var requestOptions = {
             method: "POST",

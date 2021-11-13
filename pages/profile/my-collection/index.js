@@ -327,7 +327,7 @@ const MyCollection = ({
             <Meta></Meta>
             <main className="mb-20">
                 <Collection></Collection>
-                <div className="mx-20 px-3 mt-5 search-results-holder flex items-center justify-between">
+                <div className="mx-20 px-3 mt-20 search-results-holder flex items-center justify-between">
                     {/* <!-- first section here --> */}
                     <div>
                         <button

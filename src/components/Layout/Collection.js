@@ -258,9 +258,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                             </>
                         </div>
                     ) : (
-                        <div className="blue-div px-20 mt-20 py-3 flex justify-between">
-                            <p>Loading...</p>
-                        </div>
+                        <></>
                     )}
 
                     <div

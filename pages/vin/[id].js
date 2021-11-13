@@ -184,6 +184,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [sheetError, setsheetError] = useState(false);
 
     const retrieveData = () => {
+        localStorage.removeItem('temp')
         const userActive = localStorage.getItem("user");
         if (!userActive) {
             settoken(null);

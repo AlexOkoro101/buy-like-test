@@ -56,7 +56,7 @@ const Transactions = () => {
             <div className="h-screen  mt-24 mb-20 px-32">
                 {!transactions?.length ? (
                     <div>
-                        <p>Loading...</p>
+                        <p className="sec-black">No transaction available</p>
                     </div>
                 ) : (
                     <>
@@ -93,7 +93,7 @@ const Transactions = () => {
 
                                     {transactions.map((transaction) => (
                                         <tr key={transaction?._id} className="flex flex-col border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <td className="p-3.5">{transaction?.BidCollection?.name || "N/A"}</td>
+                                            <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle.year || ""} ${transaction?.vehicle.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
                                             <td className="p-3.5">${transaction?.amount}</td>
                                             {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
                                             <td className="p-3.5">{transaction?.statusTrans === "true" && (<>Success</>)}</td>
