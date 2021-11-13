@@ -199,6 +199,13 @@ section {
     width: 53%;
 }
 }
+.buynow-phone-number {
+    height: 32px !important;
+    margin-top: 5px;
+    border: 1px solid rgba(31, 42, 83, 0.25) !important;
+    border-radius: 3px !important;
+    color: #1f2a53bf;
+}
 
 
 

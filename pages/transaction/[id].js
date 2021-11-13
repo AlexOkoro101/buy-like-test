@@ -1,8 +1,11 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { enviroment } from "../../src/components/enviroment";
 import { usePaystackPayment } from "react-paystack";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import IntlTelInput from "react-intl-tel-input";
+import "react-intl-tel-input/dist/main.css";
 
 const Transaction = () => {
     const router = useRouter();
@@ -37,6 +40,12 @@ const Transaction = () => {
     const [sectabActive, setsectabActive] = useState(false);
     const [bidID, setbidID] = useState(null);
     const [bnvehicleID, setbnvehicleID] = useState(null);
+    const [firstName, setfirstName] = useState("");
+    const [lastName, setlastName] = useState("");
+    const [phoneNumber, setphoneNumber] = useState("");
+    const [email, setemail] = useState("");
+    const [street, setstreet] = useState("");
+    const phoneNumberRef = useRef(null);
     const referenceNumber = () => {
         return "bld" + Math.floor(Math.random() * 1000000000 + 1);
     };
@@ -51,7 +60,7 @@ const Transaction = () => {
     const onSuccess = (reference) => {
         // Implementation for whatever you want to do with reference and after success call.
         verifyPaystackPayment(reference.trxref);
-        // openForm(reference, 3)
+        setstate(3)
         
 
     };
@@ -285,6 +294,21 @@ const Transaction = () => {
         console.log("car detail", carDetails)
     }, [])
 
+    const phoneNumberChange = () => {
+        setphoneNumber(
+            `+${phoneNumberRef.current.selectedCountryData.dialCode}` +
+                `${phoneNumberRef.current.state.value}`
+        );
+    };
+
+    const submitCustomerDetails = (e) => {
+        e.preventDefault()
+        if (!firstName ||  !lastName || !email || !phoneNumber || !street) {
+            return;
+        }
+        setstate(2)
+    }
+
     return (
         <div>
             <ToastContainer />
@@ -360,7 +384,7 @@ const Transaction = () => {
                         : 
                         (
                             <>
-                                <p>Loading car details...</p>
+                                <p className="font-10 sec-black">Loading car details...</p>
                             </>
                         )
                     }
@@ -370,20 +394,20 @@ const Transaction = () => {
                         <div className="py-6 max-w-3xl mx-auto">
                             <div className="w-full flex uppercase ">
                                 <div
-                                    onClick={(e) => openForm(e, 1)}
-                                    className="details-tab active flex-1 flex justify-center cursor-pointer"
+                                    
+                                    className={"details-tab flex-1 flex justify-center " + ( state === 1 ? "active" : "")}
                                 >
                                     <p className="py-2.5">1 customer info</p>
                                 </div>
                                 <div
-                                    onClick={(e) => openForm(e, 2)}
-                                    className={"details-tab cursor-pointer flex-1 flex justify-center font-semibold py-0.5 " + ( sectabActive ? "active" : "")}
+                                    
+                                    className={"details-tab flex-1 flex justify-center font-semibold py-0.5 " + ( state === 2 ? "active" : "")}
                                 >
                                     <p className="py-2">2 deposit payment</p>
                                 </div>
                                 <div
-                                    onClick={(e) => openForm(e, 3)}
-                                    className="details-tab cursor-pointer flex-1 flex justify-center font-semibold py-0.5"
+                                    
+                                    className={"details-tab flex-1 flex justify-center font-semibold py-0.5 "  + ( state === 3 ? "active" : "")}
                                 >
                                     <p className="py-2">3 confirmation</p>
                                 </div>
@@ -391,9 +415,10 @@ const Transaction = () => {
 
                             <div className="mt-5">
                                 {state === 1 && (
-                                    <div
+                                    <form
                                         className="tabcontent mt-5 "
                                         id="customer-info"
+                                        onSubmit={submitCustomerDetails}
                                     >
                                         <div className="info-holder font-10 px-4 py-4 mb-3">
                                             <p className="font-semibold primary-color  ">
@@ -412,6 +437,9 @@ const Transaction = () => {
                                                         type="text"
                                                         placeholder="Dare"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                        required
+                                                        value={firstName}
+                                                        onChange={(e) => setfirstName(e.target.value)}
                                                     />
                                                 </div>
 
@@ -426,6 +454,9 @@ const Transaction = () => {
                                                         type="text"
                                                         placeholder="Thomas"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                        required
+                                                        value={lastName}
+                                                        onChange={(e) => setlastName(e.target.value)}
                                                     />
                                                 </div>
 
@@ -436,23 +467,17 @@ const Transaction = () => {
                                                     >
                                                         Phone Number
                                                     </label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="+234 08181234567"
-                                                        className="mt-1 block w-full info-text phone-number py-2 px-16  bg-white  focus:outline-none"
+                                                    <IntlTelInput
+                                                        ref={phoneNumberRef}
+                                                        placeholder="xxxx-xxxx-xxxx"
+                                                        containerClassName="intl-tel-input buynow-phone-number"
+                                                        inputClassName="form-control"
+                                                        preferredCountries={["ng"]}
+                                                        defaultValue={phoneNumber}
+                                                        onPhoneNumberChange={(e) =>
+                                                            phoneNumberChange(e)
+                                                        }
                                                     />
-                                                    <div className="absolute left-7 bottom-3 cursor-pointer">
-                                                        <img
-                                                            src="./../assets/img/vectors/num-arrow.svg"
-                                                            alt=""
-                                                        />
-                                                    </div>
-                                                    <div className="absolute left-12 bottom-0">
-                                                        <img
-                                                            src="./../assets/img/vectors/num-line.svg"
-                                                            alt=""
-                                                        />
-                                                    </div>
                                                 </div>
                                                 <div className="col-span-6 lg:col-span-3">
                                                     <label
@@ -465,6 +490,9 @@ const Transaction = () => {
                                                         type="email"
                                                         placeholder="dare@thomas.com"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                        required
+                                                        value={email}
+                                                        onChange={(e) => setemail(e.target.value)}
                                                     />
                                                 </div>
                                             </div>
@@ -542,23 +570,30 @@ const Transaction = () => {
                                                         id="address"
                                                         className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
                                                         placeholder="Enter street address"
+                                                        required
+                                                        value={street}
+                                                        onChange={(e) => setstreet(e.target.value)}
                                                     ></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-center">
                                             <button
-                                                onClick={(e) => {
-                                                    setsectabActive(true)
-                                                    openForm(e, 2)
+                                                onClick={(e) => 
+                                                {
+                                                    submitCustomerDetails(e)
                                                     }}
+                                                // onClick={(e) => {
+                                                //     setsectabActive(true)
+                                                //     setstate(2)
+                                                //     }}
                                                 type="button"
                                                 className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
                                             >
                                                 Proceed
                                             </button>
                                         </div>
-                                    </div>
+                                    </form>
                                 )}
                                 {state === 2 && (
                                     <div
