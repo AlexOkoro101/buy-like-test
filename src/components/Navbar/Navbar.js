@@ -59,6 +59,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     }
 
     const [options, setoptions] = useState([]);
+    const [field, setField] = useState(null);
 
     // Dropdown functionality
     const [navDropdown, setnavDropdown] = useState(false);
@@ -80,6 +81,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     useEffect(() => {
         if (router.pathname !== "/") {
             setHome(false);
+            setField(null);
         } else {
             setHome(true);
         }
@@ -140,6 +142,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                                         data: ele,
                                     },
                                 ]);
+                                setField(ele.VIN);
                             });
                         }
                     })
@@ -180,9 +183,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                     </Link>
                 </div>
                 {home && (
-                    <div className="flex">
+                    <div className="block h-6 relative">
                         <Select
-                            className="lg:w-56 w-40 h-full cursor-pointer focus:outline-none"
+                            className="w-72 h-full cursor-pointer focus:outline-none"
                             placeholder={`Search VIN number`}
                             type="text"
                             isClearable
@@ -191,6 +194,35 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                             options={options}
                             arrowRenderer={renderSearchIcon}
                         />
+                        <button
+                            onClick={() => {
+                                field
+                                    ? router.push(`/vin/${field}`)
+                                    : router.push("/vin");
+                            }}
+                            type="button"
+                            className="absolute right-0 h-full  rounded-r focus:outline-none  flex items-center justify-center text-white"
+                            style={{
+                                backgroundColor: "#d80739",
+                                width: 40,
+                                top: 1,
+                            }}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                x="0px"
+                                y="0px"
+                                width="100%"
+                                height="95%"
+                                viewBox="0 0 24 24"
+                            >
+                                {" "}
+                                <path
+                                    fill="#fff"
+                                    d="M 9 2 C 5.1458514 2 2 5.1458514 2 9 C 2 12.854149 5.1458514 16 9 16 C 10.747998 16 12.345009 15.348024 13.574219 14.28125 L 14 14.707031 L 14 16 L 20 22 L 22 20 L 16 14 L 14.707031 14 L 14.28125 13.574219 C 15.348024 12.345009 16 10.747998 16 9 C 16 5.1458514 12.854149 2 9 2 z M 9 4 C 11.773268 4 14 6.2267316 14 9 C 14 11.773268 11.773268 14 9 14 C 6.2267316 14 4 11.773268 4 9 C 4 6.2267316 6.2267316 4 9 4 z"
+                                ></path>
+                            </svg>
+                        </button>
                     </div>
                 )}
                 <input

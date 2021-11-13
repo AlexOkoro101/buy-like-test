@@ -689,11 +689,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 : "100%",
                         height: "203px",
                     }}
-                    className=" bg-opacity-20 cursor-pointer rounded-md"
+                    className=" bg-opacity-20  cursor-pointer rounded-md"
                 >
                     {params.images[0] ? (
                         <a
-                            className="cursor-pointer  "
+                            className="cursor-pointer relative block"
                             href={`/vin/${params.VIN}`}
                             style={{
                                 width:
@@ -710,6 +710,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 alt="hello"
                                 className="w-full object-cover h-full rounded-md object-center"
                             />
+                            <div className="watermark opacity-50 ">
+                                <p>BUYLIKEDEALERS.COM</p>
+                            </div>
                         </a>
                     ) : (
                         <a
@@ -2177,24 +2180,32 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                             <div className="w-full cursor-pointer md:w-1/3 py-4">
                                                                                 <a
                                                                                     href={`/vin/${ele.VIN}`}
+                                                                                    className="relative block"
                                                                                 >
                                                                                     {ele
                                                                                         .images
                                                                                         .length >
                                                                                     0 ? (
-                                                                                        <img
-                                                                                            className="img-fluid rounded"
-                                                                                            src={
-                                                                                                ele
-                                                                                                    ?.images[0]
-                                                                                                    ?.image_largeUrl
-                                                                                            }
-                                                                                            alt=""
-                                                                                            style={{
-                                                                                                width: "340px",
-                                                                                                height: "250px",
-                                                                                            }}
-                                                                                        />
+                                                                                        <div>
+                                                                                            <img
+                                                                                                className="img-fluid rounded"
+                                                                                                src={
+                                                                                                    ele
+                                                                                                        ?.images[0]
+                                                                                                        ?.image_largeUrl
+                                                                                                }
+                                                                                                alt=""
+                                                                                                style={{
+                                                                                                    width: "340px",
+                                                                                                    height: "250px",
+                                                                                                }}
+                                                                                            />
+                                                                                            <div className="watermark opacity-50 ">
+                                                                                                <p>
+                                                                                                    BUYLIKEDEALERS.COM
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     ) : (
                                                                                         <div
                                                                                             className="w-full img-fluid  font-semibold  h-full rounded-md object-center flex items-center justify-center"
