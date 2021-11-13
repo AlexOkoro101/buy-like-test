@@ -89,16 +89,6 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                     },
                     200
                 );
-
-                //   var Wholesalewaypoint = new window.Waypoint({
-                //     element: document.getElementById('Wholesalewaypoint'),
-                //     handler: function () {
-                //       wholesaleTimeline.restart();
-                //     },
-                //     offset: 250,
-                //   });
-
-                // filteredCarsTimeline Animation here
                 var filteredCarsTimeline = anime.timeline({
                     autoplay: true,
                 });
