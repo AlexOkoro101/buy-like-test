@@ -183,7 +183,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                     </Link>
                 </div>
                 {home && (
-                    <div className="block h-6 relative">
+                    <div className="md:block hidden h-6 relative">
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
                             placeholder={`Search VIN number`}
