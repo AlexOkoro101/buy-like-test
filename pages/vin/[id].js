@@ -2499,14 +2499,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         )}
                                     </div>
                                     <div className="flex justify-center mt-5">
-                                        {token && offer ? (
+                                        {offer ? (
                                             <button
                                                 type="button"
                                                 className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
                                                 onClick={() => {
-                                                    router.push('/transaction/' + vin)
-                                                    localStorage.setItem("buyNowData", JSON.stringify(bidData()));
-                                                    console.log(bidData())
+                                                    if(token) {
+                                                        router.push('/transaction/' + vin)
+                                                        localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                        console.log(bidData())
+                                                    } else {
+                                                        router.push('/auth/login')
+                                                    }
                                                 }}
                                             >
                                                 
