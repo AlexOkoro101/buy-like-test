@@ -1439,8 +1439,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                 <div className="w-full lg:w-3/5">
                                     {cardD.images.length ? (
                                         <>
-                                            <div className="w-full displayLargeimage">
+                                            <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
+                                                <div className="watermark-detail opacity-60">
+                                                    <p>BUYLIKEDEALERS.COM</p>
+                                                </div>
                                             </div>
 
                                             <div className="overflow-hidden">
@@ -3225,26 +3228,32 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             className={
                                                                 !ele.images
                                                                     ?.length
-                                                                    ? "bg-white block bg-opacity-20 rounded-md"
-                                                                    : "bg-black block bg-opacity-20 rounded-md"
+                                                                    ? "bg-white relative overflow-hidden block bg-opacity-20 rounded-md"
+                                                                    : "bg-black relative overflow-hidden  block bg-opacity-20 rounded-md"
                                                             }
                                                             style={{
-                                                                width: "240px",
-                                                                height: "178px",
+                                                                height: "203px",
                                                             }}
                                                             href={`/vin/${ele.VIN}`}
                                                         >
                                                             {ele?.images
                                                                 ?.length ? (
-                                                                <img
-                                                                    src={
-                                                                        ele
-                                                                            .images[0]
-                                                                            .image_largeUrl
-                                                                    }
-                                                                    alt="hello"
-                                                                    className="w-full h-full object-center rounded-md object-contain"
-                                                                />
+                                                                <>
+                                                                    <img
+                                                                        src={
+                                                                            ele
+                                                                                .images[0]
+                                                                                .image_largeUrl
+                                                                        }
+                                                                        alt="hello"
+                                                                        className="w-full object-cover h-full rounded-md object-center"
+                                                                    />
+                                                                    <div className="watermark opacity-60">
+                                                                        <p>
+                                                                            BUYLIKEDEALERS.COM
+                                                                        </p>
+                                                                    </div>
+                                                                </>
                                                             ) : (
                                                                 <div className="text-center relative">
                                                                     <img
