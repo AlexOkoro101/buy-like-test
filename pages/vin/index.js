@@ -710,9 +710,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 alt="hello"
                                 className="w-full object-cover h-full rounded-md object-center"
                             />
-                            <div className="watermark opacity-50 ">
+                            {/* <div className="watermark opacity-50 ">
                                 <p>BUYLIKEDEALERS.COM</p>
-                            </div>
+                            </div> */}
                         </a>
                     ) : (
                         <a
@@ -997,7 +997,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
             <main>
                 {/* <!-- Search region here --> */}
                 <div
-                    className="flex items-start main h-full m-0  pb-12 pt-24"
+                    className="flex items-start main h-full m-0  pb-12 pt-16"
                     id="carDeets"
                 >
                     {/* <!-- filter tab here --> */}
@@ -1711,21 +1711,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                     {/* <!--  Display region here  --> */}
                     <div className="display-holder min-h-screen  h-full w-full  relative px-2  lg:px-0 lg:pl-5">
                         {/* <!-- Filter and search for mobile here --> */}
-                        <div className="mb-3  block lg:hidden h-9">
-                            <div className="w-full h-full">
-                                <div className="w-full h-full">
-                                    <Select
-                                        className="w-full h-full cursor-pointer focus:outline-none"
-                                        type="text"
-                                        placeholder={`Search ${cars.total} cars`}
-                                        isClearable
-                                        onChange={handleChange}
-                                        onInputChange={handleInputChange}
-                                        options={options}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+
                         <div className="flex lg:hidden items-center justify-between w-full mb-3">
                             <p className="primary-black text-black font-10  lg:py-1.5">
                                 Sort by:
@@ -1749,13 +1735,14 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 {!open && (
                                     <button
                                         type="button"
-                                        className="mr-5"
+                                        className="mr-5 h-4"
                                         value="all"
                                         onClick={() => setOpen(true)}
                                     >
                                         <img
                                             src="../../assets/img/vectors/filter-icon.svg"
                                             alt="filter"
+                                            className="w-full h-full"
                                         />
                                     </button>
                                 )}
@@ -2200,11 +2187,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     height: "250px",
                                                                                                 }}
                                                                                             />
-                                                                                            <div className="watermark opacity-50 ">
+                                                                                            {/* <div className="watermark opacity-50 ">
                                                                                                 <p>
                                                                                                     BUYLIKEDEALERS.COM
                                                                                                 </p>
-                                                                                            </div>
+                                                                                            </div> */}
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div

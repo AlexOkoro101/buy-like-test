@@ -64,6 +64,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     // Dropdown functionality
     const [navDropdown, setnavDropdown] = useState(false);
     const [home, setHome] = useState(true);
+    const [search, setSearch] = useState(true);
     const handleLogout = () => {
         dispatch(logOut());
         window.localStorage.clear();
@@ -80,10 +81,14 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
 
     useEffect(() => {
         if (router.pathname !== "/") {
+            if (router.pathname !== "/vin") {
+                setSearch(false);
+            }
             setHome(false);
             setField(null);
         } else {
             setHome(true);
+            setSearch(true);
         }
         setnavDropdown(false);
     }, [router.pathname]);
@@ -169,10 +174,59 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
         </svg>
     );
 
+    const customStyles = {
+        valueContainer: (base) => ({
+            ...base,
+            height: "30px",
+            paddingTop: 0,
+        }),
+        control: () => ({
+            // none of react-select's styles are passed to <Control />
+            minWidth: "100%",
+            margin: 0,
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "flex",
+            border: "1px solid #dee2e6",
+            height: "30px",
+            borderRadius: "5px",
+            zIndex: 0,
+            padding: 0,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            fontSize: "9px",
+            cursor: "pointer",
+            margin: 0,
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+        }),
+        menuList: (provided, state) => ({
+            ...provided,
+            border: "0.5px solid #dee2e6",
+            width: "100%",
+            height: "30px",
+            fontSize: "12px",
+            overflow: "hidden",
+        }),
+        input: (provided, state) => ({
+            ...provided,
+            height: "30px",
+            margin: 0,
+        }),
+        singleValue: (provided, state) => {
+            const opacity = state.isDisabled ? 0.5 : 1;
+            const transition = "opacity 300ms";
+
+            return { ...provided, opacity, transition };
+        },
+    };
+
     return (
         <header className="">
-            <nav className="nav-bar flex flex-wrap items-center justify-between px-7 py-2 lg:px-20">
-                <div className="flex flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
+            <nav className="nav-bar flex flex-wrap items-center justify-between px-3 py-2 lg:px-20">
+                <div className="md:flex hidden  flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
                     <Link href="/">
                         {/* <span className="font-semibold text-xs ">BUY LIKE DEALERS</span> */}
                         <img
@@ -181,6 +235,63 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                             style={{ cursor: "pointer" }}
                         />
                     </Link>
+                </div>
+                <div className="flex md:hidden flex-no-shrink items-center  py-3  text-grey-darkest">
+                    <Link href="/">
+                        {/* <span className="font-semibold text-xs ">BUY LIKE DEALERS</span> */}
+                        <img
+                            src="/img/logo.svg"
+                            style={{ cursor: "pointer", width: 30 }}
+                            alt="loader"
+                        />
+                    </Link>
+                    {search && (
+                        <div
+                            className="block relative"
+                            style={{ height: "30px" }}
+                        >
+                            <Select
+                                className="w-60 ml-2 cursor-pointer focus:outline-none"
+                                placeholder={`Search VIN number`}
+                                type="text"
+                                isClearable
+                                onChange={handleChange}
+                                onInputChange={handleInputChange}
+                                options={options}
+                                arrowRenderer={renderSearchIcon}
+                                styles={customStyles}
+                            />
+                            <button
+                                onClick={() => {
+                                    field
+                                        ? router.push(`/vin/${field}`)
+                                        : router.push("/vin");
+                                }}
+                                type="button"
+                                className="absolute right-0 h-full p-1  rounded-r focus:outline-none  flex items-center justify-center text-white"
+                                style={{
+                                    backgroundColor: "#d80739",
+                                    width: 40,
+                                    top: 0,
+                                }}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    x="0px"
+                                    y="0px"
+                                    width="100%"
+                                    height="95%"
+                                    viewBox="0 0 24 24"
+                                >
+                                    {" "}
+                                    <path
+                                        fill="#fff"
+                                        d="M 9 2 C 5.1458514 2 2 5.1458514 2 9 C 2 12.854149 5.1458514 16 9 16 C 10.747998 16 12.345009 15.348024 13.574219 14.28125 L 14 14.707031 L 14 16 L 20 22 L 22 20 L 16 14 L 14.707031 14 L 14.28125 13.574219 C 15.348024 12.345009 16 10.747998 16 9 C 16 5.1458514 12.854149 2 9 2 z M 9 4 C 11.773268 4 14 6.2267316 14 9 C 14 11.773268 11.773268 14 9 14 C 6.2267316 14 4 11.773268 4 9 C 4 6.2267316 6.2267316 4 9 4 z"
+                                    ></path>
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
                 {home && (
                     <div className="md:block hidden h-6 relative">
