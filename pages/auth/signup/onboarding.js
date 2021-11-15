@@ -91,9 +91,6 @@ const OnBoarding = () => {
             // notify()
             setisLoading(true);
             seterror(null);
-            console.log(values);
-            console.log("user token", token.token);
-
             fetch(enviroment.BASE_URL + "auth/user/profile", {
                 method: "POST",
                 headers: {

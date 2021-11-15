@@ -710,9 +710,9 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                 alt="hello"
                                 className="w-full object-cover h-full rounded-md object-center"
                             />
-                            {/* <div className="watermark opacity-50 ">
+                            <div className="watermark opacity-50 ">
                                 <p>BUYLIKEDEALERS.COM</p>
-                            </div> */}
+                            </div>
                         </a>
                     ) : (
                         <a
@@ -779,7 +779,6 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         setDefaultModel(null);
         setDefaultYear(null);
         setSortValue(null);
-        console.log(defaultYear);
         if (event !== active) {
             setPageIndex(1);
             setActive(event);
@@ -2187,11 +2186,11 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                                                                                     height: "250px",
                                                                                                 }}
                                                                                             />
-                                                                                            {/* <div className="watermark opacity-50 ">
+                                                                                            <div className="watermark opacity-50 ">
                                                                                                 <p>
                                                                                                     BUYLIKEDEALERS.COM
                                                                                                 </p>
-                                                                                            </div> */}
+                                                                                            </div>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div

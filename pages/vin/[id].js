@@ -1441,9 +1441,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                {/* <div className="watermark-detail opacity-60">
+                                                <div className="watermark-detail opacity-60">
                                                     <p>BUYLIKEDEALERS.COM</p>
-                                                </div> */}
+                                                </div>
                                             </div>
 
                                             <div className="overflow-hidden">
@@ -3248,11 +3248,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         alt="hello"
                                                                         className="w-full object-cover h-full rounded-md object-center"
                                                                     />
-                                                                    {/* <div className="watermark opacity-60">
+                                                                    <div className="watermark opacity-60">
                                                                         <p>
                                                                             BUYLIKEDEALERS.COM
                                                                         </p>
-                                                                    </div> */}
+                                                                    </div>
                                                                 </>
                                                             ) : (
                                                                 <div className="text-center relative">

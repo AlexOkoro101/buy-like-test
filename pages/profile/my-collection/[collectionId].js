@@ -53,7 +53,6 @@ const CollectionDetails = () => {
                 if (result) {
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
-                        console.log("formated", formatCollection);
                         setcollection(formatCollection);
                     }
                 }

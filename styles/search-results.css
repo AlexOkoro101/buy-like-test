@@ -60,7 +60,7 @@
 }
 
 .watermark-detail {
-    font-size: 15px;
+    font-size: 18px;
     position: absolute;
     font-weight: 500;
     width: 100%;
@@ -74,7 +74,7 @@
     font-family: 'Mulish', sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .paginate-ctn {

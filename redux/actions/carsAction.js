@@ -198,7 +198,6 @@ export const getCollection = (id) => (dispatch) => {
         },
     })
         .then(function (response) {
-            console.log(response);
             return response.text();
         })
         .then((data) => {
@@ -289,7 +288,6 @@ export const carBuyNow = (data) => async (dispatch) => {
             body: raw,
             redirect: "follow",
         };
-        console.log(requestOptions);
 
         let res = await fetch(
             `${enviroment.BASE_URL}bids/buy-now`,

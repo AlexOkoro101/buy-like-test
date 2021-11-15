@@ -3,7 +3,6 @@ import Head from "next/head";
 import React from "react";
 
 const Meta = ({ title, keywords, description }) => {
-    console.log(title);
     return (
         <Head>
             <link rel="icon" href="/favicon.ico" />

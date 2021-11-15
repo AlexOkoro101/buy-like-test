@@ -48,7 +48,6 @@ const LoginOptions = ({ beginLogin }) => {
     //Google Auth
     const googleClientId =
         "134674760557-ond8201e5n9t9f3ri7akevf62ku6uruf.apps.googleusercontent.com";
-        
 
     const onGoogleLoginSuccess = (res) => {
         const googleProfile = {
@@ -122,7 +121,6 @@ const LoginOptions = ({ beginLogin }) => {
         };
 
         // console.log("Login Successful", res.profileObj)
-        console.log(facebookProfile);
 
         fetch(enviroment.BASE_URL + "auth/login/facebook", {
             method: "POST",
@@ -140,7 +138,6 @@ const LoginOptions = ({ beginLogin }) => {
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
                 if (data?.error) {
                     seterror(data?.message);
                     toastError();
@@ -168,7 +165,6 @@ const LoginOptions = ({ beginLogin }) => {
             })
             .catch((e) => {
                 setisLoading(false);
-                console.log(e.message);
             });
     };
 

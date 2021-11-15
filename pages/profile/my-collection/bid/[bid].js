@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { enviroment } from "../../../../src/components/enviroment";
 import Meta from "../../../../src/components/Head/Meta";
-import FsLightbox from 'fslightbox-react';
+import FsLightbox from "fslightbox-react";
 import Collection from "../../../../src/components/Layout/Collection";
 import FadeLoader from "react-spinners/FadeLoader";
 import Link from "next/link";
@@ -42,12 +42,11 @@ const BidDetails = () => {
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
 
-
     const router = useRouter();
     const bidId = router.query.bid;
 
     useEffect(() => {
-        console.log(bidId)
+        console.log(bidId);
         fetch(enviroment.BASE_URL + "vehicles/vin/" + bidId, {
             method: "GET",
             redirect: "follow",
@@ -61,7 +60,6 @@ const BidDetails = () => {
                     // console.log(result)
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
-                        console.log("formated", formatCollection)
                         setbidCollection(formatCollection.data.vehicle);
                     }
                 }
@@ -71,8 +69,7 @@ const BidDetails = () => {
 
     useEffect(() => {
         displaySmall();
-        
-    }, [bidCollection])
+    }, [bidCollection]);
 
     function displaySmall() {
         let data = bidCollection?.images?.length;
@@ -120,12 +117,12 @@ const BidDetails = () => {
     };
 
     const returnLargeimage = () => {
-        const largeImageArray = bidCollection?.images.map(image => {
-            return image.image_largeUrl
-        })
+        const largeImageArray = bidCollection?.images.map((image) => {
+            return image.image_largeUrl;
+        });
 
         return largeImageArray;
-    }
+    };
 
     const displayLargeimage = () => {
         return (
@@ -137,9 +134,8 @@ const BidDetails = () => {
                 />
                 <img
                     onClick={() => {
-                        setToggler(!toggler)
-                        console.log("large images", returnLargeimage())
-                        }}
+                        setToggler(!toggler);
+                    }}
                     src={bidCollection?.images[0]?.image_largeUrl}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
@@ -149,11 +145,10 @@ const BidDetails = () => {
         );
     };
 
-    var nairaFormatter = new Intl.NumberFormat('en-NG', {
-        style: 'currency',
-        currency: 'NGN',        
+    var nairaFormatter = new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
     });
-
 
     return (
         <div>
@@ -325,7 +320,9 @@ const BidDetails = () => {
                                                             </label>
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
-                                                            {nairaFormatter.format(bidCollection?.bidAmount)}
+                                                            {nairaFormatter.format(
+                                                                bidCollection?.bidAmount
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -340,7 +337,6 @@ const BidDetails = () => {
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         Nigeria
                                                     </td>
-                                                    
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -350,7 +346,6 @@ const BidDetails = () => {
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         $300
                                                     </td>
-                                                    
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -360,7 +355,6 @@ const BidDetails = () => {
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         Not Applicable
                                                     </td>
-                                                    
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -370,16 +364,44 @@ const BidDetails = () => {
 
                                                     {!bidCollection ? (
                                                         <td className="flex justify-between font-11 sec-black font-normal pr-20 py-2 text-center">
-                                                            <>
-                                                            Contact Support
-                                                            </>
-                                                            <a href="https://api.whatsapp.com/send?phone=15551234567" style={{margin: "0 10px"}}><i style={{fontSize: "17px", color: "green"}} className="fa fa-whatsapp"></i></a>
-                                                            <a href="mailto:test@example.com" style={{margin: "0 10px"}}><i  style={{fontSize: "17px", color: "blue"}} className="fa fa-envelope-o"></i></a>
+                                                            <>Contact Support</>
+                                                            <a
+                                                                href="https://api.whatsapp.com/send?phone=15551234567"
+                                                                style={{
+                                                                    margin: "0 10px",
+                                                                }}
+                                                            >
+                                                                <i
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "17px",
+                                                                        color: "green",
+                                                                    }}
+                                                                    className="fa fa-whatsapp"
+                                                                ></i>
+                                                            </a>
+                                                            <a
+                                                                href="mailto:test@example.com"
+                                                                style={{
+                                                                    margin: "0 10px",
+                                                                }}
+                                                            >
+                                                                <i
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "17px",
+                                                                        color: "blue",
+                                                                    }}
+                                                                    className="fa fa-envelope-o"
+                                                                ></i>
+                                                            </a>
                                                         </td>
                                                     ) : (
                                                         <>
                                                             <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                                {bidCollection?.trucking ? `${bidCollection?.trucking}` : 'Loading...'}
+                                                                {bidCollection?.trucking
+                                                                    ? `${bidCollection?.trucking}`
+                                                                    : "Loading..."}
                                                             </td>
                                                             {/* <td className="text-right px-2">
                                                                 <label className="detail">
@@ -397,7 +419,6 @@ const BidDetails = () => {
                                                                     <span className="detail"></span>
                                                                 </label>
                                                             </td> */}
-
                                                         </>
                                                     )}
                                                 </tr>
@@ -542,7 +563,9 @@ const BidDetails = () => {
                                                         Trucking
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
+                                                        {truckingPrice
+                                                            ? `${truckingPrice}`
+                                                            : "Loading..."}
                                                     </td>
                                                     <td className="text-right px-2">
                                                         <label className="detail">
@@ -635,8 +658,6 @@ const BidDetails = () => {
                                     </div>
                                 )}
                             </div>
-
-                            
                         </div>
                     </section>
 
@@ -792,7 +813,9 @@ const BidDetails = () => {
                                                 Seller Name
                                             </td>
                                             <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.sourceSellerName}
+                                                {
+                                                    bidCollection?.sourceSellerName
+                                                }
                                             </td>
                                             <td></td>
                                         </tr>
@@ -879,7 +902,9 @@ const BidDetails = () => {
                                                 Engine Type
                                             </td>
                                             <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
-                                                {bidCollection?.sourceEngineFuelType}
+                                                {
+                                                    bidCollection?.sourceEngineFuelType
+                                                }
                                             </td>
                                             <td></td>
                                         </tr>
@@ -889,7 +914,9 @@ const BidDetails = () => {
                                                 Exterior Color
                                             </td>
                                             <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.sourceExteriorColor}
+                                                {
+                                                    bidCollection?.sourceExteriorColor
+                                                }
                                             </td>
                                             <td></td>
                                         </tr>
