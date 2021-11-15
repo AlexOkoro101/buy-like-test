@@ -90,6 +90,7 @@ const LogIn = ({ beginLogin }) => {
                         toastError();
                         dispatch(logOut());
                     } else {
+                        console.log(data.data)
                         seterror(data?.message);
                         toastSuccess();
                         const now = new Date();
@@ -97,8 +98,8 @@ const LogIn = ({ beginLogin }) => {
                             userToken: data.data._token,
                             userId: data.data.user._id,
                             userName: data.data.user.profile.firstName,
-                            phone: data.data.user.profile.phoneNumber,
-                            email: data.data.user.email,
+                            phoneNumber: data.data.user.profile.phoneNumber,
+                            userEmail: data.data.user.email,
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));

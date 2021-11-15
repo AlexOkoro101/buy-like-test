@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { enviroment } from "../../src/components/enviroment"
 import Meta from "../../src/components/Head/Meta"
+import Link from 'next/link'
 
 const Transactions = () => {
     const [transactions, settransactions] = useState([])
@@ -53,7 +54,7 @@ const Transactions = () => {
     return ( 
         <div>
             <Meta></Meta>
-            <div className="h-screen  mt-24 mb-20 px-32">
+            <div className="h-screen  mt-24 mb-20 lg:px-32 px-4">
                 {!transactions?.length ? (
                     <div>
                         <p className="sec-black">No transaction available</p>
@@ -79,7 +80,7 @@ const Transactions = () => {
                                     <thead className="tertiary-gray text-xs font-medium border-transactions">
                                        
 
-                                        <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
+                                        <tr className="sm:table-row mb-2 sm:mb-0">
                                             <th className="p-3.5 text-left">Vehicle/Collection Name</th>
                                             <th className="p-3.5 text-left">Amount paid</th>
                                             {/* <th className="p-3.5 text-left">Form of payment</th> */}
@@ -92,23 +93,26 @@ const Transactions = () => {
                                     <tbody className="flex-1 sm:flex-none text-xs primary-black">
 
                                     {transactions.map((transaction) => (
-                                        <tr key={transaction?._id} className="flex flex-col border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0">
-                                            <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle.year || ""} ${transaction?.vehicle.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
-                                            <td className="p-3.5">${transaction?.amount}</td>
-                                            {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
-                                            <td className="p-3.5">{transaction?.statusTrans === "true" && (<>Success</>)}</td>
-                                            <td className="p-3.5">${transaction?.amountBalance}</td>
-                                            <td className="p-3.5">{new Date(
-                                                                transaction?.createdAt
-                                                        ).toLocaleDateString(
-                                                            "en-NG",
-                                                            {
-                                                                year: "numeric",
-                                                                day: "numeric",
-                                                                month: "long",
-                                                            }
-                                                        )}</td>
-                                        </tr>
+                                        <Link href={"/profile/my-collection/bid/" + transaction?.vehicle?.vin}>
+                                            <tr key={transaction?._id} className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100">
+                                                <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle?.year || ""} ${transaction?.vehicle?.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
+                                                <td className="p-3.5">${transaction?.amount}</td>
+                                                {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
+                                                <td className="p-3.5">{transaction?.statusTrans === "true" && (<>Success</>)}</td>
+                                                <td className="p-3.5">${transaction?.amountBalance}</td>
+                                                <td className="p-3.5">{new Date(
+                                                                    transaction?.createdAt
+                                                            ).toLocaleDateString(
+                                                                "en-NG",
+                                                                {
+                                                                    year: "numeric",
+                                                                    day: "numeric",
+                                                                    month: "long",
+                                                                }
+                                                            )}</td>
+                                            </tr>
+
+                                        </Link>
 
                                     ))}
 

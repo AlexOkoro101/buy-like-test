@@ -149,10 +149,7 @@ const BidDetails = () => {
         );
     };
 
-    var nairaFormatter = new Intl.NumberFormat('en-NG', {
-        style: 'currency',
-        currency: 'NGN',        
-    });
+    var nairaFormatter = new Intl.NumberFormat();
 
 
     return (
@@ -265,13 +262,13 @@ const BidDetails = () => {
                         <div className="car-details-holder px-4 pt-4 pb-12">
                             <div className="details-border-b px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
                                 <p className="text-base font-bold primary-color">
-                                    {`${bidCollection?.name}`}
+                                    {`${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model} `}
                                 </p>
 
                                 <div className="flex mt-1.5">
                                     <div className="flex">
                                         <p className="font-11 primary-gray font-medium">
-                                            2,124 mi
+                                            {bidCollection?.odometer} mi
                                         </p>
                                         <p className="font-11 ml-2 primary-gray font-medium">
                                             VIN: {bidCollection?.vin}
@@ -316,7 +313,7 @@ const BidDetails = () => {
                                         id="offer-amount"
                                     >
                                         <div className="edit-holder my-1.5 px-2  flex items-center">
-                                            <table>
+                                            <table className="table-fixed w-full">
                                                 <tbody>
                                                     <tr className="">
                                                         <td className="sec-black font-11 font-semibold w-28  ">
@@ -325,7 +322,7 @@ const BidDetails = () => {
                                                             </label>
                                                         </td>
                                                         <td className="text-sm font-medium sec-black">
-                                                            {nairaFormatter.format(bidCollection?.bidAmount)}
+                                                            ${nairaFormatter.format(bidCollection?.bidAmount)}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -343,15 +340,6 @@ const BidDetails = () => {
                                                     
                                                 </tr>
 
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2 p-2">
-                                                        Auction Fee
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $300
-                                                    </td>
-                                                    
-                                                </tr>
 
                                                 <tr className="detail-row">
                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
@@ -368,38 +356,9 @@ const BidDetails = () => {
                                                         Trucking
                                                     </td>
 
-                                                    {!bidCollection ? (
-                                                        <td className="flex justify-between font-11 sec-black font-normal pr-20 py-2 text-center">
-                                                            <>
-                                                            Contact Support
-                                                            </>
-                                                            <a href="https://api.whatsapp.com/send?phone=15551234567" style={{margin: "0 10px"}}><i style={{fontSize: "17px", color: "green"}} className="fa fa-whatsapp"></i></a>
-                                                            <a href="mailto:test@example.com" style={{margin: "0 10px"}}><i  style={{fontSize: "17px", color: "blue"}} className="fa fa-envelope-o"></i></a>
-                                                        </td>
-                                                    ) : (
-                                                        <>
-                                                            <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                                {bidCollection?.trucking ? `${bidCollection?.trucking}` : 'Loading...'}
-                                                            </td>
-                                                            {/* <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={(e) =>
-                                                                            setFees(
-                                                                                e,
-                                                                                "truck",
-                                                                                950
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td> */}
-
-                                                        </>
-                                                    )}
+                                                    <td className="sec-black font-11 font-normal">
+                                                        ${bidCollection?.trucking || 0}
+                                                    </td>
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -407,24 +366,8 @@ const BidDetails = () => {
                                                         Shipping
                                                     </td>
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $1050
+                                                        ${nairaFormatter.format(bidCollection?.shipping)}
                                                     </td>
-                                                    {/* <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "ship",
-                                                                        950
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td> */}
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -434,22 +377,6 @@ const BidDetails = () => {
                                                     <td className="font-11 sec-black font-normal pr-20 py-2">
                                                         N2,000,000
                                                     </td>
-                                                    {/* <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                                onChange={(e) =>
-                                                                    setFees(
-                                                                        e,
-                                                                        "clear",
-                                                                        2000000
-                                                                    )
-                                                                }
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td> */}
                                                 </tr>
 
                                                 <tr className="detail-row">
@@ -467,11 +394,7 @@ const BidDetails = () => {
                                                         Total
                                                     </td>
                                                     <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        N
-                                                        {bidCollection?.bidAmount?.toLocaleString()}
-                                                    </td>
-                                                    <td className="font-10 font-medium primary-blue text-center px-2">
-                                                        Change currency
+                                                        ${nairaFormatter.format(bidCollection?.bidAmount)}
                                                     </td>
                                                 </tr>
                                             </tbody>

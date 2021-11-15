@@ -431,7 +431,7 @@ const MyCollection = ({
 
                 ): (
                     <section className="w-full grid gap-y-4 mb-10 px-20 mt-5 py-3">
-                        {buyNowCars.length <= 0 && (
+                        {buyNowCars?.length <= 0 && (
                             <div className>No cars to show</div>
                         )}
                         {buyNowCars?.map((vehicle) => (

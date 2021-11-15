@@ -173,6 +173,7 @@ const Transaction = () => {
             shipping: carDetails?.shipping,
         };
 
+        console.log("bid object", bidObject)
         var requestOptions = {
             method: 'POST',
             headers: myHeaders,
