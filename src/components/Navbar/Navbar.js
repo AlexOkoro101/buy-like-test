@@ -8,7 +8,7 @@ import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
 import Select from "react-select";
 
-const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
+const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
     const navRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -252,7 +252,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={`Search VIN number`}
+                                placeholder={`VIN to search ${cars.total} cars`}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
@@ -297,7 +297,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
                     <div className="md:block hidden h-6 relative">
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={`Search VIN number`}
+                            placeholder={`VIN to search ${cars.total} cars`}
                             type="text"
                             isClearable
                             onChange={handleChange}
@@ -517,8 +517,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { userLoggedIn } = state.Cars;
-    return { userLoggedIn };
+    const { userLoggedIn, cars } = state.Cars;
+    return { userLoggedIn, cars };
 };
 
 export default connect(mapStateToProps, (dispatch) => ({
