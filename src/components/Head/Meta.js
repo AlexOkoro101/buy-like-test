@@ -5,7 +5,7 @@ import React from "react";
 const Meta = ({ title, keywords, description }) => {
     return (
         <Head>
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/fav.svg" />
             <script
                 type="module"
                 property="og:image"

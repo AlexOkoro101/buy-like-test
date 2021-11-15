@@ -10,6 +10,7 @@ import Select from "react-select";
 
 const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
     const navRef = useRef(null);
+    var dollarFormatter = new Intl.NumberFormat();
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -80,15 +81,11 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
     };
 
     useEffect(() => {
-        if (router.pathname !== "/") {
-            if (router.pathname !== "/vin") {
-                setSearch(false);
-            }
+        if (router.pathname === "/vin") {
             setHome(false);
             setField(null);
         } else {
             setHome(true);
-            setSearch(true);
         }
         setnavDropdown(false);
     }, [router.pathname]);
@@ -247,12 +244,14 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
                     </Link>
                     {search && (
                         <div
-                            className="block relative"
+                            className="block md:hidden relative"
                             style={{ height: "30px" }}
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={`VIN to search ${cars.total} cars`}
+                                placeholder={`VIN to search ${dollarFormatter.format(
+                                    cars.total
+                                )} cars`}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
@@ -297,7 +296,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
                     <div className="md:block hidden h-6 relative">
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={`VIN to search ${cars.total} cars`}
+                            placeholder={`VIN to search ${dollarFormatter.format(
+                                cars.total
+                            )} cars`}
                             type="text"
                             isClearable
                             onChange={handleChange}
