@@ -107,7 +107,7 @@ const CollectionDetails = () => {
 
                 {!collection?.error && (
                     <div className="flex font-11 mt-10 flex-col lg:flex-row">
-                        <div className="side-card mx-20 px-5 py-5 space-y-4">
+                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px">
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">
                                     Trucking
@@ -180,13 +180,16 @@ const CollectionDetails = () => {
                             {collection?.data?.vehicles?.map((vehicle) => (
                                 <div
                                     key={vehicle._id}
-                                    className="bid-card flex py-3 px-3"
+                                    className="bid-card mt-5 lg:mt-0 mx-2 lg:mx-0 flex-col lg:flex-row flex py-3 px-3"
                                 >
-                                    <img
-                                        src={vehicle.images[0]?.image_largeUrl}
-                                        alt="benz"
-                                        className="rounded-md w-64 h-36 flex-no-shrink mr-4"
-                                    />
+                                    <div className=" w-64 h-36 lg:mr-4 m-auto lg:m-px">
+                                        <img
+                                            src={vehicle.images[0]?.image_largeUrl}
+                                            alt="benz"
+                                            className="w-full object-cover rounded-md flex-no-shrink object-center h-full"
+                                        />
+
+                                    </div>
                                     <div className="flex flex-col justify-between flex-grow">
                                         <div className="flex justify-between">
                                             <div>
