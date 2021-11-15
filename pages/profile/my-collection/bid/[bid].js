@@ -274,19 +274,6 @@ const BidDetails = () => {
                                             VIN: {bidCollection?.vin}
                                         </p>
                                     </div>
-                                    {/* <div className="ml-auto">
-                                        {bidCollection?.buyNowPrice.length > 2 ? (
-                                            <p className="primary-color text-xs font-medium">
-                                                BUY NOW @ &#8358;
-                                                {""}
-                                                {bidCollection?.bidAmount}
-                                            </p>
-                                        ) : (
-                                            parseFloat(
-                                                bidCollection?.bidAmount?.mmrPrice 
-                                            ).toLocaleString()
-                                        )}
-                                    </div> */}
                                 </div>
                             </div>
 
@@ -296,15 +283,6 @@ const BidDetails = () => {
                                         Car Transaction Detail
                                     </p>
                                 </div>
-                                {/* 
-                                <div
-                                    className="ml-auto px-14 cursor-pointer lg:px-20 font-10 font-medium details-tab primary-black py-0.5"
-                                    onClick={(e) => openForm(e, false)}
-                                >
-                                    <p href className="py-1.5">
-                                        Budget
-                                    </p>
-                                </div> */}
                             </div>
                             <div className="mt-3">
                                 {true && (
@@ -581,89 +559,7 @@ const BidDetails = () => {
                                     {bidCollection?.Vehicle_location}
                                 </p>
                             </div>
-                            <div className="flex flex-col relative  lg:block">
-                                <div className="timer-container relative bg-white">
-                                    {/* <div>
-                                        {renderCounter(
-                                            carDetails.auctionEndTime
-                                        )}
-                                    </div> */}
-
-                                    <div className="timer">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
-                                        >
-                                            Auction Day
-                                        </button>
-                                        {/* {car.data.length === 0 ? (
-                                            <></>
-                                        ) : (
-                                            <p className="font-9 font-semibold text-center primary-blue pt-4">
-                                                TIME LEFT
-                                                <p>
-                                                    {car.data[0].auctionEndTime}
-                                                    used the data this way
-                                                </p>
-                                            </p>
-                                        )} */}
-
-                                        {/* <div className=" flex w-full justify-center mt-3">
-                                            <p className="sec-black font-medium font-11">
-                                                {new Date(
-                                                    carDetails.auctionEndTime
-                                                ).toLocaleDateString()}
-                                            </p>
-                                            <p className="sec-black font-medium font-11 ml-4">
-                                                {new Date(
-                                                    carDetails.auctionEndTime
-                                                ).toLocaleString("en-US", {
-                                                    hour: "numeric",
-                                                    hour12: true,
-                                                })}
-                                            </p>
-                                        </div> */}
-
-                                        {/* <div className="flex mt-1.5 justify-center">
-                                            <div className="flex flex-col ml-2">
-                                                <p className="days font-13 sec-black font-semibold ">
-                                                    {days}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    DAYS
-                                                </p>
-                                            </div>
-
-                                            <div className=" ml-3.5">
-                                                <p className=" font-13 sec-black font-semibold hours">
-                                                    {hours}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    HOURS
-                                                </p>
-                                            </div>
-
-                                            <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold minutes">
-                                                    {minute}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    MINUTES
-                                                </p>
-                                            </div>
-
-                                            <div className="flex flex-col ml-3.5">
-                                                <p className="font-13 sec-black font-semibold seconds">
-                                                    {seconds}
-                                                </p>
-                                                <p className="primary-gray font-6">
-                                                    SECONDS
-                                                </p>
-                                            </div>
-                                        </div> */}
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             <div className="flex flex-col self-center mt-14">
                                 <div className="items-center self-center">
@@ -821,14 +717,6 @@ const BidDetails = () => {
                             </div>
                         </div>
 
-                        <div className="text-center mt-5">
-                            <a
-                                href="#"
-                                className="primary-blue font-semibold text-sm"
-                            >
-                                Show More Details
-                            </a>
-                        </div>
                     </section>
                 </>
             )}

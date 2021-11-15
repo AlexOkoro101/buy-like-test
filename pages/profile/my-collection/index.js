@@ -360,7 +360,7 @@ const MyCollection = ({
                 </div>
 
                 {placeBidView ? (
-                    <div className="px-20 mt-5 py-3 flex justify-between items-center">
+                    <div className="lg:px-20 px-5 mt-5 py-3 flex justify-between items-center">
                         <>
                             <div
                                 className=" w-full mt-2 origin-top-right bg-white divide-y divide-gray-200 outline-none font-10"
@@ -372,7 +372,7 @@ const MyCollection = ({
                                     <div
                                         key={collection?._id}
                                     >
-                                        <div className="border-gray-100 border mb-3 px-20 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
+                                        <div className="border-gray-100 border mb-3 lg:px-20 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                                             <>
                                                 <Link  href={"/profile/my-collection/" + collection?._id}>
                                                     <div className="flex flex-1 flex-col">
@@ -388,7 +388,7 @@ const MyCollection = ({
                                                                 cars selected
                                                             </h6>
                                                         </div>
-                                                        <div className="flex py-2">
+                                                        <div className="flex flex-wrap py-2">
                                                             {collection?.vehicles?.map(
                                                                 (vehicle) => (
                                                                     <img key={vehicle?.image_id}
@@ -398,7 +398,7 @@ const MyCollection = ({
                                                                                 ?.image_smallUrl
                                                                         }
                                                                         alt="car"
-                                                                        className="tiny-car-card"
+                                                                        className="tiny-car-card mb-2"
                                                                     />
                                                                 )
                                                             )}
@@ -437,7 +437,7 @@ const MyCollection = ({
                         {buyNowCars?.map((vehicle) => (
                             <div
                                 key={vehicle._id}
-                                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-28 lg:mb-1"
+                                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2"
                             >
                                 <div className=" w-64 h-36 lg:mr-4 m-auto lg:m-px">
                                     <img
