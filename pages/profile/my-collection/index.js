@@ -327,7 +327,7 @@ const MyCollection = ({
             <Meta></Meta>
             <main className="mb-20">
                 <Collection></Collection>
-                <div className="mx-20 px-3 mt-20 search-results-holder flex items-center justify-between">
+                <div className="lg:mx-20 mx-10 px-3 mt-20 search-results-holder flex items-center justify-between">
                     {/* <!-- first section here --> */}
                     <div>
                         <button
@@ -430,20 +430,23 @@ const MyCollection = ({
                     </div>
 
                 ): (
-                    <section className="w-full grid gap-y-4 mb-10 px-20 mt-5 py-3">
+                    <section className="w-full grid gap-y-4 mb-10 px-5 md:px-20 mt-5 py-3">
                         {buyNowCars?.length <= 0 && (
                             <div className>No cars to show</div>
                         )}
                         {buyNowCars?.map((vehicle) => (
                             <div
                                 key={vehicle._id}
-                                className="bid-card flex py-3 px-3"
+                                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-28 lg:mb-1"
                             >
-                                <img
-                                    src={vehicle.vehicle?.images[0]?.image_largeUrl}
-                                    alt="benz"
-                                    className="rounded-md w-64 h-36 flex-no-shrink mr-4"
-                                />
+                                <div className=" w-64 h-36 lg:mr-4 m-auto lg:m-px">
+                                    <img
+                                        src={vehicle.vehicle?.images[0]?.image_largeUrl}
+                                        alt="benz"
+                                        className="w-full object-cover  rounded-md object-center h-full flex-no-shrink"
+                                    />
+
+                                </div>
                                 <div className="flex flex-col justify-between flex-grow">
                                     <div className="flex justify-between">
                                         <div>

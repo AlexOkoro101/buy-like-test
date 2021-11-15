@@ -182,6 +182,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState("");
     const [sendSheetEmail, setsendSheetEmail] = useState("");
     const [sheetError, setsheetError] = useState(false);
+    const [shareSuccess, setshareSuccess] = useState(false);
 
     const retrieveData = () => {
         localStorage.removeItem('temp')
@@ -1280,7 +1281,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return outstanding + truck + ship;
     };
 
-    const [placebidTotal, setplacebidTotal] = useState(0);
+    useEffect(() => {
+        if(shareSuccess === true) {
+            setTimeout(function(){ setshareSuccess(false) }, 3000);
+        }
+    }, [shareSuccess])
     //
     //
     if (!cardD) {
@@ -1338,7 +1343,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                     {cardD && (
                         <>
                             <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
-                                <div className="flex gap-x-4">
+                                <div className="flex gap-x-4 relative">
                                     <p className="font-medium font-10 sec-black">
                                         Share via
                                     </p>
@@ -1386,11 +1391,15 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         </a>
                                     </button>
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             navigator.clipboard.writeText(
                                                 "www.buylikedealers.com/" +
                                                     cardD?.VIN
                                             )
+                                            setshareSuccess(true)
+
+                                           
+                                        }
                                         }
                                     >
                                         <img
@@ -1398,6 +1407,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             alt="copy"
                                         />
                                     </button>
+                                    {shareSuccess && (
+                                        <div className="absolute right-0 top-5 bg-green-200 p-1">
+                                            <p className="font-10 sec-black">Copied!</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">

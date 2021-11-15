@@ -106,7 +106,7 @@ const CollectionDetails = () => {
                 )}
 
                 {!collection?.error && (
-                    <div className="flex font-11 mt-10">
+                    <div className="flex font-11 mt-10 flex-col lg:flex-row">
                         <div className="side-card mx-20 px-5 py-5 space-y-4">
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">

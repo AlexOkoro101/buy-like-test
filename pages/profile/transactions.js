@@ -74,19 +74,19 @@ const Transactions = () => {
                         </div>
 
                         {/* <!-- table here --> */}
-                        <div className="flex items-center justify-center">
-                            <div className="container">
-                                <table className="w-full table-fixed ">
+                        <div className="">
+                            <div className="block w-full overflow-x-auto">
+                                <table className="items-center w-full  border-collapse">
                                     <thead className="tertiary-gray text-xs font-medium border-transactions">
                                        
 
-                                        <tr className="sm:table-row mb-2 sm:mb-0">
-                                            <th className="p-3.5 text-left">Vehicle/Collection Name</th>
-                                            <th className="p-3.5 text-left">Amount paid</th>
+                                        <tr className="">
+                                            <th  className="p-3.5 text-left ">Vehicle/Collection Name</th>
+                                            <th  className="p-3.5 text-left">Amount paid</th>
                                             {/* <th className="p-3.5 text-left">Form of payment</th> */}
-                                            <th className="p-3.5 text-left">Status</th>
+                                            <th  className="p-3.5 text-left">Status</th>
                                             <th className="p-3.5 text-left">Balance</th>
-                                            <th className="p-3.5 text-left">Date</th>
+                                            <th  className="p-3.5 text-left">Date</th>
                                         </tr>
                                     </thead>
 
@@ -100,7 +100,7 @@ const Transactions = () => {
                                                 {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
                                                 <td className="p-3.5">{transaction?.statusTrans === "true" && (<>Success</>)}</td>
                                                 <td className="p-3.5">${transaction?.amountBalance}</td>
-                                                <td className="p-3.5">{new Date(
+                                                <td className="p-3.5 ">{new Date(
                                                                     transaction?.createdAt
                                                             ).toLocaleDateString(
                                                                 "en-NG",

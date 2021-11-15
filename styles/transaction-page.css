@@ -206,6 +206,15 @@ section {
     border-radius: 3px !important;
     color: #1f2a53bf;
 }
+@media (min-width: 640px) {
+    .transaction-table {
+      display: inline-table !important;
+    }
+
+    .transaction-table thead tr:not(:first-child) {
+      display: none;
+    }
+  }
 
 
 
