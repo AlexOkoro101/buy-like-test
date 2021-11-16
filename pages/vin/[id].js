@@ -1441,7 +1441,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                <div className="watermark-detail pb-12 opacity-60">
+                                                <div className="watermark-detail md:pb-10 pb-1 opacity-60">
                                                     <p>BUYLIKEDEALERS.COM</p>
                                                 </div>
                                             </div>
