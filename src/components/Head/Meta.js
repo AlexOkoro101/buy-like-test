@@ -6,12 +6,16 @@ const Meta = ({ title, keywords, description }) => {
     return (
         <Head>
             <link rel="icon" href="/fav.svg" />
+            <meta property="og:site_name" content="San Roque 2014 Pollos" />
             <meta property="og:title" content="San Roque 2014 Pollos" />
             <meta property="og:description" content="Programa de fiestas" />
             <meta
                 property="og:image"
+                itemprop="image"
                 content="http://pollosweb.wesped.es/programa_pollos/play.png"
             />
+            <meta property="og:type" content="website" />
+            <meta property="og:updated_time" content="1440432930" />
             <script
                 type="module"
                 property="og:image"
