@@ -41,6 +41,7 @@ const BidDetails = () => {
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
+    const [overview, setoverview] = useState(true);
 
 
     const router = useRouter();
@@ -541,183 +542,193 @@ const BidDetails = () => {
                         </div>
                     </section>
 
-                    <section className="w-full mt-20">
-                        <div className=" justify-center mb-10 block lg:hidden"></div>
-
-                        <div className="flex justify-around flex-wrap">
-                            <div className="flex flex-col self-center">
-                                <div className="items-center self-center">
-                                    <img
-                                        src="../../../assets/img/vectors/location.svg"
-                                        alt="location"
-                                    />
-                                </div>
-                                <p className="pt-5 primary-black font-semibold text-base text-center">
-                                    Vehicle location
-                                </p>
-                                <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    {bidCollection?.Vehicle_location}
-                                </p>
+                    <div className="py-4 overview-section mt-14">
+                        <div className="flex justify-center gap-x-8 lg:gap-x-0 px-5">
+                            <div
+                                onClick={() => {
+                                    setoverview(true);
+                                }}
+                                className={
+                                    "overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " +
+                                    (overview ? " active" : "")
+                                }
+                            >
+                                <p className="lg:py-1.5 ">CAR DEATILS</p>
                             </div>
-                            
 
-                            <div className="flex flex-col self-center mt-14">
-                                <div className="items-center self-center">
-                                    <img
-                                        src="../../../assets/img/vectors/delivery.svg"
-                                        alt="location"
-                                    />
-                                </div>
-                                <p className="pt-5 primary-black font-semibold text-base text-center">
-                                    Est. Delivery
-                                </p>
-                                <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                    Thur Feb 14, 2020
+                            <div
+                                onClick={() => {
+                                    setoverview(false);
+                                }}
+                                className={
+                                    "overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " +
+                                    (!overview ? " active" : "")
+                                }
+                            >
+                                <p className="lg:py-1.5">
+                                    DOCUMENTS
                                 </p>
                             </div>
                         </div>
-                    </section>
-
-                    <section
-                        className="py-4 flex flex-col w-full overview-section"
-                        style={{ justifyContent: "center" }}
-                    >
-                        <div className="flex flex-col md:flex-row items-center  w-full  justify-center mt-6">
-                            <div className="w-full md:w-1/3 ">
+                        <div
+                            className={
+                                overview
+                                    ? "flex px-5 justify-center mt-6 w-full lg:w-auto flex-col lg:flex-row items-center"
+                                    : " hidden"
+                            }
+                        >
+                            <div className="w-full lg:w-auto">
                                 <table className="min-w-full border-separate overview-table">
                                     <tbody>
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Vehicle Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.name}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Interior Colour
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.interior_color}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Seller Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.sourceSellerName}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Mileage
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.mileage}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Tranbaseission
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.tranbaseission ||
-                                                    "Not Specified"}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Drive train
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.driveTrain}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className="w-full md:w-1/3  ">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Company Name
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.companyName}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Make
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="turncate text-sm sec-black font-normal py-2 w-1/2">
                                                 {bidCollection?.make}
                                             </td>
-                                            <td></td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Model
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
+                                            <td className="turncate text-sm sec-black font-normal py-2">
                                                 {bidCollection?.model}
                                             </td>
-                                            <td></td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Year
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {bidCollection?.year ||
+                                                    "Not Specified"}
+                                            </td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Pickup Location
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Vehicle VIN
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.pickupLocation}
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {bidCollection?.vin}
+                                                </span>
                                             </td>
-                                            <td></td>
                                         </tr>
-
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
-                                                Engine Type
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 lg:md:pr-32">
-                                                {bidCollection?.sourceEngineFuelType}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm md:text-base font-semibold w-40 py-3 lg:px-5 px-2 ">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
                                                 Exterior Color
                                             </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 md:pr-32">
-                                                {bidCollection?.sourceExteriorColor}
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {
+                                                    bidCollection?.exterior_color
+                                                }
                                             </td>
-                                            <td></td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Interior Color
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                <span className="truncate overflow-hidden overflow-ellipsis ">
+                                                    {
+                                                        bidCollection?.interior_color
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="lg:ml-3 w-full lg:w-auto">
+                                <table className="min-w-full border-separate overview-table">
+                                    <tbody>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Mileage
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {nairaFormatter.format(
+                                                    bidCollection?.odometer
+                                                )}
+                                                miles
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
+                                                Engine Fuel Type
+                                            </td>
+                                            <td className="text-sm md:text-base sec-black font-normal py-2 w-1/2">
+                                                {
+                                                    bidCollection?.fuel_type
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Transmission
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {bidCollection?.transmission}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Drive train
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {bidCollection?.driveTrain}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Body type
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {bidCollection?.body_style}
+                                            </td>
+                                        </tr>
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
+                                                Doors
+                                            </td>
+                                            <td className="turncate text-sm sec-black font-normal py-2">
+                                                {bidCollection?.doors}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        <div
+                            className={
+                                !overview
+                                    ? "flex flex-wrap px-5 mt-6 "
+                                    : " hidden"
+                            }
+                        >
+                            <div className="w-8/12 m-auto border border-gray-100 p-4 flex flex-nowrap items-center">
+                                <div className="m-5">
+                                    <img src="../../../assets/img/folder.svg" className="cursor-pointer" alt="" />
+                                    <p>Contract Files</p>
+                                </div>
+                                <div className="m-5">
+                                    <img src="../../../assets/img/doc.svg" className="cursor-pointer" alt="" />
+                                    <p>Invoice</p>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                    </div>
 
-                    </section>
+                   
                 </>
             )}
         </div>

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import IntlTelInput from "react-intl-tel-input";
 import "react-intl-tel-input/dist/main.css";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Transaction = () => {
     const router = useRouter();
@@ -34,6 +36,8 @@ const Transaction = () => {
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [userName, setuserName] = useState(null);
+    const [error, seterror] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
     const [userId, setuserId] = useState(null);
     const carId = router.query.id;
     const [carDetails, setcarDetails] = useState(null)
@@ -43,6 +47,7 @@ const Transaction = () => {
     const [firstName, setfirstName] = useState("");
     const [lastName, setlastName] = useState("");
     const [phoneNumber, setphoneNumber] = useState("");
+    const [phoneError, setphoneError] = useState(null);
     const [email, setemail] = useState("");
     const [street, setstreet] = useState("");
     const phoneNumberRef = useRef(null);
@@ -311,11 +316,25 @@ const Transaction = () => {
         console.log("car detail", carDetails)
     }, [])
 
+    const validatePhone = () => {
+        if (!phoneNumber) {
+            setphoneError(true);
+        } else {
+            console.log(phoneNumber);
+        }
+    };
+
     const phoneNumberChange = () => {
+        formik.values.number =
+            `${phoneNumberRef.current.selectedCountryData.dialCode}` +
+            `${phoneNumberRef.current.state.value}`;
         setphoneNumber(
             `+${phoneNumberRef.current.selectedCountryData.dialCode}` +
                 `${phoneNumberRef.current.state.value}`
         );
+        if (phoneNumberRef) {
+            setphoneError(false);
+        }
     };
 
     const submitCustomerDetails = (e) => {
@@ -325,6 +344,73 @@ const Transaction = () => {
         }
         setstate(2)
     }
+
+    const formik = useFormik({
+        initialValues: {
+            firstName: "",
+            lastName: "",
+            number: '',
+            email: "",
+            streetAddress: "",
+        },
+        validationSchema: Yup.object({
+            firstName: Yup.string()
+                .min(3, "Must be 3 characters or more")
+                .required("First name is required"),
+            lastName: Yup.string()
+                .min(3, "Must be 3 characters or more")
+                .required("Last name is required"),
+            number: Yup.string()
+            .required('Phone number is required'),
+            email: Yup.string()
+                .email("Invalid email address")
+                .required("Email is required"),
+            streetAddress: Yup.string()
+                .required("Address is required"),
+        }),
+        onSubmit: (values) => {
+            // notify()
+            setisLoading(true);
+            seterror(null);
+            console.log(values);
+            setstate(2)
+            
+
+            // fetch(enviroment.BASE_URL + "", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     credentials: "same-origin",
+            //     body: JSON.stringify(values),
+            // })
+            //     .then((res) => {
+            //         // console.log(res)
+            //         if (!res.ok) {
+            //             setisLoading(false);
+            //             seterror(res.statusText);
+            //             toastError();
+            //             throw Error("Could not sign up");
+            //         }
+            //         setisLoading(false);
+            //         return res.json();
+            //     })
+            //     .then((data) => {
+            //         //   console.log(data)
+            //         if (data?.error) {
+            //             seterror(data?.message);
+            //             toastError();
+            //         } else {
+            //             // console.log(data)
+            //             seterror(data?.message);
+            //             
+            //         }
+            //     })
+            //     .catch((e) => {
+            //         // seterror(e.message)
+            //         setisLoading(false);
+            //         console.log(e.message);
+            //     });
+        },
+    });
 
     return (
         <div>
@@ -435,7 +521,7 @@ const Transaction = () => {
                                     <form
                                         className="tabcontent mt-5 "
                                         id="customer-info"
-                                        onSubmit={submitCustomerDetails}
+                                        onSubmit={formik.handleSubmit}
                                     >
                                         <div className="info-holder font-10 px-4 py-4 mb-3">
                                             <p className="font-semibold primary-color  ">
@@ -452,12 +538,20 @@ const Transaction = () => {
                                                     </label>
                                                     <input
                                                         type="text"
+                                                        id="firstName"
+                                                        name="firstName"
                                                         placeholder="Dare"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        required
-                                                        value={firstName}
-                                                        onChange={(e) => setfirstName(e.target.value)}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.firstName}
                                                     />
+                                                    {formik.touched.firstName &&
+                                                    formik.errors.firstName ? (
+                                                        <div className="input-error">
+                                                            {formik.errors.firstName}
+                                                        </div>
+                                                    ) : null}
                                                 </div>
 
                                                 <div className=" col-span-6 lg:col-span-3 ">
@@ -469,12 +563,20 @@ const Transaction = () => {
                                                     </label>
                                                     <input
                                                         type="text"
+                                                        id="lastName"
+                                                        name="lastName"
                                                         placeholder="Thomas"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        required
-                                                        value={lastName}
-                                                        onChange={(e) => setlastName(e.target.value)}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.lastName}
                                                     />
+                                                    {formik.touched.lastName &&
+                                                    formik.errors.lastName ? (
+                                                        <div className="input-error">
+                                                            {formik.errors.lastName}
+                                                        </div>
+                                                    ) : null}
                                                 </div>
 
                                                 <div className="col-span-6 lg:col-span-3 relative ">
@@ -494,7 +596,13 @@ const Transaction = () => {
                                                         onPhoneNumberChange={(e) =>
                                                             phoneNumberChange(e)
                                                         }
+                                                        onPhoneNumberBlur={validatePhone}
                                                     />
+                                                    {phoneError && (
+                                                        <div className="input-error">
+                                                            Phone number is required
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="col-span-6 lg:col-span-3">
                                                     <label
@@ -505,12 +613,20 @@ const Transaction = () => {
                                                     </label>
                                                     <input
                                                         type="email"
+                                                        id="email"
+                                                        name="email"
                                                         placeholder="dare@thomas.com"
                                                         className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        required
-                                                        value={email}
-                                                        onChange={(e) => setemail(e.target.value)}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.email}
                                                     />
+                                                    {formik.touched.email &&
+                                                    formik.errors.email ? (
+                                                        <div className="input-error">
+                                                            {formik.errors.email}
+                                                        </div>
+                                                    ) : null}
                                                 </div>
                                             </div>
                                         </div>
@@ -584,27 +700,28 @@ const Transaction = () => {
                                                     <textarea
                                                         rows="2"
                                                         cols="1"
+                                                        id="streetAddress"
+                                                        name="streetAddress"
                                                         id="address"
                                                         className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
                                                         placeholder="Enter street address"
-                                                        required
-                                                        value={street}
-                                                        onChange={(e) => setstreet(e.target.value)}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.streetAddress}
                                                     ></textarea>
+                                                    {formik.touched.streetAddress &&
+                                                    formik.errors.streetAddress ? (
+                                                        <div className="input-error">
+                                                            {formik.errors.streetAddress}
+                                                        </div>
+                                                    ) : null}
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-center">
                                             <button
-                                                onClick={(e) => 
-                                                {
-                                                    submitCustomerDetails(e)
-                                                    }}
-                                                // onClick={(e) => {
-                                                //     setsectabActive(true)
-                                                //     setstate(2)
-                                                //     }}
-                                                type="button"
+                                               
+                                                type="submit"
                                                 className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
                                             >
                                                 Proceed
