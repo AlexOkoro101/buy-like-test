@@ -226,11 +226,11 @@ const Transaction = () => {
             vehicle: bnvehicleID,
             bid: bidID,
             amount: carDetails?.total,
-            amountBalance: Number(carDetails?.total) - 1000,
+            amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
             reference: ref,
             currency: "",
             metadata: "",
-            balance: Number(carDetails?.total) - 1000,
+            balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
             status: verifiedData.data.status,
             statusTrans: verifiedData.data.data.status,
         });
@@ -430,13 +430,13 @@ const Transaction = () => {
                                         <img className="w-full" src={carDetails?.images[0]?.image_largeUrl} alt="" />
                                     </span>
                                     <div className="col-span-3">
-                                        <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
+                                        <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
                                         {(`${carDetails?.name}`) || ( `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`)}
                                         </p>
-                                        <p className="primary-black font-medium py-1 font-11 uppercase">
+                                        <p className="primary-black font-medium py-1 text-xs uppercase">
                                             {dollarFormatter.format(carDetails?.odometer)} mi
                                         </p>
-                                        <p className="primary-black font-medium font-11 uppercase">
+                                        <p className="primary-black font-medium text-xs uppercase">
                                             vin: {carDetails?.vin}
                                         </p>
                                         <p className="primary-black font-medium font-11 uppercase">
@@ -449,43 +449,43 @@ const Transaction = () => {
                                     <tbody>
                                         {carDetails?.trucking && (
                                             <tr className="detail-row mb-2">
-                                                <td className="sec-black font-10 font-semibold py-1.5">Trucking</td>
-                                                <td className="font-10 primary-black font-normal py-1.5">${carDetails?.trucking}</td>
+                                                <td className="sec-black text-sm font-semibold py-1.5">Trucking</td>
+                                                <td className="text-sm primary-black font-normal py-1.5">${carDetails?.trucking}</td>
                                             </tr>
 
                                         )}
 
                                         {carDetails?.shipping && (
                                             <tr className="detail-row mb-2">
-                                                <td className="sec-black font-10 font-semibold py-1.5">Shipping</td>
-                                                <td className="font-10 primary-black font-normal py-1.5">${carDetails?.shipping}</td>
+                                                <td className="sec-black text-sm font-semibold py-1.5">Shipping</td>
+                                                <td className="text-sm primary-black font-normal py-1.5">${carDetails?.shipping}</td>
                                             </tr>
 
                                         )}
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Clearing</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">N/A</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5">Clearing</td>
+                                            <td className="text-sm primary-black font-normal py-1.5">N/A</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Service Fee</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$400</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5">Service Fee</td>
+                                            <td className="text-sm primary-black font-normal py-1.5">$400</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Auction Fee</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$450</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5">Auction Fee</td>
+                                            <td className="text-sm primary-black font-normal py-1.5">$450</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2 ">
-                                            <td className="sec-black font-10 font-semibold py-1.5 total-border">Total</td>
-                                            <td className="font-10 primary-black font-normal py-1.5 total-border">${carDetails?.total}</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5 total-border">Total</td>
+                                            <td className="text-sm primary-black font-normal py-1.5 total-border">${carDetails?.total}</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Deposit</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$1,000</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5">Deposit</td>
+                                            <td className="text-sm primary-black font-normal py-1.5">$1,000</td>
                                         </tr>
 
                                     </tbody>
@@ -496,7 +496,7 @@ const Transaction = () => {
                         : 
                         (
                             <>
-                                <p className="font-10 sec-black">Loading car details...</p>
+                                <p className="font-11 sec-black">Loading car details...</p>
                             </>
                         )
                     }
@@ -532,7 +532,7 @@ const Transaction = () => {
                                         id="customer-info"
                                         onSubmit={formik.handleSubmit}
                                     >
-                                        <div className="info-holder font-10 px-4 py-4 mb-3">
+                                        <div className="info-holder text-xs px-4 py-4 mb-3">
                                             <p className="font-semibold primary-color  ">
                                                 Personal Details
                                             </p>
@@ -541,7 +541,7 @@ const Transaction = () => {
                                                 <div className="col-span-6 lg:col-span-3">
                                                     <label
                                                         htmlFor="name"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         First Name
                                                     </label>
@@ -566,7 +566,7 @@ const Transaction = () => {
                                                 <div className=" col-span-6 lg:col-span-3 ">
                                                     <label
                                                         htmlFor="name"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Last Name
                                                     </label>
@@ -591,7 +591,7 @@ const Transaction = () => {
                                                 <div className="col-span-6 lg:col-span-3 relative ">
                                                     <label
                                                         htmlFor="phone"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Phone Number
                                                     </label>
@@ -616,7 +616,7 @@ const Transaction = () => {
                                                 <div className="col-span-6 lg:col-span-3">
                                                     <label
                                                         htmlFor="email"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Email
                                                     </label>
@@ -640,7 +640,7 @@ const Transaction = () => {
                                             </div>
                                         </div>
 
-                                        <div className="info-holder font-10 px-4 py-4 mb-3">
+                                        <div className="info-holder text-xs px-4 py-4 mb-3">
                                             <p className="font-semibold primary-color ">
                                                 Delivery address
                                             </p>
@@ -649,7 +649,7 @@ const Transaction = () => {
                                                 <div className=" col-span-6 ">
                                                     <label
                                                         htmlFor="lga"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Country
                                                     </label>
@@ -665,7 +665,7 @@ const Transaction = () => {
                                                 <div className="col-span-6 lg:col-span-3">
                                                     <label
                                                         htmlFor="state"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         State
                                                     </label>
@@ -682,7 +682,7 @@ const Transaction = () => {
                                                 <div className=" col-span-6 lg:col-span-3">
                                                     <label
                                                         htmlFor="lga"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Local Govenrment Area
                                                     </label>
@@ -702,7 +702,7 @@ const Transaction = () => {
                                                 <div className="col-span-6">
                                                     <label
                                                         htmlFor="lga"
-                                                        className="block font-10 primary-color "
+                                                        className="block text-xs primary-color "
                                                     >
                                                         Street Address
                                                     </label>
@@ -769,7 +769,7 @@ const Transaction = () => {
                                                 </form>
                                             </div>
                                         </div>
-                                        <div className="info-holder font-10   py-4 pb-5 mb-3 ">
+                                        <div className="info-holder text-xs   py-4 pb-5 mb-3 ">
                                             <div className="transfer-payment px-4">
                                                 <p className="text-xs font-semibold">
                                                     Or make transfer payment
@@ -778,7 +778,7 @@ const Transaction = () => {
                                                 <table className="mt-2 min-w-full">
                                                     <tbody className="">
                                                         <tr>
-                                                            <th className="text-left">
+                                                            <th className="text-left ">
                                                                 Bank Name
                                                             </th>
                                                             <th className="text-left">
@@ -820,13 +820,13 @@ const Transaction = () => {
                                             <p className="primary-color text-sm font-semibold">
                                                 Your payment has been sent
                                             </p>
-                                            <p className="pt-4 font-10 sec-black px-5 leading-5 lg:px-20">
+                                            <p className="pt-4 text-xs sec-black px-5 leading-5 lg:px-20">
                                                 Your confirmation number is
                                                 12A34A56C. You will be sent a
                                                 link to pay the balance after
                                                 the bid is won.
                                             </p>
-                                            <p className="pt-4 font-10 sec-black px-5 leading-5 lg:px-20">
+                                            <p className="pt-4 text-xs sec-black px-5 leading-5 lg:px-20">
                                                 You can increase your chances of
                                                 getting a car by selecting
                                                 multiple cars for us to bid on

@@ -11,8 +11,14 @@ import ClipLoader from "react-spinners/ClipLoader";
 import Link from "next/link";
 
 const ResetPassword = () => {
+    //Redirect
+    const router = useRouter();
+    const [routerQuery, setrouterQuery] = useState(null)
+    
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
+    const [thing, setthing] = useState("initialState")
+    
     
     const toastError = () =>
     toast.error(`${error ? error : "Could not reset"}`, {
@@ -34,17 +40,46 @@ const ResetPassword = () => {
         draggable: true,
         progress: undefined,
     });
+
+    const jkkkk = () => {
+        setrouterQuery(router.query?.token)
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
     
-    //Redirect
-    const router = useRouter();
-    console.log(router?.query?.token)
+        var raw = JSON.stringify({
+        verify_token: routerQuery,
+        "password": "12345678",
+        confirmPassword: "12345678"
+        });
+        console.log(raw)
+    
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+    
+        fetch("https://buylinke.herokuapp.com/auth/password/change", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+            
+    }
+    useEffect(() => {
+        jkkkk()
+        return () => {
+            jkkkk()
+        }
+    }, [])
+
 
     // let min = 6;
     const formik = useFormik({
         initialValues: {
             password: "",
             confirmPassword: "",
-            verify_token: `${router?.query}`
+            verify_token: routerQuery
         },
         validationSchema: Yup.object({
             password: Yup.string()
