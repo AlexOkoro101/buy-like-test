@@ -21,7 +21,7 @@ const ResetPassword = () => {
     
     
     const toastError = () =>
-    toast.error(`${error ? error : "Could not reset"}`, {
+    toast.error("Could not reset", {
         position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -31,7 +31,7 @@ const ResetPassword = () => {
             progress: undefined,
         });
     const toastSuccess = () =>
-    toast.success(`${error ? error : "Password reset Successful"}`, {
+    toast.success("Password reset successful", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
