@@ -95,6 +95,7 @@ const ResetPassword = () => {
                 body: JSON.stringify(values),
             })
                 .then((res) => {
+                    console.log("reset res", res)
                     if (!res.ok) {
                         setisLoading(false);
                         throw Error("Could not change password");
@@ -103,6 +104,7 @@ const ResetPassword = () => {
                     return res.json();
                 })
                 .then((data) => {
+                    console.log("reset", data)
                     if (data?.error) {
                         seterror(data?.message);
                         toastError();
@@ -110,7 +112,7 @@ const ResetPassword = () => {
                         console.log(data.data)
                         seterror(data?.message);
                         toastSuccess();
-                        router.push('/auth/login/email')
+                        // router.push('/auth/login/email')
                     }
                 })
                 .catch((e) => {

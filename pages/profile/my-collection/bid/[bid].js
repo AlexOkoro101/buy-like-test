@@ -489,7 +489,7 @@ const BidDetails = () => {
                                             <div className="upload-file w-full md:w-72 px-6 py-10 text-center mt-4 leading-4 relative">
                                                 <div className="flex  items-center justify-center pt-5">
                                                     <div className="absolute  bottom-20 cursor-pointer mb-5 "><img
-                                                            src="../assets/img/vectors/upload-icon.svg" alt="upload-icon" />
+                                                            src="../../../assets/img/vectors/upload-icon.svg" alt="upload-icon" />
                                                     </div>
                                                     <div className="w-52 text-center ">
                                                         <p className="text-sm">Upload a document</p>
