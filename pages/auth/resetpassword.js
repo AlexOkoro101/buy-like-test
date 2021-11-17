@@ -44,7 +44,7 @@ const ResetPassword = () => {
         initialValues: {
             password: "",
             confirmPassword: "",
-            verify_token: `${router?.query?.token}`
+            verify_token: `${router?.query}`
         },
         validationSchema: Yup.object({
             password: Yup.string()
