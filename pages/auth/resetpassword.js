@@ -13,10 +13,10 @@ import Link from "next/link";
 const ResetPassword = () => {
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
-
+    
     const toastError = () =>
-        toast.error(`${error ? error : "Could not reset"}`, {
-            position: "top-right",
+    toast.error(`${error ? error : "Could not reset"}`, {
+        position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
             closeOnClick: true,
@@ -25,25 +25,26 @@ const ResetPassword = () => {
             progress: undefined,
         });
     const toastSuccess = () =>
-        toast.success(`${error ? error : "Password reset Successful"}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-
+    toast.success(`${error ? error : "Password reset Successful"}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+    
     //Redirect
     const router = useRouter();
+    console.log(router?.query?.token)
 
     // let min = 6;
     const formik = useFormik({
         initialValues: {
             password: "",
             confirmPassword: "",
-            verify_token: router.query
+            verify_token: `${router?.query?.token}`
         },
         validationSchema: Yup.object({
             password: Yup.string()
