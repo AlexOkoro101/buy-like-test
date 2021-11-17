@@ -1491,7 +1491,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         src={
                                                                             ele?.image_largeUrl
                                                                         }
-                                                                        className="rounded-md shadow-sm"
+                                                                        className="rounded-md object-cover w-full shadow-sm"
                                                                         style={{
                                                                             height: "60.3px",
                                                                         }}
