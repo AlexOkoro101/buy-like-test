@@ -11,6 +11,7 @@ import * as Yup from "yup";
 
 const Transaction = () => {
     const router = useRouter();
+    var dollarFormatter = new Intl.NumberFormat();
     const buyNowInfo = () =>
         toast.info("Car already bought by you", {
             position: "top-right",
@@ -148,7 +149,7 @@ const Transaction = () => {
             link: carDetails?.link,
             name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
             site: carDetails?.site,
-            price: carDetails?.buyNowPrice,
+            price: carDetails?.bidAmount,
             year: carDetails?.year,
             exterior_color: carDetails?.exterior_color,
             vehicle_type: carDetails?.vehicle_type,
@@ -169,7 +170,7 @@ const Transaction = () => {
             description: "",
             Zip: carDetails?.Zip,
             tilteImage: carDetails?.tilteImage,
-            bidAmount: carDetails?.bidAmount,
+            bidAmount: carDetails?.total,
             owner: carDetails?.owner,
             facilitationLocation: carDetails?.facilitationLocation,
             Vehicle_location: carDetails?.Vehicle_location,
@@ -224,12 +225,12 @@ const Transaction = () => {
             owner: carDetails?.owner,
             vehicle: bnvehicleID,
             bid: bidID,
-            amount: carDetails?.bidAmount,
-            amountBalance: Number(carDetails?.bidAmount) - 1000,
+            amount: carDetails?.total,
+            amountBalance: Number(carDetails?.total) - 1000,
             reference: ref,
             currency: "",
             metadata: "",
-            balance: Number(carDetails?.bidAmount) - 1000,
+            balance: Number(carDetails?.total) - 1000,
             status: verifiedData.data.status,
             statusTrans: verifiedData.data.data.status,
         });
@@ -430,13 +431,16 @@ const Transaction = () => {
                                     </span>
                                     <div className="col-span-3">
                                         <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
-                                            {carDetails?.year} {""} {carDetails?.make} {""} {carDetails?.Model}
+                                        {(`${carDetails?.name}`) || ( `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`)}
                                         </p>
                                         <p className="primary-black font-medium py-1 font-11 uppercase">
-                                            {carDetails?.odometer.toLocaleString()} mi
+                                            {dollarFormatter.format(carDetails?.odometer)} mi
                                         </p>
                                         <p className="primary-black font-medium font-11 uppercase">
                                             vin: {carDetails?.vin}
+                                        </p>
+                                        <p className="primary-black font-medium font-11 uppercase">
+                                            ${dollarFormatter.format(carDetails?.bidAmount)}
                                         </p>
                                     </div>
                                 </div>
@@ -466,12 +470,17 @@ const Transaction = () => {
 
                                         <tr className="detail-row mb-2">
                                             <td className="sec-black font-10 font-semibold py-1.5">Service Fee</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$800</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$400</td>
+                                        </tr>
+
+                                        <tr className="detail-row mb-2">
+                                            <td className="sec-black font-10 font-semibold py-1.5">Auction Fee</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$450</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2 ">
                                             <td className="sec-black font-10 font-semibold py-1.5 total-border">Total</td>
-                                            <td className="font-10 primary-black font-normal py-1.5 total-border">${carDetails?.bidAmount}</td>
+                                            <td className="font-10 primary-black font-normal py-1.5 total-border">${carDetails?.total}</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">

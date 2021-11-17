@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const BidDetails = () => {
+    var dollarFormatter = new Intl.NumberFormat();
     const toastError = () =>
         toast.error(`${error ? error : "Could not perform operation"}`, {
             position: "top-right",
@@ -159,574 +160,357 @@ const BidDetails = () => {
             <ToastContainer />
             {bidCollection && (
                 <>
-                    <section className="flex flex-wrap w-full justify-center pt-20 lg:pt-28 px-5 xl:px-0">
-                        <div className="details-border-b py-1 block lg:hidden">
-                            <p className="font-13 font-bold primary-color">
-                                {bidCollection?.name}
-                            </p>
-
-                            <div className="flex mt-1.5">
-                                <div className="flex">
-                                    <p className="font-11 primary-gray font-medium">
-                                        2,124 mi
-                                    </p>
-                                    <p className="font-11 ml-2 primary-gray font-medium">
-                                        VIN: {""}
-                                        {bidCollection?.vin}
-                                    </p>
-                                </div>
-                                <div className="ml-auto">
-                                    <p className="primary-color text-base font-extrabold">
-                                        {}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-full lg:w-3/6 md:px-5 overflow-hidden">
-                            <div className="md:px-5">{displayLargeimage()}</div>
-
-                            <div className="overflow-scroll w-full md:px-5 scrollbar-hide">
+               
+                <main className="main mt-32">
+                    <div className="flex justify-center">
+                        {/* <!-- w-10/12 --> */}
+                        <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder w-full">
+                            {/* <!-- deposit details here --> */}
+                            <aside className="sidebar  px-4 md:px-2 lg:pl-24 lg:pr-9 pt-9 pb-4">
+                                <p className="primary-color text-sm font-bold mb-3">Transaction details</p>
                                 <div
-                                    className="scrollbar-hide flex transition-all mt-3
-                                "
-                                    style={{
-                                        width: "100%",
-                                        height: "87px",
-                                    }}
-                                >
-                                    {page >=
-                                    (window.innerWidth < 760 ? 3 : 5) ? (
-                                        <div
-                                            className=" flex mr-2 md:mr-4 animate-pulse items-center text-xs font-mono justify-center  "
-                                            style={{
-                                                width: "25px",
-                                                height: "60.03px",
-                                            }}
-                                        >
-                                            <div
-                                                onClick={() => prevPage(page)}
-                                                className="cursor-pointer"
-                                            >
-                                                <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        ""
-                                    )}
-                                    {imageD &&
-                                        imageD.map((ele, id) => (
-                                            <div
-                                                key={id}
-                                                onClick={() => setId(page + id)}
-                                                className="mr-3 h-full transition-all cursor-pointer transform hover:scale-105"
-                                            >
-                                                <img
-                                                    src={ele?.image_largeUrl}
-                                                    className="rounded-md shadow-sm"
-                                                    style={{
-                                                        height: "60.3px",
-                                                        width: "90.03px",
-                                                    }}
-                                                    alt=""
-                                                />
-                                            </div>
-                                        ))}
-                                    {imageD &&
-                                    imageD.length ===
-                                        (window.innerWidth <= 760 ? 3 : 5) &&
-                                    count > 0 ? (
-                                        <div
-                                            className="rounded-md flex items-center text-xs font-mono justify-center relative shadow-sm"
-                                            style={{
-                                                height: "60.3px",
-                                                width: "90.03px",
-                                                backgroundImage: `url(${bidCollection.images[6].image_largeUrl})`,
-                                                backgroundSize: "cover",
-                                            }}
-                                        >
-                                            <div
-                                                className=" rounded-md shadow-sm cursor-pointer absolute top-0 left-0 text-center right-0 bottom-0 bg-black
-                        bg-opacity-40 text-white flex items-center justify-center
-                        "
-                                                style={{ fontSize: "10px" }}
-                                                onClick={() => nextPage(page)}
-                                            >
-                                                load {count} more
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        ""
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="car-details-holder px-4 pt-4 pb-12">
-                            <div className="details-border-b px-7 lg:px-0 mt-3 lg:mt-0 py-1 hidden lg:block">
-                                <p className="text-base font-bold primary-color">
-                                    {`${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model} `}
-                                </p>
-
-                                <div className="flex mt-1.5">
-                                    <div className="flex">
-                                        <p className="font-11 primary-gray font-medium">
-                                            {bidCollection?.odometer} mi
+                                    className="car-holder grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1  py-2.5">
+                                    <span className="col-span-3 inline-block overflow-hidden rounded-md">
+                                        <img className="w-full" src={bidCollection?.images[0]?.image_largeUrl} alt="" />
+                                    </span>
+                                    <div className="col-span-3">
+                                        <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
+                                            {(`${bidCollection?.name}`) || ( `${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model}`)}
                                         </p>
-                                        <p className="font-11 ml-2 primary-gray font-medium">
-                                            VIN: {bidCollection?.vin}
+                                        <p className="primary-black font-medium py-1 font-11 uppercase">
+                                            {dollarFormatter.format(bidCollection?.odometer)} mi
+                                        </p>
+                                        <p className="primary-black font-medium font-11 uppercase">
+                                            vin: {bidCollection?.vin}
+                                        </p>
+                                        <p className="primary-black font-medium font-11 uppercase">
+                                            {dollarFormatter.format(bidCollection?.price)}
                                         </p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="flex mt-4 lg:mt-0">
-                                <div className="details-tab  cursor-pointer active px-10 w-full text-center font-10 font-semibold  primary-black py-0.5 ">
-                                    <p href className="py-1.5">
-                                        Car Transaction Detail
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="mt-3">
-                                {true && (
-                                    <div
-                                        className="tabcontent"
-                                        id="offer-amount"
-                                    >
-                                        <div className="edit-holder my-1.5 px-2  flex items-center">
-                                            <table className="table-fixed w-full">
-                                                <tbody>
-                                                    <tr className="">
-                                                        <td className="sec-black font-11 font-semibold w-28  ">
-                                                            <label>
-                                                                Bid Amount
-                                                            </label>
-                                                        </td>
-                                                        <td className="text-sm font-medium sec-black">
-                                                            ${nairaFormatter.format(bidCollection?.bidAmount)}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <table className="min-w-full border-separate detail-table">
-                                            <tbody>
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 ">
-                                                        Destination
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        Nigeria
-                                                    </td>
-                                                    
-                                                </tr>
-
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Tax and Reg
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        Not Applicable
-                                                    </td>
-                                                    
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Trucking
-                                                    </td>
-
-                                                    <td className="sec-black font-11 font-normal">
-                                                        ${bidCollection?.trucking || 0}
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Shipping
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        ${nairaFormatter.format(bidCollection?.shipping)}
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Clearing
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        N2,000,000
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2">
-                                                        Service Fee
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $400
-                                                    </td>
-                                                    <td> </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-bold w-28 p-2">
-                                                        Total
-                                                    </td>
-                                                    <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        ${nairaFormatter.format(bidCollection?.bidAmount)}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                                {false && (
-                                    <div className="tabcontent" id="budget">
-                                        <table className="min-w-full border-separate detail-table">
-                                            <tbody>
-                                                <tr className="detail-row mb-2">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2 ">
-                                                        Bid amount
-                                                    </td>
-                                                    <td className="font-11 sec-black font-bold pr-20 py-2">
-                                                        $ 121,000
-                                                    </td>
-                                                    <td className="float-right px-2"></td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 py-2 p-2">
-                                                        Destination
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        Nigeria
-                                                    </td>
-                                                    <td className="float-right px-2">
-                                                        <img
-                                                            src="../assets/img/vectors/arrow-down2.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Auction Fee
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $300
-                                                    </td>
-                                                    <td className="float-right px-2">
-                                                        <img
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Tax and Reg
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        Not Applicable
-                                                    </td>
-                                                    <td className="float-right px-2">
-                                                        <img
-                                                            src="../assets/img/vectors/tool-tip.svg"
-                                                            alt="tooltip"
-                                                        />
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Trucking
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        {truckingPrice ? `${truckingPrice}` : 'Loading...'}
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Service Fee
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Shipping
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-
-                                                <tr className="detail-row">
-                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                        Clearing
-                                                    </td>
-                                                    <td className="font-11 sec-black font-normal pr-20 py-2">
-                                                        $950
-                                                    </td>
-                                                    <td className="text-right px-2">
-                                                        <label className="detail">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="focus:outline-none detail self-center"
-                                                            />
-                                                            <span className="detail"></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div className="edit-holder my-1.5 px-3 flex items-center">
-                                            <table>
-                                                <tbody>
-                                                    <tr className="">
-                                                        <td className="font-10 font-medium sec-gray pr-1">
-                                                            <label>
-                                                                Enter your
-                                                                budget
-                                                            </label>
-                                                        </td>
-                                                        <td className="text-sm font-medium sec-gray">
-                                                            <input
-                                                                id="budget"
-                                                                className="border-none edit-control focus:outline-none"
-                                                                type="text"
-                                                                placeholder="$8,000"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            
-                        </div>
-                    </section>
-
-                    <div className="py-4 overview-section mt-14">
-                        <div className="flex justify-center gap-x-8 lg:gap-x-0 px-5">
-                            <div
-                                onClick={() => {
-                                    setoverview(true);
-                                }}
-                                className={
-                                    "overview-tab relative lg:px-4 lg:text-sm text-xs font-semibold  primary-black lg:py-0.5 " +
-                                    (overview ? " active" : "")
-                                }
-                            >
-                                <p className="lg:py-1.5 ">CAR DEATILS</p>
-                            </div>
-
-                            <div
-                                onClick={() => {
-                                    setoverview(false);
-                                }}
-                                className={
-                                    "overview-tab text-xs relative lg:px-4 lg:text-sm font-semibold  primary-black lg:py-0.5 " +
-                                    (!overview ? " active" : "")
-                                }
-                            >
-                                <p className="lg:py-1.5">
-                                    DOCUMENTS
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            className={
-                                overview
-                                    ? "flex px-5 justify-center mt-6 w-full lg:w-auto flex-col lg:flex-row items-center"
-                                    : " hidden"
-                            }
-                        >
-                            <div className="w-full lg:w-auto">
-                                <table className="min-w-full border-separate overview-table">
+                                <table className="min-w-full ">
                                     <tbody>
+                                        {bidCollection?.trucking && (
+                                            <tr className="detail-row mb-2">
+                                                <td className="sec-black font-10 font-semibold py-1.5">Trucking</td>
+                                                <td className="font-10 primary-black font-normal py-1.5">{bidCollection?.trucking || 0}</td>
+                                            </tr>
+                                        )}
+
+                                        {bidCollection?.shipping && (
+                                            <tr className="detail-row mb-2">
+                                                <td className="sec-black font-10 font-semibold py-1.5">Shipping</td>
+                                                <td className="font-10 primary-black font-normal py-1.5">${bidCollection?.shipping || 0}</td>
+                                            </tr>
+                                        )}
+
+
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Make
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2 w-1/2">
-                                                {bidCollection?.make}
-                                            </td>
+                                            <td className="sec-black font-10 font-semibold py-1.5">Clearing</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">N/A</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Model
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.model}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Year
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.year ||
-                                                    "Not Specified"}
-                                            </td>
+                                            <td className="sec-black font-10 font-semibold py-1.5">Auction Fee</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$450</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Vehicle VIN
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {bidCollection?.vin}
-                                                </span>
-                                            </td>
+                                            <td className="sec-black font-10 font-semibold py-1.5">Service Fee</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$400</td>
                                         </tr>
+
+                                        <tr className="detail-row mb-2 ">
+                                            <td className="total-border sec-black font-10 font-semibold py-1.5 ">Total</td>
+                                            <td className="total-border font-10 primary-black font-normal py-1.5 ">
+                                                {bidCollection?.bidAmount}</td>
+                                        </tr>
+
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Exterior Color
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {
-                                                    bidCollection?.exterior_color
-                                                }
-                                            </td>
+                                            <td className="sec-black font-10 font-semibold py-1.5">Deposit</td>
+                                            <td className="font-10 primary-black font-normal py-1.5">$1,000</td>
                                         </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Interior Color
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                    {
-                                                        bidCollection?.interior_color
-                                                    }
-                                                </span>
-                                            </td>
-                                        </tr>
+
                                     </tbody>
                                 </table>
-                            </div>
-                            <div className="lg:ml-3 w-full lg:w-auto">
-                                <table className="min-w-full border-separate overview-table">
-                                    <tbody>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Mileage
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {nairaFormatter.format(
-                                                    bidCollection?.odometer
-                                                )}
-                                                miles
-                                            </td>
-                                        </tr>
+                            </aside>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-44 py-3 lg:px-5 px-2">
-                                                Engine Fuel Type
-                                            </td>
-                                            <td className="text-sm md:text-base sec-black font-normal py-2 w-1/2">
-                                                {
-                                                    bidCollection?.fuel_type
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Transmission
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.transmission}
-                                            </td>
-                                        </tr>
+                            <section className="main-section px-3   md:ml-5 lg:mx-12 lg:px-8  ">
+                                <div className="lg:flex lg:justify-between">
+                                    <div className="Tracker-holder pb-20 ">
+                                        <p className="font-semibold text-sm py-5 px-2">Bid Tracker</p>
+                                        <table>
+                                            <tbody className="flex items-center jus mb-2 mt-0">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-44 md:w-72">
+                                                        <small>You placed a bid for Mercedes Benz GLK.</small>
+                                                    </td>
+                                                </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Drive train
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.driveTrain}
-                                            </td>
-                                        </tr>
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>Your bid has been won and is awaiting balance payment.</small>
+                                                    </td>
+                                                </tr>
 
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Body type
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.body_style}
-                                            </td>
-                                        </tr>
-                                        <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold w-40 py-3 lg:px-5 px-2">
-                                                Doors
-                                            </td>
-                                            <td className="turncate text-sm sec-black font-normal py-2">
-                                                {bidCollection?.doors}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div
-                            className={
-                                !overview
-                                    ? "flex flex-wrap px-5 mt-6 "
-                                    : " hidden"
-                            }
-                        >
-                            <div className="w-8/12 m-auto border border-gray-100 p-4 flex flex-nowrap items-center">
-                                <div className="m-5">
-                                    <img src="../../../assets/img/folder.svg" className="cursor-pointer" alt="" />
-                                    <p>Contract Files</p>
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>You paid the balance for the car and is awaiting pick up at the
+                                                            lot.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>Your car has been picked up from the lot and is on the way to the
+                                                            port.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>The car has been dropped at the port and is awaiting
+                                                            shippment.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>Your car has been shipped to Nigeria and is awaiting clearance at
+                                                            the port.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>Your car has been cleared at the port and is awaiting delivery or
+                                                            pickup.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                    <td>
+                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                        <small className="text-xs " id="time">12:20 PM</small>
+                                                    </td>
+                                                </tr>
+                                                <tr className=" mb-3 ">
+                                                    <td className="circle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                        <small>Your car has been delivered.</small>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+
+
+
+
+
+                                        </table>
+
+                                        {/* <!-- <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
+                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                <small className="text-xs " id="time">12:20 PM</small>
+                                            </div>
+                                            <div className="circle  px-3 mb-3 md:mb-0">
+                                                <input type="radio">
+                                            </div>
+                                            <div className=" px-3 mb-3 md:mb-0 leading-4 text-sm">
+                                                <small>You placed a bid for Mercedes Benz GLK.</small>
+                                            </div> --> */}
+
+                                        {/* <!-- <div className=" flex items-center md:flex mb-2 mt-9">
+                                            <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
+                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                <small className="text-xs " id="time">12:20 PM</small>
+                                            </div>
+                                            <div className="circle  px-3 mb-3 md:mb-0">
+                                                <input type="radio">
+                                            </div>
+                                            <div className=" px-3 mb-3 md:mb-0 leading-4 text-sm">
+                                                <small>Your bid has been won and is awaiting balance payment.</small>
+                                            </div>
+                                        </div> --> */}
+                                        {/* <!-- <div className=" flex items-center md:flex mb-2 mt-9">
+                                            <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
+                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                <small className="text-xs " id="time">12:20 PM</small>
+                                            </div>
+                                            <div className="circle  px-3 mb-3 md:mb-0">
+                                                <input type="radio">
+                                            </div>
+                                            <div className=" px-3 mb-3 md:mb-0 leading-4 text-sm">
+                                                <small>Your bid has been won and is awaiting balance payment.</small>
+                                            </div>
+                                        </div> --> */}
+                                    </div>
+                                    {/* <!-- bid Tracker end --> */}
+                                    {/* <!-- document  file  --> */}
+                                    <div className="doc-holder">
+                                        <p className="font-semibold text-sm py-5 px-2">Vehicle Documents</p>
+                                        <div className="pb-10">
+                                            <div
+                                                className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4">
+                                                <div className="flex items-center">
+                                                    <div className="mr-4"><img src="../../../assets/img/vectors/file-icon.svg"
+                                                            alt="file-icon" />
+                                                    </div>
+                                                    <div className="leading-3">
+                                                        <p className="text-xs">Legal Contract</p>
+                                                        <small className="text-xs">105 kb</small>
+                                                    </div>
+                                                </div>
+                                                <div className="cursor-pointer"><img src="../../../assets/img/vectors/download-icon.svg"
+                                                        alt="download-icon" /></div>
+                                            </div>
+                                            <div
+                                                className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4 mt-3">
+                                                <div className="flex items-center">
+                                                    <div className="mr-4"><img src="../../../assets/img/vectors/file-icon.svg"
+                                                            alt="file-icon" />
+                                                    </div>
+                                                    <div className="leading-3">
+                                                        <p className="text-xs">Legal Contract</p>
+                                                        <small className="text-xs">105 kb</small>
+                                                    </div>
+                                                </div>
+                                                <div className="cursor-pointer"><img src="../../../assets/img/vectors/download-icon.svg"
+                                                        alt="download-icon" /></div>
+                                            </div>
+                                            <div
+                                                className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4 mt-3">
+                                                <div className="flex items-center">
+                                                    <div className="mr-4"><img src="../../../assets/img/vectors/file-icon.svg"
+                                                            alt="file-icon" />
+                                                    </div>
+                                                    <div className="leading-3">
+                                                        <p className="text-xs">Legal Contract</p>
+                                                        <small className="text-xs">105 kb</small>
+                                                    </div>
+                                                </div>
+                                                <div className="cursor-pointer"><img src="../../../assets/img/vectors/download-icon.svg"
+                                                        alt="download-icon" /></div>
+                                            </div>
+                                            <div
+                                                className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4 mt-3">
+                                                <div className="flex items-center">
+                                                    <div className="mr-4"><img src="../../../assets/img/vectors/file-icon.svg"
+                                                            alt="file-icon" />
+                                                    </div>
+                                                    <div className="leading-3">
+                                                        <p className="text-xs">Legal Contract</p>
+                                                        <small className="text-xs">105 kb</small>
+                                                    </div>
+                                                </div>
+                                                <div className="cursor-pointer"><img src="../../../assets/img/vectors/download-icon.svg"
+                                                        alt="download-icon" /></div>
+                                            </div>
+                                            <div className="upload-file w-full md:w-72 px-6 py-10 text-center mt-4 leading-4 relative">
+                                                <div className="flex  items-center justify-center pt-5">
+                                                    <div className="absolute  bottom-20 cursor-pointer mb-5 "><img
+                                                            src="../assets/img/vectors/upload-icon.svg" alt="upload-icon" />
+                                                    </div>
+                                                    <div className="w-52 text-center ">
+                                                        <p className="text-sm">Upload a document</p>
+                                                        <small className="text-xs">Drag a document here to upload or click to browse
+                                                            your files</small>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
-                                <div className="m-5">
-                                    <img src="../../../assets/img/doc.svg" className="cursor-pointer" alt="" />
-                                    <p>Invoice</p>
-                                </div>
-                            </div>
-                            
-                            
+                            </section>
                         </div>
-                        
                     </div>
+                </main>
 
                    
                 </>

@@ -856,7 +856,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         ? Number(truckingPrice.slice(1)) / 2
         : Number(truckingPrice.slice(1))) : "",
         shipping: shipAccessory ? "1150" : "",
-        expiry: now.getTime() + 3600000
+        expiry: now.getTime() + 3600000,
+        total: accessories()
     });
     const buyNowFunction = () => {
 
@@ -1216,7 +1217,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     const accessories = () => {
         var carPrice = Number(carDetail.buyNowPrice);
-        var outstanding = 700;
+        var outstanding = 850;
         var truck = 0;
         var ship = 0;
 
@@ -1251,7 +1252,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     const placebidAccessories = () => {
         // console.log(Number(maxBidAmount))
-        var outstanding = 700;
+        var outstanding = 850;
         var truck = 0;
         var ship = 0;
 
@@ -1765,7 +1766,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
                                                             >
-                                                                $300
+                                                                $450
                                                             </td>
                                                             <td className="text-right px-2">
                                                                 <img
@@ -2164,7 +2165,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="3"
                                                                 className="font-11 sec-black font-normal pr-20 py-2"
                                                             >
-                                                                $300
+                                                                $450
                                                             </td>
                                                             <td className=" px-2 text-right">
                                                                 <img
