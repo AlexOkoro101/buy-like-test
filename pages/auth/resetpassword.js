@@ -108,7 +108,9 @@ const ResetPassword = () => {
                     if (data?.success === true) {
                         seterror(data?.message);
                         toastSuccess();
-                        router.push('/auth/login/email')
+                        setTimeout(function () {
+                            router.push('/auth/login/email')
+                        }, 1500);
                     } else {
                         seterror(data?.message);
                         toastError();
