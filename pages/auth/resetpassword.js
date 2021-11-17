@@ -105,14 +105,13 @@ const ResetPassword = () => {
                 })
                 .then((data) => {
                     console.log("reset", data)
-                    if (data?.error) {
-                        seterror(data?.message);
-                        toastError();
-                    } else {
-                        console.log(data.data)
+                    if (data?.success === true) {
                         seterror(data?.message);
                         toastSuccess();
-                        // router.push('/auth/login/email')
+                        router.push('/auth/login/email')
+                    } else {
+                        seterror(data?.message);
+                        toastError();
                     }
                 })
                 .catch((e) => {
