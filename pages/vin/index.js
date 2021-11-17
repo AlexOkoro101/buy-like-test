@@ -65,7 +65,7 @@ export function useWindowDimensions() {
 //
 //
 
-const Search = ({ cars, params, loading, getMakes, makes }) => {
+const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
     let inputEl = useRef([]);
@@ -106,7 +106,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
         { label: "Auction Date: Earliest", value: 6 },
     ]);
     const [data, setData] = useState(cars.data);
-    const [total, setTotal] = useState(cars.total);
+    // const [totalCars, setTotal] = useState(total);
     const [defaultMake, setDefaultMake] = useState();
     const [defaultModel, setDefaultModel] = useState();
     const [defaultYear, setDefaultYear] = useState();
@@ -1790,7 +1790,7 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
                                     className=" px-3 w-full cursor-pointer focus:outline-none "
                                     type="text"
                                     placeholder={`VIN to search ${dollarFormatter.format(
-                                        cars.total
+                                        total
                                     )} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
@@ -2457,8 +2457,8 @@ const Search = ({ cars, params, loading, getMakes, makes }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { cars, loading, error, params, makes } = state.Cars;
-    return { cars, loading, error, params, makes };
+    const { cars, loading, error, params, makes, total } = state.Cars;
+    return { cars, loading, error, params, makes, total };
 };
 
 export default connect(mapStateToProps, {

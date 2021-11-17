@@ -24,6 +24,7 @@ import {
     BUY_NOW_SUCCESS,
     BUY_NOW_FAILED,
     BUY_NOW,
+    TOTAL,
 } from "../types";
 import { RC, SC, RX, ES, NX, LS, IS, GS, GX } from "../../src/components/data";
 const api = process.env.cars_api;
@@ -51,6 +52,10 @@ export const getCars = () => (dispatch) => {
                         dispatch({
                             type: FETCH_SUCCESSFUL,
                             payload: dada,
+                        });
+                        dispatch({
+                            type: TOTAL,
+                            payload: dada.total,
                         });
                     }
                 }

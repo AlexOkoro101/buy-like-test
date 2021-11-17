@@ -8,7 +8,7 @@ import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
 import Select from "react-select";
 
-const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
+const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total }) => {
     const navRef = useRef(null);
     var dollarFormatter = new Intl.NumberFormat();
 
@@ -45,6 +45,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
 
     //Get Data from local Storage
     useEffect(() => {
+        console.log(total, "pppp");
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
@@ -250,7 +251,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
                                 placeholder={`VIN to search ${dollarFormatter.format(
-                                    cars.total
+                                    total
                                 )} cars`}
                                 type="text"
                                 isClearable
@@ -297,7 +298,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
                             placeholder={`VIN to search ${dollarFormatter.format(
-                                cars.total
+                                total
                             )} cars`}
                             type="text"
                             isClearable
@@ -518,8 +519,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, cars }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { userLoggedIn, cars } = state.Cars;
-    return { userLoggedIn, cars };
+    const { userLoggedIn, total } = state.Cars;
+    return { userLoggedIn, total };
 };
 
 export default connect(mapStateToProps, (dispatch) => ({
