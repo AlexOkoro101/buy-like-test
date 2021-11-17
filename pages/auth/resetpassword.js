@@ -13,11 +13,11 @@ import Link from "next/link";
 const ResetPassword = () => {
     //Redirect
     const router = useRouter();
-    const [routerQuery, setrouterQuery] = useState(null)
+    const [routerQuery, setrouterQuery] = useState(router.asPath.slice(26))
     
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
-    const [thing, setthing] = useState("initialState")
+    const [token, settoken] = useState(null)
     
     
     const toastError = () =>
@@ -41,37 +41,23 @@ const ResetPassword = () => {
         progress: undefined,
     });
 
-    const jkkkk = () => {
-        setrouterQuery(router.query?.token)
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-    
-        var raw = JSON.stringify({
-        verify_token: routerQuery,
-        "password": "12345678",
-        confirmPassword: "12345678"
-        });
-        console.log(raw)
-    
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-    
-        fetch("https://buylinke.herokuapp.com/auth/password/change", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-            
-    }
-    useEffect(() => {
-        jkkkk()
-        return () => {
-            jkkkk()
+    const retriveData = () => {
+        const userActive = localStorage.getItem("user");
+        if (!userActive) {
+            settoken("no user");
+            return null;
         }
+    }
+
+    useEffect(() => {
+        retriveData()
     }, [])
+
+    useEffect(() => {
+        setrouterQuery(router.asPath.slice(26))
+        console.log("routerQuery: ", routerQuery)
+    }, [token, isLoading])
+
 
 
     // let min = 6;
@@ -98,8 +84,11 @@ const ResetPassword = () => {
         }),
         onSubmit: (values) => {
             // notify()
+            // setrouterQuery(router.query)
             setisLoading(true);
-            seterror(null);
+            seterror(null); 
+            console.log("router query", routerQuery)
+            
             fetch(enviroment.BASE_URL + "auth/password/change", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -129,8 +118,12 @@ const ResetPassword = () => {
                     setisLoading(false);
                     console.log(e.message);
                 });
+                
+
         },
     });
+
+  
 
     return (
         <>
