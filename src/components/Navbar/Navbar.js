@@ -45,7 +45,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total }) => {
 
     //Get Data from local Storage
     useEffect(() => {
-        console.log(total, "pppp");
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
