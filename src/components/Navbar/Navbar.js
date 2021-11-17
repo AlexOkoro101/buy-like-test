@@ -7,8 +7,9 @@ import { selectToken } from "../../../redux/reducers/userReducer";
 import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
 import Select from "react-select";
+import { getCars } from "../../../redux/actions/carsAction";
 
-const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total }) => {
+const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const navRef = useRef(null);
     var dollarFormatter = new Intl.NumberFormat();
 
@@ -18,7 +19,11 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total }) => {
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     let dropdown;
-
+    useEffect(() => {
+        if (total <= 0) {
+            getCars();
+        }
+    }, [total]);
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -518,8 +523,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total }) => {
     );
 };
 const mapStateToProps = (state) => {
-    const { userLoggedIn, total } = state.Cars;
-    return { userLoggedIn, total };
+    const { userLoggedIn, total, cars } = state.Cars;
+    return { userLoggedIn, total, cars };
 };
 
 export default connect(mapStateToProps, (dispatch) => ({
