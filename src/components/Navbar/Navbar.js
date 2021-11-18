@@ -19,11 +19,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     let dropdown;
-    useEffect(() => {
-        if (total <= 0) {
-            getCars();
-        }
-    }, [total]);
+
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
