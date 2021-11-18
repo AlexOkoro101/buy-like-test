@@ -27,9 +27,56 @@ export const LS = [
     { value: "LS 460", label: "LS 460" },
     { value: "LS 600h L", label: "LS 600h L" },
 ];
+export const LX = [
+    { value: "LX 450 Luxury Wagon", label: "LX 450 Luxury Wagon" },
+    { value: "LX 470 Luxury SUV", label: "LX 470 Luxury SUV" },
+    { value: "LX 470 Luxury Wagon", label: "LX 470 Luxury Wagon" },
+    { value: "LX 570", label: "LX 570" },
+    { value: "LX 470", label: "LX 470" },
+];
+export const CLA = [
+    { value: "CLA", label: "CLA" },
+    { value: "CLA-Class", label: "CLA-Class" },
+    { value: "CLK-Class", label: "CLK-Class" },
+];
+export const ACCORD = [
+    { value: "Accord", label: "Accord" },
+    { value: "Accord Coupe", label: "Accord Coupe" },
+    { value: "Accord Crosstour", label: "Accord Crosstour" },
+    { value: "Accord Hybrid", label: "Accord Hybrid" },
+    { value: "Accord Sedan", label: "Accord Sedan" },
+];
+export const CRV = [
+    { value: "CR-V", label: "CR-V" },
+    { value: "CR-V Hybrid", label: "CR-V Hybrid" },
+    { value: "CR-Z", label: "CR-Z" },
+];
+export const CIVIC = [
+    { value: "Civic", label: "Civic" },
+    { value: "Civic Coupe", label: "Civic Coupe" },
+    { value: "Civic Hatchback", label: "Civic Hatchback" },
+    { value: "Civic Hybrid", label: "Civic Hybrid" },
+    { value: "Civic Sedan", label: "Civic Sedan" },
+    { value: "Civic Si", label: "Civic Si" },
+    { value: "Civic Si Coupe", label: "Civic Si Coupe" },
+    { value: "Civic Si Sedan", label: "Civic Si Sedan" },
+    { value: "Civic Type R", label: "Civic Type R" },
+];
+export const CLS = [
+    { value: "CLS-Class", label: "CLS-Class" },
+    { value: "CLS", label: "CLS" },
+];
+export const GLA = [
+    { value: "GLA", label: "GLA" },
+    { value: "GLA-Class", label: "GLA-Class" },
+];
+export const GL = [
+    { value: "GL", label: "GL" },
+    { value: "GL-Class", label: "GL-Class" },
+];
 export const IS = [
     { value: "IS", label: "IS" },
-    { value: "IS 200t", label: "IS 200t" },
+    { value: "IS 200T", label: "IS 200T" },
     { value: "IS 250", label: "IS 250" },
     { value: "IS 250C", label: "IS 250C" },
     { value: "IS 300", label: "IS 300" },

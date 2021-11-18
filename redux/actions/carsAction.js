@@ -26,7 +26,25 @@ import {
     BUY_NOW,
     TOTAL,
 } from "../types";
-import { RC, SC, RX, ES, NX, LS, IS, GS, GX } from "../../src/components/data";
+import {
+    RC,
+    SC,
+    RX,
+    ES,
+    NX,
+    LS,
+    IS,
+    GS,
+    GX,
+    LX,
+    CLA,
+    CLS,
+    GL,
+    GLA,
+    ACCORD,
+    CIVIC,
+    CRV,
+} from "../../src/components/data";
 const api = process.env.cars_api;
 
 export const getCars = () => (dispatch) => {
@@ -92,6 +110,10 @@ export const searchTerm = (event) => async (dispatch) => {
                 case "GX":
                     arrStr[i] = GX.map((ele) => ele.value);
                     break;
+                case "LX":
+                    arrStr[i] = LX.map((ele) => ele.value);
+                    break;
+
                 case "GS":
                     arrStr[i] = GS.map((ele) => ele.value);
                     break;
@@ -106,6 +128,45 @@ export const searchTerm = (event) => async (dispatch) => {
                     break;
                 case "SC":
                     arrStr[i] = SC.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if (event.make == "Mercedes-Benz") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "CLA":
+                    arrStr[i] = CLA.map((ele) => ele.value);
+                    break;
+                case "CLS":
+                    arrStr[i] = CLS.map((ele) => ele.value);
+                    break;
+                case "GLA":
+                    arrStr[i] = GLA.map((ele) => ele.value);
+                    break;
+                case "GL-Class":
+                    arrStr[i] = GL.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if (event.make == "Accord") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "Accord":
+                    arrStr[i] = ACCORD.map((ele) => ele.value);
+                    break;
+                case "Civic":
+                    arrStr[i] = CIVIC.map((ele) => ele.value);
+                    break;
+                case "CRV":
+                    arrStr[i] = CRV.map((ele) => ele.value);
                     break;
                 default:
                     break;
@@ -427,6 +488,9 @@ export const fetchMore =
                     case "GS":
                         arrStr[i] = GS.map((ele) => ele.value);
                         break;
+                    case "LX":
+                        arrStr[i] = LX.map((ele) => ele.value);
+                        break;
                     case "IS":
                         arrStr[i] = IS.map((ele) => ele.value);
                         break;
@@ -442,6 +506,43 @@ export const fetchMore =
                     case "SC":
                         arrStr[i] = SC.map((ele) => ele.value);
                         break;
+                    default:
+                        break;
+                }
+            }
+        } else if (main.make == "Mercedes-Benz") {
+            for (var i = 0; i < arrStr.length; i++) {
+                var supp = arrStr[i];
+                switch (supp) {
+                    case "CLA":
+                        arrStr[i] = CLA.map((ele) => ele.value);
+                        break;
+                    case "CLS":
+                        arrStr[i] = CLS.map((ele) => ele.value);
+                        break;
+                    case "GLA":
+                        arrStr[i] = GLA.map((ele) => ele.value);
+                        break;
+                    case "GL-Class":
+                        arrStr[i] = GL.map((ele) => ele.value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if (main.make == "Accord") {
+            for (var i = 0; i < arrStr.length; i++) {
+                var supp = arrStr[i];
+                switch (supp) {
+                    case "Accord":
+                        arrStr[i] = ACCORD.map((ele) => ele.value);
+                        break;
+                    case "Civic":
+                        arrStr[i] = CIVIC.map((ele) => ele.value);
+                        break;
+                    case "CRV":
+                        arrStr[i] = CRV.map((ele) => ele.value);
                     default:
                         break;
                 }

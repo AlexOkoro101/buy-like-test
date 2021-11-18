@@ -19,6 +19,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
     let dropdown;
+    useEffect(() => {
+        getCars();
+    }, [total]);
 
     //Get Data from Local Storage
     const retrieveData = () => {
@@ -251,7 +254,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
                                 placeholder={`VIN to search ${dollarFormatter.format(
-                                    cars.total
+                                    total
                                 )} cars`}
                                 type="text"
                                 isClearable
@@ -298,7 +301,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
                             placeholder={`VIN to search ${dollarFormatter.format(
-                                cars.total
+                                total
                             )} cars`}
                             type="text"
                             isClearable
