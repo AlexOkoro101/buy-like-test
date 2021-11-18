@@ -117,7 +117,6 @@ const LogIn = ({ beginLogin }) => {
                 .catch((e) => {
                     // seterror(e.message)
                     setisLoading(false);
-                    console.log(e.message);
                 });
         },
     });

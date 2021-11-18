@@ -24,6 +24,7 @@ import {
     BUY_NOW_SUCCESS,
     BUY_NOW_FAILED,
     BUY_NOW,
+    TOTAL,
 } from "../types";
 import { RC, SC, RX, ES, NX, LS, IS, GS, GX } from "../../src/components/data";
 const api = process.env.cars_api;
@@ -51,6 +52,10 @@ export const getCars = () => (dispatch) => {
                         dispatch({
                             type: FETCH_SUCCESSFUL,
                             payload: dada,
+                        });
+                        dispatch({
+                            type: TOTAL,
+                            payload: dada.total,
                         });
                     }
                 }
@@ -198,7 +203,6 @@ export const getCollection = (id) => (dispatch) => {
         },
     })
         .then(function (response) {
-            console.log(response);
             return response.text();
         })
         .then((data) => {
@@ -289,7 +293,6 @@ export const carBuyNow = (data) => async (dispatch) => {
             body: raw,
             redirect: "follow",
         };
-        console.log(requestOptions);
 
         let res = await fetch(
             `${enviroment.BASE_URL}bids/buy-now`,

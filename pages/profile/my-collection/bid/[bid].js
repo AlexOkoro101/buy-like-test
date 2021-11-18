@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { enviroment } from "../../../../src/components/enviroment";
 import Meta from "../../../../src/components/Head/Meta";
-import FsLightbox from 'fslightbox-react';
+import FsLightbox from "fslightbox-react";
 import Collection from "../../../../src/components/Layout/Collection";
 import FadeLoader from "react-spinners/FadeLoader";
 import Link from "next/link";
@@ -44,12 +44,11 @@ const BidDetails = () => {
     const [count, setCount] = useState(0);
     const [overview, setoverview] = useState(true);
 
-
     const router = useRouter();
     const bidId = router.query.bid;
 
     useEffect(() => {
-        console.log(bidId)
+        console.log(bidId);
         fetch(enviroment.BASE_URL + "vehicles/vin/" + bidId, {
             method: "GET",
             redirect: "follow",
@@ -63,7 +62,6 @@ const BidDetails = () => {
                     // console.log(result)
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
-                        console.log("formated", formatCollection)
                         setbidCollection(formatCollection.data.vehicle);
                     }
                 }
@@ -73,8 +71,7 @@ const BidDetails = () => {
 
     useEffect(() => {
         displaySmall();
-        
-    }, [bidCollection])
+    }, [bidCollection]);
 
     function displaySmall() {
         let data = bidCollection?.images?.length;
@@ -122,12 +119,12 @@ const BidDetails = () => {
     };
 
     const returnLargeimage = () => {
-        const largeImageArray = bidCollection?.images.map(image => {
-            return image.image_largeUrl
-        })
+        const largeImageArray = bidCollection?.images.map((image) => {
+            return image.image_largeUrl;
+        });
 
         return largeImageArray;
-    }
+    };
 
     const displayLargeimage = () => {
         return (
@@ -139,9 +136,8 @@ const BidDetails = () => {
                 />
                 <img
                     onClick={() => {
-                        setToggler(!toggler)
-                        console.log("large images", returnLargeimage())
-                        }}
+                        setToggler(!toggler);
+                    }}
                     src={bidCollection?.images[0]?.image_largeUrl}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
@@ -152,7 +148,6 @@ const BidDetails = () => {
     };
 
     var nairaFormatter = new Intl.NumberFormat();
-
 
     return (
         <div>

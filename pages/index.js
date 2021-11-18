@@ -233,13 +233,11 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             getMakes();
         }
         if (cars && cars.length > 0) {
-            console.log("two");
             setImages(cars);
         }
         if (makes && makes.length) {
             setcarMakes(makes);
             getVehicleModels();
-            console.log("three");
         }
     }, [cars]);
     const handleMake = (e) => {

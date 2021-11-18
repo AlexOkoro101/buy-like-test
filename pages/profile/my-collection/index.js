@@ -9,70 +9,67 @@ import { getCollection } from "../../../redux/actions/carsAction";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { usePaystackPayment } from 'react-paystack';
-
+import { usePaystackPayment } from "react-paystack";
 
 const MyCollection = ({
     loading,
     getCollection,
     carCollection: collection,
 }) => {
-         
-    const [userEmail, setuserEmail] = useState(null)
-    const [userPhone, setuserPhone] = useState(null)
-    const [userName, setuserName] = useState(null)
+    const [userEmail, setuserEmail] = useState(null);
+    const [userPhone, setuserPhone] = useState(null);
+    const [userName, setuserName] = useState(null);
 
     const [amount, setAmount] = useState(0);
     const referenceNumber = () => {
-        return 'bld' + Math.floor(Math.random() * 1000000000 + 1);
+        return "bld" + Math.floor(Math.random() * 1000000000 + 1);
     };
     const config = {
         reference: referenceNumber(),
         // email: `${userEmail}`,
         email: `judgechuks@gmail.com`,
         amount: 100000,
-        publicKey: 'pk_test_1007e9b8ddb07fc05a17864b53865c135a948fbe',
+        publicKey: "pk_test_1007e9b8ddb07fc05a17864b53865c135a948fbe",
     };
-    
+
     // you can call this function anything
     const onSuccess = (reference) => {
-      // Implementation for whatever you want to do with reference and after success call.
-        console.log("-----------onSuccess------->",reference.reference);
-        fetch("http://localhost:4000/transactions/initialize/verify/"+reference.reference, {
-        // fetch(enviroment.BASE_URL + "transactions/initialize/verify"+reference, {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-    .then(res => res.json())
-    .then(
-      (res) => {
-        console.log("category product -------->",res)
-       
-      },
-      (error) => {
-      
-      }
-  )
-
+        // Implementation for whatever you want to do with reference and after success call.
+        fetch(
+            "http://localhost:4000/transactions/initialize/verify/" +
+                reference.reference,
+            {
+                // fetch(enviroment.BASE_URL + "transactions/initialize/verify"+reference, {
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        )
+            .then((res) => res.json())
+            .then(
+                (res) => {
+                    console.log("category product -------->", res);
+                },
+                (error) => {}
+            );
     };
-    
+
     // you can call this function anything
     const onClose = () => {
-      // implementation for  whatever you want to do when the Paystack dialog closed.
-      console.log('closed')
-    }
+        // implementation for  whatever you want to do when the Paystack dialog closed.
+        console.log("closed");
+    };
     const collectionID = (collectionID) => {
-        console.log("Im here", collectionID)
-    }
+        console.log("Im here", collectionID);
+    };
     const [id, setId] = useState(null);
     const [carCollection, setcarCollection] = useState([]);
     const [isLoading, setisLoading] = useState(false);
     const [error, seterror] = useState(null);
     const [message, setmessage] = useState(null);
     const [activeTab, setactiveTab] = useState("place-bid");
-    const [placeBidView, setplaceBidView] = useState(true)
+    const [placeBidView, setplaceBidView] = useState(true);
     const [buyNowCars, setbuyNowCars] = useState(null);
     const newCollection = useRef();
     const initializePayment = usePaystackPayment(config);
@@ -107,7 +104,7 @@ const MyCollection = ({
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });  
+        });
     const placeBidSuccess = () =>
         toast.success("Payment Successful", {
             position: "top-right",
@@ -117,12 +114,12 @@ const MyCollection = ({
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });    
+        });
 
-    var nairaFormatter = new Intl.NumberFormat('en-NG', {
-        style: 'currency',
-        currency: 'NGN',        
-    });    
+    var nairaFormatter = new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+    });
 
     useEffect(() => {
         const getUserId = () => {
@@ -134,9 +131,9 @@ const MyCollection = ({
             }
             const item = JSON.parse(userActive);
             setId(item?.userId);
-            setuserEmail(item?.email)
-            setuserPhone(item?.phone)
-            setuserName(item?.userName)
+            setuserEmail(item?.email);
+            setuserPhone(item?.phone);
+            setuserName(item?.userName);
         };
         getUserId();
     }, [id]);
@@ -182,12 +179,12 @@ const MyCollection = ({
 
     const fetchBuyNowCars = () => {
         var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
-          
-          fetch(enviroment.BASE_URL + "bids/owner/" + `${id}`, requestOptions)
-            .then(response => response.text())
+            method: "GET",
+            redirect: "follow",
+        };
+
+        fetch(enviroment.BASE_URL + "bids/owner/" + `${id}`, requestOptions)
+            .then((response) => response.text())
             .then((data) => {
                 // console.log(data)
                 if (data) {
@@ -195,12 +192,11 @@ const MyCollection = ({
                     if (Object.entries(data).length >= 1) {
                         const formatBuyNow = JSON.parse(data);
                         setbuyNowCars(formatBuyNow.data);
-                        console.log(buyNowCars)
                     }
                 }
             })
-            .catch(error => console.log('error', error));
-    }
+            .catch((error) => console.log("error", error));
+    };
 
     useEffect(() => {
         fetch(
@@ -224,8 +220,6 @@ const MyCollection = ({
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
-                        console.log(formatCollection.data)
-
                         setcarCollection(formatCollection.data);
                     }
                 }
@@ -236,48 +230,44 @@ const MyCollection = ({
     }, [id, isLoading]);
 
     useEffect(() => {
-        fetchBuyNowCars()
-    }, [id])
+        fetchBuyNowCars();
+    }, [id]);
 
     const switchTab = (val) => {
-        setactiveTab(val)
+        setactiveTab(val);
 
         if (val === "place-bid") {
-            setplaceBidView(true)
+            setplaceBidView(true);
         }
         if (val === "buy-now") {
-            setplaceBidView(false)
+            setplaceBidView(false);
         }
-    }
+    };
     const verifyPaystackPayment = (ref) => {
-        fetch(enviroment.BASE_URL + 'transactions/initialize/verify/' + ref, {
-            method: 'GET',
-            redirect: 'follow'
+        fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
+            method: "GET",
+            redirect: "follow",
         })
-        .then(res => {
-            console.log(res)
-            return res.text()
-        })
-        .then(data => {
-            console.log(data)
-            if (data) {
-                //  console.log(data.data)
-                if (Object.entries(data).length >= 1) {
-                    const formatData = JSON.parse(data); 
-                    // setcollection(formatData.data);
-                    console.log("callback", formatData)
-
-                    if (formatData.data.status) {
-                        placeBidSuccess()
-                    }
-                    else {
-                        placeBidError()
+            .then((res) => {
+                return res.text();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data) {
+                    //  console.log(data.data)
+                    if (Object.entries(data).length >= 1) {
+                        const formatData = JSON.parse(data);
+                        // setcollection(formatData.data);
+                        if (formatData.data.status) {
+                            placeBidSuccess();
+                        } else {
+                            placeBidError();
+                        }
                     }
                 }
-            }
-        })
-        .catch(error => console.log('payment error', error));
-    }
+            })
+            .catch((error) => console.log("payment error", error));
+    };
 
     const frontendPayment = (collectionID) => {
         var myHeaders = new Headers();
@@ -301,26 +291,26 @@ const MyCollection = ({
             metadata: "",
             balance: "",
             status: false,
-            statusTrans: ""
+            statusTrans: "",
         });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
         };
 
         fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log("front end payment", result))
-        .catch(error => console.log('error', error));
-    }
+            .then((response) => response.text())
+            .then((result) => console.log("front end payment", result))
+            .catch((error) => console.log("error", error));
+    };
 
     const initializePaystack = (collectionID) => {
-        initializePayment(onSuccess, onClose)
-        frontendPayment(collectionID)
-    }
+        initializePayment(onSuccess, onClose);
+        frontendPayment(collectionID);
+    };
 
     return (
         <div>
@@ -354,9 +344,7 @@ const MyCollection = ({
                         >
                             Buy Now
                         </button>
-                        
                     </div>
-
                 </div>
 
                 {placeBidView ? (
@@ -374,15 +362,23 @@ const MyCollection = ({
                                     >
                                         <div className="border-gray-100 border mb-3 lg:px-20 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                                             <>
-                                                <Link  href={"/profile/my-collection/" + collection?._id}>
+                                                <Link
+                                                    href={
+                                                        "/profile/my-collection/" +
+                                                        collection?._id
+                                                    }
+                                                >
                                                     <div className="flex flex-1 flex-col">
                                                         <div className="mb-5">
                                                             <h4 className="text-sm font-medium blue-text uppercase">
-                                                                {collection?.name}
+                                                                {
+                                                                    collection?.name
+                                                                }
                                                             </h4>
                                                             <h6 className="text-xs font-normal blue-text">
                                                                 {
-                                                                    collection?.vehicles
+                                                                    collection
+                                                                        ?.vehicles
                                                                         .length
                                                                 }{" "}
                                                                 cars selected
@@ -391,7 +387,10 @@ const MyCollection = ({
                                                         <div className="flex flex-wrap py-2">
                                                             {collection?.vehicles?.map(
                                                                 (vehicle) => (
-                                                                    <img key={vehicle?.image_id}
+                                                                    <img
+                                                                        key={
+                                                                            vehicle?.image_id
+                                                                        }
                                                                         src={
                                                                             vehicle
                                                                                 ?.images[0]
@@ -404,22 +403,30 @@ const MyCollection = ({
                                                             )}
                                                         </div>
                                                     </div>
-
                                                 </Link>
                                                 <div>
-                                                    {collection?.done === true ? (
-                                                    <div className="flex flex-col mx-auxo items-end">
-                                                        {/* <h4 className="text-base font-normal gray-text">
+                                                    {collection?.done ===
+                                                    true ? (
+                                                        <div className="flex flex-col mx-auxo items-end">
+                                                            {/* <h4 className="text-base font-normal gray-text">
                                                             $15,000 - $30,500
                                                         </h4>
                                                         <h6 className="text-xs font-normal light-gray-text">
                                                             $1000 deposit paid
                                                         </h6> */}
-                                                    </div>
-
+                                                        </div>
                                                     ) : (
-                                                    <button onClick={() => initializePaystack(collection?._id)} className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3">Make Deposit</button>
-                                                    ) }
+                                                        <button
+                                                            onClick={() =>
+                                                                initializePaystack(
+                                                                    collection?._id
+                                                                )
+                                                            }
+                                                            className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                        >
+                                                            Make Deposit
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </>
                                         </div>
@@ -461,7 +468,8 @@ const MyCollection = ({
                                                 />
                                                 <p className="text-xs font-normal">
                                                     {
-                                                        vehicle.vehicle?.Vehicle_location
+                                                        vehicle.vehicle
+                                                            ?.Vehicle_location
                                                     }
                                                 </p>
                                             </div>
@@ -475,15 +483,19 @@ const MyCollection = ({
                                             </div>
                                         </div>
                                         <div className="flex flex-col mx-auxo items-end">
-
                                             <h4 className="text-base font-normal gray-text">
-                                            {nairaFormatter.format(vehicle.vehicle?.bidAmount)}
+                                                {nairaFormatter.format(
+                                                    vehicle.vehicle?.bidAmount
+                                                )}
                                             </h4>
                                         </div>
                                     </div>
                                     <div>
                                         <div className="flex justify-between mb-1">
-                                            <h3 style={{fontSize: "12px"}} className="font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
+                                            <h3
+                                                style={{ fontSize: "12px" }}
+                                                className="font-xs primary-blue uppercase cursor-pointer hover:opacity-70"
+                                            >
                                                 <Link
                                                     href={
                                                         "/profile/my-collection/bid/" +
@@ -537,8 +549,6 @@ const MyCollection = ({
                         ))}
                     </section>
                 )}
-
-
             </main>
         </div>
     );

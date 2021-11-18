@@ -57,7 +57,6 @@ const SignupOptions = ({ beginLogin }) => {
         };
 
         // console.log("Login Successful", res.profileObj)
-        console.log(googleProfile);
 
         fetch(enviroment.BASE_URL + "auth/register/google", {
             method: "POST",
@@ -78,7 +77,6 @@ const SignupOptions = ({ beginLogin }) => {
                     seterror(data?.message);
                     toastError();
                 } else {
-                    console.log(data);
                     setmessage(data?.message);
                     toastSuccess();
                     const now = new Date();
@@ -94,7 +92,6 @@ const SignupOptions = ({ beginLogin }) => {
             .catch((e) => {
                 // seterror(e.message)
                 setisLoading(false);
-                console.log(e.message);
             });
     };
     const onGoogleFailureSuccess = (res) => {
@@ -117,7 +114,6 @@ const SignupOptions = ({ beginLogin }) => {
         };
 
         // console.log("Login Successful", res.profileObj)
-        console.log(facebookProfile);
 
         fetch(enviroment.BASE_URL + "auth/register/facebook", {
             method: "POST",

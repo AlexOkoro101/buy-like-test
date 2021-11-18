@@ -22,6 +22,7 @@ import {
     LOGIN_FAILED,
     DETAIL,
     BUY_NOW,
+    TOTAL,
 } from "../types";
 //
 const initialState = {
@@ -35,6 +36,7 @@ const initialState = {
     modeled: {},
     userLoggedIn: false,
     carDetails: {},
+    total: 0,
 };
 
 const Cars = (state = initialState, action) => {
@@ -74,6 +76,11 @@ const Cars = (state = initialState, action) => {
                 cars: action.payload,
                 loading: false,
                 error: {},
+            };
+        case TOTAL:
+            return {
+                ...state,
+                total: action.payload,
             };
         case FETCHING_MAKE_SUCCESS:
             return {

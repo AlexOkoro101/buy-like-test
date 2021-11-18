@@ -4,8 +4,8 @@ import Meta from "../../src/components/Head/Meta"
 import Link from 'next/link'
 
 const Transactions = () => {
-    const [transactions, settransactions] = useState([])
-    const [id, setId] = useState(null)
+    const [transactions, settransactions] = useState([]);
+    const [id, setId] = useState(null);
 
     useEffect(() => {
         const getUserId = () => {
@@ -23,35 +23,34 @@ const Transactions = () => {
     }, [id]);
 
     const getTransactions = () => {
-        console.log(id)
         var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
-          
-          fetch(enviroment.BASE_URL + "transactions/get-owner/" + id, requestOptions)
-            .then(response => response.text())
-            .then(result => {
-                console.log(result)
+            method: "GET",
+            redirect: "follow",
+        };
+
+        fetch(
+            enviroment.BASE_URL + "transactions/get-owner/" + id,
+            requestOptions
+        )
+            .then((response) => response.text())
+            .then((result) => {
                 if (result) {
                     // console.log(result)
                     if (Object.entries(result).length >= 1) {
                         const formatTrans = JSON.parse(result);
-                        console.log("formated", formatTrans.data)
+                        console.log("formated", formatTrans.data);
                         settransactions(formatTrans.data);
                     }
                 }
             })
-            .catch(error => console.log('error', error));
-    }
+            .catch((error) => console.log("error", error));
+    };
 
     useEffect(() => {
-        getTransactions()
-    
-    }, [id])
+        getTransactions();
+    }, [id]);
 
-
-    return ( 
+    return (
         <div>
             <Meta></Meta>
             <div className="h-screen  mt-24 mb-20 lg:px-32 px-4">
@@ -61,12 +60,16 @@ const Transactions = () => {
                     </div>
                 ) : (
                     <>
-
                         <div className="flex">
-                            <button className="primary-btn focus:outline-none text-white font-10 font-semibold px-2.5 py-1.5 ">ALL
-                                BIDS</button>
-                            <button className=" focus:outline-none primary-black font-10 font-normal px-2.5 py-1.5 ml-2">WON BIDS</button>
-                            <button className=" focus:outline-none primary-black font-10 font-normal px-2.5 py-1.5">LOST BIDS</button>
+                            <button className="primary-btn focus:outline-none text-white font-10 font-semibold px-2.5 py-1.5 ">
+                                ALL BIDS
+                            </button>
+                            <button className=" focus:outline-none primary-black font-10 font-normal px-2.5 py-1.5 ml-2">
+                                WON BIDS
+                            </button>
+                            <button className=" focus:outline-none primary-black font-10 font-normal px-2.5 py-1.5">
+                                LOST BIDS
+                            </button>
                         </div>
 
                         <div className="pt-8 pb-6 text-2xl font-normal primary-black">
@@ -122,12 +125,11 @@ const Transactions = () => {
                                 </table>
                             </div>
                         </div>
-
                     </>
                 )}
             </div>
         </div>
-     );
-}
- 
+    );
+};
+
 export default Transactions;

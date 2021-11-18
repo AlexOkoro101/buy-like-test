@@ -540,7 +540,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                     }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
-                    className="br-5 w-full h-full object-contain object-center cursor-pointer"
+                    className="br-5 w-full h-full object-cover object-center cursor-pointer"
                     alt="Benz"
                 />
             </>
@@ -1464,7 +1464,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                <div className="watermark-detail opacity-60">
+                                                <div className="watermark-detail md:pb-10 pb-1 opacity-60">
                                                     <p>BUYLIKEDEALERS.COM</p>
                                                 </div>
                                             </div>
@@ -1514,7 +1514,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         src={
                                                                             ele?.image_largeUrl
                                                                         }
-                                                                        className="rounded-md shadow-sm"
+                                                                        className="rounded-md object-cover w-full shadow-sm"
                                                                         style={{
                                                                             height: "60.3px",
                                                                         }}
@@ -3267,11 +3267,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         alt="hello"
                                                                         className="w-full object-cover h-full rounded-md object-center"
                                                                     />
-                                                                    <div className="watermark opacity-60">
+                                                                    {/* <div className="watermark opacity-60">
                                                                         <p>
                                                                             BUYLIKEDEALERS.COM
                                                                         </p>
-                                                                    </div>
+                                                                    </div> */}
                                                                 </>
                                                             ) : (
                                                                 <div className="text-center relative">
