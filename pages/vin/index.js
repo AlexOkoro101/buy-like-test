@@ -1790,7 +1790,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     className=" px-3 w-full cursor-pointer focus:outline-none "
                                     type="text"
                                     placeholder={`VIN to search ${dollarFormatter.format(
-                                        total
+                                        cars.total
                                     )} cars`}
                                     isClearable={false}
                                     onChange={handleChange}
