@@ -18,6 +18,7 @@ import "react-intl-tel-input/dist/main.css";
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
 import { searchCars } from "../../redux/actions/carsAction";
+import { set } from "nprogress";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -173,7 +174,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [addTrucking, setaddTrucking] = useState(false);
     const [buyNowPrice, setbuyNowPrice] = useState(null);
     const [overview, setoverview] = useState(true);
-    const [carDestination, setcarDestination] = useState("Nigeria");
+    const [carDestination, setcarDestination] = useState("");
     const [deliveryDuration, setdeliveryDuration] = useState(36288e5);
     const [NGN, setNGN] = useState(true);
     const dollarPrice = Number(totalAmount) / parseInt(usd);
@@ -183,6 +184,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [sendSheetEmail, setsendSheetEmail] = useState("");
     const [sheetError, setsheetError] = useState(false);
     const [shareSuccess, setshareSuccess] = useState(false);
+    const [userIp, setuserIp] = useState(null)
 
     const retrieveData = () => {
         localStorage.removeItem('temp')
@@ -206,10 +208,46 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         setuserPhone(item?.phone);
     }; //Get Data from local Storage
 
+
+    const setCountry = () => {
+        const userCountry = localStorage.getItem("userCountry");
+        // console.log(userActive)
+        if (!userCountry) {
+            // localStorage.setItem("userCountry");
+            setuserIp(null);
+            return null;
+        }
+        const item = JSON.parse(userCountry)
+        setuserIp(item.countryCode)
+
+        console.log("user ip", userIp)
+
+    }
+
+
+    
+
     useEffect(() => {
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
+
+    useEffect(() => {
+        setCountry()
+        if(userIp) {
+            if(userIp === "NG") {
+                setcarDestination("Nigeria")
+                setSelectedCountryCurrency("NG")
+            } else {
+                setcarDestination("USA")
+                setSelectedCountryCurrency("US")
+                setNGN(false)
+            }
+        }
+        return () => {
+            setCountry()
+        }
+    }, [router.pathname, token, userIp])
 
     useEffect(() => {
         fetch(
@@ -326,6 +364,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (carDetail) {
             setDetail(carDetail);
         }
+        console.log("car details", cardD)
     }, [carDetail]);
 
     const getTrucking = {
@@ -349,7 +388,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 const formatData = JSON.parse(data);
                 if (formatData?.data !== null) {
                     // console.log("has value")
-                    settruckingPrice(formatData.data.raw[1]);
+                    settruckingPrice(formatData.data.raw[1] || 0);
                 } else {
                     fetchScrapperTrucking();
                 }
@@ -380,7 +419,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 if (data.status) {
                     createLocalTrucking(data);
                 }
-                settruckingPrice(data.raw[1]);
+                settruckingPrice(data.raw[1] || 0);
             });
     };
 
@@ -854,8 +893,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         : Number(truckingPrice.slice(1)) > 400 &&
           Number(truckingPrice.slice(1)) < 1000
         ? Number(truckingPrice.slice(1)) / 2
-        : Number(truckingPrice.slice(1))) : "",
-        shipping: shipAccessory ? "1150" : "",
+        : Number(truckingPrice.slice(1))) : 0,
+        shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
         total: accessories()
     });
@@ -1211,13 +1250,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         );
     };
 
+    const getAuctionFee = (price) => {
+        const auctionFee = Number(price) <= 5000 ? 350 : Number(price) > 5000 && Number(price) <= 14000 ? 450 : Number(price) > 14000 && Number(price) <= 70000 ? (3.25 / 100) * Number(price) : Number(price) > 70000 ? 2500 : 0
+        return auctionFee;
+    }
+
     //
     const [truckAccessory, settruckAccessory] = useState(false);
     const [shipAccessory, setshipAccessory] = useState(false);
 
     const accessories = () => {
         var carPrice = Number(carDetail.buyNowPrice);
-        var outstanding = 850;
+        var outstanding = 400 + getAuctionFee(cardD?.buyNowPrice);;
         var truck = 0;
         var ship = 0;
 
@@ -1252,7 +1296,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     const placebidAccessories = () => {
         // console.log(Number(maxBidAmount))
-        var outstanding = 850;
+        var outstanding = 400 + getAuctionFee(cardD?.mmrPrice);
         var truck = 0;
         var ship = 0;
 
@@ -1766,7 +1810,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
                                                             >
-                                                                $450
+                                                                ${dollarFormatter.format(getAuctionFee(cardD?.buyNowPrice))}
+                                                                
                                                             </td>
                                                             <td className="text-right px-2">
                                                                 <img
@@ -2165,7 +2210,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="3"
                                                                 className="font-11 sec-black font-normal pr-20 py-2"
                                                             >
-                                                                $450
+                                                                ${dollarFormatter.format(getAuctionFee(cardD?.mmrPrice))}
                                                             </td>
                                                             <td className=" px-2 text-right">
                                                                 <img

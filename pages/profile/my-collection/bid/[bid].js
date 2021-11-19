@@ -169,13 +169,13 @@ const BidDetails = () => {
                                         <img className="w-full" src={bidCollection?.images[0]?.image_largeUrl} alt="" />
                                     </span>
                                     <div className="col-span-3">
-                                        <p className="md:text-xs  lg:mt-3 primary-black font-medium font-10 uppercase">
+                                        <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
                                             {(`${bidCollection?.name}`) || ( `${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model}`)}
                                         </p>
-                                        <p className="primary-black font-medium py-1 font-11 uppercase">
+                                        <p className="primary-black font-medium py-1 text-xs uppercase">
                                             {dollarFormatter.format(bidCollection?.odometer)} mi
                                         </p>
-                                        <p className="primary-black font-medium font-11 uppercase">
+                                        <p className="primary-black font-medium text-xs uppercase">
                                             vin: {bidCollection?.vin}
                                         </p>
                                         <p className="primary-black font-medium font-11 uppercase">
@@ -188,43 +188,43 @@ const BidDetails = () => {
                                     <tbody>
                                         {bidCollection?.trucking && (
                                             <tr className="detail-row mb-2">
-                                                <td className="sec-black font-10 font-semibold py-1.5">Trucking</td>
-                                                <td className="font-10 primary-black font-normal py-1.5">{bidCollection?.trucking || 0}</td>
+                                                <td className="sec-black text-xs font-semibold py-1.5">Trucking</td>
+                                                <td className="text-xs primary-black font-normal py-1.5">{bidCollection?.trucking || 0}</td>
                                             </tr>
                                         )}
 
                                         {bidCollection?.shipping && (
                                             <tr className="detail-row mb-2">
-                                                <td className="sec-black font-10 font-semibold py-1.5">Shipping</td>
-                                                <td className="font-10 primary-black font-normal py-1.5">${bidCollection?.shipping || 0}</td>
+                                                <td className="sec-black text-xs font-semibold py-1.5">Shipping</td>
+                                                <td className="text-xs primary-black font-normal py-1.5">${bidCollection?.shipping || 0}</td>
                                             </tr>
                                         )}
 
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Clearing</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">N/A</td>
+                                            <td className="sec-black text-xs font-semibold py-1.5">Clearing</td>
+                                            <td className="text-xs primary-black font-normal py-1.5">N/A</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Auction Fee</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$450</td>
+                                            <td className="sec-black text-xs font-semibold py-1.5">Auction Fee</td>
+                                            <td className="text-xs primary-black font-normal py-1.5">$450</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Service Fee</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$400</td>
+                                            <td className="sec-black text-xs font-semibold py-1.5">Service Fee</td>
+                                            <td className="text-xs primary-black font-normal py-1.5">$400</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2 ">
-                                            <td className="total-border sec-black font-10 font-semibold py-1.5 ">Total</td>
-                                            <td className="total-border font-10 primary-black font-normal py-1.5 ">
+                                            <td className="total-border sec-black text-xs font-semibold py-1.5 ">Total</td>
+                                            <td className="total-border text-xs primary-black font-normal py-1.5 ">
                                                 {bidCollection?.bidAmount}</td>
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black font-10 font-semibold py-1.5">Deposit</td>
-                                            <td className="font-10 primary-black font-normal py-1.5">$1,000</td>
+                                            <td className="sec-black text-xs font-semibold py-1.5">Deposit</td>
+                                            <td className="text-xs primary-black font-normal py-1.5">$1,000</td>
                                         </tr>
 
                                     </tbody>

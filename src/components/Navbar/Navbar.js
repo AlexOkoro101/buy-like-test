@@ -8,6 +8,7 @@ import { logIn, logOut } from "../../../redux/actions/carsAction";
 import { connect } from "react-redux";
 import Select from "react-select";
 import { getCars } from "../../../redux/actions/carsAction";
+import { enviroment } from "../enviroment";
 
 const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const navRef = useRef(null);
@@ -18,6 +19,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const user = useSelector(selectToken);
     const [token, settoken] = useState(null);
     const [userNmae, setuserName] = useState(null);
+    const [userIp, setuserIp] = useState(null)
     let dropdown;
 
     //Get Data from Local Storage
@@ -44,9 +46,43 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         });
     };
 
+    const getIp = () => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+          
+        fetch(enviroment.BASE_URL + "auth/get-ip", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            const ipData = JSON.parse(result)
+            console.log("IP", ipData)
+            localStorage.setItem("userCountry", JSON.stringify(ipData.data));
+
+            if(ipData.error === false) {
+                setCountry()
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+    
+    const setCountry = () => {
+        const userCountry = localStorage.getItem("userCountry");
+        // console.log(userActive)
+        if (!userCountry) {
+            // localStorage.setItem("userCountry");
+            setuserIp(null);
+            return null;
+        }
+        const item = JSON.parse(userCountry)
+        setuserIp(item.countryCode)
+
+    }
+
     //Get Data from local Storage
     useEffect(() => {
         retrieveData();
+        getIp()
         return retrieveData;
     }, [router.pathname, token]);
 
