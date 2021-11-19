@@ -74,6 +74,20 @@
     align-items: flex-end;
 }
 
+.watermark-detail2 {
+    font-size: 20px;
+    font-weight: 500;
+    width: 100%;
+    position: fixed;
+    text-shadow: 0px 0px 3px white;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.712);
+    font-family: 'Mulish', sans-serif;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: flex-end;
+}
 
 
 .paginate-ctn {

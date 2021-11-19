@@ -531,6 +531,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                     toggler={toggler}
                     sources={returnLargeimage()}
                     type="image"
+                    className="relative"
                 />
                 <img
                     onClick={() => {
@@ -1441,9 +1442,29 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                <div className="watermark-detail md:pb-10 pb-1 opacity-60">
-                                                    <p>BUYLIKEDEALERS.COM</p>
-                                                </div>
+                                                {toggler ? (
+                                                    <div
+                                                        className="watermark-detail2  md:pb-10 pb-1 opacity-80"
+                                                        style={{
+                                                            zIndex: 9999999999,
+                                                        }}
+                                                    >
+                                                        <p>
+                                                            BUYLIKEDEALERS.COM
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        className="watermark-detail md:pb-10 pb-1 opacity-60"
+                                                        style={{
+                                                            zIndex: 9999999999,
+                                                        }}
+                                                    >
+                                                        <p>
+                                                            BUYLIKEDEALERS.COM
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className="overflow-hidden">

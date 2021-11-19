@@ -1734,7 +1734,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 {!open && (
                                     <button
                                         type="button"
-                                        className="mr-5 h-4"
+                                        className="mr-5 h-5"
                                         value="all"
                                         onClick={() => setOpen(true)}
                                     >
