@@ -170,6 +170,12 @@ export const MIN = [
     { value: 140000, label: "140,000" },
 ];
 export const MAX = [
+    { value: 200000, label: "200,000" },
+    { value: 190000, label: "190,000" },
+    { value: 180000, label: "180,000" },
+    { value: 170000, label: "170,000" },
+    { value: 160000, label: "160,000" },
+    { value: 150000, label: "150,000" },
     { value: 140000, label: "140,000" },
     { value: 130000, label: "130,000" },
     { value: 120000, label: "120,000" },
@@ -186,6 +192,7 @@ export const MAX = [
     { value: 10000, label: "10,000" },
 ];
 export const InteriorColour = [
+    { value: "Black", label: "Black" },
     { value: "White", label: "White" },
     { value: "Brown", label: "Brown" },
     { value: "Burgundy", label: "Burgundy" },

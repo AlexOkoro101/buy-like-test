@@ -468,7 +468,7 @@ export const getCategory = (data) => (dispatch) => {
 //
 //
 export const fetchMore =
-    (event, main, sortValue, active) => async (dispatch) => {
+    (event, main, sortValue, active, activeTab) => async (dispatch) => {
         let arrStr = [...main.model.split(",")];
         var sortType = "";
         var sortPattern = "";
@@ -624,7 +624,7 @@ export const fetchMore =
         };
         try {
             fetch(
-                `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
+                `${api}?${activeTab}&year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
                 {
                     method: "GET",
                     headers: {},

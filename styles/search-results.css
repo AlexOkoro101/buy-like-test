@@ -60,7 +60,6 @@
 }
 
 .watermark-detail {
-    font-size: 15px;
     position: absolute;
     font-weight: 500;
     width: 100%;
@@ -75,7 +74,6 @@
 }
 
 .watermark-detail2 {
-    font-size: 20px;
     font-weight: 500;
     width: 100%;
     position: fixed;
@@ -83,10 +81,15 @@
     text-transform: uppercase;
     color: rgba(0, 0, 0, 0.712);
     font-family: 'Mulish', sans-serif;
-    display: flex;
     text-align: center;
     justify-content: center;
-    align-items: flex-end;
+    bottom: 0;
+}
+
+@media (max-width:900px) {
+    .watermark-detail2 {
+        bottom: 32%
+    }
 }
 
 
