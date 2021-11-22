@@ -1446,7 +1446,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                {waterMarkToggle === true ? (
+                                                {/* {waterMarkToggle === true ? (
                                                     <div
                                                         className="watermark-detail2 flex text-xs md:text-sm  md:pb-12 pb-1 opacity-80"
                                                         style={{
@@ -1468,7 +1468,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             BUYLIKEDEALERS.COM
                                                         </p>
                                                     </div>
-                                                )}
+                                                )} */}
                                             </div>
 
                                             <div className="overflow-hidden">
