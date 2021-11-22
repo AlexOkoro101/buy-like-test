@@ -1,6 +1,7 @@
 //
 //
 export const FETCHING_CARS = "FETCHING_CARS";
+export const TOTAL = "TOTAL";
 export const FETCH_SUCCESSFUL = "FETCH_SUCCESSFUL";
 export const FETCHING_CARS_FAILED = "FETCHING_CARS_FAILED";
 export const SEARCHING = "SEARCHING";

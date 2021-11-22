@@ -47,7 +47,7 @@ const SignupOptions = ({ beginLogin }) => {
 
     //Google Auth
     const googleClientId =
-        "347255442348-02v0vuvm7f9puqfa70m83c09vdbnigtt.apps.googleusercontent.com";
+        "134674760557-ond8201e5n9t9f3ri7akevf62ku6uruf.apps.googleusercontent.com";
 
     const onGoogleLoginSuccess = (res) => {
         const googleProfile = {
@@ -57,7 +57,6 @@ const SignupOptions = ({ beginLogin }) => {
         };
 
         // console.log("Login Successful", res.profileObj)
-        console.log(googleProfile);
 
         fetch(enviroment.BASE_URL + "auth/register/google", {
             method: "POST",
@@ -78,7 +77,6 @@ const SignupOptions = ({ beginLogin }) => {
                     seterror(data?.message);
                     toastError();
                 } else {
-                    console.log(data);
                     setmessage(data?.message);
                     toastSuccess();
                     const now = new Date();
@@ -94,7 +92,6 @@ const SignupOptions = ({ beginLogin }) => {
             .catch((e) => {
                 // seterror(e.message)
                 setisLoading(false);
-                console.log(e.message);
             });
     };
     const onGoogleFailureSuccess = (res) => {
@@ -117,7 +114,6 @@ const SignupOptions = ({ beginLogin }) => {
         };
 
         // console.log("Login Successful", res.profileObj)
-        console.log(facebookProfile);
 
         fetch(enviroment.BASE_URL + "auth/register/facebook", {
             method: "POST",
@@ -198,7 +194,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 Sign up with Facebook 
                             </button> */}
                             <FacebookLogin
-                                appId="1014302915998441"
+                                appId="348837593684517"
                                 autoLoad={false}
                                 fields="name,email,picture"
                                 onClick={facebookClicked}

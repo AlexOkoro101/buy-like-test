@@ -3,10 +3,23 @@ import Head from "next/head";
 import React from "react";
 
 const Meta = ({ title, keywords, description }) => {
-    console.log(title);
     return (
         <Head>
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/fav.svg" />
+            <meta property="og:site_name" content="Buy cars like dealers" />
+            <meta
+                property="og:title"
+                content={title ? title : "Buy cars like dealers"}
+            />
+            <meta
+                property="og:description"
+                content="A platform where cars are sold and auctioned"
+            />
+            <meta
+                property="og:image"
+                itemprop="image"
+                content="http://pollosweb.wesped.es/programa_pollos/play.png"
+            />
             <script
                 type="module"
                 property="og:image"

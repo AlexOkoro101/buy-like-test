@@ -24,8 +24,27 @@ import {
     BUY_NOW_SUCCESS,
     BUY_NOW_FAILED,
     BUY_NOW,
+    TOTAL,
 } from "../types";
-import { RC, SC, RX, ES, NX, LS, IS, GS, GX } from "../../src/components/data";
+import {
+    RC,
+    SC,
+    RX,
+    ES,
+    NX,
+    LS,
+    IS,
+    GS,
+    GX,
+    LX,
+    CLA,
+    CLS,
+    GL,
+    GLA,
+    ACCORD,
+    CIVIC,
+    CRV,
+} from "../../src/components/data";
 const api = process.env.cars_api;
 
 export const getCars = () => (dispatch) => {
@@ -51,6 +70,10 @@ export const getCars = () => (dispatch) => {
                         dispatch({
                             type: FETCH_SUCCESSFUL,
                             payload: dada,
+                        });
+                        dispatch({
+                            type: TOTAL,
+                            payload: dada.total,
                         });
                     }
                 }
@@ -87,6 +110,10 @@ export const searchTerm = (event) => async (dispatch) => {
                 case "GX":
                     arrStr[i] = GX.map((ele) => ele.value);
                     break;
+                case "LX":
+                    arrStr[i] = LX.map((ele) => ele.value);
+                    break;
+
                 case "GS":
                     arrStr[i] = GS.map((ele) => ele.value);
                     break;
@@ -101,6 +128,45 @@ export const searchTerm = (event) => async (dispatch) => {
                     break;
                 case "SC":
                     arrStr[i] = SC.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if (event.make == "Mercedes-Benz") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "CLA":
+                    arrStr[i] = CLA.map((ele) => ele.value);
+                    break;
+                case "CLS":
+                    arrStr[i] = CLS.map((ele) => ele.value);
+                    break;
+                case "GLA":
+                    arrStr[i] = GLA.map((ele) => ele.value);
+                    break;
+                case "GL-Class":
+                    arrStr[i] = GL.map((ele) => ele.value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if (event.make == "Accord") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "Accord":
+                    arrStr[i] = ACCORD.map((ele) => ele.value);
+                    break;
+                case "Civic":
+                    arrStr[i] = CIVIC.map((ele) => ele.value);
+                    break;
+                case "CRV":
+                    arrStr[i] = CRV.map((ele) => ele.value);
                     break;
                 default:
                     break;
@@ -198,7 +264,6 @@ export const getCollection = (id) => (dispatch) => {
         },
     })
         .then(function (response) {
-            console.log(response);
             return response.text();
         })
         .then((data) => {
@@ -289,7 +354,6 @@ export const carBuyNow = (data) => async (dispatch) => {
             body: raw,
             redirect: "follow",
         };
-        console.log(requestOptions);
 
         let res = await fetch(
             `${enviroment.BASE_URL}bids/buy-now`,
@@ -404,7 +468,7 @@ export const getCategory = (data) => (dispatch) => {
 //
 //
 export const fetchMore =
-    (event, main, sortValue, active) => async (dispatch) => {
+    (event, main, sortValue, active, activeTab) => async (dispatch) => {
         let arrStr = [...main.model.split(",")];
         var sortType = "";
         var sortPattern = "";
@@ -424,6 +488,9 @@ export const fetchMore =
                     case "GS":
                         arrStr[i] = GS.map((ele) => ele.value);
                         break;
+                    case "LX":
+                        arrStr[i] = LX.map((ele) => ele.value);
+                        break;
                     case "IS":
                         arrStr[i] = IS.map((ele) => ele.value);
                         break;
@@ -439,6 +506,43 @@ export const fetchMore =
                     case "SC":
                         arrStr[i] = SC.map((ele) => ele.value);
                         break;
+                    default:
+                        break;
+                }
+            }
+        } else if (main.make == "Mercedes-Benz") {
+            for (var i = 0; i < arrStr.length; i++) {
+                var supp = arrStr[i];
+                switch (supp) {
+                    case "CLA":
+                        arrStr[i] = CLA.map((ele) => ele.value);
+                        break;
+                    case "CLS":
+                        arrStr[i] = CLS.map((ele) => ele.value);
+                        break;
+                    case "GLA":
+                        arrStr[i] = GLA.map((ele) => ele.value);
+                        break;
+                    case "GL-Class":
+                        arrStr[i] = GL.map((ele) => ele.value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if (main.make == "Accord") {
+            for (var i = 0; i < arrStr.length; i++) {
+                var supp = arrStr[i];
+                switch (supp) {
+                    case "Accord":
+                        arrStr[i] = ACCORD.map((ele) => ele.value);
+                        break;
+                    case "Civic":
+                        arrStr[i] = CIVIC.map((ele) => ele.value);
+                        break;
+                    case "CRV":
+                        arrStr[i] = CRV.map((ele) => ele.value);
                     default:
                         break;
                 }
@@ -520,7 +624,7 @@ export const fetchMore =
         };
         try {
             fetch(
-                `${api}?year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
+                `${api}?${activeTab}&year=${main.year}&make=${main.make}&model=${arrStr}&page=${main.page}&transmission=${data.transmission}&auctionenddate=${data.auctionenddate}&odometer=${data.odometer}&source_exterior_colour=${data.exterior_color}&source_interior_colour=${data.interior_color}&bodyType=${data.bodyType}&engineType=${data.engineType}&location=${data.location}&interiorType=${data.interior_type}&fuelType=${data.fuel_type}&sort_by=${sortType}&sort_pattern=${sortPattern}&apiKey=Switch!2020`,
                 {
                     method: "GET",
                     headers: {},
