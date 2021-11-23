@@ -254,13 +254,10 @@ export const FacilitationLocation = [
         value: "AL - Dealers Auto Auction - Mobile",
         label: "AL - Dealers Auto Auction - Mobile",
     },
-    { value: "AL - Manheim Birmingham", label: "AL - Manheim Birmingham" },
     {
         value: "AL - Shoals North Alabama Auto Auction",
         label: "AL - Shoals North Alabama Auto Auction",
     },
-    { value: "AZ - Manheim Phoenix", label: "AZ - Manheim Phoenix" },
-    { value: "AZ - Manheim Tucson", label: "AZ - Manheim Tucson" },
     {
         value: "AZ - Metro Auto Auction Phoenix",
         label: "AZ - Metro Auto Auction Phoenix",
@@ -278,18 +275,8 @@ export const FacilitationLocation = [
         value: "CA - AutoNation Auto Auction",
         label: "CA - AutoNation Auto Auction",
     },
-    { value: "CA - Manheim California", label: "CA - Manheim California" },
-    { value: "CA - Manheim Fresno", label: "CA - Manheim Fresno" },
-    { value: "CA - Manheim Riverside", label: "CA - Manheim Riverside" },
-    { value: "CA - Manheim San Diego", label: "CA - Manheim San Diego" },
-    {
-        value: "CA - Manheim San Francisco Bay",
-        label: "CA - Manheim San Francisco Bay",
-    },
-    {
-        value: "CA - Manheim Southern California",
-        label: "CA - Manheim Southern California",
-    },
+    {},
+    {},
     {
         value: "CA - Norwalk Auto Auction",
         label: "CA - Norwalk Auto Auction",
@@ -306,29 +293,10 @@ export const FacilitationLocation = [
         value: "FL - Dealers Auction Xchange LLC",
         label: "FL - Dealers Auction Xchange LLC",
     },
-    {
-        value: "FL - Manheim Central Florida",
-        label: "FL - Manheim Central Florida",
-    },
-    {
-        value: "FL - Manheim Daytona Beach",
-        label: "FL - Manheim Daytona Beach",
-    },
-    {
-        value: "FL - Manheim Fort Lauderdale",
-        label: "FL - Manheim Fort Lauderdale",
-    },
-    { value: "FL - Manheim Fort Myers", label: "FL - Manheim Fort Myers" },
-    {
-        value: "FL - Manheim Jacksonville",
-        label: "FL - Manheim Jacksonville",
-    },
-    { value: "FL - Manheim Lakeland", label: "FL - Manheim Lakeland" },
-    { value: "FL - Manheim Orlando", label: "FL - Manheim Orlando" },
-    { value: "FL - Manheim Palm Beach", label: "FL - Manheim Palm Beach" },
-    { value: "FL - Manheim Pensacola", label: "FL - Manheim Pensacola" },
-    { value: "FL - Manheim St Pete", label: "FL - Manheim St Pete" },
-    { value: "FL - Manheim Tampa", label: "FL - Manheim Tampa" },
+    {},
+    {},
+    {},
+    {},
     {
         value: "FL - Orlando Longwood Auto Auction",
         label: "FL - Orlando Longwood Auto Auction",
@@ -361,8 +329,6 @@ export const FacilitationLocation = [
         value: "GA - Georgia-Carolina Auto Auction",
         label: "GA - Georgia-Carolina Auto Auction",
     },
-    { value: "GA - Manheim Atlanta", label: "GA - Manheim Atlanta" },
-    { value: "GA - Manheim Georgia", label: "GA - Manheim Georgia" },
     { value: "GA - Rome Auto Auction", label: "GA - Rome Auto Auction" },
     {
         value: "IA - Dealers Choice Auto Auction - Mediapolis",
@@ -372,7 +338,6 @@ export const FacilitationLocation = [
         value: "IA - Des Moines Auto Auction",
         label: "IA - Des Moines Auto Auction",
     },
-    { value: "IA - Manheim Iowa", label: "IA - Manheim Iowa" },
     { value: "IA - Plaza Auto Auction", label: "IA - Plaza Auto Auction" },
     {
         value: "ID - Dealers Auto Auction Of Idaho",
@@ -410,11 +375,7 @@ export const FacilitationLocation = [
         value: "IN - Indiana Auto Auction",
         label: "IN - Indiana Auto Auction",
     },
-    {
-        value: "IN - Manheim Indianapolis",
-        label: "IN - Manheim Indianapolis",
-    },
-    { value: "IN - Manheim Louisville", label: "IN - Manheim Louisville" },
+    {},
     {
         value: "IN - WOLFE'S EVANSVILLE AUTO AUCTION",
         label: "IN - WOLFE'S EVANSVILLE AUTO AUCTION",
@@ -443,11 +404,7 @@ export const FacilitationLocation = [
         value: "LA - Louisiana's 1st Choice Auto Auction",
         label: "LA - Louisiana's 1st Choice Auto Auction",
     },
-    { value: "LA - Manheim Lafayette", label: "LA - Manheim Lafayette" },
-    {
-        value: "LA - Manheim New Orleans",
-        label: "LA - Manheim New Orleans",
-    },
+    {},
     { value: "MA - Adesa Boston", label: "MA - Adesa Boston" },
     {
         value: "MA - Central Mass. Auto Auction",
@@ -457,18 +414,12 @@ export const FacilitationLocation = [
         value: "MA - Lynnway Auto Auction",
         label: "MA - Lynnway Auto Auction",
     },
-    {
-        value: "MA - Manheim New England",
-        label: "MA - Manheim New England",
-    },
+    {},
     {
         value: "MD - Bel Air Auto Auction",
         label: "MD - Bel Air Auto Auction",
     },
-    {
-        value: "MD - Manheim Baltimore-Washington",
-        label: "MD - Manheim Baltimore-Washington",
-    },
+    {},
     {
         value: "ME - Port City Auto Auction",
         label: "ME - Port City Auto Auction",
@@ -497,20 +448,12 @@ export const FacilitationLocation = [
         value: "MI - Greater Kalamazoo Auto",
         label: "MI - Greater Kalamazoo Auto",
     },
-    { value: "MI - Manheim Detroit", label: "MI - Manheim Detroit" },
-    { value: "MI - Manheim Flint", label: "MI - Manheim Flint" },
     {
         value: "MI - West Michigan Auto Auction",
         label: "MI - West Michigan Auto Auction",
     },
-    {
-        value: "MN - Manheim Minneapolis",
-        label: "MN - Manheim Minneapolis",
-    },
-    {
-        value: "MN - Manheim Northstar Minnesota",
-        label: "MN - Manheim Northstar Minnesota",
-    },
+    {},
+    {},
     {
         value: "MN - Mid-State Auto Auction",
         label: "MN - Mid-State Auto Auction",
@@ -520,15 +463,8 @@ export const FacilitationLocation = [
         value: "MO - America's Auto Auction - Kansas City",
         label: "MO - America's Auto Auction - Kansas City",
     },
-    {
-        value: "MO - Manheim Kansas City",
-        label: "MO - Manheim Kansas City",
-    },
-    {
-        value: "MO - Manheim Poplar Bluff",
-        label: "MO - Manheim Poplar Bluff",
-    },
-    { value: "MO - Manheim St Louis", label: "MO - Manheim St Louis" },
+    {},
+    {},
     {
         value: "MO - Missouri Auto Auction",
         label: "MO - Missouri Auto Auction",
@@ -537,10 +473,7 @@ export const FacilitationLocation = [
         value: "MS - Dealers Auto Auction - Jackson",
         label: "MS - Dealers Auto Auction - Jackson",
     },
-    {
-        value: "MS - Manheim Mississippi",
-        label: "MS - Manheim Mississippi",
-    },
+    {},
     {
         value: "MT - Auto Auction Of Montana",
         label: "MT - Auto Auction Of Montana",
@@ -549,42 +482,25 @@ export const FacilitationLocation = [
         value: "NC - Greenville Auto Auction",
         label: "NC - Greenville Auto Auction",
     },
-    { value: "NC - Manheim Charlotte", label: "NC - Manheim Charlotte" },
-    {
-        value: "NC - Manheim North Carolina",
-        label: "NC - Manheim North Carolina",
-    },
-    {
-        value: "NC - Manheim Statesville",
-        label: "NC - Manheim Statesville",
-    },
-    { value: "NC - Manheim Wilmington", label: "NC - Manheim Wilmington" },
+    {},
+    {},
     {
         value: "NC - Speedway Auto Auction of Charlotte",
         label: "NC - Speedway Auto Auction of Charlotte",
     },
-    { value: "NE - Manheim Omaha", label: "NE - Manheim Omaha" },
     {
         value: "NH - Auto Auction Of New England",
         label: "NH - Auto Auction Of New England",
     },
-    {
-        value: "NJ - Manheim NY Metro Skyline",
-        label: "NJ - Manheim NY Metro Skyline",
-    },
-    { value: "NJ - Manheim New Jersey", label: "NJ - Manheim New Jersey" },
-    { value: "NM - Manheim New Mexico", label: "NM - Manheim New Mexico" },
+    {},
     {
         value: "NV - Dealers Auto Auction of Las Vegas",
         label: "NV - Dealers Auto Auction of Las Vegas",
     },
-    { value: "NV - Manheim Nevada", label: "NV - Manheim Nevada" },
     {
         value: "NY - Buffalo Auto Auction Incorporated",
         label: "NY - Buffalo Auto Auction Incorporated",
     },
-    { value: "NY - Manheim Albany", label: "NY - Manheim Albany" },
-    { value: "NY - Manheim Rochester", label: "NY - Manheim Rochester" },
     {
         value: "NY - Rochester Syracuse Auto Auction",
         label: "NY - Rochester Syracuse Auto Auction",
@@ -602,9 +518,6 @@ export const FacilitationLocation = [
         value: "OH - Columbus Fair Auto Auction",
         label: "OH - Columbus Fair Auto Auction",
     },
-    { value: "OH - Manheim Cincinnati", label: "OH - Manheim Cincinnati" },
-    { value: "OH - Manheim Cleveland", label: "OH - Manheim Cleveland" },
-    { value: "OH - Manheim Ohio", label: "OH - Manheim Ohio" },
     {
         value: "OH - Montpelier Auto Auction",
         label: "OH - Montpelier Auto Auction",
@@ -620,9 +533,7 @@ export const FacilitationLocation = [
     },
     { value: "OK - Daa Oklahoma City", label: "OK - Daa Oklahoma City" },
     { value: "OK - Daa Oklahoma City", label: "OK - Daa Oklahoma City" },
-    { value: "OK - Manheim Tulsa", label: "OK - Manheim Tulsa" },
     { value: "OK - Z66 Auto Auction", label: "OK - Z66 Auto Auction" },
-    { value: "OR - Manheim Portland", label: "OR - Manheim Portland" },
     {
         value: "PA - America's Auto Auction - Harrisburg",
         label: "PA - America's Auto Auction - Harrisburg",
@@ -655,14 +566,8 @@ export const FacilitationLocation = [
         value: "PA - Lehigh Valley Auto Auction",
         label: "PA - Lehigh Valley Auto Auction",
     },
-    {
-        value: "PA - Manheim Keystone Pennsylvania",
-        label: "PA - Manheim Keystone Pennsylvania",
-    },
-    {
-        value: "PA - Manheim Philadelphia",
-        label: "PA - Manheim Philadelphia",
-    },
+    {},
+    {},
     {
         value: "SC - America's Auto Auction - Greenville",
         label: "SC - America's Auto Auction - Greenville",
@@ -679,7 +584,6 @@ export const FacilitationLocation = [
         value: "SC - Grand Strand Auto Auction LLC",
         label: "SC - Grand Strand Auto Auction LLC",
     },
-    { value: "SC - Manheim Darlington", label: "SC - Manheim Darlington" },
     { value: "SC - Rawls Auto Auction", label: "SC - Rawls Auto Auction" },
     {
         value: "TN - Airport Auto Auction",
@@ -693,7 +597,6 @@ export const FacilitationLocation = [
         value: "SC - Grand Strand Auto Auction LLC",
         label: "SC - Grand Strand Auto Auction LLC",
     },
-    { value: "SC - Manheim Darlington", label: "SC - Manheim Darlington" },
     { value: "SC - Rawls Auto Auction", label: "SC - Rawls Auto Auction" },
     {
         value: "TN - Airport Auto Auction",
@@ -715,7 +618,6 @@ export const FacilitationLocation = [
         value: "TN - Dealers Auto Auction East Tennessee LLC",
         label: "TN - Dealers Auto Auction East Tennessee LLC",
     },
-    { value: "TN - Manheim Nashville", label: "TN - Manheim Nashville" },
     {
         value: "TN - Music City Auto Auction",
         label: "TN - Music City Auto Auction",
@@ -823,21 +725,9 @@ export const FacilitationLocation = [
         value: "TX - Lubbock Auto Auction",
         label: "TX - Lubbock Auto Auction",
     },
-    { value: "TX - Manheim Dallas", label: "TX - Manheim Dallas" },
-    {
-        value: "TX - Manheim Dallas-Fort Worth",
-        label: "TX - Manheim Dallas-Fort Worth",
-    },
-    { value: "TX - Manheim El Paso", label: "TX - Manheim El Paso" },
-    { value: "TX - Manheim Houston", label: "TX - Manheim Houston" },
-    {
-        value: "TX - Manheim San Antonio",
-        label: "TX - Manheim San Antonio",
-    },
-    {
-        value: "TX - Manheim Texas Hobby",
-        label: "TX - Manheim Texas Hobby",
-    },
+    {},
+    {},
+    {},
     {
         value: "TX - Metro Auto Auction Dallas",
         label: "TX - Metro Auto Auction Dallas",
@@ -850,26 +740,18 @@ export const FacilitationLocation = [
         value: "TX - Texas Lone Star Auto Auction",
         label: "TX - Texas Lone Star Auto Auction",
     },
-    { value: "UT - Manheim Utah", label: "UT - Manheim Utah" },
     {
         value: "VA - America's Auto Auction Virginia",
         label: "VA - America's Auto Auction Virginia",
     },
-    {
-        value: "VA - Manheim Fredericksburg",
-        label: "VA - Manheim Fredericksburg",
-    },
-    {
-        value: "VA - Manheim Harrisonburg",
-        label: "VA - Manheim Harrisonburg",
-    },
+    {},
+    {},
     {
         value: "VA - Richmond Auto Auction",
         label: "VA - Richmond Auto Auction",
     },
     { value: "WA - DAA Northwest", label: "WA - DAA Northwest" },
     { value: "WA - DAA Seattle", label: "WA - DAA Seattle" },
-    { value: "WA - Manheim Seattle", label: "WA - Manheim Seattle" },
     {
         value: "WI - Badger State Auto Auction",
         label: "WI - Badger State Auto Auction",
@@ -882,7 +764,6 @@ export const FacilitationLocation = [
         value: "WI - Greater Milwaukee Auto Auction",
         label: "WI - Greater Milwaukee Auto Auction",
     },
-    { value: "WI - Manheim Milwaukee", label: "WI - Manheim Milwaukee" },
     {
         value: "WV - Capital City Auto Auction Inc",
         label: "WV - Capital City Auto Auction Inc",
