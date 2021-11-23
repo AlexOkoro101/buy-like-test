@@ -481,22 +481,7 @@ const BidDetails = () => {
                                                 <div className="cursor-pointer"><img src="../../../assets/img/vectors/download-icon.svg"
                                                         alt="download-icon" /></div>
                                             </div>
-                                            <div className="upload-file w-full md:w-72 px-6 py-10 text-center mt-4 leading-4 relative">
-                                                <div className="flex  items-center justify-center pt-5">
-                                                    <div className="absolute  bottom-20 cursor-pointer mb-5 "><img
-                                                            src="../../../assets/img/vectors/upload-icon.svg" alt="upload-icon" />
-                                                    </div>
-                                                    <div className="w-52 text-center ">
-                                                        <p className="text-sm">Upload a document</p>
-                                                        <small className="text-xs">Drag a document here to upload or click to browse
-                                                            your files</small>
-                                                    </div>
-
-                                                </div>
-
-
-                                            </div>
-
+                                            
                                         </div>
 
                                     </div>
