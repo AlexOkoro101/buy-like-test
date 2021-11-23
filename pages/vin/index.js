@@ -181,13 +181,21 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
     useEffect(() => {
         if (sortValue) {
+            let activeTab =
+                active === "now"
+                    ? "buy_now=1"
+                    : active === "bid"
+                    ? "mmr_price=1"
+                    : "";
             const datas = {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
                 page: pageIndex,
             };
-            dispatch(fetchMore(filterValue, datas, sortValue, active));
+            dispatch(
+                fetchMore(filterValue, datas, sortValue, active, activeTab)
+            );
         }
     }, [sortValue]);
 
@@ -209,13 +217,21 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     const fetchPage = (i) => {
         window.scrollTo({ top: 0, behavior: "smooth" });
         if (active === "" || active === "all") {
+            let activeTab =
+                active === "now"
+                    ? "buy_now=1"
+                    : active === "bid"
+                    ? "mmr_price=1"
+                    : "";
             const datas = {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
                 page: i,
             };
-            dispatch(fetchMore(filterValue, datas, sortValue, active));
+            dispatch(
+                fetchMore(filterValue, datas, sortValue, active, activeTab)
+            );
         } else {
             let data =
                 active === "now"
@@ -229,7 +245,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 year: paramValue?.year || "",
                 page: i,
             };
-            dispatch(filterTabAction(datas, data));
+            dispatch(fetchMore(datas, data));
         }
     };
     const handleYear = (e) => {
@@ -253,7 +269,13 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             year: data,
         }));
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas, sortValue, active));
+        let activeTab =
+            active === "now"
+                ? "buy_now=1"
+                : active === "bid"
+                ? "mmr_price=1"
+                : "";
+        dispatch(fetchMore(filterValue, datas, sortValue, active, activeTab));
         setPageIndex(1);
     };
 
@@ -299,8 +321,14 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 model: data,
             }));
         }
+        let activeTab =
+            active === "now"
+                ? "buy_now=1"
+                : active === "bid"
+                ? "mmr_price=1"
+                : "";
         setPageIndex(1);
-        dispatch(fetchMore(filterValue, datas, sortValue, active));
+        dispatch(fetchMore(filterValue, datas, sortValue, active, activeTab));
         setDefaultModel(e);
     };
     const handleMake = async (e) => {
@@ -332,7 +360,13 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         } else {
             setcarModels(makes[0].models);
         }
-        dispatch(fetchMore(filterValue, datas, sortValue, active));
+        let activeTab =
+            active === "now"
+                ? "buy_now=1"
+                : active === "bid"
+                ? "mmr_price=1"
+                : "";
+        dispatch(fetchMore(filterValue, datas, sortValue, active, activeTab));
     };
     //
     // Filter actions
@@ -343,7 +377,13 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             year: paramValue?.year || "",
             page: pageIndex,
         };
-        dispatch(fetchMore(filterValue, datas, sortValue, active));
+        let activeTab =
+            active === "now"
+                ? "buy_now=1"
+                : active === "bid"
+                ? "mmr_price=1"
+                : "";
+        dispatch(fetchMore(filterValue, datas, sortValue, active, activeTab));
     };
     //
     //
@@ -624,7 +664,15 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                     year: dataWithArrays?.year || "",
                     page: pageIndex,
                 };
-                dispatch(fetchMore(filterValue, datas, sortValue, active));
+                let activeTab =
+                    active === "now"
+                        ? "buy_now=1"
+                        : active === "bid"
+                        ? "mmr_price=1"
+                        : "";
+                dispatch(
+                    fetchMore(filterValue, datas, sortValue, active, activeTab)
+                );
                 break;
             }
         }
@@ -775,26 +823,24 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     };
 
     const filterTab = (event) => {
-        setDefaultMake(null);
-        setDefaultModel(null);
-        setDefaultYear(null);
-        setSortValue(null);
         if (event !== active) {
             setPageIndex(1);
             setActive(event);
-            let data =
+            let activeTab =
                 event === "now"
                     ? "buy_now=1"
                     : event === "bid"
                     ? "mmr_price=1"
                     : "";
             const datas = {
-                make: "",
-                model: "",
-                year: "",
-                page: 1,
+                make: paramValue?.make || "",
+                model: paramValue?.model || "",
+                year: paramValue?.year || "",
+                page: pageIndex,
             };
-            dispatch(filterTabAction(datas, data));
+            dispatch(
+                fetchMore(filterValue, datas, sortValue, event, activeTab)
+            );
         }
     };
 
@@ -1188,6 +1234,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                isClearable
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Body type
@@ -1225,6 +1272,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                isClearable
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Transmission type
@@ -1259,6 +1307,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                         {/* <!--External Colour  Here --> */}
                                         <div className="tab border-bt py-4  ">
                                             <ReactMultiSelectCheckboxes
+                                                isClearable
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
@@ -1297,6 +1346,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                isClearable
                                                 ref={inputEl.current[3]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1332,6 +1382,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 ref={inputEl.current[4]}
+                                                isClearable
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1367,6 +1418,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                isClearable
                                                 ref={inputEl.current[5]}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
@@ -1402,6 +1454,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
+                                                isClearable
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Interior Type
@@ -1438,6 +1491,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 className="primary-black  font-semibold font-11  "
                                                 ref={inputEl.current[7]}
                                                 styles={customStyles}
+                                                isClearable
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
                                                         Engine Type
@@ -1505,6 +1559,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                             >
                                                 <DatePicker
                                                     minDate={new Date()}
+                                                    isClearable
                                                     onChange={(e) => {
                                                         setFilterValue(
                                                             (prev) => ({
@@ -1595,6 +1650,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                     <ReactMultiSelectCheckboxes
                                                         className="primary-black  font-semibold font-11  "
                                                         isMulti={false}
+                                                        isClearable
                                                         styles={customStyles}
                                                         placeholderButtonLabel={
                                                             <div className="font-semibold text-xs w-full self-center	">
@@ -1617,7 +1673,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                             setFilterValue(
                                                                 (prev) => ({
                                                                     ...prev,
-                                                                    min: e.value,
+                                                                    min: e
+                                                                        ? e.value
+                                                                        : e,
                                                                 })
                                                             ),
                                                                 setAdvance(
@@ -1634,6 +1692,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                         ref={
                                                             inputEl.current[10]
                                                         }
+                                                        isClearable
                                                         isMulti={false}
                                                         placeholderButtonLabel={
                                                             <div className="font-semibold text-xs w-full self-center">
@@ -1655,7 +1714,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                             setFilterValue(
                                                                 (prev) => ({
                                                                     ...prev,
-                                                                    max: e.value,
+                                                                    max: e
+                                                                        ? e.value
+                                                                        : e,
                                                                 })
                                                             ),
                                                                 setAdvance(
@@ -1734,7 +1795,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 {!open && (
                                     <button
                                         type="button"
-                                        className="mr-5 h-4"
+                                        className="mr-5 h-5"
                                         value="all"
                                         onClick={() => setOpen(true)}
                                     >

@@ -122,6 +122,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const initializePayment = usePaystackPayment(config);
     const Ref = useRef(null);
     const [toggler, setToggler] = useState(false);
+    const [waterMarkToggle, setWaterMarkToggle] = useState(false);
     const [key, setkey] = useState(0);
     const [timer, setTimer] = useState("00:00:00");
     const [cardD, setDetail] = useState(null);
@@ -566,16 +567,20 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return largeImageArray;
     };
     const displayLargeimage = () => {
+        // console.log(toggler)
         return (
             <>
                 <FsLightbox
                     toggler={toggler}
                     sources={returnLargeimage()}
                     type="image"
+                    className="relative"
+                    onClose={() => setWaterMarkToggle(false)}
                 />
                 <img
                     onClick={() => {
                         setToggler(!toggler);
+                        setWaterMarkToggle(true);
                     }}
                     src={cardD?.images[id]?.image_largeUrl}
                     loading="lazy"
@@ -1508,9 +1513,29 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <>
                                             <div className="w-full relative displayLargeimage">
                                                 {displayLargeimage()}
-                                                <div className="watermark-detail md:pb-10 pb-1 opacity-60">
-                                                    <p>BUYLIKEDEALERS.COM</p>
-                                                </div>
+                                                {/* {waterMarkToggle === true ? (
+                                                    <div
+                                                        className="watermark-detail2 flex text-xs md:text-sm  md:pb-12 pb-1 opacity-80"
+                                                        style={{
+                                                            zIndex: 9999999999,
+                                                        }}
+                                                    >
+                                                        <p>
+                                                            BUYLIKEDEALERS.COM
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        className="watermark-detail text-xs md:text-sm md:pb-10 pb-1 opacity-60"
+                                                        style={{
+                                                            zIndex: 9999999999,
+                                                        }}
+                                                    >
+                                                        <p>
+                                                            BUYLIKEDEALERS.COM
+                                                        </p>
+                                                    </div>
+                                                )} */}
                                             </div>
 
                                             <div className="overflow-hidden">
