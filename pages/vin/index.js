@@ -827,9 +827,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             setPageIndex(1);
             setActive(event);
             let activeTab =
-                active === "now"
+                event === "now"
                     ? "buy_now=1"
-                    : active === "bid"
+                    : event === "bid"
                     ? "mmr_price=1"
                     : "";
             const datas = {
@@ -839,7 +839,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 page: pageIndex,
             };
             dispatch(
-                fetchMore(filterValue, datas, sortValue, active, activeTab)
+                fetchMore(filterValue, datas, sortValue, event, activeTab)
             );
         }
     };
