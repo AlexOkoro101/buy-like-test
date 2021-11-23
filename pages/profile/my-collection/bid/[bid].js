@@ -89,7 +89,7 @@ const BidDetails = () => {
     }, [bidCollection])
 
     useEffect(() => {
-        console.log(bidId);
+        // console.log(bidId);
         fetch(enviroment.BASE_URL + "vehicles/vin/" + bidId, {
             method: "GET",
             redirect: "follow",
@@ -106,6 +106,7 @@ const BidDetails = () => {
                         setbidCollection(formatCollection.data.vehicle);
                     }
                 }
+                console.log(bidCollection)
             })
             .catch((error) => console.log("error", error));
     }, []);
@@ -227,14 +228,14 @@ const BidDetails = () => {
 
                                 <table className="min-w-full ">
                                     <tbody>
-                                        {bidCollection?.trucking && (
+                                        {(bidCollection?.trucking && bidCollection?.trucking !== "0") ? (
                                             <tr className="detail-row mb-2">
                                                 <td className="sec-black text-xs font-semibold py-1.5">Trucking</td>
-                                                <td className="text-xs primary-black font-normal py-1.5">{bidCollection?.trucking || 0}</td>
+                                                <td className="text-xs primary-black font-normal py-1.5">${bidCollection?.trucking || 0}</td>
                                             </tr>
-                                        )}
+                                        ) : (<></>)}
 
-                                        {bidCollection?.shipping && (
+                                        {(bidCollection?.shipping && bidCollection?.shipping !== "0") && (
                                             <tr className="detail-row mb-2">
                                                 <td className="sec-black text-xs font-semibold py-1.5">Shipping</td>
                                                 <td className="text-xs primary-black font-normal py-1.5">${bidCollection?.shipping || 0}</td>
