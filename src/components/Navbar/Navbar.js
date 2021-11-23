@@ -20,8 +20,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const [userNmae, setuserName] = useState(null);
     let dropdown;
     useEffect(() => {
-        getCars();
-    }, [total, cars]);
+        dispatch(getCars());
+    }, []);
 
     //Get Data from Local Storage
     const retrieveData = () => {
