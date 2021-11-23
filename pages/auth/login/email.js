@@ -53,19 +53,10 @@ const LogIn = ({ beginLogin }) => {
             password: "",
         },
         validationSchema: Yup.object({
-            email: Yup.string()
-                .email("Invalid email address")
-                .required("Email is required"),
+            email: Yup.string(),
+                
             password: Yup.string()
-                // .matches(/\w*[a-z]\w*/,  "Password must have a small letter")
-                // .matches(/\w*[A-Z]\w*/,  "Password must have a capital letter")
-                // .matches(/\d/, "Password must have a number")
-                // .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
-                .min(
-                    6,
-                    ({ min }) => `Password must be at least ${min} characters`
-                )
-                .required("Password is required"),
+                
         }),
         onSubmit: (values) => {
             // notify()
@@ -100,6 +91,7 @@ const LogIn = ({ beginLogin }) => {
                             userName: data.data.user.profile.firstName,
                             phoneNumber: data.data.user.profile.phoneNumber,
                             userEmail: data.data.user.email,
+                            userAddress: data.data.user.info,
                             expiry: now.getTime() + 3600000,
                         };
                         localStorage.setItem("user", JSON.stringify(item));

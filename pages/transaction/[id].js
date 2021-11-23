@@ -33,9 +33,21 @@ const Transaction = () => {
             progress: undefined,
         });
 
+        const addAddressSuccess = () =>
+        toast.success("New Address Added", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
     const [token, settoken] = useState(null)
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
+    const [userAddress, setuserAddress] = useState(null);
     const [userName, setuserName] = useState(null);
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
@@ -52,8 +64,33 @@ const Transaction = () => {
     const [email, setemail] = useState("");
     const [street, setstreet] = useState("");
     const phoneNumberRef = useRef(null);
+    const newPhoneNumberRef = useRef(null);
     const [confimation, setconfimation] = useState(false);
     const [refNumber, setrefNumber] = useState(null);
+    const [switchAddress, setswitchAddress] = useState(false)
+    const [addressModalContent1, setaddressModalContent1] = useState(true);
+    const [addressModalContent2, setaddressModalContent2] = useState(false);
+    const [addressModalContent3, setaddressModalContent3] = useState(false);
+
+
+    //Set Address
+    const [country, setcountry] = useState("")
+    const [city, setcity] = useState("")
+    const [countryState, setcountryState] = useState("")
+    
+
+
+//New Address State
+const [newAddressFirstName, setnewAddressFirstName] = useState("");
+const [newAddressLastName, setnewAddressLastName] = useState("");
+const [newAddressPhone, setnewAddressPhone] = useState("");
+const [newAddressEmail, setnewAddressEmail] = useState("");
+const [newAddressCountry, setnewAddressCountry] = useState("");
+const [newAddressState, setnewAddressState] = useState("");
+const [newAddressCity, setnewAddressCity] = useState("");
+const [newAddressStreet, setnewAddressStreet] = useState("");
+
+
     const referenceNumber = () => {
         return "bld" + Math.floor(Math.random() * 1000000000 + 1);
     };
@@ -107,9 +144,11 @@ const Transaction = () => {
         }
         // settoken(item?.userToken);
         setuserName(item?.userName);
-        // setuserId(item?.userId);
+        setuserId(item?.userId);
         setuserEmail(item?.userEmail);
         setuserPhone(item?.phoneNumber);
+        setuserAddress(item?.userAddress);
+        console.log(item?.userAddress)
     }; //Get Data from local Storage
 
     useEffect(() => {
@@ -353,6 +392,9 @@ const Transaction = () => {
             number: '',
             email: "",
             streetAddress: "",
+            city: city,
+            countryState: countryState,
+            country: country,
         },
         validationSchema: Yup.object({
             firstName: Yup.string()
@@ -377,41 +419,114 @@ const Transaction = () => {
             setstate(2)
             
 
-            // fetch(enviroment.BASE_URL + "", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     credentials: "same-origin",
-            //     body: JSON.stringify(values),
-            // })
-            //     .then((res) => {
-            //         // console.log(res)
-            //         if (!res.ok) {
-            //             setisLoading(false);
-            //             seterror(res.statusText);
-            //             toastError();
-            //             throw Error("Could not sign up");
-            //         }
-            //         setisLoading(false);
-            //         return res.json();
-            //     })
-            //     .then((data) => {
-            //         //   console.log(data)
-            //         if (data?.error) {
-            //             seterror(data?.message);
-            //             toastError();
-            //         } else {
-            //             // console.log(data)
-            //             seterror(data?.message);
-            //             
-            //         }
-            //     })
-            //     .catch((e) => {
-            //         // seterror(e.message)
-            //         setisLoading(false);
-            //         console.log(e.message);
-            //     });
-        },
-    });
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+            info: [
+                {
+                "firstName": "alex",
+                "lastName": "Okoro",
+                "address": "48 lagos",
+                "phone": "0909485990",
+                "email": "alex@g.com",
+                "country": "nigeria",
+                "state": "lagos",
+                "lg": "sureulere local gov"
+                }
+            ]
+            });
+
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+            };
+
+            fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+                    },
+                });
+
+    const newPhoneNumberChange = () => {
+        // formik.values.number =
+        //     `${phoneNumberRef.current.selectedCountryData.dialCode}` +
+        //     `${phoneNumberRef.current.state.value}`;
+        setnewAddressPhone(
+            `+${newPhoneNumberRef.current.selectedCountryData.dialCode}` +
+                `${newPhoneNumberRef.current.state.value}`
+        );
+        // if (phoneNumberRef) {
+        //     setphoneError(false);
+        // }
+    };
+
+    const editAddress = (address) => {
+        console.log(address)
+
+        setaddressModalContent1(false)
+        setaddressModalContent2(true)
+        setaddressModalContent3(false)
+    }
+
+    const saveShippingAddress = () => {
+        setaddressModalContent1(true)
+        setaddressModalContent2(false)
+        setaddressModalContent3(false)
+    }
+
+    const showNewAddress = () => {
+        setaddressModalContent1(false)
+        setaddressModalContent2(false)
+        setaddressModalContent3(true)
+    }
+
+    const addNewAddress = () => {
+        setaddressModalContent1(true)
+        setaddressModalContent2(false)
+        setaddressModalContent3(false)
+
+        const addressObj = {
+            firstName: newAddressFirstName,
+            lastName: newAddressLastName,
+            address: newAddressStreet, 
+            phone: newAddressPhone,
+            email: newAddressEmail,
+            country: newAddressCountry,
+            state: newAddressState,
+            lg: newAddressCity
+        }
+
+        userAddress?.push(addressObj)
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            info: userAddress
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            const newResult = JSON.parse(result)
+            if(newResult.error === false) {
+                addAddressSuccess()
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
 
     return (
         <div>
@@ -447,7 +562,7 @@ const Transaction = () => {
 
                                 <table className="min-w-full ">
                                     <tbody>
-                                        {carDetails?.trucking && (
+                                        {(carDetails?.trucking || carDetails?.trucking != 0 ) && (
                                             <tr className="detail-row mb-2">
                                                 <td className="sec-black text-sm font-semibold py-1.5">Trucking</td>
                                                 <td className="text-sm primary-black font-normal py-1.5">${carDetails?.trucking}</td>
@@ -455,7 +570,7 @@ const Transaction = () => {
 
                                         )}
 
-                                        {carDetails?.shipping && (
+                                        {(carDetails?.shipping || carDetails?.shipping != 0) && (
                                             <tr className="detail-row mb-2">
                                                 <td className="sec-black text-sm font-semibold py-1.5">Shipping</td>
                                                 <td className="text-sm primary-black font-normal py-1.5">${carDetails?.shipping}</td>
@@ -527,216 +642,363 @@ const Transaction = () => {
 
                             <div className="mt-5">
                                 {state === 1 && (
-                                    <form
-                                        className="tabcontent mt-5 "
-                                        id="customer-info"
-                                        onSubmit={formik.handleSubmit}
-                                    >
-                                        <div className="info-holder text-xs px-4 py-4 mb-3">
-                                            <p className="font-semibold primary-color  ">
-                                                Personal Details
-                                            </p>
 
-                                            <div className="grid grid-cols-6 gap-3 mt-3">
-                                                <div className="col-span-6 lg:col-span-3">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        First Name
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        id="firstName"
-                                                        name="firstName"
-                                                        placeholder="Dare"
-                                                        className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.firstName}
-                                                    />
-                                                    {formik.touched.firstName &&
-                                                    formik.errors.firstName ? (
-                                                        <div className="input-error">
-                                                            {formik.errors.firstName}
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-
-                                                <div className=" col-span-6 lg:col-span-3 ">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Last Name
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        id="lastName"
-                                                        name="lastName"
-                                                        placeholder="Thomas"
-                                                        className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.lastName}
-                                                    />
-                                                    {formik.touched.lastName &&
-                                                    formik.errors.lastName ? (
-                                                        <div className="input-error">
-                                                            {formik.errors.lastName}
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-
-                                                <div className="col-span-6 lg:col-span-3 relative ">
-                                                    <label
-                                                        htmlFor="phone"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Phone Number
-                                                    </label>
-                                                    <IntlTelInput
-                                                        ref={phoneNumberRef}
-                                                        placeholder="xxxx-xxxx-xxxx"
-                                                        containerClassName="intl-tel-input buynow-phone-number"
-                                                        inputClassName="form-control"
-                                                        preferredCountries={["ng"]}
-                                                        defaultValue={phoneNumber}
-                                                        onPhoneNumberChange={(e) =>
-                                                            phoneNumberChange(e)
-                                                        }
-                                                        onPhoneNumberBlur={validatePhone}
-                                                    />
-                                                    {phoneError && (
-                                                        <div className="input-error">
-                                                            Phone number is required
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="col-span-6 lg:col-span-3">
-                                                    <label
-                                                        htmlFor="email"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Email
-                                                    </label>
-                                                    <input
-                                                        type="email"
-                                                        id="email"
-                                                        name="email"
-                                                        placeholder="dare@thomas.com"
-                                                        className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.email}
-                                                    />
-                                                    {formik.touched.email &&
-                                                    formik.errors.email ? (
-                                                        <div className="input-error">
-                                                            {formik.errors.email}
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="info-holder text-xs px-4 py-4 mb-3">
-                                            <p className="font-semibold primary-color ">
-                                                Delivery address
-                                            </p>
-
-                                            <div className="grid grid-cols-6 gap-3 mt-3">
-                                                <div className=" col-span-6 ">
-                                                    <label
-                                                        htmlFor="lga"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Country
-                                                    </label>
-                                                    <select
-                                                        id="lga"
-                                                        className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                    >
-                                                        <option>Nigeria</option>
-                                                        <option>Canada</option>
-                                                        <option>Mexico</option>
-                                                    </select>
-                                                </div>
-                                                <div className="col-span-6 lg:col-span-3">
-                                                    <label
-                                                        htmlFor="state"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        State
-                                                    </label>
-                                                    <select
-                                                        id="state"
-                                                        className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                    >
-                                                        <option>Lagos</option>
-                                                        <option>Abuja</option>
-                                                        <option>Rivers</option>
-                                                    </select>
-                                                </div>
-
-                                                <div className=" col-span-6 lg:col-span-3">
-                                                    <label
-                                                        htmlFor="lga"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Local Govenrment Area
-                                                    </label>
-                                                    <select
-                                                        id="lga"
-                                                        className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                    >
-                                                        <option>
-                                                            Select Local
-                                                            Government Area
-                                                        </option>
-                                                        <option>Canada</option>
-                                                        <option>Mexico</option>
-                                                    </select>
-                                                </div>
-
-                                                <div className="col-span-6">
-                                                    <label
-                                                        htmlFor="lga"
-                                                        className="block text-xs primary-color "
-                                                    >
-                                                        Street Address
-                                                    </label>
-                                                    <textarea
-                                                        rows="2"
-                                                        cols="1"
-                                                        id="streetAddress"
-                                                        name="streetAddress"
-                                                        id="address"
-                                                        className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
-                                                        placeholder="Enter street address"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.streetAddress}
-                                                    ></textarea>
-                                                    {formik.touched.streetAddress &&
-                                                    formik.errors.streetAddress ? (
-                                                        <div className="input-error">
-                                                            {formik.errors.streetAddress}
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-center">
-                                            <button
-                                               
-                                                type="submit"
-                                                className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                    <>
+                                        {!userAddress?.length ? (
+                                            <form
+                                                className="tabcontent mt-5 "
+                                                id="customer-info"
+                                                onSubmit={formik.handleSubmit}
                                             >
-                                                Proceed
-                                            </button>
-                                        </div>
-                                    </form>
+                                                <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                    <p className="font-semibold primary-color  ">
+                                                        Personal Details
+                                                    </p>
+
+                                                    <div className="grid grid-cols-6 gap-3 mt-3">
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="name"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                First Name
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                id="firstName"
+                                                                name="firstName"
+                                                                placeholder="Dare"
+                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.firstName}
+                                                            />
+                                                            {formik.touched.firstName &&
+                                                            formik.errors.firstName ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.firstName}
+                                                                </div>
+                                                            ) : null}
+                                                        </div>
+
+                                                        <div className=" col-span-6 lg:col-span-3 ">
+                                                            <label
+                                                                htmlFor="name"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Last Name
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                id="lastName"
+                                                                name="lastName"
+                                                                placeholder="Thomas"
+                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.lastName}
+                                                            />
+                                                            {formik.touched.lastName &&
+                                                            formik.errors.lastName ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.lastName}
+                                                                </div>
+                                                            ) : null}
+                                                        </div>
+
+                                                        <div className="col-span-6 lg:col-span-3 relative ">
+                                                            <label
+                                                                htmlFor="phone"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Phone Number
+                                                            </label>
+                                                            <IntlTelInput
+                                                                ref={phoneNumberRef}
+                                                                placeholder="xxxx-xxxx-xxxx"
+                                                                containerClassName="intl-tel-input buynow-phone-number"
+                                                                inputClassName="form-control"
+                                                                preferredCountries={["ng"]}
+                                                                defaultValue={phoneNumber}
+                                                                onPhoneNumberChange={(e) =>
+                                                                    phoneNumberChange(e)
+                                                                }
+                                                                onPhoneNumberBlur={validatePhone}
+                                                            />
+                                                            {phoneError && (
+                                                                <div className="input-error">
+                                                                    Phone number is required
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Email
+                                                            </label>
+                                                            <input
+                                                                type="email"
+                                                                id="email"
+                                                                name="email"
+                                                                placeholder="dare@thomas.com"
+                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.email}
+                                                            />
+                                                            {formik.touched.email &&
+                                                            formik.errors.email ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.email}
+                                                                </div>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                    <p className="font-semibold primary-color ">
+                                                        Delivery address
+                                                    </p>
+
+                                                    <div className="grid grid-cols-6 gap-3 mt-3">
+                                                        <div className=" col-span-6 ">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Country
+                                                            </label>
+                                                            <select
+                                                                id="lga"
+                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                                value={country}
+                                                                onChange={(e) => setcountry(e.target.value)}
+                                                            >
+                                                                <option>Nigeria</option>
+                                                                <option>Canada</option>
+                                                                <option>Mexico</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="state"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                State
+                                                            </label>
+                                                            <select
+                                                                id="state"
+                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                                value={countryState}
+                                                                onChange={(e) => setcountryState(e.target.value)}
+                                                            >
+                                                                <option>Lagos</option>
+                                                                <option>Abuja</option>
+                                                                <option>Rivers</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className=" col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                City
+                                                            </label>
+                                                            <select
+                                                                id="city"
+                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                                value={city}
+                                                                onChange={(e) => setcity(e.target.value)}
+                                                            >
+                                                                <option>
+                                                                    Select Local
+                                                                    Government Area
+                                                                </option>
+                                                                <option>Canada</option>
+                                                                <option>Mexico</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="col-span-6">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Street Address
+                                                            </label>
+                                                            <textarea
+                                                                rows="2"
+                                                                cols="1"
+                                                                id="streetAddress"
+                                                                name="streetAddress"
+                                                                id="address"
+                                                                className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
+                                                                placeholder="Enter street address"
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.streetAddress}
+                                                            ></textarea>
+                                                            {formik.touched.streetAddress &&
+                                                            formik.errors.streetAddress ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.streetAddress}
+                                                                </div>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-center">
+                                                    <button
+                                                    
+                                                        type="submit"
+                                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                                    >
+                                                        Proceed
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        ) : (
+                                            <form
+                                                className="tabcontent mt-5 "
+                                                id="customer-info"
+                                                onSubmit={formik.handleSubmit}
+                                            >
+                                                <div className="flex justify-end mb-4">
+                                                    <button onClick={() => {
+                                                        setaddressModalContent1(true)
+                                                        setaddressModalContent2(false)
+                                                        setaddressModalContent3(false)
+                                                        setswitchAddress(true)
+                                                        }} className="text-white text-right font-11 bg-blue-500 rounded-sm py-1 px-2 hover:bg-blue-600">Switch Address</button>
+
+                                                </div>
+                                                <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                    <p className="font-semibold primary-color  ">
+                                                        Personal Details
+                                                    </p>
+
+                                                    <div className="grid grid-cols-6 gap-3 mt-3">
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="name"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                First Name
+                                                            </label>
+                                                          
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.firstName}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className=" col-span-6 lg:col-span-3 ">
+                                                            <label
+                                                                htmlFor="name"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Last Name
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.lastName}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-6 lg:col-span-3 relative ">
+                                                            <label
+                                                                htmlFor="phone"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Phone Number
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.phone}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="email"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Email
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.email}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                    <p className="font-semibold primary-color ">
+                                                        Delivery address
+                                                    </p>
+
+                                                    <div className="grid grid-cols-6 gap-3 mt-3">
+                                                        <div className=" col-span-6 ">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Country
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.country}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="state"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                State
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.state}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className=" col-span-6 lg:col-span-3">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                City
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.lg}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-6">
+                                                            <label
+                                                                htmlFor="lga"
+                                                                className="block text-xs primary-color "
+                                                            >
+                                                                Street Address
+                                                            </label>
+                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                {userAddress[0]?.address}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-center">
+                                                    <button
+                                                    
+                                                        type="submit"
+                                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                                    >
+                                                        Proceed
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                        )}
+                                    </>
                                 )}
                                 {state === 2 && (
                                     <div
@@ -851,6 +1113,463 @@ const Transaction = () => {
                         </div>
                     </section>
                 </div>
+
+                {switchAddress && (
+                    <div id="switchAddressModal" className="modal">
+                        {/* <!-- Modal content --> */}
+                        <div className="modal-content sheetModal bg-white relative w-10/12 lg:w-2/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                            <span
+                                onClick={() => {
+                                    setswitchAddress(false);
+                                }}
+                                className="close absolute right-5 top-1 text-4xl text-gray-500"
+                            >
+                                &times;
+                            </span>
+                            {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
+                            {addressModalContent1 ? (
+                                <>
+                                    <div className="flex flex-col">
+                                        {userAddress?.map((address) => (
+                                            <div key={address._id} className="border-b border-gray-200 p-3 m-2 w-full flex justify-between"> 
+                                                <div>
+                                                    <p className="text-xs text-black">{address.firstName} {""} {address.lastName}</p>
+                                                    <p className="font-11 sec-black">{address.address}</p>
+                                                    <p className="font-11 sec-black">{address.lg}</p>
+                                                    <p className="font-11 sec-black">{address.state}</p>
+                                                    <p className="font-11 sec-black mt-3">{address.phone}</p>
+                                                </div>
+
+                                                <div>
+                                                    <button onClick={() => editAddress(address)} className=" text-red-600 cursor-pointer"><i style={{fontSize: "16px"}} className="fa fa-edit"></i></button>
+                                                </div>
+                                            
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="col-span-6 place-self-center mt-4">
+                                        <button
+                                            onClick={() => {showNewAddress()}}
+                                            type="button"
+                                            className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8"
+                                        >
+                                            ADD NEW ADDRESS
+                                        </button>
+                                    </div>
+                                </>
+                            ) : addressModalContent2 ? (
+                                <>
+                                <form
+                                    className="tabcontent mt-5 "
+                                    id="customer-info"
+                                >
+                                    <div className="info-holder text-xs px-4 py-4 mb-3">
+                                        <p className="font-semibold primary-color  ">
+                                            Personal Details
+                                        </p>
+
+                                        <div className="grid grid-cols-6 gap-3 mt-3">
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    First Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="firstName"
+                                                    name="firstName"
+                                                    placeholder="Dare"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                />
+                                            </div>
+
+                                            <div className=" col-span-6 lg:col-span-3 ">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Last Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="lastName"
+                                                    name="lastName"
+                                                    placeholder="Thomas"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                />
+                                            </div>
+
+                                            <div className="col-span-6 lg:col-span-3 relative ">
+                                                <label
+                                                    htmlFor="phone"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Phone Number
+                                                </label>
+                                                <IntlTelInput
+                                                    // ref={phoneNumberRef}
+                                                    placeholder="xxxx-xxxx-xxxx"
+                                                    containerClassName="intl-tel-input buynow-phone-number"
+                                                    inputClassName="form-control"
+                                                    preferredCountries={["ng"]}
+                                                    // defaultValue={phoneNumber}
+                                                    // onPhoneNumberChange={(e) =>
+                                                    //     phoneNumberChange(e)
+                                                    // }
+                                                    // onPhoneNumberBlur={validatePhone}
+                                                />
+                                                {/* {phoneError && (
+                                                    <div className="input-error">
+                                                        Phone number is required
+                                                    </div>
+                                                )} */}
+                                            </div>
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="email"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Email
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    placeholder="dare@thomas.com"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                    // onChange={formik.handleChange}
+                                                    // onBlur={formik.handleBlur}
+                                                    // value={formik.values.email}
+                                                />
+                                                {/* {formik.touched.email &&
+                                                formik.errors.email ? (
+                                                    <div className="input-error">
+                                                        {formik.errors.email}
+                                                    </div>
+                                                ) : null} */}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="info-holder text-xs px-4 py-4 mb-3">
+                                        <p className="font-semibold primary-color ">
+                                            Delivery address
+                                        </p>
+
+                                        <div className="grid grid-cols-6 gap-3 mt-3">
+                                            <div className=" col-span-6 ">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Country
+                                                </label>
+                                                <select
+                                                    id="lga"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                >
+                                                    <option>Nigeria</option>
+                                                    <option>Canada</option>
+                                                    <option>Mexico</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="state"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    State
+                                                </label>
+                                                <select
+                                                    id="state"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                >
+                                                    <option>Lagos</option>
+                                                    <option>Abuja</option>
+                                                    <option>Rivers</option>
+                                                </select>
+                                            </div>
+
+                                            <div className=" col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    City
+                                                </label>
+                                                <select
+                                                    id="city"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                >
+                                                    <option>
+                                                        Select Local
+                                                        Government Area
+                                                    </option>
+                                                    <option>Canada</option>
+                                                    <option>Mexico</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="col-span-6">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Street Address
+                                                </label>
+                                                <textarea
+                                                    rows="2"
+                                                    cols="1"
+                                                    id="streetAddress"
+                                                    name="streetAddress"
+                                                    id="address"
+                                                    className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
+                                                    placeholder="Enter street address"
+                                                    // onChange={formik.handleChange}
+                                                    // onBlur={formik.handleBlur}
+                                                    // value={formik.values.streetAddress}
+                                                ></textarea>
+                                                {/* {formik.touched.streetAddress &&
+                                                formik.errors.streetAddress ? (
+                                                    <div className="input-error">
+                                                        {formik.errors.streetAddress}
+                                                    </div>
+                                                ) : null} */}
+                                            </div>
+                                            <div className="col-span-6">
+                                                <input type="checkbox" id="defaultAddress" />
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="text-xs ml-1 primary-color "
+                                                >
+                                                    Default Shipping Address
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => saveShippingAddress()}
+                                            type="button"
+                                            className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                                </>
+                            ) : addressModalContent3 ? (
+                                <>
+                                <form
+                                    className="tabcontent mt-5 "
+                                    id="customer-info"
+                                >
+                                    <div className="info-holder text-xs px-4 py-4 mb-3">
+                                        <p className="font-semibold primary-color  ">
+                                            Personal Details
+                                        </p>
+
+                                        <div className="grid grid-cols-6 gap-3 mt-3">
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    First Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="firstName"
+                                                    name="firstName"
+                                                    placeholder="Dare"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                    value={newAddressFirstName}
+                                                    onChange={(e) => setnewAddressFirstName(e.target.value)}
+                                                />
+                                            </div>
+
+                                            <div className=" col-span-6 lg:col-span-3 ">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Last Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="lastName"
+                                                    name="lastName"
+                                                    placeholder="Thomas"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                    value={newAddressLastName}
+                                                    onChange={(e) => setnewAddressLastName(e.target.value)}
+                                                />
+                                            </div>
+
+                                            <div className="col-span-6 lg:col-span-3 relative ">
+                                                <label
+                                                    htmlFor="phone"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Phone Number
+                                                </label>
+                                                <IntlTelInput
+                                                    ref={newPhoneNumberRef}
+                                                    placeholder="xxxx-xxxx-xxxx"
+                                                    containerClassName="intl-tel-input buynow-phone-number"
+                                                    inputClassName="form-control"
+                                                    preferredCountries={["ng"]}
+                                                    defaultValue={newAddressPhone}
+                                                    onPhoneNumberChange={(e) =>
+                                                        newPhoneNumberChange(e)
+                                                    }
+                                                    // onPhoneNumberBlur={validatePhone}
+                                                />
+                                                {/* {phoneError && (
+                                                    <div className="input-error">
+                                                        Phone number is required
+                                                    </div>
+                                                )} */}
+                                            </div>
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="email"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Email
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    name="email"
+                                                    placeholder="dare@thomas.com"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                    onChange={(e) => setnewAddressEmail(e.target.value)}
+                                                    // onBlur={formik.handleBlur}
+                                                    value={newAddressEmail}
+                                                />
+                                                {/* {formik.touched.email &&
+                                                formik.errors.email ? (
+                                                    <div className="input-error">
+                                                        {formik.errors.email}
+                                                    </div>
+                                                ) : null} */}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="info-holder text-xs px-4 py-4 mb-3">
+                                        <p className="font-semibold primary-color ">
+                                            Delivery address
+                                        </p>
+
+                                        <div className="grid grid-cols-6 gap-3 mt-3">
+                                            <div className=" col-span-6 ">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Country
+                                                </label>
+                                                <select
+                                                    id="lga"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                    value={newAddressCountry}
+                                                    onChange={(e) => setnewAddressCountry(e.target.value)}
+                                                >
+                                                    <option value="Nigeria">Nigeria</option>
+                                                    <option value="Canada">Canada</option>
+                                                    <option value="Mexico">Mexico</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="state"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    State
+                                                </label>
+                                                <select
+                                                    id="state"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                    value={newAddressState}
+                                                    onChange={(e) => setnewAddressState(e.target.value)}
+                                                >
+                                                    <option value="Lagos">Lagos</option>
+                                                    <option value="Abuja">Abuja</option>
+                                                    <option value="Rivers">Rivers</option>
+                                                </select>
+                                            </div>
+
+                                            <div className=" col-span-6 lg:col-span-3">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    City
+                                                </label>
+                                                <select
+                                                    id="city"
+                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                    value={newAddressCity}
+                                                    onChange={(e) => setnewAddressCity(e.target.value)}
+                                                >
+                                                    <option>
+                                                        Select Local
+                                                        Government Area
+                                                    </option>
+                                                    <option value="Surulere">Surulere</option>
+                                                    <option value="Lekki">Lekki</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="col-span-6">
+                                                <label
+                                                    htmlFor="lga"
+                                                    className="block text-xs primary-color "
+                                                >
+                                                    Street Address
+                                                </label>
+                                                <textarea
+                                                    rows="2"
+                                                    cols="1"
+                                                    id="streetAddress"
+                                                    name="streetAddress"
+                                                    id="address"
+                                                    className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
+                                                    placeholder="Enter street address"
+                                                    onChange={(e) => setnewAddressStreet(e.target.value)}
+                                                    // onBlur={formik.handleBlur}
+                                                    value={newAddressStreet}
+                                                ></textarea>
+                                                {/* {formik.touched.streetAddress &&
+                                                formik.errors.streetAddress ? (
+                                                    <div className="input-error">
+                                                        {formik.errors.streetAddress}
+                                                    </div>
+                                                ) : null} */}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => addNewAddress()}
+                                            type="button"
+                                            className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                        >
+                                            Proceed
+                                        </button>
+                                    </div>
+                                </form>
+                                </>
+                            ) : (<></>)}
+                            
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1844,163 +1844,169 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2"
-                                                            >
-                                                                Trucking
-                                                            </td>
-
-                                                            {noZipValue ? (
+                                                        {carDestination !== "USA" && (
+                                                            <>
+                                                            <tr className="">
                                                                 <td
                                                                     colSpan="2"
-                                                                    className="font-11 sec-black font-normal py-2"
+                                                                    className="sec-black font-11 font-semibold py-2"
                                                                 >
-                                                                    <>
-                                                                        Contact
-                                                                        Support
-                                                                    </>
-                                                                    <a
-                                                                        onClick={(
-                                                                            e
-                                                                        ) =>
-                                                                            sendSheet(
-                                                                                e
-                                                                            )
-                                                                        }
-                                                                        href="https://api.whatsapp.com/send?phone=+17135130111"
-                                                                        style={{
-                                                                            margin: "0 10px",
-                                                                        }}
-                                                                        target="_blank"
-                                                                    >
-                                                                        <i
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    "17px",
-                                                                                color: "green",
-                                                                            }}
-                                                                            className="fa fa-whatsapp"
-                                                                        ></i>
-                                                                    </a>
-                                                                    <a
-                                                                        href="mailto:buylikedealers@gmail.com"
-                                                                        style={{
-                                                                            margin: "0 10px",
-                                                                        }}
-                                                                        target="_blank"
-                                                                    >
-                                                                        <i
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    "17px",
-                                                                                color: "blue",
-                                                                            }}
-                                                                            className="fa fa-envelope-o"
-                                                                        ></i>
-                                                                    </a>
+                                                                    Trucking
                                                                 </td>
-                                                            ) : (
-                                                                <>
+
+                                                                {noZipValue ? (
                                                                     <td
                                                                         colSpan="2"
                                                                         className="font-11 sec-black font-normal py-2"
                                                                     >
-                                                                        $
-                                                                        {truckingPrice
-                                                                            ? Number(
-                                                                                  truckingPrice.slice(
-                                                                                      1
-                                                                                  )
-                                                                              ) >
-                                                                              1000
-                                                                                ? Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  3
-                                                                                : Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) >
-                                                                                      400 &&
-                                                                                  Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) <
-                                                                                      1000
-                                                                                ? Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  2
-                                                                                : Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  )
-                                                                            : "0"}
+                                                                        <>
+                                                                            Contact
+                                                                            Support
+                                                                        </>
+                                                                        <a
+                                                                            onClick={(
+                                                                                e
+                                                                            ) =>
+                                                                                sendSheet(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "green",
+                                                                                }}
+                                                                                className="fa fa-whatsapp"
+                                                                            ></i>
+                                                                        </a>
+                                                                        <a
+                                                                            href="mailto:buylikedealers@gmail.com"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "blue",
+                                                                                }}
+                                                                                className="fa fa-envelope-o"
+                                                                            ></i>
+                                                                        </a>
                                                                     </td>
-                                                                    <td className="text-right px-2">
-                                                                        <label className="detail">
-                                                                            <input
-                                                                                value={
-                                                                                    truckAccessory
-                                                                                }
-                                                                                type="checkbox"
-                                                                                className="focus:outline-none detail self-center"
-                                                                                onChange={() =>
-                                                                                    settruckAccessory(
-                                                                                        !truckAccessory
+                                                                ) : (
+                                                                    <>
+                                                                        <td
+                                                                            colSpan="2"
+                                                                            className="font-11 sec-black font-normal py-2"
+                                                                        >
+                                                                            $
+                                                                            {truckingPrice
+                                                                                ? Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
                                                                                     )
-                                                                                }
-                                                                            />
-                                                                            <span className="detail"></span>
-                                                                        </label>
-                                                                    </td>
-                                                                </>
-                                                            )}
-                                                        </tr>
+                                                                                ) >
+                                                                                1000
+                                                                                    ? Number(
+                                                                                        truckingPrice.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    3
+                                                                                    : Number(
+                                                                                        truckingPrice.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) >
+                                                                                        400 &&
+                                                                                    Number(
+                                                                                        truckingPrice.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) <
+                                                                                        1000
+                                                                                    ? Number(
+                                                                                        truckingPrice.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    2
+                                                                                    : Number(
+                                                                                        truckingPrice.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    )
+                                                                                : "0"}
+                                                                        </td>
+                                                                        <td className="text-right px-2">
+                                                                            <label className="detail">
+                                                                                <input
+                                                                                    value={
+                                                                                        truckAccessory
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="focus:outline-none detail self-center"
+                                                                                    onChange={() =>
+                                                                                        settruckAccessory(
+                                                                                            !truckAccessory
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                                <span className="detail"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </>
+                                                                )}
+                                                            </tr>
 
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2"
-                                                            >
-                                                                Shipping
-                                                            </td>
-                                                            <td
-                                                                colSpan="2"
-                                                                className="font-11 sec-black font-normal py-2"
-                                                            >
-                                                                $1,150
-                                                            </td>
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        defaultChecked={
-                                                                            shipAccessory
-                                                                        }
+                                                            <tr className="">
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="sec-black font-11 font-semibold py-2"
+                                                                >
+                                                                    Shipping
+                                                                </td>
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2"
+                                                                >
+                                                                    $1,150
+                                                                </td>
+                                                                <td className="text-right px-2">
+                                                                    <label className="detail">
+                                                                        <input
+                                                                            defaultChecked={
+                                                                                shipAccessory
+                                                                            }
 
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={(e) => {
-                                                                            setshipAccessory(
-                                                                                e.target.checked
-                                                                            )
-                                                                            console.log(shipAccessory)
-                                                                        }
-                                                                        }
-                                                                    />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
-                                                        </tr>
+                                                                            type="checkbox"
+                                                                            className="focus:outline-none detail self-center"
+                                                                            onChange={(e) => {
+                                                                                setshipAccessory(
+                                                                                    e.target.checked
+                                                                                )
+                                                                                console.log(shipAccessory)
+                                                                            }
+                                                                            }
+                                                                        />
+                                                                        <span className="detail"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
+                                                            </>
+                                                        )}
+
+                                                        
 
                                                         <tr className="">
                                                             <td
@@ -2240,97 +2246,103 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
-                                                        <tr className="">
-                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                                Trucking
-                                                            </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $
-                                                                {truckingPrice
-                                                                    ? Number(
-                                                                          truckingPrice.slice(
-                                                                              1
-                                                                          )
-                                                                      ) > 1000
-                                                                        ? Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 3
-                                                                        : Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) >
-                                                                              400 &&
-                                                                          Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) <
-                                                                              1000
-                                                                        ? Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 2
-                                                                        : Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          )
-                                                                    : "0"}
-                                                            </td>
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        value={
-                                                                            placebidTruckAccessory
-                                                                        }
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
-                                                                            setplacebidTruckAccessory(
-                                                                                !placebidTruckAccessory
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
-                                                        </tr>
+                                                        {carDestination !== "USA" && (
+                                                            <>
+                                                                <tr className="">
+                                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                        Trucking
+                                                                    </td>
+                                                                    <td
+                                                                        colSpan="3"
+                                                                        className="font-11 sec-black font-normal pr-20 py-2"
+                                                                    >
+                                                                        $
+                                                                        {truckingPrice
+                                                                            ? Number(
+                                                                                truckingPrice.slice(
+                                                                                    1
+                                                                                )
+                                                                            ) > 1000
+                                                                                ? Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) / 3
+                                                                                : Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) >
+                                                                                    400 &&
+                                                                                Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) <
+                                                                                    1000
+                                                                                ? Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) / 2
+                                                                                : Number(
+                                                                                    truckingPrice.slice(
+                                                                                        1
+                                                                                    )
+                                                                                )
+                                                                            : "0"}
+                                                                    </td>
+                                                                    <td className="text-right px-2">
+                                                                        <label className="detail">
+                                                                            <input
+                                                                                value={
+                                                                                    placebidTruckAccessory
+                                                                                }
+                                                                                type="checkbox"
+                                                                                className="focus:outline-none detail self-center"
+                                                                                onChange={() =>
+                                                                                    setplacebidTruckAccessory(
+                                                                                        !placebidTruckAccessory
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                            <span className="detail"></span>
+                                                                        </label>
+                                                                    </td>
+                                                                </tr>
 
-                                                        <tr className="">
-                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                                Shipping
-                                                            </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $1,150
-                                                            </td>
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        value={
-                                                                            placebidShipAccessory
-                                                                        }
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
-                                                                            setplacebidShipAccessory(
-                                                                                !placebidShipAccessory
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
-                                                        </tr>
+                                                                <tr className="">
+                                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                        Shipping
+                                                                    </td>
+                                                                    <td
+                                                                        colSpan="3"
+                                                                        className="font-11 sec-black font-normal pr-20 py-2"
+                                                                    >
+                                                                        $1,150
+                                                                    </td>
+                                                                    <td className="text-right px-2">
+                                                                        <label className="detail">
+                                                                            <input
+                                                                                value={
+                                                                                    placebidShipAccessory
+                                                                                }
+                                                                                type="checkbox"
+                                                                                className="focus:outline-none detail self-center"
+                                                                                onChange={() =>
+                                                                                    setplacebidShipAccessory(
+                                                                                        !placebidShipAccessory
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                            <span className="detail"></span>
+                                                                        </label>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </>
+                                                        )}
+
 
                                                         <tr className="">
                                                             <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">

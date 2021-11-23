@@ -31,13 +31,14 @@ const App = ({ children }) => {
             setLoggedIn(true);
         }
         if (router.pathname.includes("auth") && router.pathname !== "/auth/signup/onboarding") {
-            if (token && !router.query) {
+            if (token && Object.keys(router.query).length === 0) {
                 dispatch(logIn());
                 router.back();
                 
-            }
-            if(token && router.query) {
+            } 
+            if(token && Object.keys(router.query).length !== 0) {
                 router.push('/vin')
+                console.log(router.query)
             }
         }
         if (

@@ -14,6 +14,7 @@ import { selectToken } from "../../../redux/reducers/userReducer";
 
 const OnBoarding = () => {
     const [tempToken, settempToken] = useState(null)
+    const [userCountry, setuserCountry] = useState(null)
 
     const checkTemp = () => {
         const tempData = localStorage.getItem("temp");
@@ -24,6 +25,23 @@ const OnBoarding = () => {
             return;
         }
     }
+
+    const retrieveCountry = () => {
+        const country = localStorage.getItem("userCountry")
+        if(!country) return
+
+        const item = JSON.parse(country)
+        setuserCountry(item)
+    }
+    
+    useEffect(() => {
+        retrieveCountry()
+        console.log("country", userCountry)
+        return () => {
+            retrieveCountry()
+        }
+    }, [tempToken])
+
     useEffect(() => {
         checkTemp()
         return () => {
@@ -116,6 +134,7 @@ const OnBoarding = () => {
             state: "",
             phoneNumber: "123",
             city: "",
+            countrysytem: userCountry
         },
         validationSchema: Yup.object({
             address: Yup.string().required("Address is required"),
@@ -124,7 +143,7 @@ const OnBoarding = () => {
             city: Yup.string().required("City is required"),
         }),
         onSubmit: (values) => {
-            // notify()
+            console.log(values)
             setisLoading(true);
             seterror(null);
             fetch(enviroment.BASE_URL + "auth/user/profile", {
