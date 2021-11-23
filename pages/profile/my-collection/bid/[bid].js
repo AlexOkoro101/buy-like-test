@@ -43,9 +43,50 @@ const BidDetails = () => {
     const [limit, setLimit] = useState(window.innerWidth <= 760 ? 3 : 5);
     const [count, setCount] = useState(0);
     const [overview, setoverview] = useState(true);
+    const [userId, setuserId] = useState(null)
 
     const router = useRouter();
     const bidId = router.query.bid;
+
+    const retrieveData = () => {
+        const userActive = localStorage.getItem("user");
+        if (!userActive) {
+            return;
+        }
+        const item = JSON.parse(userActive);
+        const now = new Date();
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            window.localStorage.clear();
+            return null;
+        }
+        setuserId(item?.userId);
+
+        if(userId) {
+            getProcessFlow()
+        }
+    }; //Get Data from local Storage
+
+
+    const getProcessFlow = () => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+          
+        fetch(enviroment.BASE_URL + "process/" + userId, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
+
+    useEffect(() => {
+        retrieveData()
+        return () => {
+            retrieveData()
+        }
+    }, [bidCollection])
 
     useEffect(() => {
         console.log(bidId);
