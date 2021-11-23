@@ -74,9 +74,9 @@ const Transaction = () => {
 
 
     //Set Address
-    const [country, setcountry] = useState("")
+    const [country, setcountry] = useState("Nigeria")
     const [city, setcity] = useState("")
-    const [countryState, setcountryState] = useState("")
+    const [countryState, setcountryState] = useState("Lagos")
     
 
 
@@ -365,7 +365,7 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
     };
 
     const phoneNumberChange = () => {
-        formik.values.number =
+        formik.values.phone =
             `${phoneNumberRef.current.selectedCountryData.dialCode}` +
             `${phoneNumberRef.current.state.value}`;
         setphoneNumber(
@@ -389,12 +389,12 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
         initialValues: {
             firstName: "",
             lastName: "",
-            number: '',
+            phone: '',
             email: "",
-            streetAddress: "",
-            city: city,
-            countryState: countryState,
-            country: country,
+            address: "",
+            lg: "",
+            state: "",
+            country: "",
         },
         validationSchema: Yup.object({
             firstName: Yup.string()
@@ -403,20 +403,26 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
             lastName: Yup.string()
                 .min(3, "Must be 3 characters or more")
                 .required("Last name is required"),
-            number: Yup.string()
+            phone: Yup.string()
             .required('Phone number is required'),
             email: Yup.string()
                 .email("Invalid email address")
                 .required("Email is required"),
-            streetAddress: Yup.string()
+            address: Yup.string()
                 .required("Address is required"),
+            lg: Yup.string()
+                .required("City is required"),
+            state: Yup.string()
+                .required("State is required"),
+            country: Yup.string()
+                .required("Country is required"),
         }),
         onSubmit: (values) => {
             // notify()
             setisLoading(true);
             seterror(null);
-            console.log(values);
-            setstate(2)
+            // console.log(values);
+            
             
 
             var myHeaders = new Headers();
@@ -424,18 +430,11 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
 
             var raw = JSON.stringify({
             info: [
-                {
-                "firstName": "alex",
-                "lastName": "Okoro",
-                "address": "48 lagos",
-                "phone": "0909485990",
-                "email": "alex@g.com",
-                "country": "nigeria",
-                "state": "lagos",
-                "lg": "sureulere local gov"
-                }
+                values
             ]
             });
+
+            console.log(raw)
 
             var requestOptions = {
             method: 'POST',
@@ -446,7 +445,14 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
 
             fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                const newResult = JSON.parse(result)
+
+                if(newResult.error === false) {
+                    setstate(2)
+                }
+            })
             .catch(error => console.log('error', error));
                     },
                 });
@@ -772,15 +778,24 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                                                 Country
                                                             </label>
                                                             <select
-                                                                id="lga"
+                                                                id="country"
+                                                                name="country"
                                                                 className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                                value={country}
-                                                                onChange={(e) => setcountry(e.target.value)}
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.country}
                                                             >
-                                                                <option>Nigeria</option>
-                                                                <option>Canada</option>
-                                                                <option>Mexico</option>
+                                                                <option value="">Chooose Country</option>
+                                                                <option value="Nigeria">Nigeria</option>
+                                                                <option value="Canada">Canada</option>
+                                                                <option value="Mexico">Mexico</option>
                                                             </select>
+                                                            {formik.touched.country &&
+                                                            formik.errors.country ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.country}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                         <div className="col-span-6 lg:col-span-3">
                                                             <label
@@ -791,14 +806,22 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                                             </label>
                                                             <select
                                                                 id="state"
+                                                                name="state"
                                                                 className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                                value={countryState}
-                                                                onChange={(e) => setcountryState(e.target.value)}
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.state}
                                                             >
-                                                                <option>Lagos</option>
-                                                                <option>Abuja</option>
-                                                                <option>Rivers</option>
+                                                                <option value="Lagos">Lagos</option>
+                                                                <option value="Abuja">Abuja</option>
+                                                                <option value="Rivers">Rivers</option>
                                                             </select>
+                                                            {formik.touched.state &&
+                                                            formik.errors.state ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.state}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
 
                                                         <div className=" col-span-6 lg:col-span-3">
@@ -809,18 +832,26 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                                                 City
                                                             </label>
                                                             <select
-                                                                id="city"
+                                                                id="lg"
+                                                                name="lg"
                                                                 className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                                value={city}
-                                                                onChange={(e) => setcity(e.target.value)}
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                value={formik.values.lg}
                                                             >
-                                                                <option>
+                                                                <option value="">
                                                                     Select Local
                                                                     Government Area
                                                                 </option>
-                                                                <option>Canada</option>
-                                                                <option>Mexico</option>
+                                                                <option value="Surulere">Surulere</option>
+                                                                <option value="Ajah">Ajah</option>
                                                             </select>
+                                                            {formik.touched.lg &&
+                                                            formik.errors.lg ? (
+                                                                <div className="input-error">
+                                                                    {formik.errors.lg}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
 
                                                         <div className="col-span-6">
@@ -833,19 +864,19 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                                             <textarea
                                                                 rows="2"
                                                                 cols="1"
-                                                                id="streetAddress"
-                                                                name="streetAddress"
+                                                                id="address"
+                                                                name="address"
                                                                 id="address"
                                                                 className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
                                                                 placeholder="Enter street address"
                                                                 onChange={formik.handleChange}
                                                                 onBlur={formik.handleBlur}
-                                                                value={formik.values.streetAddress}
+                                                                value={formik.values.address}
                                                             ></textarea>
-                                                            {formik.touched.streetAddress &&
-                                                            formik.errors.streetAddress ? (
+                                                            {formik.touched.address &&
+                                                            formik.errors.address ? (
                                                                 <div className="input-error">
-                                                                    {formik.errors.streetAddress}
+                                                                    {formik.errors.address}
                                                                 </div>
                                                             ) : null}
                                                         </div>
