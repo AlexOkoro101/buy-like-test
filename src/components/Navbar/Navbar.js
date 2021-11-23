@@ -21,7 +21,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     let dropdown;
     useEffect(() => {
         getCars();
-    }, [total]);
+    }, [total, cars]);
 
     //Get Data from Local Storage
     const retrieveData = () => {
