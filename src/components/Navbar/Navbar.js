@@ -17,12 +17,17 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const router = useRouter();
     const user = useSelector(selectToken);
     const [token, settoken] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
     const [userNmae, setuserName] = useState(null);
     let dropdown;
     useEffect(() => {
         dispatch(getCars());
     }, []);
-
+    useEffect(() => {
+        router.pathname == "/vin"
+            ? setTotalCount(dollarFormatter.format(cars.total))
+            : setTotalCount(dollarFormatter.format(total));
+    }, [router.pathname, cars.total, total]);
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -253,9 +258,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={`VIN to search ${dollarFormatter.format(
-                                    total
-                                )} cars`}
+                                placeholder={`VIN to search ${totalCount} cars`}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
@@ -300,9 +303,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     <div className="md:block hidden h-6 relative">
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={`VIN to search ${dollarFormatter.format(
-                                total
-                            )} cars`}
+                            placeholder={`VIN to search ${totalCount} cars`}
                             type="text"
                             isClearable
                             onChange={handleChange}
