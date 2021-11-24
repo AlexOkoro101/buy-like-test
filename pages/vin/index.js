@@ -754,7 +754,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                             }}
                         >
                             <img
-                                src={params.images[0].image_largeUrl}
+                                src={`https://proxybuylike.herokuapp.com/?url=${params.images[0].image_largeUrl}`}
                                 alt="hello"
                                 className="w-full object-cover h-full rounded-md object-center"
                             />
@@ -2236,11 +2236,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                         <div>
                                                                                             <img
                                                                                                 className="img-fluid rounded"
-                                                                                                src={
-                                                                                                    ele
-                                                                                                        ?.images[0]
-                                                                                                        ?.image_largeUrl
-                                                                                                }
+                                                                                                src={`https://proxybuylike.herokuapp.com/?url=${ele?.images[0]?.image_largeUrl}`}
                                                                                                 alt=""
                                                                                                 style={{
                                                                                                     width: "340px",
