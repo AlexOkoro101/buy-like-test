@@ -457,7 +457,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 >
                     {params.images?.length ? (
                         <img
-                            src={params.images[0].image_largeUrl}
+                            src={`https://proxybuylike.herokuapp.com/?url=${params.images[0].image_largeUrl}`}
                             alt="hello"
                             className="w-full h-full object-center rounded-md object-contain"
                         />
@@ -520,9 +520,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     };
     const returnLargeimage = () => {
         const largeImageArray = cardD?.images.map((image) => {
-            return image.image_largeUrl;
+            return `https://proxybuylike.herokuapp.com/?url=${image.image_largeUrl}`;
         });
-
         return largeImageArray;
     };
     const displayLargeimage = () => {
@@ -541,7 +540,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                         setToggler(!toggler);
                         setWaterMarkToggle(true);
                     }}
-                    src={cardD?.images[id]?.image_largeUrl}
+                    src={`https://proxybuylike.herokuapp.com/?url=${cardD?.images[id]?.image_largeUrl}`}
                     loading="lazy"
                     className="br-5 w-full h-full object-cover object-center cursor-pointer"
                     alt="Benz"
@@ -1513,9 +1512,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
                                                                 >
                                                                     <img
-                                                                        src={
-                                                                            ele?.image_largeUrl
-                                                                        }
+                                                                        src={`https://proxybuylike.herokuapp.com/?url=${ele?.image_largeUrl}`}
                                                                         className="rounded-md object-cover w-full shadow-sm"
                                                                         style={{
                                                                             height: "60.3px",
@@ -3265,11 +3262,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 ?.length ? (
                                                                 <>
                                                                     <img
-                                                                        src={
-                                                                            ele
-                                                                                .images[0]
-                                                                                .image_largeUrl
-                                                                        }
+                                                                        src={`https://proxybuylike.herokuapp.com/?url=${ele.images[0].image_largeUrl}`}
                                                                         alt="hello"
                                                                         className="w-full object-cover h-full rounded-md object-center"
                                                                     />

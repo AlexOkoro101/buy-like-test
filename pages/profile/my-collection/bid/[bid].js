@@ -136,7 +136,7 @@ const BidDetails = () => {
                     onClick={() => {
                         setToggler(!toggler);
                     }}
-                    src={bidCollection?.images[0]?.image_largeUrl}
+                    src={`https://proxybuylike.herokuapp.com/?url=${bidCollection?.images[0]?.image_largeUrl}`}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
                     alt="Benz"
@@ -218,7 +218,7 @@ const BidDetails = () => {
                                                 className="mr-3 h-full transition-all cursor-pointer transform hover:scale-105"
                                             >
                                                 <img
-                                                    src={ele?.image_largeUrl}
+                                                    src={`https://proxybuylike.herokuapp.com/?url=${ele?.image_largeUrl}`}
                                                     className="rounded-md shadow-sm"
                                                     style={{
                                                         height: "60.3px",

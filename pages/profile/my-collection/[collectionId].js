@@ -182,7 +182,7 @@ const CollectionDetails = () => {
                                     className="bid-card flex py-3 px-3"
                                 >
                                     <img
-                                        src={vehicle.images[0]?.image_largeUrl}
+                                        src={`https://proxybuylike.herokuapp.com/?url=${vehicle.images[0]?.image_largeUrl}`}
                                         alt="benz"
                                         className="rounded-md w-64 h-36 flex-no-shrink mr-4"
                                     />
