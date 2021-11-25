@@ -33,8 +33,8 @@ const Transaction = () => {
             progress: undefined,
         });
 
-        const addAddressSuccess = () =>
-        toast.success("New Address Added", {
+    const addAddressSuccess = () =>
+        toast.success("New address added", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -44,7 +44,18 @@ const Transaction = () => {
             progress: undefined,
         });
 
-    const [token, settoken] = useState(null)
+    const defaultAddressSuccess = () =>
+        toast.success("Default address set", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+    const [token, settoken] = useState("")
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
     const [userAddress, setuserAddress] = useState(null);
@@ -89,6 +100,15 @@ const [newAddressCountry, setnewAddressCountry] = useState("");
 const [newAddressState, setnewAddressState] = useState("");
 const [newAddressCity, setnewAddressCity] = useState("");
 const [newAddressStreet, setnewAddressStreet] = useState("");
+
+
+
+const [defaultAddress, setdefaultAddress] = useState(null);
+const [showNotif, setshowNotif] = useState(false);
+const [defaultmodal, setdefaultmodal] = useState(false);
+const [userInitialAddress, setuserInitialAddress] = useState(null);
+
+const [refreshDOM, setrefreshDOM] = useState(false);
 
 
     const referenceNumber = () => {
@@ -147,14 +167,52 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
         setuserId(item?.userId);
         setuserEmail(item?.userEmail);
         setuserPhone(item?.phoneNumber);
-        setuserAddress(item?.userAddress);
-        console.log(item?.userAddress)
+        // setuserAddress(item?.userAddress);
+        // console.log(item?.userAddress)
+
+        if(item?.userId) {
+            getAddressArray(item?.userId)
+        }
     }; //Get Data from local Storage
+
+
+    const getAddressArray = (id) => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+          
+        fetch(enviroment.BASE_URL + "auth/user/users/admin/" + id, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            // console.log(result)
+            const newResult = JSON.parse(result)
+            console.log("address info", newResult)
+            setuserInitialAddress(newResult)
+            setuserAddress(newResult.data.info)
+
+            if(!newResult.data.info.length) {
+                setdefaultmodal(true)
+            }
+
+            setdefaultAddress(newResult.data.info.filter((address) => {
+                return address._id == newResult.data.defaultInfo;
+            }));
+
+            console.log("default", defaultAddress)
+
+            if(defaultAddress && !defaultAddress?.length) {
+                setdefaultmodal(true)
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
 
     useEffect(() => {
         retrieveData();
         return retrieveData;
-    }, [router.pathname, token]);
+    }, [router.pathname, token, switchAddress, refreshDOM]);
 
     const verifyPaystackPayment = (ref) => {
         fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
@@ -385,6 +443,34 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
         setstate(2)
     }
 
+    const setinitialDefault = (id) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            "default": id
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/address-default/" + userId, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            const newResult = JSON.parse(result)
+            if(newResult.error === false) {
+                defaultAddressSuccess()
+                setswitchAddress(false)
+            } 
+        })
+        .catch(error => console.log('error', error));
+    }
+
     const formik = useFormik({
         initialValues: {
             firstName: "",
@@ -429,18 +515,18 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
             myHeaders.append("Content-Type", "application/json");
 
             var raw = JSON.stringify({
-            info: [
-                values
-            ]
+                info: [
+                    values
+                ]
             });
 
             console.log(raw)
 
             var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
             };
 
             fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
@@ -451,11 +537,58 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
 
                 if(newResult.error === false) {
                     setstate(2)
+                    setinitialDefault(newResult.data.info[0]._id)
                 }
             })
             .catch(error => console.log('error', error));
-                    },
-                });
+        },
+    });
+
+    const setbackupDefault = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            info: [
+                {
+                    firstName: userInitialAddress?.data.profile.firstName,
+                    lastName: userInitialAddress?.data.profile.lastName,
+                    address: userInitialAddress?.data.profile.address,
+                    phone: userInitialAddress?.data.profile.phoneNumber,
+                    email: userInitialAddress?.data.email,
+                    country: userInitialAddress?.data.profile.country,
+                    state: userInitialAddress?.data.profile.state,
+                    lg: userInitialAddress?.data.profile.state
+                }
+            ]
+        });
+
+        console.log(raw)
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
+        .then(response => {
+            setrefreshDOM(true)
+            response.text()
+        })
+        .then(result => {
+            console.log(result)
+            const newResult = JSON.parse(result)
+            console.log(newResult)
+
+            if(newResult.error === false) {
+                setdefaultmodal(false)
+                setinitialDefault(newResult.data.info[0]._id)
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
 
     const newPhoneNumberChange = () => {
         // formik.values.number =
@@ -532,6 +665,10 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
             }
         })
         .catch(error => console.log('error', error));
+    }
+
+    const sendDefaultAddress = () => {
+        setstate(2)
     }
 
     return (
@@ -650,7 +787,7 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                 {state === 1 && (
 
                                     <>
-                                        {!userAddress?.length ? (
+                                        {!userAddress?.length || !defaultAddress?.length ? (
                                             <form
                                                 className="tabcontent mt-5 "
                                                 id="customer-info"
@@ -893,140 +1030,148 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                                 </div>
                                             </form>
                                         ) : (
-                                            <form
-                                                className="tabcontent mt-5 "
-                                                id="customer-info"
-                                                onSubmit={formik.handleSubmit}
-                                            >
-                                                <div className="flex justify-end mb-4">
-                                                    <button onClick={() => {
-                                                        setaddressModalContent1(true)
-                                                        setaddressModalContent2(false)
-                                                        setaddressModalContent3(false)
-                                                        setswitchAddress(true)
-                                                        }} className="text-white text-right font-11 bg-blue-500 rounded-sm py-1 px-2 hover:bg-blue-600">Switch Address</button>
-
-                                                </div>
-                                                <div className="info-holder text-xs px-4 py-4 mb-3">
-                                                    <p className="font-semibold primary-color  ">
-                                                        Personal Details
-                                                    </p>
-
-                                                    <div className="grid grid-cols-6 gap-3 mt-3">
-                                                        <div className="col-span-6 lg:col-span-3">
-                                                            <label
-                                                                htmlFor="name"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                First Name
-                                                            </label>
-                                                          
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.firstName}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className=" col-span-6 lg:col-span-3 ">
-                                                            <label
-                                                                htmlFor="name"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                Last Name
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.lastName}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-span-6 lg:col-span-3 relative ">
-                                                            <label
-                                                                htmlFor="phone"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                Phone Number
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.phone}
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-span-6 lg:col-span-3">
-                                                            <label
-                                                                htmlFor="email"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                Email
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.email}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="info-holder text-xs px-4 py-4 mb-3">
-                                                    <p className="font-semibold primary-color ">
-                                                        Delivery address
-                                                    </p>
-
-                                                    <div className="grid grid-cols-6 gap-3 mt-3">
-                                                        <div className=" col-span-6 ">
-                                                            <label
-                                                                htmlFor="lga"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                Country
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.country}
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-span-6 lg:col-span-3">
-                                                            <label
-                                                                htmlFor="state"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                State
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.state}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className=" col-span-6 lg:col-span-3">
-                                                            <label
-                                                                htmlFor="lga"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                City
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.lg}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-span-6">
-                                                            <label
-                                                                htmlFor="lga"
-                                                                className="block text-xs primary-color "
-                                                            >
-                                                                Street Address
-                                                            </label>
-                                                            <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
-                                                                {userAddress[0]?.address}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-center">
-                                                    <button
-                                                    
-                                                        type="submit"
-                                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                            <>
+                                                {defaultAddress.length && (
+                                                    <form
+                                                        className="tabcontent mt-5 "
+                                                        id="customer-info"
+                                                        
                                                     >
-                                                        Proceed
-                                                    </button>
-                                                </div>
-                                            </form>
+                                                        <div className="flex justify-end mb-4">
+                                                            <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setaddressModalContent1(true)
+                                                                setaddressModalContent2(false)
+                                                                setaddressModalContent3(false)
+                                                                setswitchAddress(true)
+                                                                }} className="text-white text-right font-11 bg-blue-500 rounded-sm py-1 px-2 hover:bg-blue-600">Switch Address</button>
+
+                                                        </div>
+                                                        <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                            <p className="font-semibold primary-color  ">
+                                                                Personal Details
+                                                            </p>
+
+                                                            <div className="grid grid-cols-6 gap-3 mt-3">
+                                                                <div className="col-span-6 lg:col-span-3">
+                                                                    <label
+                                                                        htmlFor="name"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        First Name
+                                                                    </label>
+                                                                
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.firstName}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className=" col-span-6 lg:col-span-3 ">
+                                                                    <label
+                                                                        htmlFor="name"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        Last Name
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.lastName}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-span-6 lg:col-span-3 relative ">
+                                                                    <label
+                                                                        htmlFor="phone"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        Phone Number
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.phone}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-span-6 lg:col-span-3">
+                                                                    <label
+                                                                        htmlFor="email"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        Email
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.email}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="info-holder text-xs px-4 py-4 mb-3">
+                                                            <p className="font-semibold primary-color ">
+                                                                Delivery address
+                                                            </p>
+
+                                                            <div className="grid grid-cols-6 gap-3 mt-3">
+                                                                <div className=" col-span-6 ">
+                                                                    <label
+                                                                        htmlFor="lga"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        Country
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.country}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-span-6 lg:col-span-3">
+                                                                    <label
+                                                                        htmlFor="state"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        State
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.state}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className=" col-span-6 lg:col-span-3">
+                                                                    <label
+                                                                        htmlFor="lga"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        City
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.lg}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-span-6">
+                                                                    <label
+                                                                        htmlFor="lga"
+                                                                        className="block text-xs primary-color "
+                                                                    >
+                                                                        Street Address
+                                                                    </label>
+                                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                                        {defaultAddress[0]?.address}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-center">
+                                                            <button
+                                                                onClick={sendDefaultAddress}
+                                                                type="submit"
+                                                                className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
+                                                            >
+                                                                Proceed
+                                                            </button>
+                                                        </div>
+                                                    </form>
+
+                                                )}
+
+                                            </>
 
                                         )}
                                     </>
@@ -1162,7 +1307,14 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                                 <>
                                     <div className="flex flex-col">
                                         {userAddress?.map((address) => (
-                                            <div key={address._id} className="border-b border-gray-200 p-3 m-2 w-full flex justify-between"> 
+                                            <div 
+                                                onClick={() => {
+                                                    setinitialDefault(address._id)
+                                                    setshowNotif(true)
+                                                }} 
+                                                key={address._id} 
+                                                className="border-b border-gray-200 p-3 m-2 w-full flex justify-between cursor-pointer hover:bg-gray-200"
+                                                > 
                                                 <div>
                                                     <p className="text-xs text-black">{address.firstName} {""} {address.lastName}</p>
                                                     <p className="font-11 sec-black">{address.address}</p>
@@ -1601,6 +1753,8 @@ const [newAddressStreet, setnewAddressStreet] = useState("");
                         </div>
                     </div>
                 )}
+
+               
             </div>
         </div>
     );

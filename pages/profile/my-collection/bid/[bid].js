@@ -32,6 +32,7 @@ const BidDetails = () => {
             progress: undefined,
         });
 
+    
     const [bidCollection, setbidCollection] = useState(null);
 
     const [isLoading, setisLoading] = useState(true);
@@ -44,9 +45,20 @@ const BidDetails = () => {
     const [count, setCount] = useState(0);
     const [overview, setoverview] = useState(true);
     const [userId, setuserId] = useState(null)
+    const [processDetails, setprocessDetails] = useState(null);
 
     const router = useRouter();
     const bidId = router.query.bid;
+
+    const adjustHeight = () => {
+        const proccessBody = document.getElementsByClassName('tracker-table');
+        var proccessBodyHeight = proccessBody[0]?.offsetHeight;
+        console.log(proccessBodyHeight)
+
+        const processCircle = document.querySelector('.process-circle')
+        processCircle.style.setProperty('--height', `${proccessBodyHeight}px`)
+
+    }
 
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
@@ -75,9 +87,13 @@ const BidDetails = () => {
             redirect: 'follow'
         };
           
-        fetch(enviroment.BASE_URL + "process/" + userId, requestOptions)
+        fetch(enviroment.BASE_URL + "process/vehicle/" + bidCollection?._id, requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            const newResult = JSON.parse(result)
+            console.log(newResult)
+            setprocessDetails(newResult?.data?.details)
+        })
         .catch(error => console.log('error', error));
     }
 
@@ -114,6 +130,17 @@ const BidDetails = () => {
     useEffect(() => {
         displaySmall();
     }, [bidCollection]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            adjustHeight()
+        }, 2000)
+        return () => {
+            setTimeout(() => {
+                adjustHeight()
+            }, 2000)
+        }
+    }, [])
 
     function displaySmall() {
         let data = bidCollection?.images?.length;
@@ -277,154 +304,166 @@ const BidDetails = () => {
                                 <div className="lg:flex lg:justify-between">
                                     <div className="Tracker-holder pb-20 ">
                                         <p className="font-semibold text-sm py-5 px-2">Bid Tracker</p>
-                                        <table>
-                                            <tbody className="flex items-center jus mb-2 mt-0">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-44 md:w-72">
-                                                        <small>You placed a bid for Mercedes Benz GLK.</small>
-                                                    </td>
-                                                </tr>
+                                        {processDetails ? (
+                                            <>
+                                                <table className="tracker-table">
+                                                    {processDetails?.map((process) => (
+                                                        <tbody key={process._id} className="process-body flex items-center jus mb-2 mt-8 lg:mt-11">
+                                                            <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                                <td>
+                                                                    <p className="text-xs font-bold" id="date">{new Date(process?.created_at).toLocaleDateString('en-NG', {month: 'short', day: 'numeric', year: 'numeric'})}</p>
+                                                                    <small className="text-xs " id="time">{new Date(process?.created_at).toLocaleTimeString('en-NG', {hour: '2-digit', minute: '2-digit', hour12: true}).toUpperCase()}</small>
+                                                                </td>
+                                                            </tr>
+                                                            <tr className=" mb-3 ">
+                                                                <td className="process-circle circle"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td className=" pl-4 mb-3 leading-4 w-44 md:w-72">
+                                                                    <small>{process?.body}</small>
+                                                                </td>
+                                                            </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>Your bid has been won and is awaiting balance payment.</small>
-                                                    </td>
-                                                </tr>
+                                                        </tbody>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>You paid the balance for the car and is awaiting pick up at the
-                                                            lot.</small>
-                                                    </td>
-                                                </tr>
+                                                    ))}
+                                                    {/* <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>Your bid has been won and is awaiting balance payment.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>Your car has been picked up from the lot and is on the way to the
-                                                            port.</small>
-                                                    </td>
-                                                </tr>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>You paid the balance for the car and is awaiting pick up at the
+                                                                    lot.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>The car has been dropped at the port and is awaiting
-                                                            shippment.</small>
-                                                    </td>
-                                                </tr>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>Your car has been picked up from the lot and is on the way to the
+                                                                    port.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>Your car has been shipped to Nigeria and is awaiting clearance at
-                                                            the port.</small>
-                                                    </td>
-                                                </tr>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>The car has been dropped at the port and is awaiting
+                                                                    shippment.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>Your car has been cleared at the port and is awaiting delivery or
-                                                            pickup.</small>
-                                                    </td>
-                                                </tr>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>Your car has been shipped to Nigeria and is awaiting clearance at
+                                                                    the port.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
-                                            <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
-                                                <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
-                                                    <td>
-                                                        <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
-                                                        <small className="text-xs " id="time">12:20 PM</small>
-                                                    </td>
-                                                </tr>
-                                                <tr className=" mb-3 ">
-                                                    <td className="circle"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
-                                                        <small>Your car has been delivered.</small>
-                                                    </td>
-                                                </tr>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>Your car has been cleared at the port and is awaiting delivery or
+                                                                    pickup.</small>
+                                                            </td>
+                                                        </tr>
 
-                                            </tbody>
+                                                    </tbody>
+                                                    <tbody className="flex items-center mb-2 mt-8 lg:mt-11">
+                                                        <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
+                                                            <td>
+                                                                <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
+                                                                <small className="text-xs " id="time">12:20 PM</small>
+                                                            </td>
+                                                        </tr>
+                                                        <tr className=" mb-3 ">
+                                                            <td className="circle"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td className=" pl-4 mb-3 leading-4 w-52 md:w-72">
+                                                                <small>Your car has been delivered.</small>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody> */}
 
 
 
 
 
-                                        </table>
+                                                </table>
+
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-xs">No feedback available yet</p>
+                                            </>
+                                        )}
 
                                         {/* <!-- <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
                                                 <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
