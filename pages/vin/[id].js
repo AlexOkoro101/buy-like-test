@@ -1869,8 +1869,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
-                                                        {carDestination !== "USA" && (
-                                                            <>
+                                                        
+                                                            
                                                             <tr className="">
                                                                 <td
                                                                     colSpan="2"
@@ -1994,6 +1994,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 )}
                                                             </tr>
 
+                                                        {carDestination !== "USA" && (
+
                                                             <tr className="">
                                                                 <td
                                                                     colSpan="2"
@@ -2028,7 +2030,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     </label>
                                                                 </td>
                                                             </tr>
-                                                            </>
+                                                            
                                                         )}
 
                                                         
@@ -2271,8 +2273,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
-                                                        {carDestination !== "USA" && (
-                                                            <>
+                                                        
                                                                 <tr className="">
                                                                     <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                         Trucking
@@ -2335,6 +2336,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         </label>
                                                                     </td>
                                                                 </tr>
+                                                        {carDestination !== "USA" && (
+                                                            <>    
 
                                                                 <tr className="">
                                                                     <td className="sec-black font-11 font-semibold w-28 p-2">

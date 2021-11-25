@@ -411,7 +411,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
 
     useEffect(() => {
         retrieveCar()
-        console.log("car detail", carDetails)
+        console.log("car deets", carDetails)
     }, [])
 
     const validatePhone = () => {
@@ -623,12 +623,25 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         setaddressModalContent3(true)
     }
 
+    function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * 
+     charactersLength));
+       }
+       return result;
+    }
+
     const addNewAddress = () => {
         setaddressModalContent1(true)
         setaddressModalContent2(false)
         setaddressModalContent3(false)
+        setswitchAddress(false)
 
         const addressObj = {
+            // _id: makeid(24),
             firstName: newAddressFirstName,
             lastName: newAddressLastName,
             address: newAddressStreet, 
@@ -647,6 +660,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         var raw = JSON.stringify({
             info: userAddress
         });
+
+        console.log("added address", raw)
 
         var requestOptions = {
             method: 'POST',
