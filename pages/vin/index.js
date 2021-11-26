@@ -2105,9 +2105,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                             alt="location"
                                                                                         />
                                                                                     </span>{" "}
-                                                                                    {
-                                                                                        ele?.pickupLocation
-                                                                                    }
+                                                                                    {ele?.pickupLocation.replace(
+                                                                                        "Manheim",
+                                                                                        ""
+                                                                                    )}
                                                                                 </p>
                                                                                 <div className="ml-auto flex self-center">
                                                                                     <img
@@ -2290,9 +2291,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                                             alt="beacon"
                                                                                                         />
                                                                                                     </span>{" "}
-                                                                                                    {
-                                                                                                        ele?.pickupLocation
-                                                                                                    }
+                                                                                                    {ele?.pickupLocation.replace(
+                                                                                                        "Manheim",
+                                                                                                        ""
+                                                                                                    )}
                                                                                                 </p>
                                                                                             </td>
 

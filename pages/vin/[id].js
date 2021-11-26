@@ -2561,7 +2561,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             Vehicle location
                                         </p>
                                         <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                            {cardD?.pickupLocation}
+                                            {cardD?.pickupLocation.replace(
+                                                "Manheim",
+                                                ""
+                                            )}
                                         </p>
                                     </div>
                                     <div className="flex flex-col relative  lg:block">
@@ -3020,9 +3023,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
                                                         <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                            {
-                                                                cardD?.pickupLocation
-                                                            }
+                                                            {cardD?.pickupLocation.replace(
+                                                                "Manheim",
+                                                                ""
+                                                            )}
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -3299,9 +3303,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         alt="location"
                                                                     />
                                                                 </span>
-                                                                {
-                                                                    ele?.pickupLocation
-                                                                }
+                                                                {ele?.pickupLocation.replace(
+                                                                    "Manheim",
+                                                                    ""
+                                                                )}
                                                             </p>
                                                             <div className="ml-auto flex self-center">
                                                                 <img
