@@ -58,6 +58,29 @@ const Transaction = () => {
             progress: undefined,
         });
 
+    const editAddressSuccess = () =>
+        toast.success("Success", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+    const deleteAddressSuccess = () =>
+        toast.success("Address deleted", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
+
     const [token, settoken] = useState("")
     const [userEmail, setuserEmail] = useState(null);
     const [userPhone, setuserPhone] = useState(null);
@@ -79,6 +102,7 @@ const Transaction = () => {
     const [street, setstreet] = useState("");
     const phoneNumberRef = useRef(null);
     const newPhoneNumberRef = useRef(null);
+    const editedphoneRef = useRef(null);
     const [confimation, setconfimation] = useState(false);
     const [refNumber, setrefNumber] = useState(null);
     const [switchAddress, setswitchAddress] = useState(false)
@@ -110,6 +134,7 @@ const [defaultAddress, setdefaultAddress] = useState(null);
 const [showNotif, setshowNotif] = useState(false);
 const [defaultmodal, setdefaultmodal] = useState(false);
 const [userInitialAddress, setuserInitialAddress] = useState(null);
+const [individualAddress, setindividualAddress] = useState(null);
 
 const [refreshDOM, setrefreshDOM] = useState(false);
 
@@ -202,7 +227,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                 return address._id == newResult.data.defaultInfo;
             }));
 
-            console.log("default", defaultAddress)
+            console.log("defaul", defaultAddress)
 
             if(defaultAddress && !defaultAddress?.length) {
                 setdefaultmodal(true)
@@ -216,7 +241,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         retrieveData();
         // console.log(options)
         return retrieveData;
-    }, [router.pathname, token, switchAddress, refreshDOM]);
+    }, [router.pathname, token, switchAddress, addressModalContent1]);
 
     const verifyPaystackPayment = (ref) => {
         fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
@@ -512,6 +537,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
             setisLoading(true);
             seterror(null);
             // console.log(values);
+
+            userAddress?.push(values)
             
             
 
@@ -519,9 +546,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
             myHeaders.append("Content-Type", "application/json");
 
             var raw = JSON.stringify({
-                info: [
-                    values
-                ]
+                info: userAddress
             });
 
             console.log(raw)
@@ -541,10 +566,10 @@ const [refreshDOM, setrefreshDOM] = useState(false);
 
                 if(newResult.error === false) {
                     setstate(2)
-                    setinitialDefault(newResult.data.info[0]._id)
+                    setinitialDefault(newResult.data.info[newResult.data.info.length - 1]._id)
                 }
             })
-            .catch(error => console.log('error', error));
+            .catch(error => console.log('err', error));
         },
     });
 
@@ -609,6 +634,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
 
     const editAddress = (address) => {
         console.log(address)
+        setindividualAddress(address)
 
         setaddressModalContent1(false)
         setaddressModalContent2(true)
@@ -616,9 +642,92 @@ const [refreshDOM, setrefreshDOM] = useState(false);
     }
 
     const saveShippingAddress = () => {
-        setaddressModalContent1(true)
-        setaddressModalContent2(false)
-        setaddressModalContent3(false)
+       
+
+        const editedAddress = userAddress.map((address) => {
+            if(address._id == individualAddress._id) {
+                return individualAddress;
+
+            } else {
+                return address;
+            }
+        })
+
+        console.log(editedAddress)
+        
+
+        var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                info: editedAddress
+            });
+
+            console.log(raw)
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result)
+                const newResult = JSON.parse(result)
+
+                if(newResult.error === false) {
+                    setaddressModalContent1(true)
+                    setaddressModalContent2(false)
+                    setaddressModalContent3(false)
+                    editAddressSuccess()
+                }
+            })
+            .catch(error => console.log('error', error));
+
+    }
+
+    const deleteAddress = (id) => {
+       
+
+        const editedAddress = userAddress.filter((address) => {
+            return address._id !== id
+        })
+
+        console.log(editedAddress)
+        
+
+        var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                info: editedAddress
+            });
+
+            console.log(raw)
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch(enviroment.BASE_URL + "auth/user/update/info/" + userId, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result)
+                const newResult = JSON.parse(result)
+
+                if(newResult.error === false) {
+                    setswitchAddress(false)
+                    deleteAddressSuccess()
+                }
+            })
+            .catch(error => console.log('error', error));
+
     }
 
     const showNewAddress = () => {
@@ -627,16 +736,6 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         setaddressModalContent3(true)
     }
 
-    function makeid(length) {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-          result += characters.charAt(Math.floor(Math.random() * 
-     charactersLength));
-       }
-       return result;
-    }
 
     const addNewAddress = () => {
         setaddressModalContent1(true)
@@ -690,13 +789,38 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         setstate(2)
     }
 
+    const changeFirstName = (e) => {
+        setindividualAddress({...individualAddress, firstName: e.target.value})
+    }
+    const changeLastName = (e) => {
+        setindividualAddress({...individualAddress, lastName: e.target.value})
+    }
+    const changeEmail = (e) => {
+        setindividualAddress({...individualAddress, email: e.target.value})
+    }
+    const changePhoneNumber = (e) => {
+        setindividualAddress({...individualAddress, phone: `${editedphoneRef.current.state.value}`})
+    }
+    const changeCountry = (e) => {
+        setindividualAddress({...individualAddress, country: e.target.value})
+    }
+    const changeState = (e) => {
+        setindividualAddress({...individualAddress, state: e.target.value})
+    }
+    const changeLg = (e) => {
+        setindividualAddress({...individualAddress, lg: e.target.value})
+    }
+    const changeAddress = (e) => {
+        setindividualAddress({...individualAddress, address: e.target.value})
+    }
+
     return (
         <div>
             <ToastContainer />
             <div className="flex justify-center pt-16">
                 <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder ">
 
-                <aside className="deposit-holder lg:h-screen px-4 md:px-2 lg:pl-24 lg:pr-9 pt-9 pb-4">
+                <aside className="deposit-holder lg:h-screen px-4 md:px-2 lg:pl-14 lg:pr-9 pt-9 pb-4">
                     {
                         carDetails ? (
                             <>
@@ -1320,23 +1444,27 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                     <div className="flex flex-col">
                                         {userAddress?.map((address) => (
                                             <div 
-                                                onClick={() => {
-                                                    setinitialDefault(address._id)
-                                                    setshowNotif(true)
-                                                }} 
+                                                
                                                 key={address._id} 
                                                 className="border-b border-gray-200 p-3 m-2 w-full flex justify-between cursor-pointer hover:bg-gray-200"
                                                 > 
-                                                <div>
-                                                    <p className="text-xs text-black">{address.firstName} {""} {address.lastName}</p>
-                                                    <p className="font-11 sec-black">{address.address}</p>
-                                                    <p className="font-11 sec-black">{address.lg}</p>
-                                                    <p className="font-11 sec-black">{address.state}</p>
-                                                    <p className="font-11 sec-black mt-3">{address.phone}</p>
+                                                <div onClick={() => {
+                                                    setinitialDefault(address._id)
+                                                    setshowNotif(true)
+                                                }}  className="flex-1">
+                                                    <div>
+                                                        <p className="text-xs text-black">{address.firstName} {""} {address.lastName}</p>
+                                                        <p className="font-11 sec-black">{address.address}</p>
+                                                        <p className="font-11 sec-black">{address.lg}</p>
+                                                        <p className="font-11 sec-black">{address.state}</p>
+                                                        <p className="font-11 sec-black mt-3">{address.phone}</p>
+                                                    </div>
+
                                                 </div>
 
-                                                <div>
-                                                    <button onClick={() => editAddress(address)} className=" text-red-600 cursor-pointer"><i style={{fontSize: "16px"}} className="fa fa-edit"></i></button>
+                                                <div className="flex flex-col gap-2">
+                                                    <button onClick={() => editAddress(address)} className=" text-blue-600 cursor-pointer"><i style={{fontSize: "16px"}} className="fa fa-edit"></i></button>
+                                                    <button onClick={() => deleteAddress(address._id)} className=" text-red-600 cursor-pointer"><i style={{fontSize: "16px"}} className="fa fa-trash"></i></button>
                                                 </div>
                                             
                                             </div>
@@ -1373,6 +1501,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     First Name
                                                 </label>
                                                 <input
+                                                    value={individualAddress.firstName}
+                                                    onChange={(e) => changeFirstName(e)}
                                                     type="text"
                                                     id="firstName"
                                                     name="firstName"
@@ -1389,6 +1519,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     Last Name
                                                 </label>
                                                 <input
+                                                    value={individualAddress.lastName}
+                                                    onChange={(e) => changeLastName(e)}
                                                     type="text"
                                                     id="lastName"
                                                     name="lastName"
@@ -1405,15 +1537,15 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     Phone Number
                                                 </label>
                                                 <IntlTelInput
-                                                    // ref={phoneNumberRef}
+                                                    ref={editedphoneRef}
                                                     placeholder="xxxx-xxxx-xxxx"
                                                     containerClassName="intl-tel-input buynow-phone-number"
                                                     inputClassName="form-control"
                                                     preferredCountries={["ng"]}
-                                                    // defaultValue={phoneNumber}
-                                                    // onPhoneNumberChange={(e) =>
-                                                    //     phoneNumberChange(e)
-                                                    // }
+                                                    defaultValue={individualAddress.phone}
+                                                    onPhoneNumberChange={(e) =>
+                                                        changePhoneNumber(e)
+                                                    }
                                                     // onPhoneNumberBlur={validatePhone}
                                                 />
                                                 {/* {phoneError && (
@@ -1433,6 +1565,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     type="email"
                                                     id="email"
                                                     name="email"
+                                                    value={individualAddress.email}
+                                                    onChange={(e) => changeEmail(e)}
                                                     placeholder="dare@thomas.com"
                                                     className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
                                                     // onChange={formik.handleChange}
@@ -1463,6 +1597,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     Country
                                                 </label>
                                                 <select
+                                                    value={individualAddress.country}
+                                                    onChange={(e) => changeCountry(e)}
                                                     id="lga"
                                                     className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
                                                 >
@@ -1481,6 +1617,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     State
                                                 </label>
                                                 <input
+                                                    value={individualAddress.state}
+                                                    onChange={(e) => changeState(e)}
                                                     type="text"
                                                     id="state"
                                                     className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
@@ -1495,6 +1633,8 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     City
                                                 </label>
                                                 <input
+                                                    value={individualAddress.lg}
+                                                    onChange={(e) => changeLg(e)}
                                                     type="text"
                                                     id="city"
                                                     className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
@@ -1516,9 +1656,9 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     id="address"
                                                     className="mt-1 info-area block w-full py-2 px-2 focus:outline-none"
                                                     placeholder="Enter street address"
-                                                    // onChange={formik.handleChange}
+                                                    onChange={(e) => changeAddress(e)}
                                                     // onBlur={formik.handleBlur}
-                                                    // value={formik.values.streetAddress}
+                                                    value={individualAddress.address}
                                                 ></textarea>
                                                 {/* {formik.touched.streetAddress &&
                                                 formik.errors.streetAddress ? (
@@ -1527,7 +1667,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     </div>
                                                 ) : null} */}
                                             </div>
-                                            <div className="col-span-6">
+                                            {/* <div className="col-span-6">
                                                 <input type="checkbox" id="defaultAddress" />
                                                 <label
                                                     htmlFor="lga"
@@ -1535,7 +1675,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                 >
                                                     Default Shipping Address
                                                 </label>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                     <div className="flex justify-center">
