@@ -32,6 +32,7 @@ const OnBoarding = () => {
 
         const item = JSON.parse(country)
         setuserCountry(item)
+        formik.values.countrysytem = item
     }
     
     useEffect(() => {

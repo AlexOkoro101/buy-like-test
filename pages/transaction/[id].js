@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo  } from "react";
+import Select from 'react-select'
 import { enviroment } from "../../src/components/enviroment";
 import { usePaystackPayment } from "react-paystack";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,8 +9,10 @@ import IntlTelInput from "react-intl-tel-input";
 import "react-intl-tel-input/dist/main.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import countryList from 'react-select-country-list'
 
 const Transaction = () => {
+    const options = useMemo(() => countryList().getData(), [])
     const router = useRouter();
     var dollarFormatter = new Intl.NumberFormat();
     const buyNowInfo = () =>
@@ -211,6 +214,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
 
     useEffect(() => {
         retrieveData();
+        // console.log(options)
         return retrieveData;
     }, [router.pathname, token, switchAddress, refreshDOM]);
 
@@ -938,9 +942,11 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                                 value={formik.values.country}
                                                             >
                                                                 <option value="">Chooose Country</option>
-                                                                <option value="Nigeria">Nigeria</option>
-                                                                <option value="Canada">Canada</option>
-                                                                <option value="Mexico">Mexico</option>
+                                                                {options.map((country) => (
+                                                                    <option key={country.label} value={country.label}>{country.label}</option>
+
+                                                                ))}
+                                                                
                                                             </select>
                                                             {formik.touched.country &&
                                                             formik.errors.country ? (
@@ -956,18 +962,15 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                             >
                                                                 State
                                                             </label>
-                                                            <select
+                                                            <input
+                                                                type="text"
                                                                 id="state"
                                                                 name="state"
-                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
                                                                 onChange={formik.handleChange}
                                                                 onBlur={formik.handleBlur}
                                                                 value={formik.values.state}
-                                                            >
-                                                                <option value="Lagos">Lagos</option>
-                                                                <option value="Abuja">Abuja</option>
-                                                                <option value="Rivers">Rivers</option>
-                                                            </select>
+                                                            />
                                                             {formik.touched.state &&
                                                             formik.errors.state ? (
                                                                 <div className="input-error">
@@ -983,21 +986,15 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                             >
                                                                 City
                                                             </label>
-                                                            <select
+                                                            <input
+                                                                type="text"
                                                                 id="lg"
                                                                 name="lg"
-                                                                className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                                className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
                                                                 onChange={formik.handleChange}
                                                                 onBlur={formik.handleBlur}
                                                                 value={formik.values.lg}
-                                                            >
-                                                                <option value="">
-                                                                    Select Local
-                                                                    Government Area
-                                                                </option>
-                                                                <option value="Surulere">Surulere</option>
-                                                                <option value="Ajah">Ajah</option>
-                                                            </select>
+                                                            />
                                                             {formik.touched.lg &&
                                                             formik.errors.lg ? (
                                                                 <div className="input-error">
@@ -1469,9 +1466,11 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     id="lga"
                                                     className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
                                                 >
-                                                    <option>Nigeria</option>
-                                                    <option>Canada</option>
-                                                    <option>Mexico</option>
+                                                    <option value="">Chooose Country</option>
+                                                    {options.map((country) => (
+                                                        <option key={country.label} value={country.label}>{country.label}</option>
+
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div className="col-span-6 lg:col-span-3">
@@ -1481,14 +1480,11 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                 >
                                                     State
                                                 </label>
-                                                <select
+                                                <input
+                                                    type="text"
                                                     id="state"
-                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                >
-                                                    <option>Lagos</option>
-                                                    <option>Abuja</option>
-                                                    <option>Rivers</option>
-                                                </select>
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                />
                                             </div>
 
                                             <div className=" col-span-6 lg:col-span-3">
@@ -1498,17 +1494,11 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                 >
                                                     City
                                                 </label>
-                                                <select
+                                                <input
+                                                    type="text"
                                                     id="city"
-                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                                >
-                                                    <option>
-                                                        Select Local
-                                                        Government Area
-                                                    </option>
-                                                    <option>Canada</option>
-                                                    <option>Mexico</option>
-                                                </select>
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
+                                                />
                                             </div>
 
                                             <div className="col-span-6">
@@ -1678,9 +1668,10 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                     value={newAddressCountry}
                                                     onChange={(e) => setnewAddressCountry(e.target.value)}
                                                 >
-                                                    <option value="Nigeria">Nigeria</option>
-                                                    <option value="Canada">Canada</option>
-                                                    <option value="Mexico">Mexico</option>
+                                                    <option value="">Chooose Country</option>
+                                                    {options.map((country) => (
+                                                        <option key={country.label} value={country.label}>{country.label}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div className="col-span-6 lg:col-span-3">
@@ -1690,16 +1681,14 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                 >
                                                     State
                                                 </label>
-                                                <select
+                                                <input
+                                                    type="text"
                                                     id="state"
-                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
                                                     value={newAddressState}
                                                     onChange={(e) => setnewAddressState(e.target.value)}
-                                                >
-                                                    <option value="Lagos">Lagos</option>
-                                                    <option value="Abuja">Abuja</option>
-                                                    <option value="Rivers">Rivers</option>
-                                                </select>
+                                                />
+                                                    
                                             </div>
 
                                             <div className=" col-span-6 lg:col-span-3">
@@ -1709,19 +1698,13 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                 >
                                                     City
                                                 </label>
-                                                <select
+                                                <input
+                                                    type="text"
                                                     id="city"
-                                                    className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
+                                                    className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
                                                     value={newAddressCity}
                                                     onChange={(e) => setnewAddressCity(e.target.value)}
-                                                >
-                                                    <option>
-                                                        Select Local
-                                                        Government Area
-                                                    </option>
-                                                    <option value="Surulere">Surulere</option>
-                                                    <option value="Lekki">Lekki</option>
-                                                </select>
+                                                />
                                             </div>
 
                                             <div className="col-span-6">
