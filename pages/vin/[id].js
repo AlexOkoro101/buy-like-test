@@ -326,29 +326,29 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     };
 
     useEffect(() => {
-        setvin(carDetail.VIN);
-        setname(carDetail.vehicleName);
-        setprice(carDetail.mmrPrice);
-        setyear(carDetail.year);
-        setexteriorColor(carDetail.exteriorColor);
-        setvehicleType(carDetail.vehicleType);
-        setinteriorColor(carDetail.interiorColor);
-        settransmission(carDetail.transmission);
-        setodometer(carDetail.odometer);
-        setdriveTrain(carDetail.driveTrain);
-        setdoors(carDetail.doors);
-        setmodel(carDetail.model);
-        setmake(carDetail.make);
-        setbodyStyle(carDetail.bodyType);
-        setzip(carDetail.locationFullZipcode);
-        setbidAmount(carDetail.buyNowPrice);
+        setvin(carDetail?.VIN);
+        setname(carDetail?.vehicleName);
+        setprice(carDetail?.mmrPrice);
+        setyear(carDetail?.year);
+        setexteriorColor(carDetail?.exteriorColor);
+        setvehicleType(carDetail?.vehicleType);
+        setinteriorColor(carDetail?.interiorColor);
+        settransmission(carDetail?.transmission);
+        setodometer(carDetail?.odometer);
+        setdriveTrain(carDetail?.driveTrain);
+        setdoors(carDetail?.doors);
+        setmodel(carDetail?.model);
+        setmake(carDetail?.make);
+        setbodyStyle(carDetail?.bodyType);
+        setzip(carDetail?.locationFullZipcode);
+        setbidAmount(carDetail?.buyNowPrice);
 
-        setfacilitationLocation(carDetail.facilitationLocation);
-        setvehicleLocation(carDetail.pickupLocation);
-        setcarImages(carDetail.images);
+        setfacilitationLocation(carDetail?.facilitationLocation);
+        setvehicleLocation(carDetail?.pickupLocation);
+        setcarImages(carDetail?.images);
         getZipLocation();
 
-        setbuyNowPrice(carDetail.buyNowPrice);
+        setbuyNowPrice(carDetail?.buyNowPrice);
 
         getSimilarVehicles();
         getRate();
@@ -356,7 +356,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         getSecondRate();
         displaySmall();
 
-        if (!carDetail.buyNowPrice && carDetail.mmrPrice) {
+        if (!carDetail?.buyNowPrice && carDetail?.mmrPrice) {
             setOffer(false);
         }
     }, [carDetail, cardD]);
@@ -454,7 +454,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }, []);
 
     useEffect(() => {
-        setTotalAmount((Number(carDetail.buyNowPrice) + 300) * Number(usd));
+        setTotalAmount((Number(carDetail?.buyNowPrice) + 300) * Number(usd));
     }, [usd]);
 
     const openForm = (evt, status) => {
@@ -603,10 +603,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 .then((data) => {
                     setNaira(data.data.rate);
                     setTotalAmount(
-                        (Number(carDetail.buyNowPrice) + 300) * Number(naira)
+                        (Number(carDetail?.buyNowPrice) + 300) * Number(naira)
                     );
-                    setAmount(carDetail.buyNowPrice * data.data.rate);
-                    setbidAmount(carDetail.buyNowPrice);
+                    setAmount(carDetail?.buyNowPrice * data.data.rate);
+                    setbidAmount(carDetail?.buyNowPrice);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -893,6 +893,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         facilitationLocation: facilitationLocation,
         Vehicle_location: vehicleLocation,
         images: carImages,
+        auctionEndTime: carDetail?.auctionEndTime,
         trucking: truckAccessory ? ( Number(truckingPrice.slice(1)) > 1000
         ? Number(truckingPrice.slice(1)) / 3
         : Number(truckingPrice.slice(1)) > 400 &&
@@ -1098,7 +1099,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
 
     function getDeadTime() {
-        let deadline = new Date(carDetail.auctionEndTime);
+        let deadline = new Date(carDetail?.auctionEndTime);
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }

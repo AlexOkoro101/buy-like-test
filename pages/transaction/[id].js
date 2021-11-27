@@ -303,6 +303,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
             images: carDetails?.images,
             trucking: carDetails?.trucking,
             shipping: carDetails?.shipping,
+            auctionEndTime: carDetails?.auctionEndTime
         };
 
         console.log("bid object", bidObject)
