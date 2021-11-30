@@ -78,22 +78,6 @@ const Transaction = () => {
 
         const card = elements.getElement(CardElement);
         const result = await stripe.createToken(card);
-    
-        // const payload = await stripe.createPaymentMethod({
-        //   type: 'card',
-        //   card: elements.getElement(CardElement),
-        // });
-
-        // console.log(card)
-        // console.log(result)
-
-        // const result = await stripe.confirmPayment({
-        //     //`Elements` instance that was used to create the Payment Element
-        //     elements,
-        //     confirmParams: {
-        //       return_url: "http://localhost:3000",
-        //     },
-        // });
 
         if (result.error) {
             // Show error to your customer (e.g., payment details incomplete)
@@ -243,6 +227,17 @@ const [userInitialAddress, setuserInitialAddress] = useState(null);
 const [individualAddress, setindividualAddress] = useState(null);
 
 const [refreshDOM, setrefreshDOM] = useState(false);
+const [userCountry, setuserCountry] = useState(null);
+
+
+const retrieveCountry = () => {
+    const country = localStorage.getItem("userCountry")
+    if(!country) return
+
+    const item = JSON.parse(country)
+    setuserCountry(item.country)
+}
+
 
 
     const referenceNumber = () => {
@@ -341,6 +336,13 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         })
         .catch(error => console.log('error', error));
     }
+
+    useEffect(() => {
+        retrieveCountry()
+        return () => {
+            retrieveCountry()
+        }
+    }, [router.pathname, token, switchAddress])
 
 
     useEffect(() => {
@@ -1427,26 +1429,30 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                         <div className="info-holder font-10 py-24 mb-3 ">
                                             <div className="flex justify-center px-4 ">
                                                 <form className="w-full">
-                                                    <div className="flex  justify-center items-center">
-                                                        <button
-                                                            onClick={() => {
-                                                                // initializePayment(
-                                                                //     onSuccess,
-                                                                //     onClose
-                                                                // );
-                                                                buyNowFunction()
-                                                            }}
-                                                            type="button"
-                                                            className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
-                                                        >
-                                                            Pay with
-                                                            <img
-                                                                src="../assets/img/paystack-logo.png"
-                                                                className="ml-2"
-                                                                alt="Paystack"
-                                                            />
-                                                        </button>
-                                                    </div>
+                                                    {userCountry == 'Nigeria' ? (
+                                                        <div className="flex  justify-center items-center">
+                                                            <button
+                                                                onClick={() => {
+                                                                    // initializePayment(
+                                                                    //     onSuccess,
+                                                                    //     onClose
+                                                                    // );
+                                                                    buyNowFunction()
+                                                                }}
+                                                                type="button"
+                                                                className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
+                                                            >
+                                                                Pay with
+                                                                <img
+                                                                    src="../assets/img/paystack-logo.png"
+                                                                    className="ml-2"
+                                                                    alt="Paystack"
+                                                                />
+                                                            </button>
+                                                        </div>
+
+                                                    ) : (
+
                                                     <div className=" px-4 ">
                                                         <img src="../../../assets/img/stripe-logo.svg" alt="" width="100" className="" />
                                                         <form onSubmit={handleSubmit} className="mt-2 border border-gray-200 p-4">
@@ -1459,6 +1465,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                             </button>
                                                         </form>
                                                     </div>
+                                                    )}
                                                 </form>
                                             </div>
                                         </div>
