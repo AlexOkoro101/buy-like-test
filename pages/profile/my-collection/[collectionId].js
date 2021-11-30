@@ -181,14 +181,11 @@ const CollectionDetails = () => {
                                     key={vehicle._id}
                                     className="bid-card mt-5 lg:mt-0 mx-2 lg:mx-0 flex-col lg:flex-row flex py-3 px-3"
                                 >
-                                    <div className=" w-64 h-36 lg:mr-4 m-auto lg:m-px">
-                                        <img
-                                            src={vehicle.images[0]?.image_largeUrl}
-                                            alt="benz"
-                                            className="w-full object-cover rounded-md flex-no-shrink object-center h-full"
-                                        />
-
-                                    </div>
+                                    <img
+                                        src={`https://proxybuylike.herokuapp.com/?url=${vehicle.images[0]?.image_largeUrl}`}
+                                        alt="benz"
+                                        className="rounded-md w-64 h-36 flex-no-shrink mr-4"
+                                    />
                                     <div className="flex flex-col justify-between flex-grow">
                                         <div className="flex justify-between">
                                             <div>

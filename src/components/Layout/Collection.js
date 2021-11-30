@@ -233,7 +233,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                         {carCollection[0]?.images?.map(
                                             (image) => (
                                                 <img
-                                                    src={image.image_smallUrl}
+                                                    src={`https://proxybuylike.herokuapp.com/?url=${image.image_smallUrl}`}
                                                     alt={"car"}
                                                     className="tiny-car-card"
                                                 />

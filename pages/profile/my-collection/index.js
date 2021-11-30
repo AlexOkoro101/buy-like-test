@@ -391,11 +391,7 @@ const MyCollection = ({
                                                                         key={
                                                                             vehicle?.image_id
                                                                         }
-                                                                        src={
-                                                                            vehicle
-                                                                                ?.images[0]
-                                                                                ?.image_smallUrl
-                                                                        }
+                                                                        src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
                                                                         alt="car"
                                                                         className="tiny-car-card mb-2"
                                                                     />
@@ -446,14 +442,11 @@ const MyCollection = ({
                                 key={vehicle._id}
                                 className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2"
                             >
-                                <div className=" w-64 h-36 lg:mr-4 m-auto lg:m-px">
-                                    <img
-                                        src={vehicle.vehicle?.images[0]?.image_largeUrl}
-                                        alt="benz"
-                                        className="w-full object-cover  rounded-md object-center h-full flex-no-shrink"
-                                    />
-
-                                </div>
+                                <img
+                                    src={`https://proxybuylike.herokuapp.com/?url=${vehicle.vehicle?.images[0]?.image_largeUrl}`}
+                                    alt="benz"
+                                    className="rounded-md w-64 h-36 flex-no-shrink mr-4"
+                                />
                                 <div className="flex flex-col justify-between flex-grow">
                                     <div className="flex justify-between">
                                         <div>

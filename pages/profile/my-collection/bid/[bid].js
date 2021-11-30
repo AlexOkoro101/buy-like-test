@@ -207,7 +207,7 @@ const BidDetails = () => {
                     onClick={() => {
                         setToggler(!toggler);
                     }}
-                    src={bidCollection?.images[0]?.image_largeUrl}
+                    src={`https://proxybuylike.herokuapp.com/?url=${bidCollection?.images[0]?.image_largeUrl}`}
                     loading="lazy"
                     className="rounded-xl w-full largeImage sm:h-32 shadow-md cursor-pointer"
                     alt="Benz"

@@ -274,7 +274,12 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             params.images.length > 0 &&
             params.images[0].image_smallUrl
         ) {
-            return <img src={params.images[0].image_largeUrl} alt="hello" />;
+            return (
+                <img
+                    src={`https://proxybuylike.herokuapp.com/?url=${params.images[0].image_largeUrl}`}
+                    alt="hello"
+                />
+            );
         }
     };
     //
