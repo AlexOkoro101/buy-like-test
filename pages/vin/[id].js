@@ -1337,6 +1337,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             setTimeout(function(){ setshareSuccess(false) }, 3000);
         }
     }, [shareSuccess])
+
+    const editLocation = (location) => {
+        return location.replace(/Manheim/g, "");
+    }
     //
     //
     if (!cardD) {
@@ -2644,7 +2648,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             Vehicle location
                                         </p>
                                         <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                            {cardD?.pickupLocation}
+                                            {editLocation(cardD?.pickupLocation)}
                                         </p>
                                     </div>
                                     <div className="flex flex-col relative  lg:block">
@@ -3104,7 +3108,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     <td className="turncate text-sm sec-black font-normal py-2">
                                                         <span className="truncate overflow-hidden overflow-ellipsis ">
                                                             {
-                                                                cardD?.pickupLocation
+                                                                editLocation(cardD?.pickupLocation)
                                                             }
                                                         </span>
                                                     </td>
@@ -3387,7 +3391,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     />
                                                                 </span>
                                                                 {
-                                                                    ele?.pickupLocation
+                                                                    
+                                                                    editLocation(ele?.pickupLocation)
+                                                                    
                                                                 }
                                                             </p>
                                                             <div className="ml-auto flex self-center">

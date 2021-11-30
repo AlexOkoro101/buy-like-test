@@ -9,12 +9,117 @@ import IntlTelInput from "react-intl-tel-input";
 import "react-intl-tel-input/dist/main.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import countryList from 'react-select-country-list'
+import countryList from 'react-select-country-list';
+import {loadStripe} from '@stripe/stripe-js';
+import {
+  CardElement,
+  Elements,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
+
+const useOptions = () => {
+    const fontSize = "14px";
+    const options = useMemo(
+      () => ({
+        style: {
+            
+          base: {
+            fontSize,
+            color: "#424770",
+            letterSpacing: "0.025em",
+            fontFamily: "'Montserrat', sans-serif",
+            "::placeholder": {
+              color: "#aab7c4"
+            },
+            border: "1px solid #000",
+          },
+          invalid: {
+            color: "#9e2146"
+          }
+        }
+      }),
+      [fontSize]
+    );
+  
+    return options;
+  };
+
+  async function stripeTokenHandler(token) {
+    const paymentData = {token: token.id};
+    console.log(token)
+  
+    // Use fetch to send the token ID and any other payment data to your server.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    const response = await fetch('/charge', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(paymentData),
+    });
+  
+    // Return and display the result of the charge.
+    return response.json();
+  }
 
 const Transaction = () => {
+    //Stripe
+    const stripe = useStripe();
+    const elements = useElements();
+    const cardOptions = useOptions();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        if (!elements || !stripe) {
+          return;
+        }
+
+        const card = elements.getElement(CardElement);
+        const result = await stripe.createToken(card);
+    
+        // const payload = await stripe.createPaymentMethod({
+        //   type: 'card',
+        //   card: elements.getElement(CardElement),
+        // });
+
+        // console.log(card)
+        // console.log(result)
+
+        // const result = await stripe.confirmPayment({
+        //     //`Elements` instance that was used to create the Payment Element
+        //     elements,
+        //     confirmParams: {
+        //       return_url: "http://localhost:3000",
+        //     },
+        // });
+
+        if (result.error) {
+            // Show error to your customer (e.g., payment details incomplete)
+            console.log(result.error.message);
+          } else {
+            // Your customer will be redirected to your `return_url`. For some payment
+            // methods like iDEAL, your customer will be redirected to an intermediate
+            // site first to authorize the payment, then redirected to the `return_url`.
+            stripeTokenHandler(result.token);
+          }
+    };
+    const stripePromise = loadStripe('pk_test_51JyfUzLikhQleFKQmN8UGjaUEHvzU1WZEw3gG5rLmnmYx13atgEOtDYPrS5wUSzfcUSXxG2W4k1QTJAVBuIlOuGb00jUdAZdni');
+
+    //Country List
     const options = useMemo(() => countryList().getData(), [])
+
+    //Route hook
     const router = useRouter();
+
+    //number format
     var dollarFormatter = new Intl.NumberFormat();
+
+
+
+
+    //Notifiers
     const buyNowInfo = () =>
         toast.info("Car already bought by you", {
             position: "top-right",
@@ -79,6 +184,7 @@ const Transaction = () => {
             draggable: true,
             progress: undefined,
         });
+    //End of Notifiers
 
 
     const [token, settoken] = useState("")
@@ -273,7 +379,7 @@ const [refreshDOM, setrefreshDOM] = useState(false);
         const bidObject = {
             vin: carDetails?.vin,
             link: carDetails?.link,
-            name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
+            name: `${carDetails?.year } ${carDetails?.make} ${carDetails?.Model}`,
             site: carDetails?.site,
             price: carDetails?.bidAmount,
             year: carDetails?.year,
@@ -1340,6 +1446,18 @@ const [refreshDOM, setrefreshDOM] = useState(false);
                                                                 alt="Paystack"
                                                             />
                                                         </button>
+                                                    </div>
+                                                    <div className=" px-4 ">
+                                                        <img src="../../../assets/img/stripe-logo.svg" alt="" width="100" className="" />
+                                                        <form onSubmit={handleSubmit} className="mt-2 border border-gray-200 p-4">
+                                                            <label className="text-base block mb-4">
+                                                                Card details
+                                                            </label>
+                                                            <CardElement options={cardOptions} />
+                                                            <button className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6" type="submit" disabled={!stripe || !elements}>
+                                                                Pay
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </form>
                                             </div>

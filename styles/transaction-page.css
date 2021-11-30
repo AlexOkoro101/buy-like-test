@@ -214,7 +214,10 @@ section {
     .transaction-table thead tr:not(:first-child) {
       display: none;
     }
-  }
+}
+.CardField {
+    border: 1px solid #ddd;
+}
 
 
 

@@ -11,6 +11,8 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@splidejs/react-splide": "^0.4.4",
     "@splidejs/splide": "^2.4.21",
+    "@stripe/react-stripe-js": "^1.6.0",
+    "@stripe/stripe-js": "^1.21.1",
     "@tailwindcss/line-clamp": "^0.2.1",
     "animejs": "^3.2.1",
     "autoprefixer": "^10.0.4",
