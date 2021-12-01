@@ -1278,6 +1278,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     const [placebidTotal, setplacebidTotal] = useState(0);
     //
+
+    const editLocation = (location) => {
+        return location.replace(/Manheim/g, "");
+    }
     //
     if (!cardD) {
         // reRender();
@@ -2561,10 +2565,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             Vehicle location
                                         </p>
                                         <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                                            {cardD?.pickupLocation.replace(
-                                                "Manheim",
-                                                ""
-                                            )}
+                                            {editLocation(cardD?.pickupLocation)}
                                         </p>
                                     </div>
                                     <div className="flex flex-col relative  lg:block">
@@ -3023,10 +3024,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
                                                         <span className="truncate overflow-hidden overflow-ellipsis ">
-                                                            {cardD?.pickupLocation.replace(
-                                                                "Manheim",
-                                                                ""
-                                                            )}
+                                                            {
+                                                                editLocation(cardD?.pickupLocation)
+                                                            }
                                                         </span>
                                                     </td>
                                                 </tr>

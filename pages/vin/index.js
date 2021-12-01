@@ -1036,6 +1036,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         },
     };
 
+    const editLocation = (location) => {
+        return location.replace(/Manheim/g, "");
+    }
+
     return (
         <div>
             <Meta title="Buylike Dealers search page" />
@@ -2105,10 +2109,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                             alt="location"
                                                                                         />
                                                                                     </span>{" "}
-                                                                                    {ele?.pickupLocation.replace(
-                                                                                        "Manheim",
-                                                                                        ""
-                                                                                    )}
+                                                                                    {
+                                                                                        editLocation(ele?.pickupLocation)
+                                                                                    }
                                                                                 </p>
                                                                                 <div className="ml-auto flex self-center">
                                                                                     <img
@@ -2291,10 +2294,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                                             alt="beacon"
                                                                                                         />
                                                                                                     </span>{" "}
-                                                                                                    {ele?.pickupLocation.replace(
-                                                                                                        "Manheim",
-                                                                                                        ""
-                                                                                                    )}
+                                                                                                    {
+                                                                                                        editLocation(ele?.pickupLocation)
+                                                                                                    }
                                                                                                 </p>
                                                                                             </td>
 
