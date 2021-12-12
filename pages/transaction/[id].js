@@ -1526,7 +1526,7 @@ const retrieveCountry = () => {
                                         <div className="info-holder font-10 py-24 mb-3 ">
                                             <div className="flex justify-center px-4 ">
                                                 <form className="w-full">
-                                                    {(userCountry == 'Nigeria' || carDetails?.carDestination == 'Nigeria') ? (
+                                                    {(userCountry == 'Nigeria' && carDetails?.carDestination == 'Nigeria') ? (
                                                         <div className="flex  justify-center items-center">
                                                             <button
                                                                 onClick={() => {
@@ -1633,42 +1633,45 @@ const retrieveCountry = () => {
                                                 </form>
                                             </div>
                                         </div>
-                                        <div className="info-holder text-xs   py-4 pb-5 mb-3 ">
-                                            <div className="transfer-payment px-4">
-                                                <p className="text-xs font-semibold">
-                                                    Or make transfer payment
-                                                    using these details
-                                                </p>
-                                                <table className="mt-2 min-w-full">
-                                                    <tbody className="">
-                                                        <tr>
-                                                            <th className="text-left ">
-                                                                Bank Name
-                                                            </th>
-                                                            <th className="text-left">
-                                                                Account Number
-                                                            </th>
-                                                            <th className="text-left">
-                                                                Account Name
-                                                            </th>
-                                                            <th className="text-left">
-                                                                REF
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                Name of Bank
-                                                            </td>
-                                                            <td>0123456789</td>
-                                                            <td>0123456789</td>
-                                                            <td>
-                                                                SJTKPOLVAX123
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                        {(userCountry == 'Nigeria' && carDetails?.carDestination == 'Nigeria') && (
+                                            <div className="info-holder text-xs   py-4 pb-5 mb-3 ">
+                                                <div className="transfer-payment px-4">
+                                                    <p className="text-xs font-semibold">
+                                                        Or make transfer payment
+                                                        using these details
+                                                    </p>
+                                                    <table className="mt-2 min-w-full">
+                                                        <tbody className="">
+                                                            <tr>
+                                                                <th className="text-left ">
+                                                                    Bank Name
+                                                                </th>
+                                                                <th className="text-left">
+                                                                    Account Number
+                                                                </th>
+                                                                <th className="text-left">
+                                                                    Account Name
+                                                                </th>
+                                                                <th className="text-left">
+                                                                    REF
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    Name of Bank
+                                                                </td>
+                                                                <td>0123456789</td>
+                                                                <td>0123456789</td>
+                                                                <td>
+                                                                    SJTKPOLVAX123
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
-                                        </div>
+
+                                        )}
                                     </div>
                                 )}
                                 {state === 3 && (
