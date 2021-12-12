@@ -1526,7 +1526,7 @@ const retrieveCountry = () => {
                                         <div className="info-holder font-10 py-24 mb-3 ">
                                             <div className="flex justify-center px-4 ">
                                                 <form className="w-full">
-                                                    {(!userCountry == 'Nigeria' || carDetails?.carDestination !== 'Nigeria') ? (
+                                                    {(userCountry == 'Nigeria' || carDetails?.carDestination == 'Nigeria') ? (
                                                         <div className="flex  justify-center items-center">
                                                             <button
                                                                 onClick={() => {
