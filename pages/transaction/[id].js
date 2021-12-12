@@ -273,8 +273,8 @@ const retrieveCountry = () => {
     const config = {
         reference: referenceNumber(),
         email: `${userEmail}`,
-        amount: /*amount * 100*/ 100000,
-        publicKey: "pk_test_c9e721436fd837814692c450db204c33326ff6d1",
+        amount: /*amount * 100*/ 50000,
+        publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
     };
     
     // you can call this function anything
