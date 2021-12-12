@@ -18,6 +18,8 @@ import "react-intl-tel-input/dist/main.css";
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
 import { searchCars } from "../../redux/actions/carsAction";
+import countryList from 'react-select-country-list'
+import { useMemo } from "react";
 import { set } from "nprogress";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
@@ -90,6 +92,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         });
 
     var dollarFormatter = new Intl.NumberFormat();
+
+     //Country List
+     const options = useMemo(() => countryList().getData(), [])
 
     const [selectedCountryCurrency, setSelectedCountryCurrency] = useState(
         carDestination === "Nigeria" ? "US" : "NG"
@@ -901,7 +906,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         : Number(truckingPrice.slice(1))) : 0,
         shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
-        total: accessories()
+        total: accessories(),
+        carDestination
     });
     const buyNowFunction = () => {
 
@@ -1813,15 +1819,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         )
                                                                     }
                                                                 >
-                                                                    <option value="Nigeria">
-                                                                        Nigeria
-                                                                    </option>
-                                                                    <option value="USA">
-                                                                        USA
-                                                                    </option>
-                                                                    <option value="Ghana">
-                                                                        Ghana
-                                                                    </option>
+                                                                    {options.map((country) => (
+                                                                        <option key={country.label} value={country.label}>{country.label}</option>
+                                                                    ))}
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -1876,7 +1876,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             <tr className="">
                                                                 <td
                                                                     colSpan="2"
-                                                                    className="sec-black font-11 font-semibold py-2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2"
                                                                 >
                                                                     Trucking
                                                                 </td>
@@ -1996,12 +1996,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 )}
                                                             </tr>
 
-                                                        {carDestination !== "USA" && (
+                                                        {carDestination !== "United States" &&  (
 
                                                             <tr className="">
                                                                 <td
                                                                     colSpan="2"
-                                                                    className="sec-black font-11 font-semibold py-2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2"
                                                                 >
                                                                     Shipping
                                                                 </td>
@@ -2037,32 +2037,36 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
                                                         
 
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
-                                                            >
-                                                                Clearing
-                                                            </td>
-                                                            <td
-                                                                colSpan="2"
-                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                            >
-                                                                N/A
-                                                            </td>
-                                                            <td className="text-right px-2 border-b border-gray-200">
-                                                                <img
-                                                                    className="inline"
-                                                                    src="../assets/img/vectors/tool-tip.svg"
-                                                                    alt="tooltip"
-                                                                />
-                                                            </td>
-                                                        </tr>
+                                                        {carDestination !== "United States" && (
+
+                                                            <tr className="">
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                                >
+                                                                    Clearing
+                                                                </td>
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                                >
+                                                                    N/A
+                                                                </td>
+                                                                <td className="text-right px-2 border-b border-gray-200">
+                                                                    <img
+                                                                        className="inline"
+                                                                        src="../assets/img/vectors/tool-tip.svg"
+                                                                        alt="tooltip"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+
+                                                        )}
 
                                                         <tr className="">
                                                             <td
                                                                 colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
                                                             >
                                                                 Service Fee
                                                             </td>
@@ -2077,7 +2081,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         <tr className="">
                                                             <td
                                                                 colSpan="2"
-                                                                className="sec-black font-11 font-bold py-2"
+                                                                className="sec-black font-11 font-bold w-28 p-2"
                                                             >
                                                                 Total
                                                             </td>
@@ -2185,15 +2189,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         )
                                                                     }
                                                                 >
-                                                                    <option value="Nigeria">
-                                                                        Nigeria
-                                                                    </option>
-                                                                    <option value="USA">
-                                                                        USA
-                                                                    </option>
-                                                                    <option value="Ghana">
-                                                                        Ghana
-                                                                    </option>
+                                                                    {options.map((country) => (
+                                                                        <option key={country.label} value={country.label}>{country.label}</option>
+                                                                    ))}
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -2276,69 +2274,69 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         </tr>
 
                                                         
-                                                                <tr className="">
-                                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                                        Trucking
-                                                                    </td>
-                                                                    <td
-                                                                        colSpan="3"
-                                                                        className="font-11 sec-black font-normal pr-20 py-2"
-                                                                    >
-                                                                        $
-                                                                        {truckingPrice
-                                                                            ? Number(
-                                                                                truckingPrice.slice(
-                                                                                    1
-                                                                                )
-                                                                            ) > 1000
-                                                                                ? Number(
-                                                                                    truckingPrice.slice(
-                                                                                        1
-                                                                                    )
-                                                                                ) / 3
-                                                                                : Number(
-                                                                                    truckingPrice.slice(
-                                                                                        1
-                                                                                    )
-                                                                                ) >
-                                                                                    400 &&
-                                                                                Number(
-                                                                                    truckingPrice.slice(
-                                                                                        1
-                                                                                    )
-                                                                                ) <
-                                                                                    1000
-                                                                                ? Number(
-                                                                                    truckingPrice.slice(
-                                                                                        1
-                                                                                    )
-                                                                                ) / 2
-                                                                                : Number(
-                                                                                    truckingPrice.slice(
-                                                                                        1
-                                                                                    )
-                                                                                )
-                                                                            : "0"}
-                                                                    </td>
-                                                                    <td className="text-right px-2">
-                                                                        <label className="detail">
-                                                                            <input
-                                                                                value={
-                                                                                    placebidTruckAccessory
-                                                                                }
-                                                                                type="checkbox"
-                                                                                className="focus:outline-none detail self-center"
-                                                                                onChange={() =>
-                                                                                    setplacebidTruckAccessory(
-                                                                                        !placebidTruckAccessory
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                            <span className="detail"></span>
-                                                                        </label>
-                                                                    </td>
-                                                                </tr>
-                                                        {carDestination !== "USA" && (
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Trucking
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
+                                                            >
+                                                                $
+                                                                {truckingPrice
+                                                                    ? Number(
+                                                                        truckingPrice.slice(
+                                                                            1
+                                                                        )
+                                                                    ) > 1000
+                                                                        ? Number(
+                                                                            truckingPrice.slice(
+                                                                                1
+                                                                            )
+                                                                        ) / 3
+                                                                        : Number(
+                                                                            truckingPrice.slice(
+                                                                                1
+                                                                            )
+                                                                        ) >
+                                                                            400 &&
+                                                                        Number(
+                                                                            truckingPrice.slice(
+                                                                                1
+                                                                            )
+                                                                        ) <
+                                                                            1000
+                                                                        ? Number(
+                                                                            truckingPrice.slice(
+                                                                                1
+                                                                            )
+                                                                        ) / 2
+                                                                        : Number(
+                                                                            truckingPrice.slice(
+                                                                                1
+                                                                            )
+                                                                        )
+                                                                    : "0"}
+                                                            </td>
+                                                            <td className="text-right px-2">
+                                                                <label className="detail">
+                                                                    <input
+                                                                        value={
+                                                                            placebidTruckAccessory
+                                                                        }
+                                                                        type="checkbox"
+                                                                        className="focus:outline-none detail self-center"
+                                                                        onChange={() =>
+                                                                            setplacebidTruckAccessory(
+                                                                                !placebidTruckAccessory
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <span className="detail"></span>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                        {carDestination !== "United States" && (
                                                             <>    
 
                                                                 <tr className="">
@@ -2374,24 +2372,31 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         )}
 
 
-                                                        <tr className="">
-                                                            <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                                                Clearing
-                                                            </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
-                                                            >
-                                                                N/A
-                                                            </td>
-                                                            <td className="text-right px-2 border-b border-gray-200">
-                                                                <img
-                                                                    className="inline"
-                                                                    src="../assets/img/vectors/tool-tip.svg"
-                                                                    alt="tooltip"
-                                                                />
-                                                            </td>
-                                                        </tr>
+                                                        {carDestination !== "United States" && (
+
+                                                            <tr className="">
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                                >
+                                                                    Clearing
+                                                                </td>
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                                >
+                                                                    N/A
+                                                                </td>
+                                                                <td className="text-right px-2 border-b border-gray-200">
+                                                                    <img
+                                                                        className="inline"
+                                                                        src="../assets/img/vectors/tool-tip.svg"
+                                                                        alt="tooltip"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+
+                                                        )}
 
                                                         <tr className="">
                                                             <td
@@ -2409,7 +2414,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         </tr>
 
                                                         <tr className="">
-                                                            <td className="sec-black font-11 font-bold p-2">
+                                                            <td className="sec-black font-11 font-bold w-28 p-2">
                                                                 Total
                                                             </td>
                                                             <td

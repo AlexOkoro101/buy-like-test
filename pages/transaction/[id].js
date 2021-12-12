@@ -17,6 +17,8 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
+import Cards from 'react-credit-cards';
+import 'react-credit-cards/es/styles-compiled.css'
 
 const useOptions = () => {
     const fontSize = "14px";
@@ -45,23 +47,7 @@ const useOptions = () => {
     return options;
   };
 
-  async function stripeTokenHandler(token) {
-    const paymentData = {token: token.id};
-    console.log(token)
   
-    // Use fetch to send the token ID and any other payment data to your server.
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    const response = await fetch('/charge', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(paymentData),
-    });
-  
-    // Return and display the result of the charge.
-    return response.json();
-  }
 
 const Transaction = () => {
     //Stripe
@@ -168,6 +154,17 @@ const Transaction = () => {
             draggable: true,
             progress: undefined,
         });
+
+    const stripeSuccess = () =>
+        toast.success("Payment Successful", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });    
     //End of Notifiers
 
 
@@ -228,6 +225,36 @@ const [individualAddress, setindividualAddress] = useState(null);
 
 const [refreshDOM, setrefreshDOM] = useState(false);
 const [userCountry, setuserCountry] = useState(null);
+
+//Stripe Details
+const [cvc, setcvc] = useState("")
+const [stripeExpiry, setstripeExpiry] = useState("")
+const [stripeFocus, setstripeFocus] = useState("")
+const [stripeName, setstripeName] = useState("")
+const [stripeNumber, setstripeNumber] = useState("")
+
+
+async function stripeTokenHandler(token) {
+    const paymentData = {
+        source: token,
+        email: userEmail,
+        amount: carDetails?.bidAmount
+    };
+    console.log(token)
+  
+    // Use fetch to send the token ID and any other payment data to your server.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    const response = await fetch(enviroment.BASE_URL + 'stripe/charge-stripe/' + token.id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(paymentData),
+    });
+  
+    // Return and display the result of the charge.
+    return response.json();
+  }
 
 
 const retrieveCountry = () => {
@@ -923,6 +950,76 @@ const retrieveCountry = () => {
         setindividualAddress({...individualAddress, address: e.target.value})
     }
 
+    const chargeCard = (id) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "source": id,
+        "amount": `${carDetails?.total}`
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "stripe/charge-card", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if(!error) {
+                stripeSuccess()
+                setstate(3)
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
+    const generateToken = (e) => {
+        e.preventDefault()
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "number": stripeNumber,
+        "exp_month": stripeExpiry.slice(0,2),
+        "exp_year": stripeExpiry.slice(2,4),
+        "cvc": cvc,
+        "name": userName,
+        "address_city": defaultAddress[0]?.lg,
+        "address_country": defaultAddress[0]?.country,
+        "address_line1": defaultAddress[0]?.address,
+        "address_zip": "",
+        "ifsave": false,
+        "email": userEmail,
+        "phone": userPhone
+        });
+
+        console.log(JSON.parse(raw))
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "stripe/create-token", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if(!error) {
+                chargeCard(result.data.id)
+            }
+        })
+        .catch(error => console.log('error', error));
+
+        
+    }
+
     return (
         <div>
             <ToastContainer />
@@ -1429,7 +1526,7 @@ const retrieveCountry = () => {
                                         <div className="info-holder font-10 py-24 mb-3 ">
                                             <div className="flex justify-center px-4 ">
                                                 <form className="w-full">
-                                                    {userCountry == 'Nigeria' ? (
+                                                    {(!userCountry == 'Nigeria' || carDetails?.carDestination !== 'Nigeria') ? (
                                                         <div className="flex  justify-center items-center">
                                                             <button
                                                                 onClick={() => {
@@ -1453,8 +1550,8 @@ const retrieveCountry = () => {
 
                                                     ) : (
 
-                                                    <div className=" px-4 ">
-                                                        <img src="../../../assets/img/stripe-logo.svg" alt="" width="100" className="" />
+                                                    <div className=" px-2 ">
+                                                        {/* <img src="../../../assets/img/stripe-logo.svg" alt="" width="100" className="" />
                                                         <form onSubmit={handleSubmit} className="mt-2 border border-gray-200 p-4">
                                                             <label className="text-base block mb-4">
                                                                 Card details
@@ -1463,7 +1560,74 @@ const retrieveCountry = () => {
                                                             <button className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6" type="submit" disabled={!stripe || !elements}>
                                                                 Pay
                                                             </button>
-                                                        </form>
+                                                        </form> */}
+                                                        <div id="PaymentForm" className="flex gap-x-2 justify-between">
+                                                            <Cards
+                                                                cvc={cvc}
+                                                                expiry={stripeExpiry}
+                                                                focused={stripeFocus}
+                                                                name={stripeName}
+                                                                number={stripeNumber}
+                                                            />
+                                                            <form className="flex-1 p-1">
+                                                                <div className="flex flex-col gap-y-2 mb-4">
+
+                                                                    <div>
+                                                                        <input
+                                                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                            type="tel"
+                                                                            name="number"
+                                                                            placeholder="Card Number"
+                                                                            onChange={(e) => setstripeNumber(e.target.value)}
+                                                                            onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                        />
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <input
+                                                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                            type="text"
+                                                                            name="name"
+                                                                            placeholder="Card Name"
+                                                                            onChange={(e) => setstripeName(e.target.value)}
+                                                                            onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex gap-x-2">
+                                                                        <div>
+                                                                            <input
+                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                type="tel"
+                                                                                name="expiry"
+                                                                                placeholder="Expiry"
+                                                                                onChange={(e) => setstripeExpiry(e.target.value)}
+                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <input
+                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                type="tel"
+                                                                                name="cvc"
+                                                                                placeholder="CVC"
+                                                                                onChange={(e) => setcvc(e.target.value)}
+                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <button 
+                                                                        onClick={generateToken}
+                                                                        type="btn-primary"
+                                                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
+                                                                    >
+                                                                    Submit
+                                                                    </button>
+                                                                </div>
+                                                        
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                     )}
                                                 </form>
