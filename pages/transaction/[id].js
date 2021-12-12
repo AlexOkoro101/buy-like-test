@@ -19,6 +19,7 @@ import {
 } from '@stripe/react-stripe-js';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css'
+import ClipLoader from "react-spinners/ClipLoader";
 
 const useOptions = () => {
     const fontSize = "14px";
@@ -951,6 +952,8 @@ const retrieveCountry = () => {
     }
 
     const chargeCard = (id) => {
+        setisLoading(true)
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -969,6 +972,7 @@ const retrieveCountry = () => {
         fetch(enviroment.BASE_URL + "stripe/charge-card", requestOptions)
         .then(response => response.json())
         .then(result => {
+            setisLoading(false)
             console.log(result)
             if(!error) {
                 stripeSuccess()
@@ -979,6 +983,7 @@ const retrieveCountry = () => {
     }
 
     const generateToken = (e) => {
+        setisLoading(true)
         e.preventDefault()
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -1010,6 +1015,7 @@ const retrieveCountry = () => {
         fetch(enviroment.BASE_URL + "stripe/create-token", requestOptions)
         .then(response => response.json())
         .then(result => {
+            setisLoading(true)
             console.log(result)
             if(!error) {
                 chargeCard(result.data.id)
@@ -1622,7 +1628,16 @@ const retrieveCountry = () => {
                                                                         type="btn-primary"
                                                                         className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
                                                                     >
-                                                                    Submit
+                                                                    {isLoading ? (
+                                                                        <ClipLoader
+                                                                            color="#fff"
+                                                                            size={20}
+                                                                            loading
+                                                                        />
+                                                                    ) : (
+                                                                        "Submit"
+                                                                    )}
+                                                                    
                                                                     </button>
                                                                 </div>
                                                         
