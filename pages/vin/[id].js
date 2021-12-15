@@ -392,7 +392,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             .then((data) => {
                 const formatData = JSON.parse(data);
                 if (formatData?.data !== null) {
-                    // console.log("has value")
+                    console.log(formatData.data.raw[1])
                     settruckingPrice(formatData.data.raw[1] || 0);
                 } else {
                     fetchScrapperTrucking();
@@ -425,6 +425,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                     createLocalTrucking(data);
                 }
                 settruckingPrice(data.raw[1] || 0);
+                console.log(data.raw[1])
             });
     };
 
@@ -897,12 +898,21 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         Vehicle_location: vehicleLocation,
         images: carImages,
         auctionEndTime: carDetail?.auctionEndTime,
-        trucking: truckAccessory ? ( Number(truckingPrice?.slice(1)) > 1000
+        trucking: truckingPrice.includes(",") ?  (truckAccessory ? ( Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+        ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+        : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+          Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+        ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+        : Number(truckingPrice?.slice(1).replace(/,/g, ''))) : 0) 
+
+        : 
+        
+        ((truckAccessory ? ( Number(truckingPrice?.slice(1)) > 1000
         ? Number(truckingPrice?.slice(1)) / 3
         : Number(truckingPrice?.slice(1)) > 400 &&
           Number(truckingPrice?.slice(1)) < 1000
         ? Number(truckingPrice?.slice(1)) / 2
-        : Number(truckingPrice?.slice(1))) : 0,
+        : Number(truckingPrice?.slice(1))) : 0)),
         shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
         total: accessories(),
@@ -1277,13 +1287,25 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (truckAccessory === true) {
             // setaddTrucking(true);
-            truck =
-                Number(truckingPrice?.slice(1)) > 1000
-                    ? Number(truckingPrice?.slice(1)) / 3
-                    : Number(truckingPrice?.slice(1)) > 400 &&
-                      Number(truckingPrice?.slice(1)) < 1000
-                    ? Number(truckingPrice?.slice(1)) / 2
-                    : Number(truckingPrice?.slice(1));
+            if(truckingPrice?.includes(",")) {
+                
+                truck =
+                Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+                    : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+                      Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+                    : Number(truckingPrice?.slice(1).replace(/,/g, ''));
+            } else {
+                truck =
+                    Number(truckingPrice?.slice(1)) > 1000
+                        ? Number(truckingPrice?.slice(1)) / 3
+                        : Number(truckingPrice?.slice(1)) > 400 &&
+                          Number(truckingPrice?.slice(1)) < 1000
+                        ? Number(truckingPrice?.slice(1)) / 2
+                        : Number(truckingPrice?.slice(1));
+
+            }
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1312,13 +1334,26 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
-            truck =
-                Number(truckingPrice?.slice(1)) > 1000
-                    ? Number(truckingPrice?.slice(1)) / 3
-                    : Number(truckingPrice?.slice(1)) > 400 &&
-                      Number(truckingPrice?.slice(1)) < 1000
-                    ? Number(truckingPrice?.slice(1)) / 2
-                    : Number(truckingPrice?.slice(1));
+            if(truckingPrice?.includes(",")) {
+                
+                truck =
+                Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+                    : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+                      Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+                    : Number(truckingPrice?.slice(1).replace(/,/g, ''));
+            } else {
+                truck =
+                    Number(truckingPrice?.slice(1)) > 1000
+                        ? Number(truckingPrice?.slice(1)) / 3
+                        : Number(truckingPrice?.slice(1)) > 400 &&
+                          Number(truckingPrice?.slice(1)) < 1000
+                        ? Number(truckingPrice?.slice(1)) / 2
+                        : Number(truckingPrice?.slice(1));
+
+            }
+            
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1811,12 +1846,16 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     }
                                                                     onChange={(
                                                                         e
-                                                                    ) =>
+                                                                    ) => {
                                                                         setcarDestination(
                                                                             e
                                                                                 .target
                                                                                 .value
                                                                         )
+                                                                        if(e.target.value == "United States") {
+                                                                            setshipAccessory(false)
+                                                                        }
+                                                                    }
                                                                     }
                                                                 >
                                                                     {options.map((country) => (
@@ -1936,7 +1975,52 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                             colSpan="2"
                                                                             className="font-11 sec-black font-normal py-2"
                                                                         >
-                                                                            $
+                                                                            {truckingPrice?.includes(",") ? (
+                                                                                <>
+                                                                                    
+                                                                                    {"$"}
+                                                                                    {truckingPrice
+                                                                                        ? Number(
+                                                                                            truckingPrice?.slice(
+                                                                                                1
+                                                                                            ).replace(/,/g, '')
+                                                                                        ) > 
+                                                                                        1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            3
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) >
+                                                                                                400 &&
+                                                                                            Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) <
+                                                                                                1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            2
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            )
+                                                                                        : "0"}
+                                                                                </>
+                                                                            ) : (
+                                                                            <>
+
+                                                                            {"$"}
                                                                             {truckingPrice
                                                                                 ? Number(
                                                                                     truckingPrice?.slice(
@@ -1974,6 +2058,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                         )
                                                                                     )
                                                                                 : "0"}
+                                                                            </>
+                                                                            )}
                                                                         </td>
                                                                         <td className="text-right px-2">
                                                                             <label className="detail">
@@ -2025,7 +2111,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                     !shipAccessory
                                                                                 )
                                                                             }
-                                                                            checked={shipAccessory}
+                                                                            checked={carDestination == "United States" ? false : shipAccessory}
                                                                         />
                                                                         <span className="detail"></span>
                                                                     </label>
@@ -2274,46 +2360,167 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                 Trucking
                                                             </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $
-                                                                {truckingPrice
-                                                                    ? Number(
-                                                                        truckingPrice?.slice(
-                                                                            1
-                                                                        )
-                                                                    ) > 1000
-                                                                        ? Number(
-                                                                            truckingPrice?.slice(
-                                                                                1
-                                                                            )
-                                                                        ) / 3
-                                                                        : Number(
-                                                                            truckingPrice?.slice(
-                                                                                1
-                                                                            )
-                                                                        ) >
-                                                                            400 &&
-                                                                        Number(
-                                                                            truckingPrice?.slice(
-                                                                                1
-                                                                            )
-                                                                        ) <
-                                                                            1000
-                                                                        ? Number(
-                                                                            truckingPrice?.slice(
-                                                                                1
-                                                                            )
-                                                                        ) / 2
-                                                                        : Number(
-                                                                            truckingPrice?.slice(
-                                                                                1
-                                                                            )
-                                                                        )
-                                                                    : "0"}
-                                                            </td>
+                                                            {noZipValue ? (
+                                                                    <td
+                                                                        colSpan="2"
+                                                                        className="font-11 sec-black font-normal py-2"
+                                                                    >
+                                                                        <>
+                                                                            Contact
+                                                                            Support
+                                                                        </>
+                                                                        <a
+                                                                            onClick={(
+                                                                                e
+                                                                            ) =>
+                                                                                sendSheet(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "green",
+                                                                                }}
+                                                                                className="fa fa-whatsapp"
+                                                                            ></i>
+                                                                        </a>
+                                                                        <a
+                                                                            href="mailto:buylikedealers@gmail.com"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "blue",
+                                                                                }}
+                                                                                className="fa fa-envelope-o"
+                                                                            ></i>
+                                                                        </a>
+                                                                    </td>
+                                                                ) : (
+                                                                    <>
+                                                                        <td
+                                                                            colSpan="2"
+                                                                            className="font-11 sec-black font-normal py-2"
+                                                                        >
+                                                                            {truckingPrice?.includes(",") ? (
+                                                                                <>
+                                                                                    
+                                                                                    {"$"}
+                                                                                    {truckingPrice
+                                                                                        ? Number(
+                                                                                            truckingPrice?.slice(
+                                                                                                1
+                                                                                            ).replace(/,/g, '')
+                                                                                        ) > 
+                                                                                        1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            3
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) >
+                                                                                                400 &&
+                                                                                            Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) <
+                                                                                                1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            2
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            )
+                                                                                        : "0"}
+                                                                                </>
+                                                                            ) : (
+                                                                            <>
+
+                                                                            {"$"}
+                                                                            {truckingPrice
+                                                                                ? Number(
+                                                                                    truckingPrice?.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) >
+                                                                                1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    3
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) >
+                                                                                        400 &&
+                                                                                    Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) <
+                                                                                        1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    2
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    )
+                                                                                : "0"}
+                                                                            </>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="text-right px-2">
+                                                                            <label className="detail">
+                                                                                <input
+                                                                                    value={
+                                                                                        truckAccessory
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="focus:outline-none detail self-center"
+                                                                                    onChange={() =>
+                                                                                        settruckAccessory(
+                                                                                            !truckAccessory
+                                                                                        )
+                                                                                    }
+                                                                                    checked={truckAccessory}
+                                                                                />
+                                                                                <span className="detail"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </>
+                                                                )}
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input

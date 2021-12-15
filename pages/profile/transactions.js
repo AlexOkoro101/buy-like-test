@@ -78,7 +78,7 @@ const Transactions = () => {
 
                         {/* <!-- table here --> */}
                         <div className="">
-                            <div className="block w-full overflow-x-auto">
+                            <div className="block w-full overflow-x-auto overflow-y-auto h-96 mb-20">
                                 <table className="items-center w-full  border-collapse">
                                     <thead className="tertiary-gray text-xs font-medium border-transactions">
                                        

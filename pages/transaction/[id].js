@@ -165,7 +165,17 @@ const Transaction = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });    
+        });
+    const stripeFailure = () =>
+        toast.error("Couldn't process payment", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });        
     //End of Notifiers
 
 
@@ -182,6 +192,7 @@ const Transaction = () => {
     const [sectabActive, setsectabActive] = useState(false);
     const [bidID, setbidID] = useState(null);
     const [bnvehicleID, setbnvehicleID] = useState(null);
+    const [bnsvehicleID, setbnsvehicleID] = useState(null);
     const [firstName, setfirstName] = useState("");
     const [lastName, setlastName] = useState("");
     const [phoneNumber, setphoneNumber] = useState("");
@@ -275,7 +286,7 @@ const retrieveCountry = () => {
         reference: referenceNumber(),
         email: `${userEmail}`,
         amount: /*amount * 100*/ 5000,
-        publicKey: "pk_test_c9e721436fd837814692c450db204c33326ff6d1",
+        publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
     };
     
     // you can call this function anything
@@ -519,7 +530,7 @@ const retrieveCountry = () => {
     };
 
     const stripePayment = (ref, verifiedData) => {
-        console.log("vehicle id", bnvehicleID)
+        console.log("vehicle id", bnsvehicleID)
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -532,7 +543,7 @@ const retrieveCountry = () => {
             username: "",
             collection: "",
             owner: carDetails?.owner,
-            vehicle: bnvehicleID,
+            vehicle: bnsvehicleID,
             bid: bidID,
             amount: carDetails?.total,
             amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
@@ -1021,8 +1032,10 @@ const retrieveCountry = () => {
         .then(result => {
             setisLoading(false)
             console.log(result)
-            if(!error) {
+            if(!result.error) {
                 stripePayment(result.data.id, result)
+            } else {
+                stripeFailure()
             }
         })
         .catch(error => console.log('error', error));
@@ -1132,8 +1145,7 @@ const retrieveCountry = () => {
                 
                 getBidId(resultFormat)
                 console.log("bnvID", resultFormat.data._id)
-                setbnvehicleID(resultFormat.data._id)
-                setconfimation(true)
+                setbnsvehicleID(resultFormat.data._id)
                 generateToken()
                 // stripeSuccess();
                 // setstate(3)
