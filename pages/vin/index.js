@@ -233,19 +233,34 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 fetchMore(filterValue, datas, sortValue, active, activeTab)
             );
         } else {
-            let data =
-                active === "now"
-                    ? "buy_now=1"
-                    : active === "bid"
-                    ? "mmr_price=1"
-                    : "";
-            const datas = {
-                make: paramValue?.make || "",
-                model: paramValue?.model || "",
-                year: paramValue?.year || "",
-                page: i,
-            };
-            dispatch(fetchMore(datas, data));
+            // let data =
+            //     active === "now"
+            //         ? "buy_now=1"
+            //         : active === "bid"
+            //         ? "mmr_price=1"
+            //         : "";
+            // const datas = {
+            //     make: paramValue?.make || "",
+            //     model: paramValue?.model || "",
+            //     year: paramValue?.year || "",
+            //     page: i,
+            // };
+            // dispatch(fetchMore(datas, data));
+            let activeTab =
+            active === "now"
+                ? "buy_now=1"
+                : active === "bid"
+                ? "mmr_price=1"
+                : "";
+        const datas = {
+            make: paramValue?.make || "",
+            model: paramValue?.model || "",
+            year: paramValue?.year || "",
+            page: i,
+        };
+        dispatch(
+            fetchMore(filterValue, datas, sortValue, active, activeTab)
+        )
         }
     };
     const handleYear = (e) => {
