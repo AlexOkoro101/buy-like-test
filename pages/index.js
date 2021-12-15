@@ -835,7 +835,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 <div>
                                     <h3 className="primary-red line-60 font-medium text-3xl lg:text-4xl ">
                                         {" "}
-                                        CLEAN TITLE CARS <br />
+                                        <mark>ACCIDENT-FREE CARS</mark> <br />
                                         <span className="primary-color rem4 font-semibold ">
                                             FILTERED <br /> FOR YOU
                                         </span>
@@ -843,8 +843,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     <hr className="orange-underline w-10 m-1 " />
                                 </div>
                                 <p className="pt-4 text-lg filtered__text font-normal w-10/12 ">
-                                    Choose from our amazing selection of clean
-                                    title cars carefully chosen to meet your
+                                    Choose from our amazing selection of accident-free
+                                     cars carefully chosen to meet your
                                     exquisite taste.
                                 </p>
                             </div>
@@ -914,13 +914,15 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         {" "}
                                         BUY WITH EASE <br />{" "}
                                         <span className="primary-color rem4 font-semibold ">
-                                            FROM ANYWHERE
+                                       <mark> WITH DOORSTEP<br /> DELIVERY</mark>
                                         </span>{" "}
                                     </h3>
                                 </div>
                                 <p className="pt-4 text-lg filtered__text font-normal w-10/12 ">
-                                    Visit our showroom from anywhere and
-                                    complete a request while we handle the rest.
+                
+                                    Purchase our accident-free cars from the comfort
+                                    of your home, using our website, and have the cars
+                                    delivered to your doorstep!
                                 </p>
                             </div>
                         </div>
