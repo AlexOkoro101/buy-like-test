@@ -274,8 +274,8 @@ const retrieveCountry = () => {
     const config = {
         reference: referenceNumber(),
         email: `${userEmail}`,
-        amount: /*amount * 100*/ 50000,
-        publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
+        amount: /*amount * 100*/ 5000,
+        publicKey: "pk_test_c9e721436fd837814692c450db204c33326ff6d1",
     };
     
     // you can call this function anything
@@ -513,6 +513,53 @@ const retrieveCountry = () => {
                 console.log("front end payment", resultFormat)
                 if(resultFormat.error === false) {
                     buyNowSuccess();
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
+
+    const stripePayment = (ref, verifiedData) => {
+        console.log("vehicle id", bnvehicleID)
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            vin: carDetails?.vin,
+            number: `${userPhone}`,
+            fullname: `${userName}`,
+            email: `${userEmail}`,
+            buyNow: true,
+            username: "",
+            collection: "",
+            owner: carDetails?.owner,
+            vehicle: bnvehicleID,
+            bid: bidID,
+            amount: carDetails?.total,
+            amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+            reference: ref,
+            currency: "",
+            metadata: "",
+            balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+            status: verifiedData.data.paid,
+            statusTrans: verifiedData.data.paid,
+        });
+        console.log("stripe data", raw)
+
+        var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+        };
+
+        fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                const resultFormat = JSON.parse(result)
+                console.log("front end payment", resultFormat)
+                if(resultFormat.error === false) {
+                    setstate(3)
+                    stripeSuccess()
                 }
             })
             .catch((error) => console.log("error", error));
@@ -975,16 +1022,14 @@ const retrieveCountry = () => {
             setisLoading(false)
             console.log(result)
             if(!error) {
-                stripeSuccess()
-                setstate(3)
+                stripePayment(result.data.id, result)
             }
         })
         .catch(error => console.log('error', error));
     }
 
-    const generateToken = (e) => {
+    const generateToken = () => {
         setisLoading(true)
-        e.preventDefault()
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -1019,12 +1064,87 @@ const retrieveCountry = () => {
             console.log(result)
             if(!error) {
                 chargeCard(result.data.id)
+                // buyNowStripe()
             }
         })
         .catch(error => console.log('error', error));
 
         
     }
+
+    const buyNowStripe = (e) => {
+        e.preventDefault()
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const bidObject = {
+            vin: carDetails?.vin,
+            link: carDetails?.link,
+            name: (carDetails?.name || (`${carDetails?.year } ${carDetails?.make} ${carDetails?.Model}`)),
+            site: carDetails?.site,
+            price: carDetails?.bidAmount,
+            year: carDetails?.year,
+            exterior_color: carDetails?.exterior_color,
+            vehicle_type: carDetails?.vehicle_type,
+            interior_color: carDetails?.interior_color,
+            transmission: carDetails?.transmission,
+            odometer: carDetails?.odometer,
+            driveTrain: carDetails?.driveTrain,
+            doors: carDetails?.doors,
+            Model: carDetails?.model,
+            make: carDetails?.make,
+            equipment: "",
+            EngineType: "",
+            interior_type: "",
+            body_style: carDetails?.body_style,
+            fuel_type: "",
+            passengerCapacity: "",
+            sellerCity: "",
+            description: "",
+            Zip: carDetails?.Zip,
+            tilteImage: carDetails?.tilteImage,
+            bidAmount: carDetails?.total,
+            owner: carDetails?.owner,
+            facilitationLocation: carDetails?.facilitationLocation,
+            Vehicle_location: carDetails?.Vehicle_location,
+            images: carDetails?.images,
+            trucking: carDetails?.trucking,
+            shipping: carDetails?.shipping,
+            auctionEndTime: carDetails?.auctionEndTime
+        };
+
+        console.log("bid object", bidObject)
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(bidObject),
+            redirect: 'follow'
+          };
+
+        //Add car to buy now
+        fetch(enviroment.BASE_URL + "bids/buy-now", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            // console.log(result)
+            const resultFormat = JSON.parse(result)
+            console.log("bns", resultFormat)
+            if(resultFormat.error === false) {
+                
+                getBidId(resultFormat)
+                console.log("bnvID", resultFormat.data._id)
+                setbnvehicleID(resultFormat.data._id)
+                setconfimation(true)
+                generateToken()
+                // stripeSuccess();
+                // setstate(3)
+                //
+            } else {
+                buyNowInfo();
+            }
+
+        })
+        .catch(error => console.log('error', error));
+    };
 
     return (
         <div>
@@ -1567,7 +1687,7 @@ const retrieveCountry = () => {
                                                                 Pay
                                                             </button>
                                                         </form> */}
-                                                        <div id="PaymentForm" className="flex gap-x-2 justify-between">
+                                                        <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
                                                             <Cards
                                                                 cvc={cvc}
                                                                 expiry={stripeExpiry}
@@ -1624,7 +1744,7 @@ const retrieveCountry = () => {
                                                                 </div>
                                                                 <div>
                                                                     <button 
-                                                                        onClick={generateToken}
+                                                                        onClick={buyNowStripe}
                                                                         type="btn-primary"
                                                                         className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
                                                                     >
