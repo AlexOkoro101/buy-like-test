@@ -1061,7 +1061,7 @@ const retrieveCountry = () => {
         .then(response => response.json())
         .then(result => {
             setisLoading(true)
-            console.log(result)
+            console.log(result.data.id)
             if(!error) {
                 chargeCard(result.data.id)
                 // buyNowStripe()

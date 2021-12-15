@@ -20,7 +20,6 @@ var moment = require("moment");
 import { searchCars } from "../../redux/actions/carsAction";
 import countryList from 'react-select-country-list'
 import { useMemo } from "react";
-import { set } from "nprogress";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -898,12 +897,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         Vehicle_location: vehicleLocation,
         images: carImages,
         auctionEndTime: carDetail?.auctionEndTime,
-        trucking: truckAccessory ? ( Number(truckingPrice.slice(1)) > 1000
-        ? Number(truckingPrice.slice(1)) / 3
-        : Number(truckingPrice.slice(1)) > 400 &&
-          Number(truckingPrice.slice(1)) < 1000
-        ? Number(truckingPrice.slice(1)) / 2
-        : Number(truckingPrice.slice(1))) : 0,
+        trucking: truckAccessory ? ( Number(truckingPrice?.slice(1)) > 1000
+        ? Number(truckingPrice?.slice(1)) / 3
+        : Number(truckingPrice?.slice(1)) > 400 &&
+          Number(truckingPrice?.slice(1)) < 1000
+        ? Number(truckingPrice?.slice(1)) / 2
+        : Number(truckingPrice?.slice(1))) : 0,
         shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
         total: accessories(),
@@ -1267,8 +1266,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
 
     //
-    const [truckAccessory, settruckAccessory] = useState(false);
-    const [shipAccessory, setshipAccessory] = useState(false);
+    const [truckAccessory, settruckAccessory] = useState(true);
+    const [shipAccessory, setshipAccessory] = useState(true);
 
     const accessories = () => {
         var carPrice = Number(carDetail.buyNowPrice);
@@ -1279,12 +1278,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (truckAccessory === true) {
             // setaddTrucking(true);
             truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1302,8 +1301,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return carPrice + outstanding + truck + ship;
     };
 
-    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false);
-    const [placebidShipAccessory, setplacebidShipAccessory] = useState(false);
+    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(true);
+    const [placebidShipAccessory, setplacebidShipAccessory] = useState(true);
 
     const placebidAccessories = () => {
         // console.log(Number(maxBidAmount))
@@ -1314,12 +1313,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
             truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1347,6 +1346,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return location.replace(/Manheim/g, "");
     }
     //
+
     //
     if (!cardD) {
         // reRender();
@@ -1939,37 +1939,37 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                             $
                                                                             {truckingPrice
                                                                                 ? Number(
-                                                                                    truckingPrice.slice(
+                                                                                    truckingPrice?.slice(
                                                                                         1
                                                                                     )
                                                                                 ) >
                                                                                 1000
                                                                                     ? Number(
-                                                                                        truckingPrice.slice(
+                                                                                        truckingPrice?.slice(
                                                                                             1
                                                                                         )
                                                                                     ) /
                                                                                     3
                                                                                     : Number(
-                                                                                        truckingPrice.slice(
+                                                                                        truckingPrice?.slice(
                                                                                             1
                                                                                         )
                                                                                     ) >
                                                                                         400 &&
                                                                                     Number(
-                                                                                        truckingPrice.slice(
+                                                                                        truckingPrice?.slice(
                                                                                             1
                                                                                         )
                                                                                     ) <
                                                                                         1000
                                                                                     ? Number(
-                                                                                        truckingPrice.slice(
+                                                                                        truckingPrice?.slice(
                                                                                             1
                                                                                         )
                                                                                     ) /
                                                                                     2
                                                                                     : Number(
-                                                                                        truckingPrice.slice(
+                                                                                        truckingPrice?.slice(
                                                                                             1
                                                                                         )
                                                                                     )
@@ -1988,6 +1988,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                             !truckAccessory
                                                                                         )
                                                                                     }
+                                                                                    checked={truckAccessory}
                                                                                 />
                                                                                 <span className="detail"></span>
                                                                             </label>
@@ -2014,28 +2015,23 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 <td className="text-right px-2">
                                                                     <label className="detail">
                                                                         <input
-                                                                            defaultChecked={
+                                                                            value={
                                                                                 shipAccessory
                                                                             }
-
                                                                             type="checkbox"
                                                                             className="focus:outline-none detail self-center"
-                                                                            onChange={(e) => {
+                                                                            onChange={() =>
                                                                                 setshipAccessory(
-                                                                                    e.target.checked
+                                                                                    !shipAccessory
                                                                                 )
-                                                                                console.log(shipAccessory)
                                                                             }
-                                                                            }
+                                                                            checked={shipAccessory}
                                                                         />
                                                                         <span className="detail"></span>
                                                                     </label>
                                                                 </td>
                                                             </tr>
-                                                            
                                                         )}
-
-                                                        
 
                                                         {carDestination !== "United States" && (
 
@@ -2285,34 +2281,34 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 $
                                                                 {truckingPrice
                                                                     ? Number(
-                                                                        truckingPrice.slice(
+                                                                        truckingPrice?.slice(
                                                                             1
                                                                         )
                                                                     ) > 1000
                                                                         ? Number(
-                                                                            truckingPrice.slice(
+                                                                            truckingPrice?.slice(
                                                                                 1
                                                                             )
                                                                         ) / 3
                                                                         : Number(
-                                                                            truckingPrice.slice(
+                                                                            truckingPrice?.slice(
                                                                                 1
                                                                             )
                                                                         ) >
                                                                             400 &&
                                                                         Number(
-                                                                            truckingPrice.slice(
+                                                                            truckingPrice?.slice(
                                                                                 1
                                                                             )
                                                                         ) <
                                                                             1000
                                                                         ? Number(
-                                                                            truckingPrice.slice(
+                                                                            truckingPrice?.slice(
                                                                                 1
                                                                             )
                                                                         ) / 2
                                                                         : Number(
-                                                                            truckingPrice.slice(
+                                                                            truckingPrice?.slice(
                                                                                 1
                                                                             )
                                                                         )
@@ -2331,59 +2327,55 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                 !placebidTruckAccessory
                                                                             )
                                                                         }
+                                                                        checked={placebidTruckAccessory}
                                                                     />
                                                                     <span className="detail"></span>
                                                                 </label>
                                                             </td>
                                                         </tr>
+                                                        
+
                                                         {carDestination !== "United States" && (
-                                                            <>    
+                                                            <tr className="">
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                    Shipping
+                                                                </td>
+                                                                <td
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2"
+                                                                >
+                                                                    $1,150
+                                                                </td>
+                                                                <td className="text-right px-2">
+                                                                    <label className="detail">
+                                                                        <input
+                                                                            value={
+                                                                                placebidShipAccessory
+                                                                            }
+                                                                            type="checkbox"
+                                                                            className="focus:outline-none detail self-center"
+                                                                            onChange={() =>
+                                                                                setplacebidShipAccessory(
+                                                                                    !placebidShipAccessory
+                                                                                )
+                                                                            }
+                                                                            checked={placebidShipAccessory}
+                                                                        />
+                                                                        <span className="detail"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
 
-                                                                <tr className="">
-                                                                    <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                                        Shipping
-                                                                    </td>
-                                                                    <td
-                                                                        colSpan="3"
-                                                                        className="font-11 sec-black font-normal pr-20 py-2"
-                                                                    >
-                                                                        $1,150
-                                                                    </td>
-                                                                    <td className="text-right px-2">
-                                                                        <label className="detail">
-                                                                            <input
-                                                                                value={
-                                                                                    placebidShipAccessory
-                                                                                }
-                                                                                type="checkbox"
-                                                                                className="focus:outline-none detail self-center"
-                                                                                onChange={() =>
-                                                                                    setplacebidShipAccessory(
-                                                                                        !placebidShipAccessory
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                            <span className="detail"></span>
-                                                                        </label>
-                                                                    </td>
-                                                                </tr>
-
-                                                            </>
                                                         )}
 
-
                                                         {carDestination !== "United States" && (
-
                                                             <tr className="">
-                                                                <td
-                                                                    colSpan="2"
-                                                                    className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
-                                                                >
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                                     Clearing
                                                                 </td>
                                                                 <td
-                                                                    colSpan="2"
-                                                                    className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
                                                                 >
                                                                     N/A
                                                                 </td>
@@ -2395,8 +2387,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     />
                                                                 </td>
                                                             </tr>
-
                                                         )}
+
+
 
                                                         <tr className="">
                                                             <td
@@ -3388,11 +3381,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         alt="location"
                                                                     />
                                                                 </span>
-                                                                {
-                                                                    
-                                                                    editLocation(ele?.pickupLocation)
-                                                                    
-                                                                }
+                                                                {ele?.pickupLocation.replace(
+                                                                    "Manheim",
+                                                                    ""
+                                                                )}
                                                             </p>
                                                             <div className="ml-auto flex self-center">
                                                                 <img

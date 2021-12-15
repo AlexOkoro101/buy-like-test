@@ -2110,7 +2110,6 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                         />
                                                                                     </span>{" "}
                                                                                     {
-                                                                                        
                                                                                         editLocation(ele?.pickupLocation)
                                                                                     }
                                                                                 </p>
@@ -2296,7 +2295,6 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                                         />
                                                                                                     </span>{" "}
                                                                                                     {
-                                                                                                        
                                                                                                         editLocation(ele?.pickupLocation)
                                                                                                     }
                                                                                                 </p>
