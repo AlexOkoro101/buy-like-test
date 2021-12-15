@@ -1686,96 +1686,106 @@ const retrieveCountry = () => {
                                                             </button>
                                                         </div>
 
-                                                    ) : (
-
-                                                    <div className=" px-2 ">
-                                                        {/* <img src="../../../assets/img/stripe-logo.svg" alt="" width="100" className="" />
-                                                        <form onSubmit={handleSubmit} className="mt-2 border border-gray-200 p-4">
-                                                            <label className="text-base block mb-4">
-                                                                Card details
-                                                            </label>
-                                                            <CardElement options={cardOptions} />
-                                                            <button className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6" type="submit" disabled={!stripe || !elements}>
-                                                                Pay
+                                                    ) : (userCountry !== 'Nigeria' && carDetails?.carDestination == 'Nigeria') ? (
+                                                        <div className="flex  justify-center items-center">
+                                                            <button
+                                                                onClick={() => {
+                                                                    // initializePayment(
+                                                                    //     onSuccess,
+                                                                    //     onClose
+                                                                    // );
+                                                                    buyNowFunction()
+                                                                }}
+                                                                type="button"
+                                                                className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
+                                                            >
+                                                                Pay with
+                                                                <img
+                                                                    src="../assets/img/paystack-logo.png"
+                                                                    className="ml-2"
+                                                                    alt="Paystack"
+                                                                />
                                                             </button>
-                                                        </form> */}
-                                                        <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
-                                                            <Cards
-                                                                cvc={cvc}
-                                                                expiry={stripeExpiry}
-                                                                focused={stripeFocus}
-                                                                name={stripeName}
-                                                                number={stripeNumber}
-                                                            />
-                                                            <form className="flex-1 p-1">
-                                                                <div className="flex flex-col gap-y-2 mb-4">
-
-                                                                    <div>
-                                                                        <input
-                                                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
-                                                                            type="tel"
-                                                                            name="number"
-                                                                            placeholder="Card Number"
-                                                                            onChange={(e) => setstripeNumber(e.target.value)}
-                                                                            onFocus={(e) => setstripeFocus(e.target.name)}
-                                                                        />
-
-                                                                    </div>
-                                                                    <div>
-                                                                        <input
-                                                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
-                                                                            type="text"
-                                                                            name="name"
-                                                                            placeholder="Card Name"
-                                                                            onChange={(e) => setstripeName(e.target.value)}
-                                                                            onFocus={(e) => setstripeFocus(e.target.name)}
-                                                                        />
-                                                                    </div>
-                                                                    <div className="flex gap-x-2">
-                                                                        <div>
-                                                                            <input
-                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
-                                                                                type="tel"
-                                                                                name="expiry"
-                                                                                placeholder="Expiry"
-                                                                                onChange={(e) => setstripeExpiry(e.target.value)}
-                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
-                                                                            />
-                                                                        </div>
-                                                                        <div>
-                                                                            <input
-                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
-                                                                                type="tel"
-                                                                                name="cvc"
-                                                                                placeholder="CVC"
-                                                                                onChange={(e) => setcvc(e.target.value)}
-                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <button 
-                                                                        onClick={buyNowStripe}
-                                                                        type="btn-primary"
-                                                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
-                                                                    >
-                                                                    {isLoading ? (
-                                                                        <ClipLoader
-                                                                            color="#fff"
-                                                                            size={20}
-                                                                            loading
-                                                                        />
-                                                                    ) : (
-                                                                        "Submit"
-                                                                    )}
-                                                                    
-                                                                    </button>
-                                                                </div>
-                                                        
-                                                            </form>
                                                         </div>
-                                                    </div>
+                                                    ) : (
+                                                        <div className=" px-2 ">
+                                                            <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
+                                                                <Cards
+                                                                    cvc={cvc}
+                                                                    expiry={stripeExpiry}
+                                                                    focused={stripeFocus}
+                                                                    name={stripeName}
+                                                                    number={stripeNumber}
+                                                                />
+                                                                <form className="flex-1 p-1">
+                                                                    <div className="flex flex-col gap-y-2 mb-4">
+
+                                                                        <div>
+                                                                            <input
+                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                type="tel"
+                                                                                name="number"
+                                                                                placeholder="Card Number"
+                                                                                onChange={(e) => setstripeNumber(e.target.value)}
+                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                            />
+
+                                                                        </div>
+                                                                        <div>
+                                                                            <input
+                                                                                className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                type="text"
+                                                                                name="name"
+                                                                                placeholder="Card Name"
+                                                                                onChange={(e) => setstripeName(e.target.value)}
+                                                                                onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="flex gap-x-2">
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="tel"
+                                                                                    name="expiry"
+                                                                                    placeholder="Expiry"
+                                                                                    onChange={(e) => setstripeExpiry(e.target.value)}
+                                                                                    onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="tel"
+                                                                                    name="cvc"
+                                                                                    placeholder="CVC"
+                                                                                    onChange={(e) => setcvc(e.target.value)}
+                                                                                    onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button 
+                                                                            onClick={buyNowStripe}
+                                                                            type="btn-primary"
+                                                                            className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
+                                                                        >
+                                                                        {isLoading ? (
+                                                                            <ClipLoader
+                                                                                color="#fff"
+                                                                                size={20}
+                                                                                loading
+                                                                            />
+                                                                        ) : (
+                                                                            "Submit"
+                                                                        )}
+                                                                        
+                                                                        </button>
+                                                                    </div>
+                                                            
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     )}
                                                 </form>
                                             </div>
