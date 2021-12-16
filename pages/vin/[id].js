@@ -1968,7 +1968,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     colSpan="2"
                                                                     className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
                                                                 >
-                                                                    Clearing
+                                                                   Custom clearing
                                                                 </td>
                                                                 <td
                                                                     colSpan="2"
@@ -1992,7 +1992,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="2"
                                                                 className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
                                                             >
-                                                                Service Fee
+                                                                Buylikedealer’s fee
                                                             </td>
                                                             <td
                                                                 colSpan="3"
@@ -2532,8 +2532,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         type="button"
                                                         className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
                                                     >
-                                                        SUBMIT A REQUEST TO
-                                                        PROCEED
+                                                        REQUEST FOR MORE 
+                                                        INFO
+
                                                     </button>
                                                 </Link>
 

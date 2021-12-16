@@ -865,16 +865,17 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                             <div>
                                 <h3 className="primary-red line-60 font-medium text-3xl lg:text-4xl ">
                                     {" "}
-                                    WHOLESALE PRICE{" "}
+                                    MULTIPLE{" "}
                                     <span className="primary-color block rem4 font-semibold ">
-                                        ON CLEAN CARS
+                                    INSPECTIONS <p className="primary-red line-60 font-medium text-3xl lg:text-4xl ">AND</p> SERVICING…
                                     </span>{" "}
                                 </h3>
                                 <hr className="orange-underline w-10 mx-1.5 mt-5" />
                             </div>
                             <p className="pt-4 text-lg filtered__text font-normal w-10/12 ">
-                                Buy clean as new cars at unbeatable wholesale
-                                prices.{" "}
+                            For our retail customers, we conduct multiple inspections
+                             and service and guarantee the great condition of the
+                            car’s powertrain.{" "}
                             </p>
                         </div>
                         <div className="red__ellipse mt-5 lg:mt-0 ">
