@@ -1456,7 +1456,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
                                                     <div className="font-semibold text-xs w-full self-center	">
-                                                        Pickup Location
+                                                        Facilitation Location
                                                     </div>
                                                 }
                                                 getDropdownButtonLabel={({
