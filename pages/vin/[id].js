@@ -203,6 +203,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             window.localStorage.clear();
             return null;
         }
+
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
@@ -286,7 +287,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             });
         }
         setsize((num || 0) + size);
-        const items = array.slice(0, size + (num || 0));
+        const items = array?.slice(0, size + (num || 0));
         setData(items);
     };
 
@@ -330,6 +331,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (carDetail) {
             setDetail(carDetail);
         }
+        console.log(carDetail)
     }, [carDetail]);
 
     const getTrucking = {
@@ -1223,12 +1225,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (truckAccessory === true) {
             // setaddTrucking(true);
             truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1258,12 +1260,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
             truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1867,37 +1869,37 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         $
                                                                         {truckingPrice
                                                                             ? Number(
-                                                                                  truckingPrice.slice(
+                                                                                  truckingPrice?.slice(
                                                                                       1
                                                                                   )
                                                                               ) >
                                                                               1000
                                                                                 ? Number(
-                                                                                      truckingPrice.slice(
+                                                                                      truckingPrice?.slice(
                                                                                           1
                                                                                       )
                                                                                   ) /
                                                                                   3
                                                                                 : Number(
-                                                                                      truckingPrice.slice(
+                                                                                      truckingPrice?.slice(
                                                                                           1
                                                                                       )
                                                                                   ) >
                                                                                       400 &&
                                                                                   Number(
-                                                                                      truckingPrice.slice(
+                                                                                      truckingPrice?.slice(
                                                                                           1
                                                                                       )
                                                                                   ) <
                                                                                       1000
                                                                                 ? Number(
-                                                                                      truckingPrice.slice(
+                                                                                      truckingPrice?.slice(
                                                                                           1
                                                                                       )
                                                                                   ) /
                                                                                   2
                                                                                 : Number(
-                                                                                      truckingPrice.slice(
+                                                                                      truckingPrice?.slice(
                                                                                           1
                                                                                       )
                                                                                   )
@@ -2208,34 +2210,34 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 $
                                                                 {truckingPrice
                                                                     ? Number(
-                                                                          truckingPrice.slice(
+                                                                          truckingPrice?.slice(
                                                                               1
                                                                           )
                                                                       ) > 1000
                                                                         ? Number(
-                                                                              truckingPrice.slice(
+                                                                              truckingPrice?.slice(
                                                                                   1
                                                                               )
                                                                           ) / 3
                                                                         : Number(
-                                                                              truckingPrice.slice(
+                                                                              truckingPrice?.slice(
                                                                                   1
                                                                               )
                                                                           ) >
                                                                               400 &&
                                                                           Number(
-                                                                              truckingPrice.slice(
+                                                                              truckingPrice?.slice(
                                                                                   1
                                                                               )
                                                                           ) <
                                                                               1000
                                                                         ? Number(
-                                                                              truckingPrice.slice(
+                                                                              truckingPrice?.slice(
                                                                                   1
                                                                               )
                                                                           ) / 2
                                                                         : Number(
-                                                                              truckingPrice.slice(
+                                                                              truckingPrice?.slice(
                                                                                   1
                                                                               )
                                                                           )
@@ -3363,21 +3365,35 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 <a
                                                                     href={`/vin/${ele.VIN}`}
                                                                 >
-                                                                    <button
-                                                                        type="button"
-                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                        onClick={() => {
-                                                                            dispatch(
-                                                                                carDetail(
-                                                                                    ele
-                                                                                )
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        {ele?.buyNowPrice
-                                                                            ? "Buy now"
-                                                                            : "Place bid"}
-                                                                    </button>
+                                                                    {ele?.buyNowPrice>0?
+                                                                     <button
+                                                                     type="button"
+                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                     onClick={() => {
+                                                                         dispatch(
+                                                                             carDetail(
+                                                                                 ele
+                                                                             )
+                                                                         );
+                                                                     }}
+                                                                 >Buy now</button>:
+                                                                 <button
+                                                                 type="button"
+                                                                 className="focus:outline-none text-white bg-blue-700 py-1.5 font-10 fonr-semibold px-5"
+                                                                 onClick={() => {
+                                                                     dispatch(
+                                                                         carDetail(
+                                                                             ele
+                                                                         )
+                                                                     );
+                                                                 }}>
+                                                                     Place bid
+                                                                 </button>
+
+                                                                    }
+                                                                   
+                                                                       
+                                                            
                                                                 </a>
                                                             </div>
                                                         </div>

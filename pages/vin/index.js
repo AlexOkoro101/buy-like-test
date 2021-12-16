@@ -7,6 +7,7 @@ import {
     filterTabAction,
     getMakes,
     carDetail,
+    getCategory,
 } from "../../redux/actions/carsAction";
 import Select from "react-select";
 import { useRouter } from "next/router";
@@ -94,6 +95,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     });
     const [pageIndex, setPageIndex] = useState(1);
     const [active, setActive] = useState("all");
+    const [bodyType, setBodyType]=useState("")
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
     const [sortValue, setSortValue] = useState(null);
@@ -125,22 +127,29 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     });
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
+    
+
     useEffect(() => {
+        console.log(cars)
         if (paramValue && cars.data === []) {
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
-            fetchPage(pageIndex);
+            // fetchPage(pageIndex);
         } else {
             setData(cars.data);
+            
         }
     }, [cars]);
+
+
+    
     useEffect(() => {
         if (carModels.length <= 0) {
             if (makes && makes[0]) {
                 getVehicleModels();
             }
         }
-        fetchPage(pageIndex);
+        // fetchPage(pageIndex);
     }, []);
     useEffect(() => {
         if (advance === true) {
@@ -191,6 +200,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
+                bodyType:paramValue?.bodyType||"",
                 page: pageIndex,
             };
             dispatch(
@@ -227,10 +237,11 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
+                bodyType:paramValue?.bodyType||"",
                 page: i,
             };
             dispatch(
-                fetchMore(filterValue, datas, sortValue, active, activeTab)
+                fetchMore( filterValue, datas, sortValue, active, activeTab)
             );
         } else {
             // let data =
@@ -247,21 +258,25 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             // };
             // dispatch(fetchMore(datas, data));
             let activeTab =
-            active === "now"
-                ? "buy_now=1"
-                : active === "bid"
+                active === "bid"
                 ? "mmr_price=1"
+                : active === "now"
+                ? "buy_now=1"
                 : "";
-        const datas = {
-            make: paramValue?.make || "",
-            model: paramValue?.model || "",
-            year: paramValue?.year || "",
-            page: i,
-        };
-        dispatch(
-            fetchMore(filterValue, datas, sortValue, active, activeTab)
-        )
+                
+                    
+                const datas = {
+                    make: paramValue?.make || "",
+                    model: paramValue?.model || "",
+                    year: paramValue?.year || "",
+                    bodyType:paramValue?.bodyType||"",
+                    page: i,
+                };
+                dispatch(
+                    fetchMore(filterValue, datas, sortValue, active, activeTab)
+                );
         }
+        
     };
     const handleYear = (e) => {
         var data;
