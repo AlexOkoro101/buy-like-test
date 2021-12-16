@@ -70,7 +70,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
     let inputEl = useRef([]);
-    inputEl.current = [...Array(11)].map(
+    inputEl.current = [...Array(12)].map(
         (ref, index) => (inputEl.current[index] = React.createRef())
     );
 
@@ -1415,7 +1415,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
-                                                ref={inputEl.current[4]}
+                                                ref={inputEl.current[11]}
                                                 isClearable
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
@@ -1430,6 +1430,42 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                     return (
                                                         <div className="font-semibold text-xs w-96 self-center">
                                                             Pickup Location
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        location: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                ref={inputEl.current[4]}
+                                                isClearable
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Pickup Location
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Facilitation Location
                                                         </div>
                                                     );
                                                 }}

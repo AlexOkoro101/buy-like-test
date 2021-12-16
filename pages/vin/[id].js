@@ -2990,7 +2990,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
                                                         {
-                                                            cardD?.facilitationLocation
+                                                            cardD?.facilitationLocation?.replace("Manheim","")
                                                         }
                                                     </td>
                                                 </tr>
