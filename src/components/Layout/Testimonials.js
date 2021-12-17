@@ -57,9 +57,8 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                  If you can wait over 6 weeks for a car, then you should
+                  buy from them. Their cars are good and worth the wait
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -71,7 +70,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Ona. O{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
@@ -83,9 +82,8 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                  I’ve heard a lot about them. Their customer service needs
+                   improvement but their cars look great.
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -97,7 +95,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Victor{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
@@ -109,9 +107,9 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                  I got my Range Rover from them. It took some time to get to me but
+                   I love the ride! It’s clean as they promised.
+
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -123,7 +121,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Folk Obi{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
@@ -135,9 +133,9 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                  I’ve actually bought over 10 cars since they started selling
+                   in 2018. My family and I love their cars. They are accident-free 
+                   and reliable.
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -149,7 +147,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Uche Rhapsohair{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
@@ -161,9 +159,9 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                 This is my 4th purchase in 2 years and I will keep coming back.
+                 They have an eye for quality cars
+
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -175,7 +173,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Adetoye Oludare{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
@@ -187,9 +185,9 @@ const Testimonials = () => {
                   style={{ lineHeight: "24px" }}
                   className="primary-color text-sm font-normal"
                 >
-                  The car is exactly what I saw in the picture. The staff were
-                  good listeners and professional. The car is exactly what I saw
-                  in the picture.
+                  Their prices are not so cheap but their cars are 
+                  accident-free unlike the ones I was seeing in Nigeria
+
                 </p>
                 {/* Star ratings here */}
                 <div className="star__rating flex pt-8 pb-2 ">
@@ -201,7 +199,7 @@ const Testimonials = () => {
                 </div>
                 <p className="font-bold text-base primary-color py-2 ">
                   {" "}
-                  Dare Thomas{" "}
+                  Chibuike Danny{" "}
                 </p>
                 <p className="text-sm font-normal testinonial__location ">
                   Lagos, Nigeria{" "}
