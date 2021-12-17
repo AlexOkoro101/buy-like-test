@@ -244,6 +244,13 @@ const [stripeExpiry, setstripeExpiry] = useState("")
 const [stripeFocus, setstripeFocus] = useState("")
 const [stripeName, setstripeName] = useState("")
 const [stripeNumber, setstripeNumber] = useState("")
+const [billingName, setbillingName] = useState("")
+const [billingPhone, setbillingPhone] = useState("")
+const [billingEmail, setbillingEmail] = useState("")
+const [billingCity, setbillingCity] = useState("")
+const [billingCountry, setbillingCountry] = useState("")
+const [billingAddress, setbillingAddress] = useState("")
+const [billingZip, setbillingZip] = useState("")
 
 
 async function stripeTokenHandler(token) {
@@ -1051,14 +1058,14 @@ const retrieveCountry = () => {
         "exp_month": stripeExpiry.slice(0,2),
         "exp_year": stripeExpiry.slice(2,4),
         "cvc": cvc,
-        "name": userName,
-        "address_city": defaultAddress[0]?.lg,
-        "address_country": defaultAddress[0]?.country,
-        "address_line1": defaultAddress[0]?.address,
-        "address_zip": "",
+        "name": billingName,
+        "address_city": billingCity,
+        "address_country": billingCountry,
+        "address_line1": billingAddress,
+        "address_zip": billingZip,
         "ifsave": false,
-        "email": userEmail,
-        "phone": userPhone
+        "email": billingEmail,
+        "phone": billingPhone
         });
 
         console.log(JSON.parse(raw))
@@ -1083,6 +1090,39 @@ const retrieveCountry = () => {
         .catch(error => console.log('error', error));
 
         
+    }
+
+    const addStripeCustomer = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify({
+          "email": billingEmail,
+          "name": billingName,
+          "description": "lorem ipsum",
+        });
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        
+        fetch(enviroment.BASE_URL + "stripe/create-customer", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              console.log(result)
+              if(result.error == false) {
+                  var existingInfo = JSON.parse(localStorage.getItem('user'))
+                  const StripeId = result.data.id;
+
+                  existingInfo.stripeId = StripeId;
+
+                  localStorage.setItem('user', JSON.stringify(existingInfo))
+              }
+            })
+          .catch(error => console.log('error', error));
     }
 
     const buyNowStripe = (e) => {
@@ -1147,8 +1187,13 @@ const retrieveCountry = () => {
                 console.log("bnvID", resultFormat.data._id)
                 setbnsvehicleID(resultFormat.data._id)
                 generateToken()
-                // stripeSuccess();
-                // setstate(3)
+
+                var checkStripeId = JSON.parse(localStorage.getItem('user'))
+                if(!checkStripeId.stripeId) {
+                    addStripeCustomer()
+                } else {
+                    return;
+                }
                 //
             } else {
                 buyNowInfo();
@@ -1229,7 +1274,7 @@ const retrieveCountry = () => {
                                         </tr>
 
                                         <tr className="detail-row mb-2">
-                                            <td className="sec-black text-sm font-semibold py-1.5">Deposit</td>
+                                            <td className="sec-black text-sm font-semibold py-1.5">Deposit Due</td>
                                             <td className="text-sm primary-black font-normal py-1.5">$1,000</td>
                                         </tr>
 
@@ -1687,25 +1732,192 @@ const retrieveCountry = () => {
                                                         </div>
 
                                                     ) : (userCountry !== 'Nigeria' && carDetails?.carDestination == 'Nigeria') ? (
-                                                        <div className="flex  justify-center items-center">
-                                                            <button
-                                                                onClick={() => {
-                                                                    // initializePayment(
-                                                                    //     onSuccess,
-                                                                    //     onClose
-                                                                    // );
-                                                                    buyNowFunction()
-                                                                }}
-                                                                type="button"
-                                                                className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
-                                                            >
-                                                                Pay with
-                                                                <img
-                                                                    src="../assets/img/paystack-logo.png"
-                                                                    className="ml-2"
-                                                                    alt="Paystack"
-                                                                />
-                                                            </button>
+                                                        <div className="flex flex-col gap-y-2">
+                                                            <div className="flex  justify-center items-center">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        // initializePayment(
+                                                                        //     onSuccess,
+                                                                        //     onClose
+                                                                        // );
+                                                                        buyNowFunction()
+                                                                    }}
+                                                                    type="button"
+                                                                    className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
+                                                                >
+                                                                    Pay with
+                                                                    <img
+                                                                        src="../assets/img/paystack-logo.png"
+                                                                        className="ml-2"
+                                                                        alt="Paystack"
+                                                                    />
+                                                                </button>
+                                                            </div>
+
+                                                            <div>
+                                                                OR
+                                                            </div>
+
+                                                            <div className=" px-2 ">
+                                                                <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
+                                                                    <Cards
+                                                                        cvc={cvc}
+                                                                        expiry={stripeExpiry}
+                                                                        focused={stripeFocus}
+                                                                        name={stripeName}
+                                                                        number={stripeNumber}
+                                                                    />
+                                                                    <form className="flex-1 p-1">
+                                                                        <div className="flex flex-col gap-y-2 mb-4">
+
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="tel"
+                                                                                    name="number"
+                                                                                    placeholder="Card Number"
+                                                                                    onChange={(e) => setstripeNumber(e.target.value)}
+                                                                                    onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                />
+
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="text"
+                                                                                    name="name"
+                                                                                    placeholder="Card Name"
+                                                                                    onChange={(e) => setstripeName(e.target.value)}
+                                                                                    onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="flex gap-x-2">
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="tel"
+                                                                                        name="expiry"
+                                                                                        placeholder="Expiry"
+                                                                                        onChange={(e) => setstripeExpiry(e.target.value)}
+                                                                                        onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="tel"
+                                                                                        name="cvc"
+                                                                                        placeholder="CVC"
+                                                                                        onChange={(e) => setcvc(e.target.value)}
+                                                                                        onFocus={(e) => setstripeFocus(e.target.name)}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div className="flex gap-x-2">
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="text"
+                                                                                        name="billingName"
+                                                                                        placeholder="Full name"
+                                                                                        value={billingName}
+                                                                                        onChange={(e) => setbillingName(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="tel"
+                                                                                        name="billingPhone"
+                                                                                        placeholder="Phone number"
+                                                                                        value={billingPhone}
+                                                                                        onChange={(e) => setbillingPhone(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div className="flex gap-x-2">
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="email"
+                                                                                        name="billingEmail"
+                                                                                        placeholder="Email"
+                                                                                        value={billingEmail}
+                                                                                        onChange={(e) => setbillingEmail(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="text"
+                                                                                        name="billingCity"
+                                                                                        placeholder="City"
+                                                                                        value={billingCity}
+                                                                                        onChange={(e) => setbillingCity(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="flex gap-x-2">
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="text"
+                                                                                        name="billingCountry"
+                                                                                        placeholder="Country"
+                                                                                        value={billingCountry}
+                                                                                        onChange={(e) => setbillingCountry(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="text"
+                                                                                        name="billingAddress"
+                                                                                        placeholder="Address"
+                                                                                        value={billingAddress}
+                                                                                        onChange={(e) => setbillingAddress(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="flex gap-x-2">
+                                                                                <div>
+                                                                                    <input
+                                                                                        className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                        type="tel"
+                                                                                        name="billingZip"
+                                                                                        placeholder="Zip Code"
+                                                                                        value={billingZip}
+                                                                                        onChange={(e) => setbillingZip(e.target.value)}
+                                                                                    />
+                                                                                </div>
+                                                                            
+                                                                            </div>
+                                                                        </div>
+                                                                    <div>
+                                                                        <button 
+                                                                            onClick={buyNowStripe}
+                                                                            type="btn-primary"
+                                                                            className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
+                                                                        >
+                                                                        {isLoading ? (
+                                                                            <ClipLoader
+                                                                                color="#fff"
+                                                                                size={20}
+                                                                                loading
+                                                                            />
+                                                                        ) : (
+                                                                            "Submit"
+                                                                        )}
+                                                                        
+                                                                        </button>
+                                                                    </div>
+                                                            
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
                                                         </div>
                                                     ) : (
                                                         <div className=" px-2 ">
@@ -1762,6 +1974,87 @@ const retrieveCountry = () => {
                                                                                     onFocus={(e) => setstripeFocus(e.target.name)}
                                                                                 />
                                                                             </div>
+                                                                        </div>
+
+                                                                        <div className="flex gap-x-2">
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="text"
+                                                                                    name="billingName"
+                                                                                    placeholder="Full name"
+                                                                                    value={billingName}
+                                                                                    onChange={(e) => setbillingName(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="tel"
+                                                                                    name="billingPhone"
+                                                                                    placeholder="Phone number"
+                                                                                    value={billingPhone}
+                                                                                    onChange={(e) => setbillingPhone(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="flex gap-x-2">
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="email"
+                                                                                    name="billingEmail"
+                                                                                    placeholder="Email"
+                                                                                    value={billingEmail}
+                                                                                    onChange={(e) => setbillingEmail(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="text"
+                                                                                    name="billingCity"
+                                                                                    placeholder="City"
+                                                                                    value={billingCity}
+                                                                                    onChange={(e) => setbillingCity(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex gap-x-2">
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="text"
+                                                                                    name="billingCountry"
+                                                                                    placeholder="Country"
+                                                                                    value={billingCountry}
+                                                                                    onChange={(e) => setbillingCountry(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="text"
+                                                                                    name="billingAddress"
+                                                                                    placeholder="Address"
+                                                                                    value={billingAddress}
+                                                                                    onChange={(e) => setbillingAddress(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex gap-x-2">
+                                                                            <div>
+                                                                                <input
+                                                                                    className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                                                                    type="tel"
+                                                                                    name="billingZip"
+                                                                                    placeholder="Zip Code"
+                                                                                    value={billingZip}
+                                                                                    onChange={(e) => setbillingZip(e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                           
                                                                         </div>
                                                                     </div>
                                                                     <div>
@@ -1846,7 +2139,7 @@ const retrieveCountry = () => {
                                             </p>
                                             <p className="pt-4 text-xs sec-black px-5 leading-5 lg:px-20">
                                                 Your confirmation number is
-                                                12A34A56C. You will be sent a
+                                                BLD{carDetails?.vin}. You will be sent a
                                                 link to pay the balance after
                                                 the bid is won.
                                             </p>
