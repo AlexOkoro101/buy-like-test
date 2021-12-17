@@ -53,7 +53,7 @@ export const getCars = () => (dispatch) => {
         type: FETCHING_CARS,
     });
 
-    let url = `https://buylikepoint.us/topcar.php?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    let url = `${api}?popular=1&apiKey=Switch!2020`;
     fetch(url.trim(), {
         method: "GET",
         headers: {},
