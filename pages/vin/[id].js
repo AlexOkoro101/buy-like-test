@@ -244,7 +244,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 setcarDestination("Nigeria")
                 setSelectedCountryCurrency("NG")
             } else {
-                setcarDestination("USA")
+                setcarDestination("United States")
                 setSelectedCountryCurrency("US")
                 setNGN(false)
             }
@@ -2521,6 +2521,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         </td>
                                                                     </>
                                                                 )}
+                                                                
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input

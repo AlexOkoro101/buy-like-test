@@ -292,7 +292,7 @@ const retrieveCountry = () => {
     const config = {
         reference: referenceNumber(),
         email: `${userEmail}`,
-        amount: /*amount * 100*/ 5000,
+        amount: /*amount * 100*/ 100000,
         publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
     };
     
@@ -1759,7 +1759,7 @@ const retrieveCountry = () => {
                                                             </div>
 
                                                             <div className=" px-2 ">
-                                                                <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
+                                                                <div id="PaymentForm" className="flex gap-x-3 flex-col gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
                                                                     <Cards
                                                                         cvc={cvc}
                                                                         expiry={stripeExpiry}
@@ -1921,7 +1921,7 @@ const retrieveCountry = () => {
                                                         </div>
                                                     ) : (
                                                         <div className=" px-2 ">
-                                                            <div id="PaymentForm" className="flex gap-x-3 flex-col-reverse gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
+                                                            <div id="PaymentForm" className="flex gap-x-3 flex-col gap-y-2 lg:gap-y-0 lg:flex-row justify-between">
                                                                 <Cards
                                                                     cvc={cvc}
                                                                     expiry={stripeExpiry}
