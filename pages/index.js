@@ -835,7 +835,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                 <div>
                                     <h3 className="primary-red line-60 font-medium text-3xl lg:text-4xl ">
                                         {" "}
-                                        <mark>ACCIDENT-FREE CARS</mark> <br />
+                                        ACCIDENT-FREE CARS <br />
                                         <span className="primary-color rem4 font-semibold ">
                                             FILTERED <br /> FOR YOU
                                         </span>
@@ -915,7 +915,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                         {" "}
                                         BUY WITH EASE <br />{" "}
                                         <span className="primary-color rem4 font-semibold ">
-                                       <mark> WITH DOORSTEP<br /> DELIVERY</mark>
+                                        WITH DOORSTEP<br /> DELIVERY
                                         </span>{" "}
                                     </h3>
                                 </div>
