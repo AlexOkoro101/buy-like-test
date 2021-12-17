@@ -18,7 +18,16 @@ import withRedux from "next-redux-wrapper";
 import { store, persistor } from "../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import Meta from "../src/components/Head/Meta";
+import {loadStripe} from '@stripe/stripe-js';
+import {
+    CardElement,
+    Elements,
+    useStripe,
+    useElements,
+    PaymentRequestButtonElement
+  } from '@stripe/react-stripe-js';
 const MyApp = ({ Component, pageProps }) => {
+    const stripePromise = loadStripe('pk_test_51JyfUzLikhQleFKQmN8UGjaUEHvzU1WZEw3gG5rLmnmYx13atgEOtDYPrS5wUSzfcUSXxG2W4k1QTJAVBuIlOuGb00jUdAZdni');
     const router = useRouter();
     const handleRouteChange = (url) => {
         if (typeof window.gtag !== "undefined") {
@@ -39,8 +48,9 @@ const MyApp = ({ Component, pageProps }) => {
                 {" "}
                 <App>
                     <Meta title="Buylike dealers" />
-
-                    <Component {...pageProps} />
+                    <Elements stripe={stripePromise}>
+                        <Component {...pageProps} />
+                    </Elements>
                 </App>
             </PersistGate>
         </Provider>

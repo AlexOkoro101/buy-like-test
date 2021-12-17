@@ -1845,7 +1845,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     value="bid"
                                     onClick={() => filterTab("bid")}
                                 >
-                                    Bid Cars
+                                    Place Bid
                                 </button>
                             </div>
 

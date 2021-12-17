@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import { useState } from "react";
+import { enviroment } from "../../src/components/enviroment";
 import Meta from "../../src/components/Head/Meta";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Profile = () => {
-
+    const [isLoading, setisLoading] = useState(false)
     
     // Initial Tab state
     const [profileTab, setprofileTab] = useState(true)
@@ -10,6 +13,80 @@ const Profile = () => {
     const [passwordTab, setpasswordTab] = useState(false)
 
     const [showModal, setshowModal] = useState(false)
+
+    const [user, setuser] = useState(null)
+    const [stripeId, setstripeId] = useState(null)
+    const [userCards, setuserCards] = useState(null)
+
+
+    //Forms
+    const [newCardNumber, setnewCardNumber] = useState("")
+    const [newCardMonth, setnewCardMonth] = useState(1)
+    const [newCardYear, setnewCardYear] = useState(2022)
+    const [newCardCVC, setnewCardCVC] = useState("")
+    const [newCardName, setnewCardName] = useState("")
+    const [newCardCity, setnewCardCity] = useState("")
+    const [newCardCountry, setnewCardCountry] = useState("")
+    const [newCardAddress, setnewCardAddress] = useState("")
+    const [newCardZip, setnewCardZip] = useState("")
+    const [newCardEmail, setnewCardEmail] = useState("")
+    const [newCardPhone, setnewCardPhone] = useState("")
+
+    useEffect(() => {
+        getUserID()
+        return () => {
+            getUserID()
+        }
+    }, [showModal])
+
+    const getUserID = () => {
+        const user = localStorage.getItem('user');
+        if(user) {
+            const item = JSON.parse(user)
+            fetchUserData(item)
+            if(item?.stripeId) {
+                setstripeId(item?.stripeId)
+                
+                getUserCards(item?.stripeId)
+            }
+        }
+    }
+
+    const fetchUserData = (user) => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+          
+        fetch(enviroment.BASE_URL + "auth/user/users/admin/" + user.userId, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if(result.error == false) {
+                setuser(result.data)
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
+
+
+    const getUserCards = (id) => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+          };
+          
+          fetch(enviroment.BASE_URL + "stripe/get-allcard/" + id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.error == false) {
+                    setuserCards(result.data.data)
+                }
+            })
+            .catch(error => console.log('error', error));
+    }
 
 
     //active tab
@@ -33,6 +110,70 @@ const Profile = () => {
         setshowModal(true)
     }
 
+
+    const generateToken = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "number": newCardNumber,
+        "exp_month": newCardMonth,
+        "exp_year": newCardYear,
+        "cvc": newCardCVC,
+        "name": newCardName,
+        "address_city": newCardCity,
+        "address_country": newCardCountry,
+        "address_line1": newCardAddress,
+        "address_zip": newCardZip,
+        "ifsave": false,
+        "email": newCardEmail,
+        "phone": newCardPhone
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "stripe/create-token", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if(result.error == false) {
+                addCustomerCard(result.data.id)
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
+    const addCustomerCard = (id) => {
+        setisLoading(true)
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "token": id
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "stripe/add-user-card/" + stripeId, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            setisLoading(false)
+            console.log(result)
+            setshowModal(false)
+            
+        })
+        .catch(error => console.log('error', error));
+    }
 
     return ( 
         <div>
@@ -87,36 +228,48 @@ const Profile = () => {
                                                         <i className="bg-blue-500 fill-current text-white p-1 rounded-full h-6 absolute top-1 right-2 fa fa-pencil"
                                                             aria-hidden="true"></i>
                                                     </span>
-                                                    <button
+                                                    {/* <button
                                                         className="block p-4 bg-blue-50 border border-dashed border-blue-400 text-blue-500 mt-3">
                                                         Edit Profile Image
-                                                    </button>
+                                                    </button> */}
                                                 </div>
                                                 <span className="border-b-4 border-gray-100 w-full md:hidden"></span>
                                                 <div className="col-span-3 w-full">
                                                     <label htmlFor="first_name" className="block font-10 font-medium pb-1 sec-black">First
                                                         name</label>
-                                                    <input type="text" id="first_name" placeholder="Enter your first name"
-                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.userName || "N/A"}
+                                                        </div>
+                                                    {/* <input type="text" id="first_name" placeholder="Enter your first name"
+                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" /> */}
                                                 </div>
 
                                                 <div className="col-span-3 w-full">
                                                     <label htmlFor="last_name" className="block font-10 font-medium pb-1 sec-black">Last
                                                         name</label>
-                                                    <input type="text" id="last_name" placeholder="Enter your last name"
-                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.userName || "N/A"}
+                                                        </div>
+                                                    {/* <input type="text" id="last_name" placeholder="Enter your last name"
+                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" /> */}
                                                 </div>
                                                 <div className="col-span-3 w-full">
                                                     <label htmlFor="phone" className="block font-10 font-medium pb-1 sec-black">Phone
                                                         Number</label>
-                                                    <input type="tel" id="phone" placeholder="Enter your phone number"
-                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.phoneNumber || "N/A"}
+                                                        </div>
+                                                    {/* <input type="tel" id="phone" placeholder="Enter your phone number"
+                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" /> */}
                                                 </div>
                                                 <div className="col-span-3 w-full">
                                                     <label htmlFor="phone" className="block font-10 font-medium pb-1 sec-black">Email
                                                         Address</label>
-                                                    <input type="email" id="email" placeholder="Enter your email address"
-                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" />
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.email || "N/A"}
+                                                        </div>
+                                                    {/* <input type="email" id="email" placeholder="Enter your email address"
+                                                        className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none" /> */}
                                                 </div>
 
                                                 <span className="border-b-4 border-gray-100 w-full md:hidden"></span>
@@ -124,61 +277,76 @@ const Profile = () => {
                                                 <div className="col-span-3 w-full">
                                                     <label htmlFor="country"
                                                         className="block font-10 font-medium pb-1 sec-black">Country</label>
-                                                    <select id="country"
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.country || "N/A"}
+                                                        </div>
+                                                    {/* <select id="country"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white  focus:outline-none">
                                                         <option>Select Country</option>
                                                         <option>Canada</option>
                                                         <option>Mexico</option>
-                                                    </select>
+                                                    </select> */}
                                                 </div>
 
                                                 <div className="col-span-6 w-full">
                                                     <label htmlFor="address_one"
-                                                        className="block font-10 font-medium pb-1 sec-black">Address Line 1</label>
-                                                    <input type="text" id="address_one"
-                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
+                                                        className="block font-10 font-medium pb-1 sec-black">Address Line</label>
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.address || "N/A"}
+                                                        </div>
+                                                    {/* <input type="text" id="address_one"
+                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" /> */}
                                                 </div>
 
-                                                <div className="col-span-6 w-full">
+                                                {/* <div className="col-span-6 w-full">
                                                     <label htmlFor="address_two"
                                                         className="block font-10 font-medium pb-1 sec-black">Address Line 2</label>
                                                     <input type="text" id="address_two"
                                                         className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
-                                                </div>
+                                                </div> */}
 
                                                 <div className="col-span-2 w-full ">
                                                     <label htmlFor="city" className="block font-10 font-medium pb-1 sec-black">City</label>
-                                                    <input type="text" id="city" placeholder="Enter city"
-                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
+                                                    <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.city || "N/A"}
+                                                        </div>
+                                                    {/* <input type="text" id="city" placeholder="Enter city"
+                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" /> */}
                                                 </div>
 
                                                 <div className="col-span-2 w-full ">
                                                     <label htmlFor="province" className="block font-10 font-medium pb-1 sec-black">State /
                                                         Province</label>
-                                                    <select id="province"
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.state || "N/A"}
+                                                        </div>
+                                                    {/* <select id="province"
                                                         className="mt-1 block w-full py-2 px-3 profile-control bg-white focus:outline-none">
                                                         <option>United States</option>
                                                         <option>Canada</option>
                                                         <option>Mexico</option>
-                                                    </select>
+                                                    </select> */}
                                                 </div>
 
                                                 <div className="col-span-2 w-full ">
                                                     <label htmlFor="postal_code" className="block font-10 font-medium pb-1 sec-black">ZIP /
                                                         Postal</label>
-                                                    <input type="text" id="postal_code" placeholder="Enter Zipcode"
-                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" />
+                                                        <div className="bg-gray-200 text-black py-2 px-2 w-full mt-1 block">
+                                                            {user?.profile?.zip || "N/A"}
+                                                        </div>
+                                                    {/* <input type="text" id="postal_code" placeholder="Enter Zipcode"
+                                                        className="mt-1 block w-full py-2 px-3 bg-white profile-control focus:outline-none" /> */}
                                                 </div>
                                             </div>
 
                                             <div className="flex justify-center mt-6 mb-16">
-                                                <button type="button"
+                                                {/* <button type="button"
                                                     className="uppercase focus:outline-none primary-btn text-white font-10 font-medium mt-4 py-1.5 px-4">
                                                     save
-                                                </button>
+                                                </button> */}
                                                 <button type="button"
                                                     className="uppercase focus:outline-none primary-red font-10 font-medium mt-4 py-1.5 px-4">
-                                                    cancel
+                                                    Update Profile
                                                 </button>
                                             </div>
                                         </form>
@@ -195,30 +363,27 @@ const Profile = () => {
                                         <h2 className="py-1 lg:px-0 text-xl col-span-6 w-full  primary-black ">
                                             Payment Settings
                                         </h2>
-                                        <div className="profile-holder mt-4 py-3.5 px-10">
-                                            <p className="mb-5 text-sm primary-black pt-1">Saved Cards</p>
+                                        {(userCards && userCards?.length) ? (
+                                            
+                                            <div className="profile-holder mt-4 py-3.5 px-10">
+                                                <p className="mb-5 text-sm primary-black pt-1">Saved Cards</p>
 
-                                            {/* <!-- Cards here --> */}
-                                            <div className="flex flex-wrap">
-                                                <div className="text-xs mr-3 md:mr-6 mb-4">
-                                                    <div className="card-holder p-3.5 mb-2 grid place-content-between">
-                                                        <p className="mb-10 primary-black">**** **** **** 1234</p>
-                                                        <p className="font-10 primary-black">My online shopping card</p>
-                                                    </div>
-                                                    <p className="text-center">
-                                                        <a className="font-11 primary-blue" href="#">Edit card details</a>
-                                                    </p>
-                                                </div>
+                                                {/* <!-- Cards here --> */}
+                                                {userCards?.map((stripeCard, index) => (
+                                                    <div className="flex flex-wrap" key={index}>
+                                                        <div className="text-xs mr-3 md:mr-6 mb-4">
+                                                            <div className="card-holder p-3.5 mb-2 grid place-content-between">
+                                                                <p className="mb-10 primary-black">**** **** **** {stripeCard.last4}</p>
+                                                                <p className="font-10 primary-black">My online shopping card</p>
+                                                            </div>
+                                                            <p className="text-center">
+                                                                <a className="font-11 primary-blue" href="#">Edit card details</a>
+                                                            </p>
+                                                        </div>
 
-                                                <div className="text-xs mr-3 md:mr-6 mb-4">
-                                                    <div className="card-holder p-3.5 mb-2 grid place-content-between">
-                                                        <p className="mb-10 primary-black">**** **** **** 1234</p>
-                                                        <p className="font-10 primary-black">Alternate shopping card</p>
                                                     </div>
-                                                    <p className="text-center">
-                                                        <a className="font-11 primary-blue" href="#">Edit card details</a>
-                                                    </p>
-                                                </div>
+
+                                                ))}
                                                 <div id="myBtn" onClick={openModal}
                                                     className="text-xs cursor-pointer mr-3 md:mr-6 mb-4">
                                                     <div className="add-new-card p-3.5 mb-3 grid place-content-center">
@@ -227,7 +392,19 @@ const Profile = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+
+                                        ) : (
+                                            <div>
+                                                <p className="mb-5 text-sm primary-black pt-1">No Saved Cards</p>
+                                                <div id="myBtn" onClick={openModal}
+                                                    className="text-xs cursor-pointer mr-3 md:mr-6 mb-4">
+                                                    <div className="add-new-card p-3.5 mb-3 grid place-content-center">
+                                                        <p className="mb-3 text-blue-600 text-5xl text-center">+</p>
+                                                        <p className="text-blue-600">Add a new card</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     )
                                 }
@@ -291,13 +468,13 @@ const Profile = () => {
 
                 <div id="myModal" className="modal">
                     {/* <!-- Modal content --> */}
-                    <div className="modal-content relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                    <div className="modal-content bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
                         <span onClick={() => {setshowModal(false)}} className="close absolute right-5 top-1 text-4xl text-gray-500">&times;</span>
                         {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
-                        <form action="" className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
+                        <form className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
                             <div className="col-span-6 mb-2">
                                 <label className="block pb-1.5 font-10 primary-black" htmlFor="card_number"> Card Number </label>
-                                <input id="card_number" className="profile-control focus:outline-none p-2 w-full" type="text"
+                                <input value={newCardNumber} onChange={(e) => setnewCardNumber(e.target.value)} id="card_number" className="profile-control focus:outline-none p-2 w-full" type="text"
                                     placeholder="Enter your 12 or 16 digit card number" />
                             </div>
                             <div className="col-span-6  ">
@@ -305,30 +482,90 @@ const Profile = () => {
                             </div>
 
                             <div className="col-span-2">
-                                <select className="bg-white profile-control focus:outline-none p-2 col-span-2 w-full" name="" id="">
-                                    <option value="">Month</option>
+                                <select value={newCardMonth} onChange={(e) => setnewCardMonth(e.target.value)} className="bg-white profile-control focus:outline-none p-2 col-span-2 w-full" name="" id="">
+                                    <option value={1}>01</option>
+                                    <option value={2}>02</option>
+                                    <option value={3}>03</option>
+                                    <option value={4}>04</option>
+                                    <option value={5}>05</option>
+                                    <option value={6}>06</option>
+                                    <option value={7}>07</option>
+                                    <option value={8}>08</option>
+                                    <option value={9}>09</option>
+                                    <option value={10}>10</option>
+                                    <option value={11}>11</option>
+                                    <option value={12}>12</option>
                                 </select>
                             </div>
 
                             <div className="col-span-2">
-                                <select className="bg-white profile-control focus:outline-none p-2 col-span-2 w-full">
-                                    <option value="">Year</option>
+                                <select value={newCardYear} onChange={(e) => setnewCardYear(e.target.value)} className="bg-white profile-control focus:outline-none p-2 col-span-2 w-full">
+                                    <option value={2022}>2022</option>
+                                    <option value={2023}>2023</option>
+                                    <option value={2024}>2024</option>
+                                    <option value={2025}>2025</option>
+                                    <option value={2026}>2026</option>
+                                    <option value={2027}>2027</option>
+                                    <option value={2028}>2028</option>
+                                    <option value={2029}>2029</option>
+                                    <option value={2030}>2030</option>
+                                    <option value={2031}>2031</option>
+                                    <option value={2032}>2032</option>
                                 </select>
                             </div>
 
                             <div className="col-span-2">
-                                <input type="text" placeholder="CVV" autocomplete="postal-code"
+                                <input value={newCardCVC} onChange={(e) => setnewCardCVC(e.target.value)} type="text" placeholder="CVV" autocomplete="postal-code"
                                     className="bg-white focus:outline-none profile-control p-2 col-span-2 w-full" />
                             </div>
                             <div className="col-span-6 mt-2">
                                 <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Card Name </label>
-                                <input className="profile-control focus:outline-none p-2 w-full" type="text"
+                                <input value={newCardName} onChange={(e) => setnewCardName(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text"
                                     placeholder="Add a name to help you identify this card" />
+                            </div>
+                            <div className="col-span-6 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Billing Country </label>
+                                <input value={newCardCountry} onChange={(e) => setnewCardCountry(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text" />
+                            </div>
+
+                            <div className="col-span-3 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Billing City </label>
+                                <input value={newCardCity} onChange={(e) => setnewCardCity(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text" />
+                            </div>
+
+                            <div className="col-span-3 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Zip Code </label>
+                                <input value={newCardZip} onChange={(e) => setnewCardZip(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text" />
+                            </div>
+
+                            <div className="col-span-3 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Email </label>
+                                <input value={newCardEmail} onChange={(e) => setnewCardEmail(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text" />
+                            </div>
+
+                            <div className="col-span-3 mt-2">
+                                <label className="block font-10 primary-black pb-1.5" htmlFor="cardName"> Phone Number </label>
+                                <input value={newCardPhone} onChange={(e) => setnewCardPhone(e.target.value)} className="profile-control focus:outline-none p-2 w-full" type="text" />
                             </div>
                             <div className="col-span-6 place-self-center mt-4">
                                 <button type="button"
-                                    className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8">ADD
-                                    CARD</button>
+                                    onClick={generateToken}
+                                    className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8">
+                                    {isLoading ? (
+                                        <ClipLoader
+                                            color="#fff"
+                                            size={20}
+                                            loading
+                                        />
+                                    ):(
+                                        <>
+                                            " ADD
+                                        CARD"
+
+                                        </>
+                                    )}
+                                   
+                                    </button>
                             </div>
                         </form>
                     </div>

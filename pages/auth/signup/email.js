@@ -138,16 +138,18 @@ const EmailSignup = ({ beginLogin }) => {
                         const item = {
                             userToken: data.data._token,
                             userName: data.data.user.profile.firstName,
+                            userId: data.data.user._id,
+                            userEmail: data.data.user.email,
                             expiry: now.getTime() + 3600000,
                         };
-                        localStorage.setItem("user", JSON.stringify(item));
+                        localStorage.setItem("temp", JSON.stringify(item));
                         router.push("/auth/signup/onboarding");
                     }
                     //save data to store
-                    beginLogin({
-                        token: data.data._token,
-                        login: true,
-                    });
+                    // beginLogin({
+                    //     token: data.data._token,
+                    //     login: true,
+                    // });
                 })
                 .catch((e) => {
                     // seterror(e.message)

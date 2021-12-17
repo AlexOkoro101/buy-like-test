@@ -18,6 +18,8 @@ import "react-intl-tel-input/dist/main.css";
 import ReactFlagsSelect from "react-flags-select";
 var moment = require("moment");
 import { searchCars } from "../../redux/actions/carsAction";
+import countryList from 'react-select-country-list'
+import { useMemo } from "react";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -89,6 +91,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         });
 
     var dollarFormatter = new Intl.NumberFormat();
+
+     //Country List
+     const options = useMemo(() => countryList().getData(), [])
 
     const [selectedCountryCurrency, setSelectedCountryCurrency] = useState(
         carDestination === "Nigeria" ? "US" : "NG"
@@ -174,7 +179,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [addTrucking, setaddTrucking] = useState(false);
     const [buyNowPrice, setbuyNowPrice] = useState(null);
     const [overview, setoverview] = useState(true);
-    const [carDestination, setcarDestination] = useState("Nigeria");
+    const [carDestination, setcarDestination] = useState("");
     const [deliveryDuration, setdeliveryDuration] = useState(36288e5);
     const [NGN, setNGN] = useState(true);
     const dollarPrice = Number(totalAmount) / parseInt(usd);
@@ -183,8 +188,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState("");
     const [sendSheetEmail, setsendSheetEmail] = useState("");
     const [sheetError, setsheetError] = useState(false);
+    const [shareSuccess, setshareSuccess] = useState(false);
+    const [userIp, setuserIp] = useState(null)
 
     const retrieveData = () => {
+        localStorage.removeItem('temp')
         const userActive = localStorage.getItem("user");
         if (!userActive) {
             settoken(null);
@@ -205,10 +213,46 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         setuserPhone(item?.phone);
     }; //Get Data from local Storage
 
+
+    const setCountry = () => {
+        const userCountry = localStorage.getItem("userCountry");
+        // console.log(userActive)
+        if (!userCountry) {
+            // localStorage.setItem("userCountry");
+            setuserIp(null);
+            return null;
+        }
+        const item = JSON.parse(userCountry)
+        setuserIp(item.countryCode)
+
+        console.log("user ip", userIp)
+
+    }
+
+
+    
+
     useEffect(() => {
         retrieveData();
         return retrieveData;
     }, [router.pathname, token]);
+
+    useEffect(() => {
+        setCountry()
+        if(userIp) {
+            if(userIp === "NG") {
+                setcarDestination("Nigeria")
+                setSelectedCountryCurrency("NG")
+            } else {
+                setcarDestination("United States")
+                setSelectedCountryCurrency("US")
+                setNGN(false)
+            }
+        }
+        return () => {
+            setCountry()
+        }
+    }, [router.pathname, token, userIp])
 
     useEffect(() => {
         fetch(
@@ -286,29 +330,29 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     };
 
     useEffect(() => {
-        setvin(carDetail.VIN);
-        setname(carDetail.vehicleName);
-        setprice(carDetail.mmrPrice);
-        setyear(carDetail.year);
-        setexteriorColor(carDetail.exteriorColor);
-        setvehicleType(carDetail.vehicleType);
-        setinteriorColor(carDetail.interiorColor);
-        settransmission(carDetail.transmission);
-        setodometer(carDetail.odometer);
-        setdriveTrain(carDetail.driveTrain);
-        setdoors(carDetail.doors);
-        setmodel(carDetail.model);
-        setmake(carDetail.make);
-        setbodyStyle(carDetail.bodyType);
-        setzip(carDetail.locationFullZipcode);
-        setbidAmount(carDetail.buyNowPrice);
+        setvin(carDetail?.VIN);
+        setname(carDetail?.vehicleName);
+        setprice(carDetail?.mmrPrice);
+        setyear(carDetail?.year);
+        setexteriorColor(carDetail?.exteriorColor);
+        setvehicleType(carDetail?.vehicleType);
+        setinteriorColor(carDetail?.interiorColor);
+        settransmission(carDetail?.transmission);
+        setodometer(carDetail?.odometer);
+        setdriveTrain(carDetail?.driveTrain);
+        setdoors(carDetail?.doors);
+        setmodel(carDetail?.model);
+        setmake(carDetail?.make);
+        setbodyStyle(carDetail?.bodyType);
+        setzip(carDetail?.locationFullZipcode);
+        setbidAmount(carDetail?.buyNowPrice);
 
-        setfacilitationLocation(carDetail.facilitationLocation);
-        setvehicleLocation(carDetail.pickupLocation);
-        setcarImages(carDetail.images);
+        setfacilitationLocation(carDetail?.facilitationLocation);
+        setvehicleLocation(carDetail?.pickupLocation);
+        setcarImages(carDetail?.images);
         getZipLocation();
 
-        setbuyNowPrice(carDetail.buyNowPrice);
+        setbuyNowPrice(carDetail?.buyNowPrice);
 
         getSimilarVehicles();
         getRate();
@@ -316,7 +360,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         getSecondRate();
         displaySmall();
 
-        if (!carDetail.buyNowPrice && carDetail.mmrPrice) {
+        if (!carDetail?.buyNowPrice && carDetail?.mmrPrice) {
             setOffer(false);
         }
     }, [carDetail, cardD]);
@@ -325,6 +369,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (carDetail) {
             setDetail(carDetail);
         }
+        console.log("car details", cardD)
     }, [carDetail]);
 
     const getTrucking = {
@@ -347,8 +392,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             .then((data) => {
                 const formatData = JSON.parse(data);
                 if (formatData?.data !== null) {
-                    // console.log("has value")
-                    settruckingPrice(formatData.data.raw[1]);
+                    console.log(formatData.data.raw[1])
+                    settruckingPrice(formatData.data.raw[1] || 0);
                 } else {
                     fetchScrapperTrucking();
                 }
@@ -379,7 +424,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 if (data.status) {
                     createLocalTrucking(data);
                 }
-                settruckingPrice(data.raw[1]);
+                settruckingPrice(data.raw[1] || 0);
+                console.log(data.raw[1])
             });
     };
 
@@ -413,7 +459,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }, []);
 
     useEffect(() => {
-        setTotalAmount((Number(carDetail.buyNowPrice) + 300) * Number(usd));
+        setTotalAmount((Number(carDetail?.buyNowPrice) + 300) * Number(usd));
     }, [usd]);
 
     const openForm = (evt, status) => {
@@ -561,10 +607,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 .then((data) => {
                     setNaira(data.data.rate);
                     setTotalAmount(
-                        (Number(carDetail.buyNowPrice) + 300) * Number(naira)
+                        (Number(carDetail?.buyNowPrice) + 300) * Number(naira)
                     );
-                    setAmount(carDetail.buyNowPrice * data.data.rate);
-                    setbidAmount(carDetail.buyNowPrice);
+                    setAmount(carDetail?.buyNowPrice * data.data.rate);
+                    setbidAmount(carDetail?.buyNowPrice);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -819,41 +865,60 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         addCar();
     };
+    const now = new Date();
+    const bidData = () => ( {
+        vin: vin,
+        link: "https://members.manheim.com/",
+        name: name,
+        site: "https://members.manheim.com/",
+        price: price,
+        year: year,
+        exterior_color: exteriorColor,
+        vehicle_type: vehicleType,
+        interior_color: interiorColor,
+        transmission: transmission,
+        odometer: odometer,
+        driveTrain: driveTrain,
+        doors: doors,
+        Model: model,
+        make: make,
+        equipment: "",
+        EngineType: "",
+        interior_type: "",
+        body_style: bodyStyle,
+        fuel_type: "",
+        passengerCapacity: "",
+        sellerCity: "",
+        description: "",
+        Zip: zip,
+        tilteImage: "",
+        bidAmount: bidAmount,
+        owner: userId,
+        facilitationLocation: facilitationLocation,
+        Vehicle_location: vehicleLocation,
+        images: carImages,
+        auctionEndTime: carDetail?.auctionEndTime,
+        trucking: truckingPrice.includes(",") ?  (truckAccessory ? ( Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+        ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+        : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+          Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+        ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+        : Number(truckingPrice?.slice(1).replace(/,/g, ''))) : 0) 
+
+        : 
+        
+        ((truckAccessory ? ( Number(truckingPrice?.slice(1)) > 1000
+        ? Number(truckingPrice?.slice(1)) / 3
+        : Number(truckingPrice?.slice(1)) > 400 &&
+          Number(truckingPrice?.slice(1)) < 1000
+        ? Number(truckingPrice?.slice(1)) / 2
+        : Number(truckingPrice?.slice(1))) : 0)),
+        shipping: shipAccessory ? "1150" : 0,
+        expiry: now.getTime() + 3600000,
+        total: accessories(),
+        carDestination
+    });
     const buyNowFunction = () => {
-        const bidObject = {
-            vin: vin,
-            link: "https://members.manheim.com/",
-            name: name,
-            site: "https://members.manheim.com/",
-            price: price,
-            year: year,
-            exterior_color: exteriorColor,
-            vehicle_type: vehicleType,
-            interior_color: interiorColor,
-            transmission: transmission,
-            odometer: odometer,
-            driveTrain: driveTrain,
-            doors: doors,
-            Model: model,
-            make: make,
-            equipment: "",
-            EngineType: "",
-            interior_type: "",
-            body_style: bodyStyle,
-            fuel_type: "",
-            passengerCapacity: "",
-            sellerCity: "",
-            description: "",
-            Zip: zip,
-            tilteImage: "",
-            bidAmount: bidAmount,
-            owner: userId,
-            facilitationLocation: facilitationLocation,
-            Vehicle_location: vehicleLocation,
-            images: carImages,
-            trucking: addTrucking ? truckingPrice : "",
-            shipping: "",
-        };
 
         //Add car to buy now
         fetch(enviroment.BASE_URL + "bids/buy-now", {
@@ -1048,7 +1113,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
 
     function getDeadTime() {
-        let deadline = new Date(carDetail.auctionEndTime);
+        let deadline = new Date(carDetail?.auctionEndTime);
         deadline.setSeconds(deadline.getSeconds());
         return deadline;
     }
@@ -1205,25 +1270,42 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         );
     };
 
+    const getAuctionFee = (price) => {
+        const auctionFee = Number(price) <= 5000 ? 350 : Number(price) > 5000 && Number(price) <= 14000 ? 450 : Number(price) > 14000 && Number(price) <= 70000 ? (3.25 / 100) * Number(price) : Number(price) > 70000 ? 2500 : 0
+        return auctionFee;
+    }
+
     //
-    const [truckAccessory, settruckAccessory] = useState(false);
-    const [shipAccessory, setshipAccessory] = useState(false);
+    const [truckAccessory, settruckAccessory] = useState(true);
+    const [shipAccessory, setshipAccessory] = useState(true);
 
     const accessories = () => {
         var carPrice = Number(carDetail.buyNowPrice);
-        var outstanding = 700;
+        var outstanding = 400 + getAuctionFee(cardD?.buyNowPrice);;
         var truck = 0;
         var ship = 0;
 
         if (truckAccessory === true) {
             // setaddTrucking(true);
-            truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+            if(truckingPrice?.includes(",")) {
+                
+                truck =
+                Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+                    : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+                      Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+                    : Number(truckingPrice?.slice(1).replace(/,/g, ''));
+            } else {
+                truck =
+                    Number(truckingPrice?.slice(1)) > 1000
+                        ? Number(truckingPrice?.slice(1)) / 3
+                        : Number(truckingPrice?.slice(1)) > 400 &&
+                          Number(truckingPrice?.slice(1)) < 1000
+                        ? Number(truckingPrice?.slice(1)) / 2
+                        : Number(truckingPrice?.slice(1));
+
+            }
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1241,24 +1323,37 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return carPrice + outstanding + truck + ship;
     };
 
-    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(false);
-    const [placebidShipAccessory, setplacebidShipAccessory] = useState(false);
+    const [placebidTruckAccessory, setplacebidTruckAccessory] = useState(true);
+    const [placebidShipAccessory, setplacebidShipAccessory] = useState(true);
 
     const placebidAccessories = () => {
         // console.log(Number(maxBidAmount))
-        var outstanding = 700;
+        var outstanding = 400 + getAuctionFee(cardD?.mmrPrice);
         var truck = 0;
         var ship = 0;
 
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
-            truck =
-                Number(truckingPrice.slice(1)) > 1000
-                    ? Number(truckingPrice.slice(1)) / 3
-                    : Number(truckingPrice.slice(1)) > 400 &&
-                      Number(truckingPrice.slice(1)) < 1000
-                    ? Number(truckingPrice.slice(1)) / 2
-                    : Number(truckingPrice.slice(1));
+            if(truckingPrice?.includes(",")) {
+                
+                truck =
+                Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
+                    : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
+                      Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
+                    ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 2
+                    : Number(truckingPrice?.slice(1).replace(/,/g, ''));
+            } else {
+                truck =
+                    Number(truckingPrice?.slice(1)) > 1000
+                        ? Number(truckingPrice?.slice(1)) / 3
+                        : Number(truckingPrice?.slice(1)) > 400 &&
+                          Number(truckingPrice?.slice(1)) < 1000
+                        ? Number(truckingPrice?.slice(1)) / 2
+                        : Number(truckingPrice?.slice(1));
+
+            }
+            
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1276,12 +1371,17 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         return outstanding + truck + ship;
     };
 
-    const [placebidTotal, setplacebidTotal] = useState(0);
-    //
+    useEffect(() => {
+        if(shareSuccess === true) {
+            setTimeout(function(){ setshareSuccess(false) }, 3000);
+        }
+    }, [shareSuccess])
 
     const editLocation = (location) => {
         return location.replace(/Manheim/g, "");
     }
+    //
+
     //
     if (!cardD) {
         // reRender();
@@ -1338,7 +1438,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                     {cardD && (
                         <>
                             <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
-                                <div className="flex gap-x-4">
+                                <div className="flex gap-x-4 relative">
                                     <p className="font-medium font-10 sec-black">
                                         Share via
                                     </p>
@@ -1386,11 +1486,15 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         </a>
                                     </button>
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             navigator.clipboard.writeText(
                                                 "www.buylikedealers.com/" +
                                                     cardD?.VIN
                                             )
+                                            setshareSuccess(true)
+
+                                           
+                                        }
                                         }
                                     >
                                         <img
@@ -1398,6 +1502,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             alt="copy"
                                         />
                                     </button>
+                                    {shareSuccess && (
+                                        <div className="absolute right-0 top-5 bg-green-200 p-1">
+                                            <p className="font-10 sec-black">Copied!</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="flex flex-wrap mt-5 lg:justify-center justify-start px-5 xl:px-0">
@@ -1737,23 +1846,21 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     }
                                                                     onChange={(
                                                                         e
-                                                                    ) =>
+                                                                    ) => {
                                                                         setcarDestination(
                                                                             e
                                                                                 .target
                                                                                 .value
                                                                         )
+                                                                        if(e.target.value == "United States") {
+                                                                            setshipAccessory(false)
+                                                                        }
+                                                                    }
                                                                     }
                                                                 >
-                                                                    <option value="Nigeria">
-                                                                        Nigeria
-                                                                    </option>
-                                                                    <option value="USA">
-                                                                        USA
-                                                                    </option>
-                                                                    <option value="Ghana">
-                                                                        Ghana
-                                                                    </option>
+                                                                    {options.map((country) => (
+                                                                        <option key={country.label} value={country.label}>{country.label}</option>
+                                                                    ))}
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -1769,7 +1876,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="2"
                                                                 className="font-11 sec-black font-normal py-2"
                                                             >
-                                                                $300
+                                                                ${dollarFormatter.format(getAuctionFee(cardD?.buyNowPrice))}
+                                                                
                                                             </td>
                                                             <td className="text-right px-2">
                                                                 <img
@@ -1802,189 +1910,247 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2"
-                                                            >
-                                                                Trucking
-                                                            </td>
-
-                                                            {noZipValue ? (
+                                                        
+                                                            
+                                                            <tr className="">
                                                                 <td
                                                                     colSpan="2"
-                                                                    className="font-11 sec-black font-normal py-2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2"
                                                                 >
-                                                                    <>
-                                                                        Contact
-                                                                        Support
-                                                                    </>
-                                                                    <a
-                                                                        onClick={(
-                                                                            e
-                                                                        ) =>
-                                                                            sendSheet(
-                                                                                e
-                                                                            )
-                                                                        }
-                                                                        href="https://api.whatsapp.com/send?phone=+17135130111"
-                                                                        style={{
-                                                                            margin: "0 10px",
-                                                                        }}
-                                                                        target="_blank"
-                                                                    >
-                                                                        <i
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    "17px",
-                                                                                color: "green",
-                                                                            }}
-                                                                            className="fa fa-whatsapp"
-                                                                        ></i>
-                                                                    </a>
-                                                                    <a
-                                                                        href="mailto:buylikedealers@gmail.com"
-                                                                        style={{
-                                                                            margin: "0 10px",
-                                                                        }}
-                                                                        target="_blank"
-                                                                    >
-                                                                        <i
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    "17px",
-                                                                                color: "blue",
-                                                                            }}
-                                                                            className="fa fa-envelope-o"
-                                                                        ></i>
-                                                                    </a>
+                                                                    Trucking
                                                                 </td>
-                                                            ) : (
-                                                                <>
+
+                                                                {noZipValue ? (
                                                                     <td
                                                                         colSpan="2"
                                                                         className="font-11 sec-black font-normal py-2"
                                                                     >
-                                                                        $
-                                                                        {truckingPrice
-                                                                            ? Number(
-                                                                                  truckingPrice.slice(
-                                                                                      1
-                                                                                  )
-                                                                              ) >
-                                                                              1000
-                                                                                ? Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  3
-                                                                                : Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) >
-                                                                                      400 &&
-                                                                                  Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) <
-                                                                                      1000
-                                                                                ? Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  2
-                                                                                : Number(
-                                                                                      truckingPrice.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  )
-                                                                            : "0"}
+                                                                        <>
+                                                                            Contact
+                                                                            Support
+                                                                        </>
+                                                                        <a
+                                                                            onClick={(
+                                                                                e
+                                                                            ) =>
+                                                                                sendSheet(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "green",
+                                                                                }}
+                                                                                className="fa fa-whatsapp"
+                                                                            ></i>
+                                                                        </a>
+                                                                        <a
+                                                                            href="mailto:buylikedealers@gmail.com"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "blue",
+                                                                                }}
+                                                                                className="fa fa-envelope-o"
+                                                                            ></i>
+                                                                        </a>
                                                                     </td>
-                                                                    <td className="text-right px-2">
-                                                                        <label className="detail">
-                                                                            <input
-                                                                                value={
-                                                                                    truckAccessory
-                                                                                }
-                                                                                type="checkbox"
-                                                                                className="focus:outline-none detail self-center"
-                                                                                onChange={() =>
-                                                                                    settruckAccessory(
-                                                                                        !truckAccessory
+                                                                ) : (
+                                                                    <>
+                                                                        <td
+                                                                            colSpan="2"
+                                                                            className="font-11 sec-black font-normal py-2"
+                                                                        >
+                                                                            {truckingPrice?.includes(",") ? (
+                                                                                <>
+                                                                                    
+                                                                                    {"$"}
+                                                                                    {truckingPrice
+                                                                                        ? Number(
+                                                                                            truckingPrice?.slice(
+                                                                                                1
+                                                                                            ).replace(/,/g, '')
+                                                                                        ) > 
+                                                                                        1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            3
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) >
+                                                                                                400 &&
+                                                                                            Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) <
+                                                                                                1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            2
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            )
+                                                                                        : "0"}
+                                                                                </>
+                                                                            ) : (
+                                                                            <>
+
+                                                                            {"$"}
+                                                                            {truckingPrice
+                                                                                ? Number(
+                                                                                    truckingPrice?.slice(
+                                                                                        1
                                                                                     )
-                                                                                }
-                                                                            />
-                                                                            <span className="detail"></span>
-                                                                        </label>
-                                                                    </td>
-                                                                </>
-                                                            )}
-                                                        </tr>
+                                                                                ) >
+                                                                                1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    3
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) >
+                                                                                        400 &&
+                                                                                    Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) <
+                                                                                        1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    2
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    )
+                                                                                : "0"}
+                                                                            </>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="text-right px-2">
+                                                                            <label className="detail">
+                                                                                <input
+                                                                                    value={
+                                                                                        truckAccessory
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="focus:outline-none detail self-center"
+                                                                                    onChange={() =>
+                                                                                        settruckAccessory(
+                                                                                            !truckAccessory
+                                                                                        )
+                                                                                    }
+                                                                                    checked={truckAccessory}
+                                                                                />
+                                                                                <span className="detail"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </>
+                                                                )}
+                                                            </tr>
 
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2"
-                                                            >
-                                                                Shipping
-                                                            </td>
-                                                            <td
-                                                                colSpan="2"
-                                                                className="font-11 sec-black font-normal py-2"
-                                                            >
-                                                                $1,150
-                                                            </td>
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        value={
-                                                                            shipAccessory
-                                                                        }
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
-                                                                            setshipAccessory(
-                                                                                !shipAccessory
-                                                                            )
-                                                                        }
+                                                        {carDestination !== "United States" &&  (
+
+                                                            <tr className="">
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2"
+                                                                >
+                                                                    Shipping
+                                                                </td>
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2"
+                                                                >
+                                                                    $1,150
+                                                                </td>
+                                                                <td className="text-right px-2">
+                                                                    <label className="detail">
+                                                                        <input
+                                                                            value={
+                                                                                shipAccessory
+                                                                            }
+                                                                            type="checkbox"
+                                                                            className="focus:outline-none detail self-center"
+                                                                            onChange={() =>
+                                                                                setshipAccessory(
+                                                                                    !shipAccessory
+                                                                                )
+                                                                            }
+                                                                            checked={carDestination == "United States" ? false : shipAccessory}
+                                                                        />
+                                                                        <span className="detail"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
+                                                        )}
+
+                                                        {carDestination !== "United States" && (
+
+                                                            <tr className="">
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                                >
+                                                                   Custom clearing
+                                                                </td>
+                                                                <td
+                                                                    colSpan="2"
+                                                                    className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                                >
+                                                                    N/A
+                                                                </td>
+                                                                <td className="text-right px-2 border-b border-gray-200">
+                                                                    <img
+                                                                        className="inline"
+                                                                        src="../assets/img/vectors/tool-tip.svg"
+                                                                        alt="tooltip"
                                                                     />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
-                                                        </tr>
+                                                                </td>
+                                                            </tr>
+
+                                                        )}
 
                                                         <tr className="">
                                                             <td
                                                                 colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
+                                                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
                                                             >
-                                                                Clearing
-                                                            </td>
-                                                            <td
-                                                                colSpan="2"
-                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                                                            >
-                                                                N/A
-                                                            </td>
-                                                            <td className="text-right px-2 border-b border-gray-200">
-                                                                <img
-                                                                    className="inline"
-                                                                    src="../assets/img/vectors/tool-tip.svg"
-                                                                    alt="tooltip"
-                                                                />
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr className="">
-                                                            <td
-                                                                colSpan="2"
-                                                                className="sec-black font-11 font-semibold py-2 border-b border-gray-200"
-                                                            >
-                                                                Service Fee
+                                                                Buylikedealer’s fee
                                                             </td>
                                                             <td
                                                                 colSpan="3"
@@ -1997,7 +2163,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         <tr className="">
                                                             <td
                                                                 colSpan="2"
-                                                                className="sec-black font-11 font-bold py-2"
+                                                                className="sec-black font-11 font-bold w-28 p-2"
                                                             >
                                                                 Total
                                                             </td>
@@ -2105,15 +2271,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         )
                                                                     }
                                                                 >
-                                                                    <option value="Nigeria">
-                                                                        Nigeria
-                                                                    </option>
-                                                                    <option value="USA">
-                                                                        USA
-                                                                    </option>
-                                                                    <option value="Ghana">
-                                                                        Ghana
-                                                                    </option>
+                                                                    {options.map((country) => (
+                                                                        <option key={country.label} value={country.label}>{country.label}</option>
+                                                                    ))}
                                                                 </select>
                                                             </td>
                                                         </tr>
@@ -2165,7 +2325,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="3"
                                                                 className="font-11 sec-black font-normal pr-20 py-2"
                                                             >
-                                                                $300
+                                                                ${dollarFormatter.format(getAuctionFee(cardD?.mmrPrice))}
                                                             </td>
                                                             <td className=" px-2 text-right">
                                                                 <img
@@ -2195,50 +2355,173 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </td>
                                                         </tr>
 
+                                                        
                                                         <tr className="">
                                                             <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                 Trucking
                                                             </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $
-                                                                {truckingPrice
-                                                                    ? Number(
-                                                                          truckingPrice.slice(
-                                                                              1
-                                                                          )
-                                                                      ) > 1000
-                                                                        ? Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 3
-                                                                        : Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) >
-                                                                              400 &&
-                                                                          Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) <
-                                                                              1000
-                                                                        ? Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 2
-                                                                        : Number(
-                                                                              truckingPrice.slice(
-                                                                                  1
-                                                                              )
-                                                                          )
-                                                                    : "0"}
-                                                            </td>
+                                                            {noZipValue ? (
+                                                                    <td
+                                                                        colSpan="2"
+                                                                        className="font-11 sec-black font-normal py-2"
+                                                                    >
+                                                                        <>
+                                                                            Contact
+                                                                            Support
+                                                                        </>
+                                                                        <a
+                                                                            onClick={(
+                                                                                e
+                                                                            ) =>
+                                                                                sendSheet(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "green",
+                                                                                }}
+                                                                                className="fa fa-whatsapp"
+                                                                            ></i>
+                                                                        </a>
+                                                                        <a
+                                                                            href="mailto:buylikedealers@gmail.com"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "blue",
+                                                                                }}
+                                                                                className="fa fa-envelope-o"
+                                                                            ></i>
+                                                                        </a>
+                                                                    </td>
+                                                                ) : (
+                                                                    <>
+                                                                        <td
+                                                                            colSpan="2"
+                                                                            className="font-11 sec-black font-normal py-2"
+                                                                        >
+                                                                            {truckingPrice?.includes(",") ? (
+                                                                                <>
+                                                                                    
+                                                                                    {"$"}
+                                                                                    {truckingPrice
+                                                                                        ? Number(
+                                                                                            truckingPrice?.slice(
+                                                                                                1
+                                                                                            ).replace(/,/g, '')
+                                                                                        ) > 
+                                                                                        1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            3
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) >
+                                                                                                400 &&
+                                                                                            Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) <
+                                                                                                1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            2
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            )
+                                                                                        : "0"}
+                                                                                </>
+                                                                            ) : (
+                                                                            <>
+
+                                                                            {"$"}
+                                                                            {truckingPrice
+                                                                                ? Number(
+                                                                                    truckingPrice?.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) >
+                                                                                1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    3
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) >
+                                                                                        400 &&
+                                                                                    Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) <
+                                                                                        1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    2
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    )
+                                                                                : "0"}
+                                                                            </>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="text-right px-2">
+                                                                            <label className="detail">
+                                                                                <input
+                                                                                    value={
+                                                                                        truckAccessory
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="focus:outline-none detail self-center"
+                                                                                    onChange={() =>
+                                                                                        settruckAccessory(
+                                                                                            !truckAccessory
+                                                                                        )
+                                                                                    }
+                                                                                    checked={truckAccessory}
+                                                                                />
+                                                                                <span className="detail"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </>
+                                                                )}
+                                                                
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
@@ -2252,59 +2535,69 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                 !placebidTruckAccessory
                                                                             )
                                                                         }
+                                                                        checked={placebidTruckAccessory}
                                                                     />
                                                                     <span className="detail"></span>
                                                                 </label>
                                                             </td>
                                                         </tr>
+                                                        
 
-                                                        <tr className="">
-                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
-                                                                Shipping
-                                                            </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $1,150
-                                                            </td>
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        value={
-                                                                            placebidShipAccessory
-                                                                        }
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
-                                                                            setplacebidShipAccessory(
-                                                                                !placebidShipAccessory
-                                                                            )
-                                                                        }
+                                                        {carDestination !== "United States" && (
+                                                            <tr className="">
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                    Shipping
+                                                                </td>
+                                                                <td
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2"
+                                                                >
+                                                                    $1,150
+                                                                </td>
+                                                                <td className="text-right px-2">
+                                                                    <label className="detail">
+                                                                        <input
+                                                                            value={
+                                                                                placebidShipAccessory
+                                                                            }
+                                                                            type="checkbox"
+                                                                            className="focus:outline-none detail self-center"
+                                                                            onChange={() =>
+                                                                                setplacebidShipAccessory(
+                                                                                    !placebidShipAccessory
+                                                                                )
+                                                                            }
+                                                                            checked={placebidShipAccessory}
+                                                                        />
+                                                                        <span className="detail"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
+
+                                                        )}
+
+                                                        {carDestination !== "United States" && (
+                                                            <tr className="">
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                                    Clearing
+                                                                </td>
+                                                                <td
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
+                                                                >
+                                                                    N/A
+                                                                </td>
+                                                                <td className="text-right px-2 border-b border-gray-200">
+                                                                    <img
+                                                                        className="inline"
+                                                                        src="../assets/img/vectors/tool-tip.svg"
+                                                                        alt="tooltip"
                                                                     />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
-                                                        </tr>
+                                                                </td>
+                                                            </tr>
+                                                        )}
 
-                                                        <tr className="">
-                                                            <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                                                Clearing
-                                                            </td>
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
-                                                            >
-                                                                N/A
-                                                            </td>
-                                                            <td className="text-right px-2 border-b border-gray-200">
-                                                                <img
-                                                                    className="inline"
-                                                                    src="../assets/img/vectors/tool-tip.svg"
-                                                                    alt="tooltip"
-                                                                />
-                                                            </td>
-                                                        </tr>
+
 
                                                         <tr className="">
                                                             <td
@@ -2322,7 +2615,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         </tr>
 
                                                         <tr className="">
-                                                            <td className="sec-black font-11 font-bold p-2">
+                                                            <td className="sec-black font-11 font-bold w-28 p-2">
                                                                 Total
                                                             </td>
                                                             <td
@@ -2442,59 +2735,28 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <div className="flex justify-center">
                                         {token ? (
                                             <>
-                                                {carDetail?.buyNowPrice
-                                                    ?.length >= 1 ? (
-                                                    <button
-                                                        // onClick={() => {
-                                                        //     initializePayment(
-                                                        //         onSuccess,
-                                                        //         onClose
-                                                        //     );
-                                                        // }}
-                                                        onClick={
-                                                            OpenSendSheetModal
-                                                        }
-                                                        className={
-                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                            (!terms &&
-                                                                `opacity-50 cursor-not-allowed`)
-                                                        }
-                                                        disabled={!terms}
-                                                    >
-                                                        {isLoading ? (
-                                                            <ClipLoader
-                                                                color="#fff"
-                                                                size={20}
-                                                                loading
-                                                            />
-                                                        ) : (
-                                                            "SUBMIT A REQUEST"
-                                                        )}
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        // onClick={placeBid}
-                                                        onClick={
-                                                            OpenSendSheetModal
-                                                        }
-                                                        className={
-                                                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                                                            (!terms &&
-                                                                `opacity-50 cursor-not-allowed`)
-                                                        }
-                                                        disabled={!terms}
-                                                    >
-                                                        {isLoading ? (
-                                                            <ClipLoader
-                                                                color="#fff"
-                                                                size={20}
-                                                                loading
-                                                            />
-                                                        ) : (
-                                                            "SUBMIT A REQUEST"
-                                                        )}
-                                                    </button>
-                                                )}
+                                                <button
+                                                    onClick={
+                                                        OpenSendSheetModal
+                                                    }
+                                                    className={
+                                                        `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                        (!terms &&
+                                                            `opacity-50 cursor-not-allowed`)
+                                                    }
+                                                    disabled={!terms}
+                                                >
+                                                    {isLoading ? (
+                                                        <ClipLoader
+                                                            color="#fff"
+                                                            size={20}
+                                                            loading
+                                                        />
+                                                    ) : (
+                                                        "SUBMIT A REQUEST"
+                                                    )}
+                                                </button>
+                                                
                                                 <p className="font-11 sec-black mx-2 mt-2">
                                                     OR
                                                 </p>
@@ -2513,6 +2775,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     />{" "}
                                                     WHATSAPP US
                                                 </button>
+                                                
                                             </>
                                         ) : (
                                             <>
@@ -2521,8 +2784,9 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                         type="button"
                                                         className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
                                                     >
-                                                        SUBMIT A REQUEST TO
-                                                        PROCEED
+                                                        REQUEST FOR MORE 
+                                                        INFO
+
                                                     </button>
                                                 </Link>
 
@@ -2545,6 +2809,29 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     WHATSAPP US
                                                 </button>
                                             </>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-center mt-5">
+                                        {offer ? (
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                onClick={() => {
+                                                    if(token) {
+                                                        router.push('/transaction/' + vin)
+                                                        localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                        console.log(bidData())
+                                                    } else {
+                                                        router.push('/auth/login')
+                                                    }
+                                                }}
+                                            >
+                                                
+                                                BUY NOW
+                                            </button>
+
+                                        ) : (
+                                            <></>
                                         )}
                                     </div>
                                 </div>
@@ -3303,9 +3590,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         alt="location"
                                                                     />
                                                                 </span>
-                                                                {
-                                                                    ele?.pickupLocation
-                                                                }
+                                                                {ele?.pickupLocation.replace(
+                                                                    "Manheim",
+                                                                    ""
+                                                                )}
                                                             </p>
                                                             <div className="ml-auto flex self-center">
                                                                 <img

@@ -317,7 +317,7 @@ const MyCollection = ({
             <Meta></Meta>
             <main className="mb-20">
                 <Collection></Collection>
-                <div className="mx-20 px-3 mt-5 search-results-holder flex items-center justify-between">
+                <div className="lg:mx-20 mx-10 px-3 mt-20 search-results-holder flex items-center justify-between">
                     {/* <!-- first section here --> */}
                     <div>
                         <button
@@ -348,7 +348,7 @@ const MyCollection = ({
                 </div>
 
                 {placeBidView ? (
-                    <div className="px-20 mt-5 py-3 flex justify-between items-center">
+                    <div className="lg:px-20 px-5 mt-5 py-3 flex justify-between items-center">
                         <>
                             <div
                                 className=" w-full mt-2 origin-top-right bg-white divide-y divide-gray-200 outline-none font-10"
@@ -357,8 +357,10 @@ const MyCollection = ({
                                 role="menu"
                             >
                                 {carCollection?.map((collection) => (
-                                    <div key={collection?._id}>
-                                        <div className="border-gray-100 border mb-3 px-20 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
+                                    <div
+                                        key={collection?._id}
+                                    >
+                                        <div className="border-gray-100 border mb-3 lg:px-20 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                                             <>
                                                 <Link
                                                     href={
@@ -382,7 +384,7 @@ const MyCollection = ({
                                                                 cars selected
                                                             </h6>
                                                         </div>
-                                                        <div className="flex py-2">
+                                                        <div className="flex flex-wrap py-2">
                                                             {collection?.vehicles?.map(
                                                                 (vehicle) => (
                                                                     <img
@@ -391,7 +393,7 @@ const MyCollection = ({
                                                                         }
                                                                         src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
                                                                         alt="car"
-                                                                        className="tiny-car-card"
+                                                                        className="tiny-car-card mb-2"
                                                                     />
                                                                 )
                                                             )}
@@ -429,15 +431,16 @@ const MyCollection = ({
                             </div>
                         </>
                     </div>
-                ) : (
-                    <section className="w-full grid gap-y-4 mb-10 px-20 mt-5 py-3">
-                        {buyNowCars.length <= 0 && (
+
+                ): (
+                    <section className="w-full grid gap-y-4 mb-10 px-5 md:px-20 mt-5 py-3">
+                        {buyNowCars?.length <= 0 && (
                             <div className>No cars to show</div>
                         )}
                         {buyNowCars?.map((vehicle) => (
                             <div
                                 key={vehicle._id}
-                                className="bid-card flex py-3 px-3"
+                                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2"
                             >
                                 <img
                                     src={`https://proxybuylike.herokuapp.com/?url=${vehicle.vehicle?.images[0]?.image_largeUrl}`}

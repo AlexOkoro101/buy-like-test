@@ -105,8 +105,8 @@ const CollectionDetails = () => {
                 )}
 
                 {!collection?.error && (
-                    <div className="flex font-11 mt-10">
-                        <div className="side-card mx-20 px-5 py-5 space-y-4">
+                    <div className="flex font-11 mt-10 flex-col lg:flex-row">
+                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px">
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">
                                     Trucking
@@ -179,7 +179,7 @@ const CollectionDetails = () => {
                             {collection?.data?.vehicles?.map((vehicle) => (
                                 <div
                                     key={vehicle._id}
-                                    className="bid-card flex py-3 px-3"
+                                    className="bid-card mt-5 lg:mt-0 mx-2 lg:mx-0 flex-col lg:flex-row flex py-3 px-3"
                                 >
                                     <img
                                         src={`https://proxybuylike.herokuapp.com/?url=${vehicle.images[0]?.image_largeUrl}`}

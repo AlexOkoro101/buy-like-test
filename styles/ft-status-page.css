@@ -72,6 +72,7 @@ tbody:nth-child(3) .circle {
     background: #D80739;
 }
 
+
 tbody:nth-child(4) .circle,
 tbody:nth-child(5) .circle,
 tbody:nth-child(6) .circle,
@@ -84,7 +85,7 @@ tbody:nth-child(1) .circle::before {
     content: '';
     position: absolute;
     width: 3px;
-    height: 550px;
+    height: var(--height, 0);
     background: #E5EBED;
     margin: 16px 0 5px 5px;
 }

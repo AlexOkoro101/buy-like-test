@@ -2,26 +2,27 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useRef, useState } from "react";
-import { enviroment } from "../../../src/components/enviroment";
-import Meta from "../../../src/components/Head/Meta";
+import { enviroment } from "../../src/components/enviroment";
+import Meta from "../../src/components/Head/Meta";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../../redux/features/userSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
-import { connect } from "react-redux";
-import { selectToken } from "../../../redux/reducers/userReducer";
-import { logIn, logOut } from "../../../redux/actions/carsAction";
 import Link from "next/link";
 
-const LogIn = ({ beginLogin }) => {
+const ResetPassword = () => {
+    //Redirect
+    const router = useRouter();
+    const [routerQuery, setrouterQuery] = useState(router.asPath.slice(26))
+    
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
-
+    const [token, settoken] = useState(null)
+    
+    
     const toastError = () =>
-        toast.error(`${error ? error : "Could not login"}`, {
-            position: "top-right",
+    toast.error("Could not reset", {
+        position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
             closeOnClick: true,
@@ -30,88 +31,102 @@ const LogIn = ({ beginLogin }) => {
             progress: undefined,
         });
     const toastSuccess = () =>
-        toast.success(`${error ? error : "Login Successful"}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
+    toast.success("Password reset successful", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
 
-    //Redirect
-    const router = useRouter();
+    const retriveData = () => {
+        const userActive = localStorage.getItem("user");
+        if (!userActive) {
+            settoken("no user");
+            return null;
+        }
+    }
 
-    //action access
-    const dispatch = useDispatch();
+    useEffect(() => {
+        retriveData()
+    }, [])
+
+    useEffect(() => {
+        setrouterQuery(router.asPath.slice(26))
+        console.log("routerQuery: ", routerQuery)
+    }, [token, isLoading])
+
+
 
     // let min = 6;
     const formik = useFormik({
         initialValues: {
-            email: "",
             password: "",
+            confirmPassword: "",
+            verify_token: routerQuery
         },
         validationSchema: Yup.object({
-            email: Yup.string(),
-                
             password: Yup.string()
-                
+            .min(
+                6,
+                ({ min }) => `Password must be at least ${min} characters`
+            )
+            .required("Required"),
+            confirmPassword: Yup.string()
+                // .matches(/\w*[a-z]\w*/,  "Password must have a small letter")
+                // .matches(/\w*[A-Z]\w*/,  "Password must have a capital letter")
+                // .matches(/\d/, "Password must have a number")
+                // .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
+                .oneOf([Yup.ref('password'), null], 'Passwords must match')
+                .required("Required"),
         }),
         onSubmit: (values) => {
             // notify()
+            // setrouterQuery(router.query)
             setisLoading(true);
-            seterror(null);
-            fetch(enviroment.BASE_URL + "auth/login", {
+            seterror(null); 
+            console.log("router query", routerQuery)
+            
+            fetch(enviroment.BASE_URL + "auth/password/change", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             })
                 .then((res) => {
+                    console.log("reset res", res)
                     if (!res.ok) {
                         setisLoading(false);
-                        throw Error("Could not login");
+                        throw Error("Could not change password");
                     }
                     setisLoading(false);
                     return res.json();
                 })
                 .then((data) => {
-                    if (data?.error) {
-                        seterror(data?.message);
-                        toastError();
-                        dispatch(logOut());
-                    } else {
-                        console.log(data.data)
+                    console.log("reset", data)
+                    if (data?.success === true) {
                         seterror(data?.message);
                         toastSuccess();
-                        const now = new Date();
-                        const item = {
-                            userToken: data.data._token,
-                            userId: data.data.user._id,
-                            userName: data.data.user.profile.firstName,
-                            phoneNumber: data.data.user.profile.phoneNumber,
-                            userEmail: data.data.user.email,
-                            userAddress: data.data.user.info,
-                            expiry: now.getTime() + 3600000,
-                        };
-                        localStorage.setItem("user", JSON.stringify(item));
                         setTimeout(function () {
-                            router.back();
-                            dispatch(logIn());
+                            router.push('/auth/login/email')
                         }, 1500);
+                    } else {
+                        seterror(data?.message);
+                        toastError();
                     }
-                    //save data to store
-                    beginLogin({
-                        token: data.data._token,
-                        login: true,
-                    });
                 })
                 .catch((e) => {
                     // seterror(e.message)
                     setisLoading(false);
+                    console.log(e.message);
                 });
+                
+
         },
     });
+
+  
 
     return (
         <>
@@ -123,7 +138,7 @@ const LogIn = ({ beginLogin }) => {
                         <div className="options-holder  mx-auto mt-20 p-5 lg:p-9">
                             <div className="text-center">
                                 <p className="text-sm primary-color font-medium">
-                                    Enter your details to log in
+                                    Enter new password to reset
                                 </p>
                             </div>
 
@@ -134,29 +149,6 @@ const LogIn = ({ beginLogin }) => {
                                 <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
                                     <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0">
                                         <label className="pb-1 sec-black font-10 font-medium">
-                                            Email Address
-                                        </label>
-                                        <input
-                                            className="login-control focus:outline-none px-2"
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.email}
-                                            placeholder="What is your email address?"
-                                        />
-                                        {formik.touched.email &&
-                                        formik.errors.email ? (
-                                            <div className="input-error">
-                                                {formik.errors.email}
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
-                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
-                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0 ">
-                                        <label className="pb-1 sec-black font-10 font-medium">
                                             Password
                                         </label>
                                         <input
@@ -166,13 +158,36 @@ const LogIn = ({ beginLogin }) => {
                                             type="password"
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.password}
-                                            placeholder="What is your password?"
+                                            value={formik.values.email}
+                                            placeholder="Enter new password"
                                         />
                                         {formik.touched.password &&
                                         formik.errors.password ? (
                                             <div className="input-error">
                                                 {formik.errors.password}
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
+                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0 ">
+                                        <label className="pb-1 sec-black font-10 font-medium">
+                                            Confirm Password
+                                        </label>
+                                        <input
+                                            className="login-control focus:outline-none px-2"
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            type="password"
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.confirmPassword}
+                                            placeholder="Confirm password?"
+                                        />
+                                        {formik.touched.confirmPassword &&
+                                        formik.errors.confirmPassword ? (
+                                            <div className="input-error">
+                                                {formik.errors.confirmPassword}
                                             </div>
                                         ) : null}
                                     </div>
@@ -190,16 +205,11 @@ const LogIn = ({ beginLogin }) => {
                                                 loading
                                             />
                                         ) : (
-                                            "login"
+                                            "reset password"
                                         )}{" "}
                                     </button>
                                 </div>
                             </form>
-                            <div className="text-center text-xs mt-10 text-blue-500">
-                                <Link href="/auth/login/forgotPassword">
-                                    Forgot Password
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </main>
@@ -208,13 +218,4 @@ const LogIn = ({ beginLogin }) => {
     );
 };
 
-export default connect(
-    () => ({}),
-    (dispatch) => ({
-        beginLogin: (payload) =>
-            dispatch({
-                type: "login",
-                payload,
-            }),
-    })
-)(LogIn);
+export default ResetPassword

@@ -466,6 +466,9 @@ input.detail:checked~span:after {
 .buy-now-tab.active {
     border: 1px solid #D80739;
 }
+.buy-now-tab.active-placebid {
+    border: 1px solid #2054e2;
+}
 .buy-now-active-tab-text {
     font-weight: 600;
     font-size: 10px;

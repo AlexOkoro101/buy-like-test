@@ -30,10 +30,15 @@ const App = ({ children }) => {
 
             setLoggedIn(true);
         }
-        if (router.pathname.includes("auth")) {
-            if (token) {
+        if (router.pathname.includes("auth") && router.pathname !== "/auth/signup/onboarding") {
+            if (token && Object.keys(router.query).length === 0) {
                 dispatch(logIn());
-                return router.back();
+                router.back();
+                
+            } 
+            if(token && Object.keys(router.query).length !== 0) {
+                router.push('/vin')
+                console.log(router.query)
             }
         }
         if (
