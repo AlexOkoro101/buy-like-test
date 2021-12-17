@@ -20,7 +20,7 @@ const ForgotPassword = ({ beginLogin }) => {
     const [isLoading, setisLoading] = useState(false);
 
     const toastError = () =>
-        toast.error(`${error ? error : "Could not login"}`, {
+        toast.error(`${error ? error : "Could not process request"}`, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -30,7 +30,7 @@ const ForgotPassword = ({ beginLogin }) => {
             progress: undefined,
         });
     const toastSuccess = () =>
-        toast.success(`${error ? error : "Login Successful"}`, {
+        toast.success("Email sent for password reset", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -43,8 +43,6 @@ const ForgotPassword = ({ beginLogin }) => {
     //Redirect
     const router = useRouter();
 
-    //action access
-    const dispatch = useDispatch();
 
     // let min = 6;
     const formik = useFormik({
@@ -62,7 +60,7 @@ const ForgotPassword = ({ beginLogin }) => {
             seterror(null);
             console.log(values);
 
-            fetch(enviroment.BASE_URL + "/auth/password/forgot", {
+            fetch(enviroment.BASE_URL + "auth/password/forgot", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
@@ -79,30 +77,11 @@ const ForgotPassword = ({ beginLogin }) => {
                     if (data?.error) {
                         seterror(data?.message);
                         toastError();
-                        dispatch(logOut());
                     } else {
-                        dispatch(logIn());
                         seterror(data?.message);
                         toastSuccess();
-                        localStorage.setItem(
-                            "userToken",
-                            JSON.stringify(data.data._token)
-                        );
-                        router.push("/vin");
                     }
-                    const now = new Date();
-                    //save data to local storage
-                    const item = {
-                        userToken: data.data._token,
-                        expiry: now.getTime() + 3600000,
-                    };
-                    localStorage.setItem("userToken", JSON.stringify(item));
 
-                    //save data to store
-                    beginLogin({
-                        token: data.data._token,
-                        login: true,
-                    });
                 })
                 .catch((e) => {
                     // seterror(e.message)

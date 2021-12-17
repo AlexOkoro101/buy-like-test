@@ -13,6 +13,61 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { selectToken } from "../../../redux/reducers/userReducer";
 
 const OnBoarding = () => {
+    const [tempToken, settempToken] = useState(null)
+    const [userCountry, setuserCountry] = useState(null)
+
+    const checkTemp = () => {
+        const tempData = localStorage.getItem("temp");
+        const item = JSON.parse(tempData)
+        settempToken(item?.userToken)
+        if (!tempData) {
+            router.push('/auth/signup');
+            return;
+        }
+    }
+
+    const retrieveCountry = () => {
+        const country = localStorage.getItem("userCountry")
+        if(!country) return
+
+        const item = JSON.parse(country)
+        setuserCountry(item)
+        formik.values.countrysytem = item
+    }
+    
+    useEffect(() => {
+        retrieveCountry()
+        console.log("country", userCountry)
+        return () => {
+            retrieveCountry()
+        }
+    }, [tempToken])
+
+    useEffect(() => {
+        checkTemp()
+        return () => {
+            checkTemp()
+        }
+    }, [])
+
+    const retrieveTemp = (data) => {
+        const tempData = localStorage.getItem("temp");
+        if (!tempData) {
+            return;
+        }
+        const item = JSON.parse(tempData);
+        item.phoneNumber = data.data.user.profile.phoneNumber;
+
+        const now = new Date();
+        
+        localStorage.setItem("user", JSON.stringify(item))
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            window.localStorage.clear();
+            return null;
+        }
+    }
     //router
     const router = useRouter();
 
@@ -80,6 +135,7 @@ const OnBoarding = () => {
             state: "",
             phoneNumber: "123",
             city: "",
+            countrysytem: userCountry
         },
         validationSchema: Yup.object({
             address: Yup.string().required("Address is required"),
@@ -88,14 +144,14 @@ const OnBoarding = () => {
             city: Yup.string().required("City is required"),
         }),
         onSubmit: (values) => {
-            // notify()
+            console.log(values)
             setisLoading(true);
             seterror(null);
             fetch(enviroment.BASE_URL + "auth/user/profile", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token.token}`,
+                    Authorization: `Bearer ${tempToken}`,
                 },
                 credentials: "same-origin",
                 body: JSON.stringify(values),
@@ -117,7 +173,8 @@ const OnBoarding = () => {
                     } else {
                         seterror(data?.message);
                         toastSuccess();
-                        router.push("/auth/login");
+                        retrieveTemp(data)
+                        router.push("/vin");
                     }
                 })
                 .catch((e) => {

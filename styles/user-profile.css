@@ -89,6 +89,11 @@ section {
     box-shadow: 0px 0px 5px 1px rgba(31, 42, 83, 0.03);
     border-radius: 7px;
 }
+@media (max-width: 580px) {
+    .bid-card {
+        height: auto;
+    }
+}
 
 .small-car-card {
     border-radius: 3px;
