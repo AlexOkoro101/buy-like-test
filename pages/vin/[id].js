@@ -206,6 +206,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             window.localStorage.clear();
             return null;
         }
+
         settoken(item?.userToken);
         setuserName(item?.userName);
         setuserId(item?.userId);
@@ -325,7 +326,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             });
         }
         setsize((num || 0) + size);
-        const items = array.slice(0, size + (num || 0));
+        const items = array?.slice(0, size + (num || 0));
         setData(items);
     };
 
@@ -369,7 +370,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (carDetail) {
             setDetail(carDetail);
         }
+<<<<<<< HEAD
         console.log("car details", cardD)
+=======
+        console.log(carDetail)
+>>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
     }, [carDetail]);
 
     const getTrucking = {
@@ -1287,6 +1292,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (truckAccessory === true) {
             // setaddTrucking(true);
+<<<<<<< HEAD
             if(truckingPrice?.includes(",")) {
                 
                 truck =
@@ -1306,6 +1312,15 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                         : Number(truckingPrice?.slice(1));
 
             }
+=======
+            truck =
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
+>>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1334,6 +1349,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
+<<<<<<< HEAD
             if(truckingPrice?.includes(",")) {
                 
                 truck =
@@ -1354,6 +1370,15 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
             }
             
+=======
+            truck =
+                Number(truckingPrice?.slice(1)) > 1000
+                    ? Number(truckingPrice?.slice(1)) / 3
+                    : Number(truckingPrice?.slice(1)) > 400 &&
+                      Number(truckingPrice?.slice(1)) < 1000
+                    ? Number(truckingPrice?.slice(1)) / 2
+                    : Number(truckingPrice?.slice(1));
+>>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1925,6 +1950,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         colSpan="2"
                                                                         className="font-11 sec-black font-normal py-2"
                                                                     >
+<<<<<<< HEAD
                                                                         <>
                                                                             Contact
                                                                             Support
@@ -1968,6 +1994,46 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                 className="fa fa-envelope-o"
                                                                             ></i>
                                                                         </a>
+=======
+                                                                        $
+                                                                        {truckingPrice
+                                                                            ? Number(
+                                                                                  truckingPrice?.slice(
+                                                                                      1
+                                                                                  )
+                                                                              ) >
+                                                                              1000
+                                                                                ? Number(
+                                                                                      truckingPrice?.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) /
+                                                                                  3
+                                                                                : Number(
+                                                                                      truckingPrice?.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) >
+                                                                                      400 &&
+                                                                                  Number(
+                                                                                      truckingPrice?.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) <
+                                                                                      1000
+                                                                                ? Number(
+                                                                                      truckingPrice?.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  ) /
+                                                                                  2
+                                                                                : Number(
+                                                                                      truckingPrice?.slice(
+                                                                                          1
+                                                                                      )
+                                                                                  )
+                                                                            : "0"}
+>>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
                                                                     </td>
                                                                 ) : (
                                                                     <>
@@ -2360,6 +2426,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                 Trucking
                                                             </td>
+<<<<<<< HEAD
                                                             {noZipValue ? (
                                                                     <td
                                                                         colSpan="2"
@@ -2522,6 +2589,48 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     </>
                                                                 )}
                                                                 
+=======
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
+                                                            >
+                                                                $
+                                                                {truckingPrice
+                                                                    ? Number(
+                                                                          truckingPrice?.slice(
+                                                                              1
+                                                                          )
+                                                                      ) > 1000
+                                                                        ? Number(
+                                                                              truckingPrice?.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) / 3
+                                                                        : Number(
+                                                                              truckingPrice?.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) >
+                                                                              400 &&
+                                                                          Number(
+                                                                              truckingPrice?.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) <
+                                                                              1000
+                                                                        ? Number(
+                                                                              truckingPrice?.slice(
+                                                                                  1
+                                                                              )
+                                                                          ) / 2
+                                                                        : Number(
+                                                                              truckingPrice?.slice(
+                                                                                  1
+                                                                              )
+                                                                          )
+                                                                    : "0"}
+                                                            </td>
+>>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
@@ -3264,7 +3373,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                     </td>
                                                     <td className="turncate text-sm sec-black font-normal py-2">
                                                         {
-                                                            cardD?.facilitationLocation
+                                                            cardD?.facilitationLocation?.replace("Manheim","")
                                                         }
                                                     </td>
                                                 </tr>
@@ -3639,21 +3748,35 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 <a
                                                                     href={`/vin/${ele.VIN}`}
                                                                 >
-                                                                    <button
-                                                                        type="button"
-                                                                        className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
-                                                                        onClick={() => {
-                                                                            dispatch(
-                                                                                carDetail(
-                                                                                    ele
-                                                                                )
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        {ele?.buyNowPrice
-                                                                            ? "Buy now"
-                                                                            : "Place bid"}
-                                                                    </button>
+                                                                    {ele?.buyNowPrice>0?
+                                                                     <button
+                                                                     type="button"
+                                                                     className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5"
+                                                                     onClick={() => {
+                                                                         dispatch(
+                                                                             carDetail(
+                                                                                 ele
+                                                                             )
+                                                                         );
+                                                                     }}
+                                                                 >Buy now</button>:
+                                                                 <button
+                                                                 type="button"
+                                                                 className="focus:outline-none text-white bg-blue-700 py-1.5 font-10 fonr-semibold px-5"
+                                                                 onClick={() => {
+                                                                     dispatch(
+                                                                         carDetail(
+                                                                             ele
+                                                                         )
+                                                                     );
+                                                                 }}>
+                                                                     Place bid
+                                                                 </button>
+
+                                                                    }
+                                                                   
+                                                                       
+                                                            
                                                                 </a>
                                                             </div>
                                                         </div>
