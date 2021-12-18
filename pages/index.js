@@ -395,8 +395,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -404,8 +404,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                     </svg>
 
@@ -461,8 +461,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -470,8 +470,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                     </svg>
 
@@ -534,8 +534,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -543,8 +543,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
                                         />
                                     </svg>
 
