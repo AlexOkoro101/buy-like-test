@@ -53,7 +53,7 @@ export const getCars = () => (dispatch) => {
         type: FETCHING_CARS,
     });
 
-    let url = `${api}?year=&make=&model=&price=&page=1&apiKey=Switch!2020`;
+    let url = `${api}?popular=1&apiKey=Switch!2020`;
     fetch(url.trim(), {
         method: "GET",
         headers: {},
@@ -66,6 +66,7 @@ export const getCars = () => (dispatch) => {
             if (res) {
                 if (Object.entries(res).length >= 1) {
                     const dada = JSON.parse(res);
+                    console.log(dada)
                     if (dada) {
                         dispatch({
                             type: FETCH_SUCCESSFUL,
@@ -448,6 +449,7 @@ export const getCategory = (data) => (dispatch) => {
                 if (Object.entries(res).length >= 1) {
                     const dada = JSON.parse(res);
                     if (dada) {
+                        console.log(dada)
                         dispatch({
                             type: FETCH_SUCCESSFUL,
                             payload: dada,
@@ -637,6 +639,7 @@ export const fetchMore =
                 .then(function (res) {
                     if (JSON.parse(res)) {
                         const response = JSON.parse(res);
+                        console.log(response)
                         dispatch({
                             type: SEARCHING_SUCCESS,
                             payload: response,
