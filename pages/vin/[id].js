@@ -370,11 +370,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         if (carDetail) {
             setDetail(carDetail);
         }
-<<<<<<< HEAD
-        console.log("car details", cardD)
-=======
-        console.log(carDetail)
->>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
     }, [carDetail]);
 
     const getTrucking = {
@@ -1292,7 +1287,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (truckAccessory === true) {
             // setaddTrucking(true);
-<<<<<<< HEAD
             if(truckingPrice?.includes(",")) {
                 
                 truck =
@@ -1312,15 +1306,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                         : Number(truckingPrice?.slice(1));
 
             }
-=======
-            truck =
-                Number(truckingPrice?.slice(1)) > 1000
-                    ? Number(truckingPrice?.slice(1)) / 3
-                    : Number(truckingPrice?.slice(1)) > 400 &&
-                      Number(truckingPrice?.slice(1)) < 1000
-                    ? Number(truckingPrice?.slice(1)) / 2
-                    : Number(truckingPrice?.slice(1));
->>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1349,7 +1334,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
         if (placebidTruckAccessory === true) {
             // setaddTrucking(true);
-<<<<<<< HEAD
             if(truckingPrice?.includes(",")) {
                 
                 truck =
@@ -1370,15 +1354,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
             }
             
-=======
-            truck =
-                Number(truckingPrice?.slice(1)) > 1000
-                    ? Number(truckingPrice?.slice(1)) / 3
-                    : Number(truckingPrice?.slice(1)) > 400 &&
-                      Number(truckingPrice?.slice(1)) < 1000
-                    ? Number(truckingPrice?.slice(1)) / 2
-                    : Number(truckingPrice?.slice(1));
->>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
         } else {
             // setaddTrucking(false);
             truck = 0;
@@ -1950,7 +1925,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         colSpan="2"
                                                                         className="font-11 sec-black font-normal py-2"
                                                                     >
-<<<<<<< HEAD
                                                                         <>
                                                                             Contact
                                                                             Support
@@ -1994,46 +1968,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                 className="fa fa-envelope-o"
                                                                             ></i>
                                                                         </a>
-=======
-                                                                        $
-                                                                        {truckingPrice
-                                                                            ? Number(
-                                                                                  truckingPrice?.slice(
-                                                                                      1
-                                                                                  )
-                                                                              ) >
-                                                                              1000
-                                                                                ? Number(
-                                                                                      truckingPrice?.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  3
-                                                                                : Number(
-                                                                                      truckingPrice?.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) >
-                                                                                      400 &&
-                                                                                  Number(
-                                                                                      truckingPrice?.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) <
-                                                                                      1000
-                                                                                ? Number(
-                                                                                      truckingPrice?.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  ) /
-                                                                                  2
-                                                                                : Number(
-                                                                                      truckingPrice?.slice(
-                                                                                          1
-                                                                                      )
-                                                                                  )
-                                                                            : "0"}
->>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
                                                                     </td>
                                                                 ) : (
                                                                     <>
@@ -2426,7 +2360,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                 Trucking
                                                             </td>
-<<<<<<< HEAD
                                                             {noZipValue ? (
                                                                     <td
                                                                         colSpan="2"
@@ -2589,48 +2522,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     </>
                                                                 )}
                                                                 
-=======
-                                                            <td
-                                                                colSpan="3"
-                                                                className="font-11 sec-black font-normal pr-20 py-2"
-                                                            >
-                                                                $
-                                                                {truckingPrice
-                                                                    ? Number(
-                                                                          truckingPrice?.slice(
-                                                                              1
-                                                                          )
-                                                                      ) > 1000
-                                                                        ? Number(
-                                                                              truckingPrice?.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 3
-                                                                        : Number(
-                                                                              truckingPrice?.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) >
-                                                                              400 &&
-                                                                          Number(
-                                                                              truckingPrice?.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) <
-                                                                              1000
-                                                                        ? Number(
-                                                                              truckingPrice?.slice(
-                                                                                  1
-                                                                              )
-                                                                          ) / 2
-                                                                        : Number(
-                                                                              truckingPrice?.slice(
-                                                                                  1
-                                                                              )
-                                                                          )
-                                                                    : "0"}
-                                                            </td>
->>>>>>> a251d2a194c6de27da2a554eb25c25a374f4faa8
                                                             <td className="text-right px-2">
                                                                 <label className="detail">
                                                                     <input
