@@ -129,7 +129,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         if (paramValue && cars.data === []) {
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
-            fetchPage(pageIndex);
+            // fetchPage(pageIndex);
         } else {
             setData(cars.data);
         }
