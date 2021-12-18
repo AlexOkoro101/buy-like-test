@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 const EmailSignup = ({ beginLogin }) => {
     //router
     const router = useRouter();
+    
 
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
