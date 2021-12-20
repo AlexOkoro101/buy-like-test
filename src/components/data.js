@@ -26,6 +26,7 @@ export const LS = [
   { value: "LS 430", label: "LS 430" },
   { value: "LS 460", label: "LS 460" },
   { value: "LS 600h L", label: "LS 600h L" },
+  { value: "LS", label: "LS" }
 ];
 export const LX = [
   { value: "LX 450 Luxury Wagon", label: "LX 450 Luxury Wagon" },
@@ -33,11 +34,30 @@ export const LX = [
   { value: "LX 470 Luxury Wagon", label: "LX 470 Luxury Wagon" },
   { value: "LX 570", label: "LX 570" },
   { value: "LX 470", label: "LX 470" },
+  { value: "LX 450", label: "LX 450" }
 ];
 export const CLA = [
   { value: "CLA", label: "CLA" },
   { value: "CLA-Class", label: "CLA-Class" },
-  { value: "CLK-Class", label: "CLK-Class" },
+  // { value: "CLK-Class", label: "CLK-Class" },
+];
+
+export const CULLINAN = [
+  { value: "Cullinan", label: "Cullinan" },
+
+  // { value: "CLK-Class", label: "CLK-Class" },
+];
+
+export const TACOMA = [
+  { value: "TACOMA", label: "TACOMA" },
+
+  // { value: "CLK-Class", label: "CLK-Class" },
+];
+
+export const TUNDRA = [
+  { value: "TUNDRA", label: "TUNDRA" },
+
+  // { value: "CLK-Class", label: "CLK-Class" },
 ];
 export const ACCORD = [
   { value: "Accord", label: "Accord" },
@@ -45,6 +65,7 @@ export const ACCORD = [
   { value: "Accord Crosstour", label: "Accord Crosstour" },
   { value: "Accord Hybrid", label: "Accord Hybrid" },
   { value: "Accord Sedan", label: "Accord Sedan" },
+  
 ];
 export const CRV = [
   { value: "CR-V", label: "CR-V" },
@@ -93,6 +114,7 @@ export const GS = [
   { value: "GS 430", label: "GS 430" },
   { value: "GS 450h", label: "GS 450h" },
   { value: "GS F", label: "GS F" },
+  { value: "GS", label: "GS" }
 ];
 export const ES = [
   { value: "ES 300", label: "ES 300" },
@@ -100,10 +122,12 @@ export const ES = [
   { value: "ES 300h", label: "ES 300h" },
   { value: "ES 330", label: "ES 330" },
   { value: "ES 350", label: "ES 350" },
+  { value: "ES", label: "ES" },
 ];
 export const GX = [
   { value: "GX 460", label: "GX 460" },
   { value: "GX 470", label: "GX 470" },
+  { value: "GX", label: "GX" }
 ];
 export const RX = [
   { value: "RX 450h", label: "RX 450h" },
@@ -111,6 +135,7 @@ export const RX = [
   { value: "RX 350", label: "RX 350" },
   { value: "RX 330", label: "RX 330" },
   { value: "RX 300 Luxury SUV", label: "RX 300 Luxury SUV" },
+  { value: "RX", label: "RX" }
 ];
 export const FuelType = [
   { value: "Gasoline", label: "Gasoline" },

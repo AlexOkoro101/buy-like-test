@@ -104,8 +104,8 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         { label: "Price: High - Low", value: 2 },
         { label: "Mileage: Low - High", value: 3 },
         { label: "Mileage: High - Low", value: 4 },
-        { label: "Auction Date: Latest", value: 5 },
-        { label: "Auction Date: Earliest", value: 6 },
+        { label: "Auction Date: Earliest", value: 5 },
+        { label: "Auction Date: Latest", value: 6 },
     ]);
     const [data, setData] = useState(cars.data);
     // const [totalCars, setTotal] = useState(total);
@@ -1719,7 +1719,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 <div className="tab border-bt py-4 ">
                                                     <ReactMultiSelectCheckboxes
                                                         className="primary-black  font-semibold font-11  "
-                                                        isMulti={false}
+                                                        // isMulti={false}
                                                         isClearable
                                                         styles={customStyles}
                                                         placeholderButtonLabel={
@@ -1763,7 +1763,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                             inputEl.current[10]
                                                         }
                                                         isClearable
-                                                        isMulti={false}
+                                                        // isMulti={false}
                                                         placeholderButtonLabel={
                                                             <div className="font-semibold text-xs w-full self-center">
                                                                 Max.

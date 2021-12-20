@@ -44,6 +44,9 @@ import {
     ACCORD,
     CIVIC,
     CRV,
+    CULLINAN,
+    TACOMA,
+    TUNDRA
 } from "../../src/components/data";
 const api = process.env.cars_api;
 
@@ -156,7 +159,7 @@ export const searchTerm = (event) => async (dispatch) => {
             }
         }
     }
-    if (event.make == "Accord") {
+    if (event.make == "Honda") {
         for (var i = 0; i < arrStr.length; i++) {
             var supp = arrStr[i];
             switch (supp) {
@@ -174,12 +177,35 @@ export const searchTerm = (event) => async (dispatch) => {
             }
         }
     }
+//     if (event.make == "Rolls-Royce") {
+//         for (var i = 0; i < arrStr.length; i++) {
+//             var supp = arrStr[i];
+//             switch (supp) {
+//                 case "Cullinan":
+//                     arrStr[i] = CULLINAN.map((ele)=>ele.value);
+//                     break;
+//         }
+//     }
+// }
+// if (event.make == "Toyota") {
+//     for (var i = 0; i < arrStr.length; i++) {
+//         var supp = arrStr[i];
+//         switch (supp) {
+//             case "Tacoma":
+//                 arrStr[i] = TACOMA.map((ele)=>ele.value);
+//                 break;
+//     }
+// }
+// }
+    
     let data = {
         year: event.year || "",
         make: event.make || "",
         model: event.model || "",
         vin: event.VIN || "",
     };
+
+
 
     try {
         let res = await fetch(
@@ -236,6 +262,7 @@ export const getMakes = () => (dispatch) => {
             return response.json();
         })
         .then((data) => {
+            console.log(data)
             dispatch({
                 type: FETCHING_MAKE_SUCCESS,
                 payload: data.data,
@@ -533,7 +560,7 @@ export const fetchMore =
                 }
             }
         }
-        if (main.make == "Accord") {
+        if (main.make == "Honda") {
             for (var i = 0; i < arrStr.length; i++) {
                 var supp = arrStr[i];
                 switch (supp) {
