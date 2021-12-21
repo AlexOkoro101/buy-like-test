@@ -177,6 +177,47 @@ export const searchTerm = (event) => async (dispatch) => {
             }
         }
     }
+
+    if (event.make == "Toyota") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "Tacoma":
+                    arrStr[i] = TACOMA.map((ele)=>ele.value);
+                    break;
+                case "Tacoma 2WD":
+                    arrStr[i] = TACOMA.map((ele)=>ele.value);
+                    break;
+                case "Tacoma 4WD":
+                    arrStr[i] = TACOMA.map((ele)=>ele.value);
+                    break;       
+                
+        }
+    }
+    }
+
+    if (event.make == "Toyota") {
+        for (var i = 0; i < arrStr.length; i++) {
+            var supp = arrStr[i];
+            switch (supp) {
+                case "Tundra":
+                    arrStr[i] = TUNDRA.map((ele)=>ele.value);
+                    break;
+                case "Tundra 2WD":
+                    arrStr[i] = TUNDRA.map((ele)=>ele.value);
+                    break;
+                case "Tundra 4WD":
+                    arrStr[i] = TUNDRA.map((ele)=>ele.value);
+                    break;       
+                case "Tundra 2WD Truck":
+                        arrStr[i] = TUNDRA.map((ele)=>ele.value);
+                        break;
+                 case "Tundra 4WD Truck":
+                        arrStr[i] = TUNDRA.map((ele)=>ele.value);
+                        break;
+        }
+    }
+    }
 //     if (event.make == "Rolls-Royce") {
 //         for (var i = 0; i < arrStr.length; i++) {
 //             var supp = arrStr[i];
@@ -187,16 +228,9 @@ export const searchTerm = (event) => async (dispatch) => {
 //         }
 //     }
 // }
-// if (event.make == "Toyota") {
-//     for (var i = 0; i < arrStr.length; i++) {
-//         var supp = arrStr[i];
-//         switch (supp) {
-//             case "Tacoma":
-//                 arrStr[i] = TACOMA.map((ele)=>ele.value);
-//                 break;
-//     }
-// }
-// }
+
+
+
     
     let data = {
         year: event.year || "",
