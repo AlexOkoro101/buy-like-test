@@ -49,15 +49,19 @@ export const CULLINAN = [
 ];
 
 export const TACOMA = [
-  { value: "TACOMA", label: "TACOMA" },
+  { value: "Tacoma", label: "Tacoma" },
+  { value: "Tacoma 2WD", label: "Tacoma 2WD" },
+  { value: "Tacoma 4WD", label: "Tacoma 4WD" },
 
-  // { value: "CLK-Class", label: "CLK-Class" },
 ];
 
 export const TUNDRA = [
-  { value: "TUNDRA", label: "TUNDRA" },
+  { value: "Tundra", label: "Tundra" },
+  { value: "Tundra 2WD", label: "Tundra 2WD" },
+  { value: "Tundra 4WD", label: "Tundra 4WD" },
+  { value: "Tundra 2WD Truck", label: "Tundra 2wd Truck" },
+  { value: "Tundra 4WD Truck", label: "Tundra 4WD Truck" },
 
-  // { value: "CLK-Class", label: "CLK-Class" },
 ];
 export const ACCORD = [
   { value: "Accord", label: "Accord" },
@@ -300,8 +304,6 @@ export const FacilitationLocation = [
     value: "CA - AutoNation Auto Auction",
     label: "CA - AutoNation Auto Auction",
   },
-  {},
-  {},
   {
     value: "CA - Norwalk Auto Auction",
     label: "CA - Norwalk Auto Auction",
@@ -318,10 +320,6 @@ export const FacilitationLocation = [
     value: "FL - Dealers Auction Xchange LLC",
     label: "FL - Dealers Auction Xchange LLC",
   },
-  {},
-  {},
-  {},
-  {},
   {
     value: "FL - Orlando Longwood Auto Auction",
     label: "FL - Orlando Longwood Auto Auction",
@@ -400,7 +398,6 @@ export const FacilitationLocation = [
     value: "IN - Indiana Auto Auction",
     label: "IN - Indiana Auto Auction",
   },
-  {},
   {
     value: "IN - WOLFE'S EVANSVILLE AUTO AUCTION",
     label: "IN - WOLFE'S EVANSVILLE AUTO AUCTION",
@@ -429,7 +426,6 @@ export const FacilitationLocation = [
     value: "LA - Louisiana's 1st Choice Auto Auction",
     label: "LA - Louisiana's 1st Choice Auto Auction",
   },
-  {},
   { value: "MA - Adesa Boston", label: "MA - Adesa Boston" },
   {
     value: "MA - Central Mass. Auto Auction",
@@ -439,12 +435,10 @@ export const FacilitationLocation = [
     value: "MA - Lynnway Auto Auction",
     label: "MA - Lynnway Auto Auction",
   },
-  {},
   {
     value: "MD - Bel Air Auto Auction",
     label: "MD - Bel Air Auto Auction",
   },
-  {},
   {
     value: "ME - Port City Auto Auction",
     label: "ME - Port City Auto Auction",
@@ -477,8 +471,6 @@ export const FacilitationLocation = [
     value: "MI - West Michigan Auto Auction",
     label: "MI - West Michigan Auto Auction",
   },
-  {},
-  {},
   {
     value: "MN - Mid-State Auto Auction",
     label: "MN - Mid-State Auto Auction",
@@ -488,8 +480,6 @@ export const FacilitationLocation = [
     value: "MO - America's Auto Auction - Kansas City",
     label: "MO - America's Auto Auction - Kansas City",
   },
-  {},
-  {},
   {
     value: "MO - Missouri Auto Auction",
     label: "MO - Missouri Auto Auction",
@@ -498,7 +488,6 @@ export const FacilitationLocation = [
     value: "MS - Dealers Auto Auction - Jackson",
     label: "MS - Dealers Auto Auction - Jackson",
   },
-  {},
   {
     value: "MT - Auto Auction Of Montana",
     label: "MT - Auto Auction Of Montana",
@@ -507,8 +496,6 @@ export const FacilitationLocation = [
     value: "NC - Greenville Auto Auction",
     label: "NC - Greenville Auto Auction",
   },
-  {},
-  {},
   {
     value: "NC - Speedway Auto Auction of Charlotte",
     label: "NC - Speedway Auto Auction of Charlotte",
@@ -517,7 +504,6 @@ export const FacilitationLocation = [
     value: "NH - Auto Auction Of New England",
     label: "NH - Auto Auction Of New England",
   },
-  {},
   {
     value: "NV - Dealers Auto Auction of Las Vegas",
     label: "NV - Dealers Auto Auction of Las Vegas",
@@ -591,8 +577,6 @@ export const FacilitationLocation = [
     value: "PA - Lehigh Valley Auto Auction",
     label: "PA - Lehigh Valley Auto Auction",
   },
-  {},
-  {},
   {
     value: "SC - America's Auto Auction - Greenville",
     label: "SC - America's Auto Auction - Greenville",
@@ -750,9 +734,6 @@ export const FacilitationLocation = [
     value: "TX - Lubbock Auto Auction",
     label: "TX - Lubbock Auto Auction",
   },
-  {},
-  {},
-  {},
   {
     value: "TX - Metro Auto Auction Dallas",
     label: "TX - Metro Auto Auction Dallas",
@@ -769,8 +750,6 @@ export const FacilitationLocation = [
     value: "VA - America's Auto Auction Virginia",
     label: "VA - America's Auto Auction Virginia",
   },
-  {},
-  {},
   {
     value: "VA - Richmond Auto Auction",
     label: "VA - Richmond Auto Auction",
