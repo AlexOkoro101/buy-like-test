@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm, getCategory, getMakes } from "../redux/actions/carsAction";
+import { enviroment } from "../src/components/enviroment";
 
 //
 const Home = ({ getCars, cars, makes, getMakes }) => {
@@ -19,6 +20,15 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     useEffect(() => {
         setIsComponentFullyMounted(true);
     }, []);
+
+    useEffect(() => {
+        const user = localStorage.getItem('user')
+        if(user) {
+            const item = JSON.parse(user)
+            setuserId(item.userId)
+        }
+        
+    }, [])
 
     useEffect(() => {
         if (isComponentFullyMounted === false) {
@@ -213,6 +223,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const [fetchModel, setmodel] = useState(false);
     const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
+    const [userId, setuserId] = useState(null)
 
     const [years, setYears] = useState(() => {
         let year = 2005;
@@ -255,9 +266,41 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const router = useRouter();
 
     const onSubmit = (data) => {
-        dispatch(searchTerm(data));
-        router.push("/vin");
+        if(data.year==="" && data.make==="" && data.model===""){
+            getCars();
+            router.push("/vin");
+        }else{
+            dispatch(searchTerm(data));
+            router.push("/vin");
+        }
+
+        searchItem(data)
+       
     };
+
+    const searchItem = (data) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "make": data.make,
+        "model": data.model,
+        "yaer": data.year,
+        "user": (userId || "")
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "search", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
 
     const onCategory = (data) => {
         let options = { bodyType: data };
@@ -395,8 +438,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -404,8 +447,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                     </svg>
 
@@ -461,8 +504,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -470,8 +513,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                     </svg>
 
@@ -534,8 +577,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.2"
                                             y2="7.58578"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                         <line
                                             x1="13.2002"
@@ -543,8 +586,8 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                             x2="7.41441"
                                             y2="7.8"
                                             stroke="#0D101B"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
                                         />
                                     </svg>
 
@@ -990,21 +1033,21 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         {/* <!--    Questions here --> */}
                         <div className="w-full lg:w-1/3 mb-5">
                             <h4 className="faq-header pb-3">
-                                Bids and Deposits{" "}
+                                Buying{" "}
                             </h4>
 
                             <ul>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> How do I place a bid?</a>
+                                    <a href="#"> What forms of identification are accepted?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a deposit?</a>
+                                    <a href="#"> How does the buying process work?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a collection?</a>
+                                    <a href="#"> How long will my deposit hold the vehicle?</a>
                                 </li>
                                 <li className="pb-2 faq all">
                                     {" "}
@@ -1016,21 +1059,21 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         {/* <!--    Questions here --> */}
                         <div className=" w-full lg:w-1/3 mb-5">
                             <h4 className="faq-header pb-3">
-                                Bids and Deposits{" "}
+                                Payments{" "}
                             </h4>
 
                             <ul>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> How do I place a bid?</a>
+                                    <a href="#"> What forms of payment does buylikedealers accept?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a deposit?</a>
+                                    <a href="#"> When is my balance due?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a collection?</a>
+                                    <a href="#">Who do I make my cashier's check out to?</a>
                                 </li>
                                 <li className="pb-2 faq all">
                                     {" "}
@@ -1045,21 +1088,21 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                         {/* <!--    Questions here --> */}
                         <div className=" w-full lg:w-1/3 mb-5">
                             <h4 className="faq-header pb-3">
-                                Bids and Deposits{" "}
+                            Pick Up and Delivery{" "}
                             </h4>
 
                             <ul>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> How do I place a bid?</a>
+                                    <a href="#"> When will my vehicle be delivered?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a deposit?</a>
+                                    <a href="#"> How long does delivery take?</a>
                                 </li>
                                 <li className="pb-2 faq">
                                     {" "}
-                                    <a href="#"> What is a collection?</a>
+                                    <a href="#"> What is a bill of laden?</a>
                                 </li>
                                 <li className="pb-2 faq all">
                                     {" "}
