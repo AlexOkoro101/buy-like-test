@@ -409,7 +409,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
 
                     <li className="font-10 sec-black font-medium">
                         <a
-                            href="/"
+                            href="/aboutus"
                             className="block md:inline-block uppercase px-2 lg:px-3 py-3 hover:no-underline hover:text-current"
                         >
                             about us
