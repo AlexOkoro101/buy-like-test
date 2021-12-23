@@ -680,10 +680,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 const dataWithArrays = Object.fromEntries(
                     Object.entries(data).map(([key, value]) => [
                         key,
-                        ...value
+                        ...value.toString()
                             .split(",")
                             .filter(
-                                (ele) => ele.toLowerCase() != val.toLowerCase()
+                                (ele) => ele.toLowerCase() != val.toString()?.toLowerCase()
                             ),
                     ])
                 );
@@ -1072,7 +1072,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
     return (
         <div>
-            <Meta title="Buylike Dealers search page" />
+            <Meta title="Buylike Dealers search page"  />
             <main>
                 {/* <!-- Search region here --> */}
                 <div
@@ -1412,42 +1412,43 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 options={FuelType}
                                             />
                                         </div>
-                                        <div className="tab border-bt py-4 ">
-                                            <ReactMultiSelectCheckboxes
-                                                className="primary-black font-semibold font-11  "
+                                        {/* <div className="tab border-bt py-4 ">
+                                        <div className="font-semibold text-xs w-full self-center	">
+                                                        Pickup Location
+                                                    </div>
+                                            <input
+                                                className="primary-black font-semibold font-11  border border-black"
                                                 ref={inputEl.current[11]}
                                                 isClearable
                                                 styles={customStyles}
-                                                placeholderButtonLabel={
-                                                    <div className="font-semibold text-xs w-full self-center	">
-                                                        Pickup Location
-                                                    </div>
-                                                }
-                                                getDropdownButtonLabel={({
-                                                    placeholderButtonLabel,
-                                                    value,
-                                                }) => {
-                                                    return (
-                                                        <div className="font-semibold text-xs w-96 self-center">
-                                                            Pickup Location
-                                                        </div>
-                                                    );
-                                                }}
+                                                // placeholderButtonLabel={
+                                                //     <div className="font-semibold text-xs w-full self-center	">
+                                                //         Pickup Location
+                                                //     </div>
+                                                // }
+                                                // getDropdownButtonLabel={({
+                                                //     placeholderButtonLabel,
+                                                //     value,
+                                                // }) => {
+                                                //     return (
+                                                //         <div className="font-semibold text-xs w-96 self-center">
+                                                //             Pickup Location
+                                                //         </div>
+                                                //     );
+                                                // }}
                                                 width="100%"
                                                 onChange={(e) => {
+                                                    e.persist()
                                                     setFilterValue((prev) => ({
                                                         ...prev,
-                                                        location: e.map(
-                                                            (el) => {
-                                                                return el.value;
-                                                            }
-                                                        ),
+                                                        location: e.target?.value,
                                                     })),
                                                         setAdvance(true);
+                                                        console.log(e.target?.value)
                                                 }}
                                                 
                                             />
-                                        </div>
+                                        </div> */}
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
@@ -1941,7 +1942,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     value={sortValue}
                                     onChange={(e) => setSortValue(e)}
                                     options={sortOptions}
-                                    styles={customStyles2}
+                                    // styles={customStyles2}
                                 />
                             </div>
                             {/* <!-- Third section here --> */}
@@ -2305,12 +2306,12 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                     0 ? (
                                                                                         <div>
                                                                                             <img
-                                                                                                className="img-fluid rounded"
+                                                                                                className="img-fluid rounded text-center"
                                                                                                 src={`https://proxybuylike.herokuapp.com/?url=${ele?.images[0]?.image_largeUrl}`}
                                                                                                 alt=""
                                                                                                 style={{
-                                                                                                    width: "340px",
-                                                                                                    height: "250px",
+                                                                                                    width: "320px",
+                                                                                                    height: "200px",
                                                                                                 }}
                                                                                             />
                                                                                             {/* <div className="watermark opacity-50 ">
