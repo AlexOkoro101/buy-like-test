@@ -20,6 +20,7 @@ var moment = require("moment");
 import { searchCars } from "../../redux/actions/carsAction";
 import countryList from 'react-select-country-list'
 import { useMemo } from "react";
+import Select from "react-select";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -242,10 +243,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         setCountry()
         if(userIp) {
             if(userIp === "NG") {
-                setcarDestination("Nigeria")
+                setcarDestination(options[161])
                 setSelectedCountryCurrency("NG")
             } else {
-                setcarDestination("United States")
+                setcarDestination(options[236])
                 setSelectedCountryCurrency("US")
                 setNGN(false)
             }
@@ -916,7 +917,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
         total: accessories(),
-        carDestination
+        carDestination: carDestination?.label
     });
     const buyNowFunction = () => {
 
@@ -1837,7 +1838,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="3"
                                                                 className="font-11 sec-black font-normal py-2 pr-4"
                                                             >
-                                                                <select
+                                                                {/* <select
                                                                     className="w-full"
                                                                     name="destination"
                                                                     id="buynow-destination"
@@ -1861,7 +1862,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     {options.map((country) => (
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
-                                                                </select>
+                                                                </select> */}
+                                                                <Select options={options} value={carDestination} 
+                                                                // id="buynow-destination"
+                                                                inputId="buynow-destination"
+                                                                onChange={(e) => {
+                                                                console.log(e.label)
+                                                                setcarDestination(e)
+                                                                if(e.label == "United States") {
+                                                                    setshipAccessory(false)
+                                                                }
+
+                                                                }} />
                                                             </td>
                                                         </tr>
 
@@ -2083,7 +2095,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 )}
                                                             </tr>
 
-                                                        {carDestination !== "United States" &&  (
+                                                        {carDestination?.label !== "United States" &&  (
 
                                                             <tr className="">
                                                                 <td
@@ -2119,7 +2131,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             </tr>
                                                         )}
 
-                                                        {carDestination !== "United States" && (
+                                                        {carDestination?.label !== "United States" && (
 
                                                             <tr className="">
                                                                 <td
@@ -2254,7 +2266,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 colSpan="4"
                                                                 className="font-11 sec-black font-normal py-2 destination-content pr-4"
                                                             >
-                                                                <select
+                                                                {/* <select
                                                                     className="w-full "
                                                                     name="destination"
                                                                     id="placebid-destination"
@@ -2274,7 +2286,16 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     {options.map((country) => (
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
-                                                                </select>
+                                                                </select> */}
+                                                                <Select options={options} value={carDestination} 
+                                                                onChange={(e) => {
+                                                                console.log(e.label)
+                                                                setcarDestination(e)
+                                                                if(e.label == "United States") {
+                                                                    setshipAccessory(false)
+                                                                }
+
+                                                                }} />
                                                             </td>
                                                         </tr>
 
@@ -2412,7 +2433,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                 ) : (
                                                                     <>
                                                                         <td
-                                                                            colSpan="2"
+                                                                            colSpan="3"
                                                                             className="font-11 sec-black font-normal py-2"
                                                                         >
                                                                             {truckingPrice?.includes(",") ? (
@@ -2505,16 +2526,16 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                             <label className="detail">
                                                                                 <input
                                                                                     value={
-                                                                                        truckAccessory
+                                                                                        placebidTruckAccessory
                                                                                     }
                                                                                     type="checkbox"
                                                                                     className="focus:outline-none detail self-center"
                                                                                     onChange={() =>
-                                                                                        settruckAccessory(
-                                                                                            !truckAccessory
+                                                                                        setplacebidTruckAccessory(
+                                                                                            !placebidTruckAccessory
                                                                                         )
                                                                                     }
-                                                                                    checked={truckAccessory}
+                                                                                    checked={placebidTruckAccessory}
                                                                                 />
                                                                                 <span className="detail"></span>
                                                                             </label>
@@ -2522,28 +2543,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     </>
                                                                 )}
                                                                 
-                                                            <td className="text-right px-2">
-                                                                <label className="detail">
-                                                                    <input
-                                                                        value={
-                                                                            placebidTruckAccessory
-                                                                        }
-                                                                        type="checkbox"
-                                                                        className="focus:outline-none detail self-center"
-                                                                        onChange={() =>
-                                                                            setplacebidTruckAccessory(
-                                                                                !placebidTruckAccessory
-                                                                            )
-                                                                        }
-                                                                        checked={placebidTruckAccessory}
-                                                                    />
-                                                                    <span className="detail"></span>
-                                                                </label>
-                                                            </td>
                                                         </tr>
                                                         
 
-                                                        {carDestination !== "United States" && (
+                                                        {carDestination?.label !== "United States" && (
                                                             <tr className="">
                                                                 <td className="sec-black font-11 font-semibold w-28 p-2">
                                                                     Shipping
@@ -2576,7 +2579,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
                                                         )}
 
-                                                        {carDestination !== "United States" && (
+                                                        {carDestination?.label !== "United States" && (
                                                             <tr className="">
                                                                 <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
                                                                     Clearing
