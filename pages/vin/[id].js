@@ -1433,6 +1433,10 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                             "" +
                             cardD?.year
                         }
+
+                        image={cardD?.images[id]?.image_smallUrl}
+
+                        
                     />
                     <ToastContainer />
                     {cardD && (
@@ -1445,7 +1449,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <button>
                                         <Link
                                             href={
-                                                "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" +
+                                                "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" + 
                                                 router.pathname
                                             }
                                         >
@@ -1473,7 +1477,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <a
                                             href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
                                                 cardD?.vehicleName
-                                            )}%20%20www.buylikedealers.com/${
+                                            )}%20%20www.buylikedealers.com/vin/${
                                                 cardD?.VIN
                                             }`}
                                             data-action="share/whatsapp/share"
@@ -1488,7 +1492,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <button
                                         onClick={() => {
                                             navigator.clipboard.writeText(
-                                                "www.buylikedealers.com/" +
+                                                "www.buylikedealers.com/" + "vin/" +
                                                     cardD?.VIN
                                             )
                                             setshareSuccess(true)
