@@ -1,24 +1,29 @@
+import React from "react";
 import Head from "next/head";
 
-import React from "react";
 
-const Meta = ({ title, keywords, description }) => {
+
+
+
+
+const Meta = ({ title, keywords, description,image }) => {
     return (
         <Head>
             <link rel="icon" href="/fav.svg" />
+            <meta name="google-site-verification" content="yGcb4Qn0DdhCHl8N7gbLcniO0cexMV3HUMdeVFcehaw" />
             <meta property="og:site_name" content="Buy cars like dealers" />
             <meta
                 property="og:title"
-                content={title ? title : "Buy cars like dealers"}
+                content={title ? title : "Buylikedealers"}
             />
             <meta
                 property="og:description"
-                content="A platform where cars are sold and auctioned"
+                content={description ? description:"Buy up to 100,000 accidents free cars from the U.S at wholesale auction prices and have them delivered to you! We have something for everyone - from different professions down to families, singles e.t.c or for individuals and companies"}
             />
             <meta
                 property="og:image"
                 itemprop="image"
-                content="http://pollosweb.wesped.es/programa_pollos/play.png"
+                content={image ? image : `../../../public/img/logo.svg`}
             />
             <script
                 type="module"

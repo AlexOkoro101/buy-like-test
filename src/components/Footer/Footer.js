@@ -1,3 +1,6 @@
+
+import Link from "next/link";
+
 const Footer = () => {
     return (
         <footer className=" text-white" style={{ background: "#D80739" }}>
@@ -93,12 +96,12 @@ const Footer = () => {
                     <p className="footer-header pb-4">QUICK LINKS</p>
 
                     <div className="flex items-center pb-4">
-                        <a
-                            href=""
-                            className="text-sm text-white font-medium pt-0.5"
+                        <Link
+                            href="/aboutus"
+                            
                         >
-                            About us{" "}
-                        </a>
+                           <p className="text-sm text-white font-medium pt-0.5">About us</p>
+                        </Link>
                     </div>
 
                     <div className="flex items-center pb-4">
