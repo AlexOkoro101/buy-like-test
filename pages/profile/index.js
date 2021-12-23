@@ -52,6 +52,7 @@ const Profile = () => {
     //Password update
     const [oldPassword, setoldPassword] = useState("")
     const [newPassword, setnewPassword] = useState("")
+    const [confirmPassword, setconfirmPassword] = useState("")
 
     useEffect(() => {
         getUserID()
@@ -208,7 +209,7 @@ const Profile = () => {
         var raw = JSON.stringify({
             "oldPassword": oldPassword,
             "newPassword": newPassword,
-            "confirmNewPassword": newPassword
+            "confirmNewPassword": confirmPassword
         });
 
         var requestOptions = {
@@ -499,7 +500,7 @@ const Profile = () => {
                                                     <label className="block pb-1 font-10 font-medium sec-black " htmlFor="confirm">
                                                         Confirm new password
                                                     </label>
-                                                    <input id="confirm" value={newPassword} onChange={(e) => setnewPassword(e.target.value)} className="px-3 profile-control focus:outline-none w-full"
+                                                    <input id="confirm" value={confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)} className="px-3 profile-control focus:outline-none w-full"
                                                         type="password" placeholder="*******" />
                                                 </div>
 

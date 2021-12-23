@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm, getCategory, getMakes } from "../redux/actions/carsAction";
+import { enviroment } from "../src/components/enviroment";
 
 //
 const Home = ({ getCars, cars, makes, getMakes }) => {
@@ -19,6 +20,15 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     useEffect(() => {
         setIsComponentFullyMounted(true);
     }, []);
+
+    useEffect(() => {
+        const user = localStorage.getItem('user')
+        if(user) {
+            const item = JSON.parse(user)
+            setuserId(item.userId)
+        }
+        
+    }, [])
 
     useEffect(() => {
         if (isComponentFullyMounted === false) {
@@ -213,6 +223,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     const [fetchModel, setmodel] = useState(false);
     const [carMakes, setcarMakes] = useState(makes);
     const [carModels, setcarModels] = useState([]);
+    const [userId, setuserId] = useState(null)
 
     const [years, setYears] = useState(() => {
         let year = 2005;
@@ -262,8 +273,34 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
             dispatch(searchTerm(data));
             router.push("/vin");
         }
+
+        searchItem(data)
        
     };
+
+    const searchItem = (data) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "make": data.make,
+        "model": data.model,
+        "yaer": data.year,
+        "user": (userId || "")
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "search", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
 
     const onCategory = (data) => {
         let options = { bodyType: data };
