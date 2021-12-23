@@ -1863,9 +1863,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
                                                                 </select> */}
-                                                                <Select options={options} value={carDestination} 
-                                                                // id="buynow-destination"
-                                                                inputId="buynow-destination"
+                                                                <Select options={options} value={carDestination}                                                                 
                                                                 onChange={(e) => {
                                                                 console.log(e.label)
                                                                 setcarDestination(e)
