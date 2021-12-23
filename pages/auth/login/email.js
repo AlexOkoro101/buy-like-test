@@ -200,6 +200,15 @@ const LogIn = ({ beginLogin }) => {
                                     Forgot Password
                                 </Link>
                             </div>
+                            <div className="text-center">
+                                <p
+                                    onClick={() => router.push("/auth/signup")}
+                                    style={{ color: "#0C74D4" }}
+                                    className="font-11 cursor-pointer mt-8"
+                                >
+                                    Or create an account
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </main>

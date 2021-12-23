@@ -7,6 +7,7 @@ import {
     filterTabAction,
     getMakes,
     carDetail,
+    getCategory,
 } from "../../redux/actions/carsAction";
 import Select from "react-select";
 import { useRouter } from "next/router";
@@ -69,7 +70,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     var dollarFormatter = new Intl.NumberFormat();
     const { height, width } = useWindowDimensions();
     let inputEl = useRef([]);
-    inputEl.current = [...Array(11)].map(
+    inputEl.current = [...Array(12)].map(
         (ref, index) => (inputEl.current[index] = React.createRef())
     );
 
@@ -94,6 +95,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     });
     const [pageIndex, setPageIndex] = useState(1);
     const [active, setActive] = useState("all");
+    const [bodyType, setBodyType]=useState("")
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
     const [sortValue, setSortValue] = useState(null);
@@ -102,8 +104,8 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         { label: "Price: High - Low", value: 2 },
         { label: "Mileage: Low - High", value: 3 },
         { label: "Mileage: High - Low", value: 4 },
-        { label: "Auction Date: Latest", value: 5 },
-        { label: "Auction Date: Earliest", value: 6 },
+        { label: "Auction Date: Earliest", value: 5 },
+        { label: "Auction Date: Latest", value: 6 },
     ]);
     const [data, setData] = useState(cars.data);
     // const [totalCars, setTotal] = useState(total);
@@ -125,22 +127,29 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     });
     const [carMakes, setcarMakes] = useState([]);
     const [carModels, setcarModels] = useState([]);
+    
+
     useEffect(() => {
+        console.log(cars)
         if (paramValue && cars.data === []) {
             fetchPage(pageIndex);
         } else if (cars.data === {}) {
-            fetchPage(pageIndex);
+            // fetchPage(pageIndex);
         } else {
             setData(cars.data);
+            
         }
     }, [cars]);
+
+
+    
     useEffect(() => {
         if (carModels.length <= 0) {
             if (makes && makes[0]) {
                 getVehicleModels();
             }
         }
-        fetchPage(pageIndex);
+        // fetchPage(pageIndex);
     }, []);
     useEffect(() => {
         if (advance === true) {
@@ -191,6 +200,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
+                bodyType:paramValue?.bodyType||"",
                 page: pageIndex,
             };
             dispatch(
@@ -227,26 +237,46 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 make: paramValue?.make || "",
                 model: paramValue?.model || "",
                 year: paramValue?.year || "",
+                bodyType:paramValue?.bodyType||"",
                 page: i,
             };
             dispatch(
-                fetchMore(filterValue, datas, sortValue, active, activeTab)
+                fetchMore( filterValue, datas, sortValue, active, activeTab)
             );
         } else {
-            let data =
-                active === "now"
-                    ? "buy_now=1"
-                    : active === "bid"
-                    ? "mmr_price=1"
-                    : "";
-            const datas = {
-                make: paramValue?.make || "",
-                model: paramValue?.model || "",
-                year: paramValue?.year || "",
-                page: i,
-            };
-            dispatch(fetchMore(datas, data));
+            // let data =
+            //     active === "now"
+            //         ? "buy_now=1"
+            //         : active === "bid"
+            //         ? "mmr_price=1"
+            //         : "";
+            // const datas = {
+            //     make: paramValue?.make || "",
+            //     model: paramValue?.model || "",
+            //     year: paramValue?.year || "",
+            //     page: i,
+            // };
+            // dispatch(fetchMore(datas, data));
+            let activeTab =
+                active === "bid"
+                ? "mmr_price=1"
+                : active === "now"
+                ? "buy_now=1"
+                : "";
+                
+                    
+                const datas = {
+                    make: paramValue?.make || "",
+                    model: paramValue?.model || "",
+                    year: paramValue?.year || "",
+                    bodyType:paramValue?.bodyType||"",
+                    page: i,
+                };
+                dispatch(
+                    fetchMore(filterValue, datas, sortValue, active, activeTab)
+                );
         }
+        
     };
     const handleYear = (e) => {
         var data;
@@ -1385,7 +1415,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
-                                                ref={inputEl.current[4]}
+                                                ref={inputEl.current[11]}
                                                 isClearable
                                                 styles={customStyles}
                                                 placeholderButtonLabel={
@@ -1400,6 +1430,42 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                     return (
                                                         <div className="font-semibold text-xs w-96 self-center">
                                                             Pickup Location
+                                                        </div>
+                                                    );
+                                                }}
+                                                width="100%"
+                                                onChange={(e) => {
+                                                    setFilterValue((prev) => ({
+                                                        ...prev,
+                                                        location: e.map(
+                                                            (el) => {
+                                                                return el.value;
+                                                            }
+                                                        ),
+                                                    })),
+                                                        setAdvance(true);
+                                                }}
+                                                
+                                            />
+                                        </div>
+                                        <div className="tab border-bt py-4 ">
+                                            <ReactMultiSelectCheckboxes
+                                                className="primary-black font-semibold font-11  "
+                                                ref={inputEl.current[4]}
+                                                isClearable
+                                                styles={customStyles}
+                                                placeholderButtonLabel={
+                                                    <div className="font-semibold text-xs w-full self-center	">
+                                                        Facilitation Location
+                                                    </div>
+                                                }
+                                                getDropdownButtonLabel={({
+                                                    placeholderButtonLabel,
+                                                    value,
+                                                }) => {
+                                                    return (
+                                                        <div className="font-semibold text-xs w-96 self-center">
+                                                            Facilitation Location
                                                         </div>
                                                     );
                                                 }}
@@ -1653,7 +1719,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 <div className="tab border-bt py-4 ">
                                                     <ReactMultiSelectCheckboxes
                                                         className="primary-black  font-semibold font-11  "
-                                                        isMulti={false}
+                                                        // isMulti={false}
                                                         isClearable
                                                         styles={customStyles}
                                                         placeholderButtonLabel={
@@ -1697,7 +1763,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                             inputEl.current[10]
                                                         }
                                                         isClearable
-                                                        isMulti={false}
+                                                        // isMulti={false}
                                                         placeholderButtonLabel={
                                                             <div className="font-semibold text-xs w-full self-center">
                                                                 Max.

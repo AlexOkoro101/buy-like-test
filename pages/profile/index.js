@@ -3,8 +3,23 @@ import { useState } from "react";
 import { enviroment } from "../../src/components/enviroment";
 import Meta from "../../src/components/Head/Meta";
 import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
+     //Notifiers
+     const passwordChanged = () =>
+     toast.success("Password Updated!", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: true,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+     });
+
+
     const [isLoading, setisLoading] = useState(false)
     
     // Initial Tab state
@@ -14,6 +29,7 @@ const Profile = () => {
 
     const [showModal, setshowModal] = useState(false)
 
+    const [userToken, setuserToken] = useState(null)
     const [user, setuser] = useState(null)
     const [stripeId, setstripeId] = useState(null)
     const [userCards, setuserCards] = useState(null)
@@ -32,6 +48,12 @@ const Profile = () => {
     const [newCardEmail, setnewCardEmail] = useState("")
     const [newCardPhone, setnewCardPhone] = useState("")
 
+
+    //Password update
+    const [oldPassword, setoldPassword] = useState("")
+    const [newPassword, setnewPassword] = useState("")
+    const [confirmPassword, setconfirmPassword] = useState("")
+
     useEffect(() => {
         getUserID()
         return () => {
@@ -44,6 +66,7 @@ const Profile = () => {
         if(user) {
             const item = JSON.parse(user)
             fetchUserData(item)
+            setuserToken(item.userToken)
             if(item?.stripeId) {
                 setstripeId(item?.stripeId)
                 
@@ -175,8 +198,45 @@ const Profile = () => {
         .catch(error => console.log('error', error));
     }
 
+    const updatePassword = () => {
+        setisLoading(true)
+
+
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${userToken}`);
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            "oldPassword": oldPassword,
+            "newPassword": newPassword,
+            "confirmNewPassword": confirmPassword
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/settings/changepassword", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            setisLoading(false)
+
+            if(result.error == false) {
+                setoldPassword("")
+                setnewPassword("")
+                passwordChanged()
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
     return ( 
         <div>
+            <ToastContainer />
             <Meta />
             <main>
                 <div className="flex main pt-20 pb-32">
@@ -415,7 +475,7 @@ const Profile = () => {
                                     passwordTab && (
 
                                     <div id="password" className="meg">
-                                        <form action="" className="px-32 pb-64">
+                                        <form className="px-32 pb-64">
                                             <div className="flex flex-col items-center md:grid md:grid-cols-6 gap-5 font-11 w-1/2">
                                                 <h2 className="py-1 lg:px-0 text-xl col-span-6 w-full  primary-black ">
                                                     Password Settings
@@ -424,7 +484,7 @@ const Profile = () => {
                                                     <label className="block pb-1 font-10 font-medium sec-black" htmlFor="password">
                                                         Enter current password
                                                     </label>
-                                                    <input id="password" className="px-3 profile-control focus:outline-none w-full"
+                                                    <input id="password" value={oldPassword} onChange={(e) => setoldPassword(e.target.value)} className="px-3 profile-control focus:outline-none w-full"
                                                         type="password" placeholder="*******" />
                                                 </div>
 
@@ -432,7 +492,7 @@ const Profile = () => {
                                                     <label className="block pb-1 font-10 font-medium sec-black " htmlFor="newPassword">
                                                         Enter new password
                                                     </label>
-                                                    <input id="newPassword" className="px-3 profile-control focus:outline-none w-full"
+                                                    <input id="newPassword" value={newPassword} onChange={(e) => setnewPassword(e.target.value)} className="px-3 profile-control focus:outline-none w-full"
                                                         type="password" placeholder="*******" />
                                                 </div>
 
@@ -440,14 +500,25 @@ const Profile = () => {
                                                     <label className="block pb-1 font-10 font-medium sec-black " htmlFor="confirm">
                                                         Confirm new password
                                                     </label>
-                                                    <input id="confirm" className="px-3 profile-control focus:outline-none w-full"
+                                                    <input id="confirm" value={confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)} className="px-3 profile-control focus:outline-none w-full"
                                                         type="password" placeholder="*******" />
                                                 </div>
 
                                                 <div className="col-span-6 place-self-center mt-3">
                                                     <button
+                                                        type="button"
+                                                        onClick={updatePassword}
                                                         className="primary-btn text-white font-10 font-semibold focus:outline-none px-4 py-1.5">
-                                                        SAVE PASSWORD
+                                                        {isLoading ? (
+                                                            <ClipLoader
+                                                                color="#fff"
+                                                                size={20}
+                                                                loading
+                                                            />
+                                                        ) : (
+                                                            "SAVE PASSWORD"
+                                                        )}
+                                                        
                                                     </button>
                                                 </div>
                                             </div>

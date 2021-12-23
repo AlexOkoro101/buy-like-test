@@ -1791,7 +1791,7 @@ const retrieveCountry = () => {
                                                                                     onFocus={(e) => setstripeFocus(e.target.name)}
                                                                                 />
                                                                             </div>
-                                                                            <div className="flex gap-x-2">
+                                                                            <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
                                                                                 <div>
                                                                                     <input
                                                                                         className="outline-none p-2 border border-gray-200 w-full text-xs"
@@ -1814,7 +1814,7 @@ const retrieveCountry = () => {
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div className="flex gap-x-2">
+                                                                            <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
                                                                                 <div>
                                                                                     <input
                                                                                         className="outline-none p-2 border border-gray-200 w-full text-xs"
@@ -1837,7 +1837,7 @@ const retrieveCountry = () => {
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div className="flex gap-x-2">
+                                                                            <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
                                                                                 <div>
                                                                                     <input
                                                                                         className="outline-none p-2 border border-gray-200 w-full text-xs"
@@ -1859,7 +1859,7 @@ const retrieveCountry = () => {
                                                                                     />
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="flex gap-x-2">
+                                                                            <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
                                                                                 <div>
                                                                                     <input
                                                                                         className="outline-none p-2 border border-gray-200 w-full text-xs"
@@ -1881,7 +1881,7 @@ const retrieveCountry = () => {
                                                                                     />
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="flex gap-x-2">
+                                                                            <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
                                                                                 <div>
                                                                                     <input
                                                                                         className="outline-none p-2 border border-gray-200 w-full text-xs"
