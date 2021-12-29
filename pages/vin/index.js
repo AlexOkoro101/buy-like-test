@@ -1412,10 +1412,42 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 options={FuelType}
                                             />
                                         </div>
-                                        {/* <div className="tab border-bt py-4 ">
-                                        <div className="font-semibold text-xs w-full self-center	">
-                                                        Pickup Location
+                                        <div className="tab border-bt py-4 ">
+                                         <Collapsible
+                                                overflowWhenOpen="visible"
+                                                contentOuterClassName="px-4"
+                                                trigger={
+                                                    <div className="font-semibold flex justify-between text-xs w-full self-center">
+                                                        <span
+                                                            style={{
+                                                                color: "#515151",
+                                                            }}
+                                                        >
+                                                            Pickup Location
+                                                        </span>{" "}
+                                                        <span className="font-bold ">
+                                                            <svg
+                                                                width="24"
+                                                                height="24"
+                                                                style={{
+                                                                    marginRight:
+                                                                        "-6px",
+                                                                }}
+                                                                viewBox="0 0 24 24"
+                                                                focusable="false"
+                                                                role="presentation"
+                                                            >
+                                                                <path
+                                                                    d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z"
+                                                                    fill="currentColor"
+                                                                    fillRule="evenodd"
+                                                                ></path>
+                                                            </svg>
+                                                        </span>
                                                     </div>
+                                                }
+                                            >
+                                
                                             <input
                                                 className="primary-black font-semibold font-11  border border-black"
                                                 ref={inputEl.current[11]}
@@ -1448,7 +1480,8 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 }}
                                                 
                                             />
-                                        </div> */}
+                                            </Collapsible>
+                                        </div>
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
@@ -1521,7 +1554,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 options={InteriorColour}
                                             />
                                         </div>
-                                        <div className="tab border-bt py-4 ">
+                                        {/* <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
                                                 styles={customStyles}
@@ -1556,7 +1589,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 }}
                                                 options={InteriorType}
                                             />
-                                        </div>
+                                        </div> */}
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black  font-semibold font-11  "
@@ -1906,7 +1939,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     type="button"
                                     className={
                                         active === "bid"
-                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5"
+                                            ? "primary-btn focus:outline-none text-white font-10 font-semibold px-3.5 py-1.5 "
                                             : "focus:outline-none primary-black text-black font-10  px-3.5 py-1.5"
                                     }
                                     value="bid"
@@ -1919,7 +1952,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                             {/* <!-- Second section here --> */}
                             <div className="hidden lg:block w-1/3">
                                 <Select
-                                    className=" px-3 w-full cursor-pointer focus:outline-none "
+                                    className=" px-3 w-full cursor-pointer focus:outline-none"
                                     type="text"
                                     placeholder={`VIN to search ${dollarFormatter.format(
                                         cars.total

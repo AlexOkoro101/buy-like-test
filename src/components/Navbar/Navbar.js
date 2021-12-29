@@ -256,6 +256,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
             ...provided,
             height: "30px",
             margin: 0,
+            fontSize:""
         }),
         singleValue: (provided, state) => {
             const opacity = state.isDisabled ? 0.5 : 1;
@@ -336,9 +337,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     )}
                 </div>
                 {home && (
-                    <div className="md:block hidden h-6 relative">
+                    <div className="md:block hidden h-6 relative ">
                         <Select
-                            className="w-72 h-full cursor-pointer focus:outline-none"
+                            className="w-72 h-full cursor-pointer  focus:outline-none"
                             placeholder={`VIN to search ${totalCount} cars`}
                             type="text"
                             isClearable
@@ -346,6 +347,9 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                             onInputChange={handleInputChange}
                             options={options}
                             arrowRenderer={renderSearchIcon}
+                        
+                            
+                            
                         />
                         <button
                             onClick={() => {
@@ -354,7 +358,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                                     : router.push("/vin");
                             }}
                             type="button"
-                            className="absolute right-0 h-full  rounded-r focus:outline-none  flex items-center justify-center text-white"
+                            className="absolute right-0 h-full rounded-r focus:outline-none  flex items-center justify-center text-white"
                             style={{
                                 backgroundColor: "#d80739",
                                 width: 40,
