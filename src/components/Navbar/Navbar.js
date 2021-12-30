@@ -254,7 +254,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         }),
         input: (provided, state) => ({
             ...provided,
-            height: "",
+            height: "30px",
             margin: 0,
         }),
         singleValue: (provided, state) => {
@@ -294,14 +294,14 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={<div className="text-4xs" style={{fontSize:"8px"}}>VIN to search {totalCount} cars</div>}
+                                placeholder={<div style={{fontSize:"8px"}}>VIN to search {totalCount} cars</div>}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
                                 onInputChange={handleInputChange}
                                 options={options}
                                 arrowRenderer={renderSearchIcon}
-                                // styles={customStyles}
+                                styles={customStyles}
                             />
                             <button
                                 onClick={() => {
@@ -336,16 +336,17 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     )}
                 </div>
                 {home && (
-                    <div className="md:block hidden h-6 relative">
+                    <div className="md:block hidden h-6 relative" style={{height:"26px"}}>
                         <Select
                             className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={<div className="" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
+                            placeholder={<div className="m-0 p-0" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
                             onInputChange={handleInputChange}
                             options={options}
                             arrowRenderer={renderSearchIcon}
+                            style={{height:"26px"}}
                         
                         />
                         <button
@@ -380,7 +381,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     </div>
                 )}
                 <input
-                    className="menu-btn hidden"
+                    className="menu-btn hidden h-6"
                     type="checkbox"
                     id="menu-btn"
                 />
