@@ -254,7 +254,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         }),
         input: (provided, state) => ({
             ...provided,
-            height: "30px",
+            height: "",
             margin: 0,
         }),
         singleValue: (provided, state) => {
@@ -290,7 +290,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     {search && (
                         <div
                             className="block md:hidden relative"
-                            // style={{ height: "30px" }}
+                            style={{ height: "30px" }}
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
@@ -359,7 +359,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                             style={{
                                 backgroundColor: "#d80739",
                                 width: 40,
-                                top: 0,
+                                top: 1,
                             }}
                         >
                             <svg
