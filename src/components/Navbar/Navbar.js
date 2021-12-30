@@ -290,7 +290,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     {search && (
                         <div
                             className="block md:hidden relative"
-                            style={{ height: "30px" }}
+                            // style={{ height: "30px" }}
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
@@ -338,8 +338,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                 {home && (
                     <div className="md:block hidden h-6 relative">
                         <Select
-                            className="w-72 h-6 cursor-pointer focus:outline-none"
-                            placeholder={<div className="text-4xs" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
+                            className="w-72 cursor-pointer focus:outline-none"
+                            placeholder={<div className="" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
@@ -359,7 +359,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                             style={{
                                 backgroundColor: "#d80739",
                                 width: 40,
-                                top: 1,
+                                top: 0,
                             }}
                         >
                             <svg
