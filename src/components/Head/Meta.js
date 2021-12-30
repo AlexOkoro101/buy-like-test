@@ -7,6 +7,7 @@ import Head from "next/head";
 
 
 const Meta = ({ title, keywords, description,image }) => {
+    // console.log("meta image", description)
     return (
         <Head>
             <link rel="icon" href="/fav.svg" />

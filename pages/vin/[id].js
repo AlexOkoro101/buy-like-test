@@ -1450,8 +1450,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <button>
                                         <Link
                                             href={
-                                                "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com" + 
-                                                router.pathname
+                                                "https://twitter.com/intent/tweet?url=https%3A%2F%2Fbuylikedealers.com/vin/" + 
+                                                cardD?.VIN
                                             }
                                         >
                                             <img
@@ -1463,8 +1463,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                     <button>
                                         <a
                                             href={
-                                                "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com" +
-                                                router.pathname
+                                                "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbuylikedealers.com/vin/" +
+                                                cardD?.VIN
                                             }
                                             target="_blank"
                                         >
@@ -1478,7 +1478,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         <a
                                             href={`https://api.whatsapp.com/send?text=check%20out%20this%20car%20%20${encodeURIComponent(
                                                 cardD?.vehicleName
-                                            )}%20%20www.buylikedealers.com/vin/${
+                                            )}%20%20https://www.buylikedealers.com/vin/${
                                                 cardD?.VIN
                                             }`}
                                             data-action="share/whatsapp/share"
@@ -1867,9 +1867,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
                                                                 </select> */}
-                                                                <Select options={options} value={carDestination} 
-                                                                // id="buynow-destination"
-                                                                inputId="buynow-destination"
+                                                                <Select options={options} value={carDestination}                                                                 
                                                                 onChange={(e) => {
                                                                 console.log(e.label)
                                                                 setcarDestination(e)

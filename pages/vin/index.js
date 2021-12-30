@@ -1975,7 +1975,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     value={sortValue}
                                     onChange={(e) => setSortValue(e)}
                                     options={sortOptions}
-                                    styles={customStyles2}
+                                    // styles={customStyles2}
                                 />
                             </div>
                             {/* <!-- Third section here --> */}
