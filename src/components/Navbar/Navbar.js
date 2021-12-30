@@ -290,18 +290,18 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     {search && (
                         <div
                             className="block md:hidden relative"
-                            // style={{ height: "30px" }}
+                            style={{ height: "30px" }}
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={<div className="text-2xs">VIN to search {totalCount} cars</div>}
+                                placeholder={`VIN to search ${totalCount} cars`}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
                                 onInputChange={handleInputChange}
                                 options={options}
                                 arrowRenderer={renderSearchIcon}
-                                // styles={customStyles}
+                                styles={customStyles}
                             />
                             <button
                                 onClick={() => {
@@ -336,16 +336,16 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     )}
                 </div>
                 {home && (
-                    <div className="md:block hidden h-6 relative ">
+                    <div className="md:block hidden h-6 relative">
                         <Select
-                            className="w-72 h-full cursor-pointer  focus:outline-none"
-                            placeholder={<div className="text-2xs ">VIN to search {totalCount} cars</div>}
+                            className="w-72 h-full cursor-pointer focus:outline-none"
+                            placeholder={<div className="text-4xs" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
                             onInputChange={handleInputChange}
                             options={options}
-                            arrowRenderer={renderSearchIcon}      
+                            arrowRenderer={renderSearchIcon}
                         />
                         <button
                             onClick={() => {
@@ -354,7 +354,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                                     : router.push("/vin");
                             }}
                             type="button"
-                            className="absolute right-0 h-full rounded-r focus:outline-none  flex items-center justify-center text-white"
+                            className="absolute right-0 h-full  rounded-r focus:outline-none  flex items-center justify-center text-white"
                             style={{
                                 backgroundColor: "#d80739",
                                 width: 40,
