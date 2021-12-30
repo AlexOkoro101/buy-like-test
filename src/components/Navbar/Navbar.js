@@ -338,7 +338,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                 {home && (
                     <div className="md:block hidden h-6 relative">
                         <Select
-                            className="w-72 cursor-pointer focus:outline-none"
+                            className="w-72 h-6 cursor-pointer focus:outline-none"
                             placeholder={<div className="text-4xs" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
