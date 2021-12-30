@@ -301,7 +301,17 @@ input.detail:checked~span:after {
     align-content: center !important;
     border-color: rgba(13, 16, 27, 0.25) !important;
     box-shadow: none !important;
-    font-size: 0.75rem !important;
+    font-size: 0.65rem !important;
+    border-radius: 3px !important;
+}
+
+.css-1s2u09g-control {
+    min-height: 26px !important;
+    height: 26px !important;
+    align-content: center !important;
+    border-color: rgba(13, 16, 27, 0.25) !important;
+    box-shadow: none !important;
+    font-size: 0.65rem !important;
     border-radius: 3px !important;
 }
 

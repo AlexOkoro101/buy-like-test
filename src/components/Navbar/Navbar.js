@@ -336,17 +336,17 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     )}
                 </div>
                 {home && (
-                    <div className="md:block hidden h-6 relative" style={{height:"26px"}}>
+                    <div className="md:block hidden relative" style={{height:"26px"}}>
                         <Select
-                            className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={<div className="m-0 p-0" style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
+                            className="w-72 cursor-pointer focus:outline-none"
+                            placeholder={<div  style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
                             onInputChange={handleInputChange}
                             options={options}
                             arrowRenderer={renderSearchIcon}
-                            style={{height:"26px"}}
+                            
                         
                         />
                         <button
@@ -381,7 +381,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     </div>
                 )}
                 <input
-                    className="menu-btn hidden h-6"
+                    className="menu-btn hidden "
                     type="checkbox"
                     id="menu-btn"
                 />
