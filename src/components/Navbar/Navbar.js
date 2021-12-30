@@ -256,7 +256,6 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
             ...provided,
             height: "30px",
             margin: 0,
-            fontSize:""
         }),
         singleValue: (provided, state) => {
             const opacity = state.isDisabled ? 0.5 : 1;
@@ -291,18 +290,18 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     {search && (
                         <div
                             className="block md:hidden relative"
-                            style={{ height: "30px" }}
+                            // style={{ height: "30px" }}
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={`VIN to search ${totalCount} cars`}
+                                placeholder={<div className="text-2xs">VIN to search {totalCount} cars</div>}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
                                 onInputChange={handleInputChange}
                                 options={options}
                                 arrowRenderer={renderSearchIcon}
-                                styles={customStyles}
+                                // styles={customStyles}
                             />
                             <button
                                 onClick={() => {
@@ -340,16 +339,13 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     <div className="md:block hidden h-6 relative ">
                         <Select
                             className="w-72 h-full cursor-pointer  focus:outline-none"
-                            placeholder={`VIN to search ${totalCount} cars`}
+                            placeholder={<div className="text-2xs ">VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
                             onInputChange={handleInputChange}
                             options={options}
-                            arrowRenderer={renderSearchIcon}
-                        
-                            
-                            
+                            arrowRenderer={renderSearchIcon}      
                         />
                         <button
                             onClick={() => {
