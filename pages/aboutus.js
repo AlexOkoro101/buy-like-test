@@ -2,11 +2,11 @@ import React from "react";
 
 const About = () => {
   return (
-    <div style={{ marginTop: "67px" }} className="py-20 px-40 bg-white">
+    <div style={{ marginTop: "67px" }} className=" p-10 lg:py-20 lg:px-40 bg-white">
       <div className="text-md">
-        <div className="flex justify-between">
-        <div className="w-3/6 ">
-          <h1 className="text-9xl " style={{ color: "#D80739" }}>
+        <div className=" lg:flex lg:justify-between">
+        <div className="lg:w-3/6 ">
+          <h1 className=" text-5xl md:text-7xl lg:text-7xl xl:text-7xl mb-2" style={{ color: "#D80739" }}>
             About Us
           </h1>
           <div className="py-1">
@@ -20,7 +20,7 @@ const About = () => {
             accident cars.
           </div>
         </div>
-        <div className="relative w-2/5  text-center px-20">
+        <div className=" hidden lg:block relative lg:w-2/5 text-center px-20">
           <div
             className=" rounded-full bg-red-500"
             style={{
@@ -30,7 +30,7 @@ const About = () => {
             }}
           >
             <div
-              className="absolute top-14 "
+              className="absolute top-24 xl:top-14 "
               // style={{ width: "460px", height: "460px" }}
             >
               {" "}

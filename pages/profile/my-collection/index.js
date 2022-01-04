@@ -220,6 +220,8 @@ const MyCollection = ({
                     //  console.log(data.data)
                     if (Object.entries(data).length >= 1) {
                         const formatCollection = JSON.parse(data);
+                        console.log(formatCollection.data)
+
                         setcarCollection(formatCollection.data);
                     }
                 }
@@ -360,7 +362,7 @@ const MyCollection = ({
                                     <div
                                         key={collection?._id}
                                     >
-                                        <div className="border-gray-100 border mb-3 lg:px-20 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
+                                        <div className="border-gray-100 border mb-3 lg:px-5 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                                             <>
                                                 <Link
                                                     href={
@@ -368,14 +370,27 @@ const MyCollection = ({
                                                         collection?._id
                                                     }
                                                 >
-                                                    <div className="flex flex-1 flex-col">
+                                                    <div className="flex w-full">
+                                                        <div className="mx-2 w-2/6 xl:w-1/5">
+                                                        <img
+                                                                        key={
+                                                                            collection?.image_id
+                                                                        }
+                                                                        src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
+                                                                        alt="car"
+                                                                        className="img-fluid rounded text-center w-full h-full"
+                                                                      
+                                                                    />
+                                                        </div>
+                                                        <div className="w-4/5 flex flex-col">
+                                                        <div  className="flex  w-full justify-between">
                                                         <div className="mb-5">
-                                                            <h4 className="text-sm font-medium blue-text uppercase">
+                                                            <h4 className="text-sm font-medium blue-text uppercase mb-2 ">
                                                                 {
                                                                     collection?.name
                                                                 }
                                                             </h4>
-                                                            <h6 className="text-xs font-normal blue-text">
+                                                            <h6 className="text-sm font-normal blue-text">
                                                                 {
                                                                     collection
                                                                         ?.vehicles
@@ -383,33 +398,19 @@ const MyCollection = ({
                                                                 }{" "}
                                                                 cars selected
                                                             </h6>
+                                                            
                                                         </div>
-                                                        <div className="flex flex-wrap py-2">
-                                                            {collection?.vehicles?.map(
-                                                                (vehicle) => (
-                                                                    <img
-                                                                        key={
-                                                                            vehicle?.image_id
-                                                                        }
-                                                                        src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
-                                                                        alt="car"
-                                                                        className="tiny-car-card mb-2"
-                                                                    />
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                                <div>
+                                                        <div className="flex flex-col mx-auxo items-end  text-right">
+                                                        <div>
                                                     {collection?.done ===
                                                     true ? (
                                                         <div className="flex flex-col mx-auxo items-end">
-                                                            {/* <h4 className="text-base font-normal gray-text">
+                                                            <h4 className="text-base font-normal light-gray-text">
                                                             $15,000 - $30,500
                                                         </h4>
                                                         <h6 className="text-xs font-normal light-gray-text">
                                                             $1000 deposit paid
-                                                        </h6> */}
+                                                        </h6>
                                                         </div>
                                                     ) : (
                                                         <button
@@ -424,6 +425,34 @@ const MyCollection = ({
                                                         </button>
                                                     )}
                                                 </div>
+                                                        
+                                                        </div>
+                                                     
+                                                        </div>
+                                                        <div className="w-full flex justify-between items-bottom mt-20 py-2" style={{borderTop:"2px solid gray"}}>
+                                                               <div className="flex flex-wrap py-2">
+                                                            {collection?.vehicles?.map(
+                                                                (vehicle) => (
+                                                                    <img
+                                                                        key={
+                                                                            vehicle?.image_id
+                                                                        }
+                                                                        src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
+                                                                        alt="car"
+                                                                        className="tiny-car-card mb-2"
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </div>
+                                                        <div className="flex cursor-pointer group">
+                                                        <h6 className="text-xs text-blue-400 my-2 font-bold">Manage this collection</h6>
+                                                        </div>
+
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                             
                                             </>
                                         </div>
                                     </div>

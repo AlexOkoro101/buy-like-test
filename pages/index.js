@@ -1111,7 +1111,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                             </ul>
                         </div>
                         {/* <!--    Questions here --> */}
-                        <div className="w-full lg:w-1/3 mb-5">
+                        {/* <div className="w-full lg:w-1/3 mb-5">
                             <h4 className="faq-header pb-3">
                                 Bids and Deposits{" "}
                             </h4>
@@ -1134,10 +1134,10 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     <a href="#"> See all questions</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
 
                         {/* <!--    Questions here --> */}
-                        <div className=" w-full lg:w-1/3 mb-5">
+                        {/* <div className=" w-full lg:w-1/3 mb-5">
                             <h4 className="faq-header pb-3">
                                 Bids and Deposits{" "}
                             </h4>
@@ -1160,7 +1160,7 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
                                     <a href="#"> See all questions</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
                     </div>
                 </section>
             </main>

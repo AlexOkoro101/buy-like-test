@@ -294,7 +294,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                         >
                             <Select
                                 className="w-60 ml-2 cursor-pointer focus:outline-none"
-                                placeholder={`VIN to search ${totalCount} cars`}
+                                placeholder={<div style={{fontSize:"8px"}}>VIN to search {totalCount} cars</div>}
                                 type="text"
                                 isClearable
                                 onChange={handleChange}
@@ -336,16 +336,18 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     )}
                 </div>
                 {home && (
-                    <div className="md:block hidden h-6 relative">
+                    <div className="md:block hidden relative" style={{height:"26px"}}>
                         <Select
-                            className="w-72 h-full cursor-pointer focus:outline-none"
-                            placeholder={`VIN to search ${totalCount} cars`}
+                            className="w-72 cursor-pointer focus:outline-none"
+                            placeholder={<div  style={{fontSize:"9px"}}>VIN to search {totalCount} cars</div>}
                             type="text"
                             isClearable
                             onChange={handleChange}
                             onInputChange={handleInputChange}
                             options={options}
                             arrowRenderer={renderSearchIcon}
+                            
+                        
                         />
                         <button
                             onClick={() => {
@@ -379,7 +381,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                     </div>
                 )}
                 <input
-                    className="menu-btn hidden"
+                    className="menu-btn hidden "
                     type="checkbox"
                     id="menu-btn"
                 />
