@@ -279,8 +279,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 {!isLoading ? (
                                     <>
                                         {carCollection
-                                            ?.slice(0, 5)
-                                            .map((collection) => (
+                                            ?.map((collection) => (
                                                 <div
                                                     key={collection?._id}
                                                     className="px-20 py-3 flex justify-between items-center"
