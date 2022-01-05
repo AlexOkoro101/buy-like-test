@@ -208,6 +208,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
             });
     };
 
+    console.log(carCollection)
     return (
         <>
             {id && (
@@ -230,10 +231,10 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                         </h6>
                                     </div>
                                     <div className="flex py-2 ml-3">
-                                        {carCollection[0]?.images?.map(
-                                            (image) => (
+                                        {carCollection[0]?.vehicles?.map(
+                                            (vehicle) => (
                                                 <img
-                                                    src={`https://proxybuylike.herokuapp.com/?url=${image.image_smallUrl}`}
+                                                    src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
                                                     alt={"car"}
                                                     className="tiny-car-card"
                                                 />
@@ -279,8 +280,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 {!isLoading ? (
                                     <>
                                         {carCollection
-                                            ?.slice(0, 5)
-                                            .map((collection) => (
+                                            ?.map((collection) => (
                                                 <div
                                                     key={collection?._id}
                                                     className="px-20 py-3 flex justify-between items-center"
