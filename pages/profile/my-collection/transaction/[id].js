@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import Select from "react-select";
-import { enviroment } from "../../../../../buylike-pro/src/components/enviroment";
+import { enviroment } from "../../../../src/components/enviroment";
 import { usePaystackPayment } from "react-paystack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
