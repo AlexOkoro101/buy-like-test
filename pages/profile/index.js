@@ -54,6 +54,9 @@ const Profile = () => {
     const [newPassword, setnewPassword] = useState("")
     const [confirmPassword, setconfirmPassword] = useState("")
 
+    //Picture
+    const [profilePicture, setprofilePicture] = useState("")
+
     useEffect(() => {
         getUserID()
         return () => {
@@ -234,6 +237,11 @@ const Profile = () => {
         .catch(error => console.log('error', error));
     }
 
+    const getDP = () => {
+        const input = document.getElementById('profile-picture')
+        input.click()
+    }
+
     return ( 
         <div>
             <ToastContainer />
@@ -244,7 +252,11 @@ const Profile = () => {
                         className="mx-auto overflow-hidden lg:border md:shadow-md md:rounded-md md:flex  lg:mt-5 container-main bg-white">
                         {/* <!-- sidebar --> */}
                         <aside className="hidden md:grid  profile-sidebar lg:grid auto-rows-min justify-items-center">
-                            <span className="inline-block relative mt-20">
+                            <span className="inline-block relative mt-20 cursor-pointer" onClick={getDP}>
+                                <input type="file" id="profile-picture" className="hidden" onChange={(e) => {
+                                    setprofilePicture(e.target.files)
+                                    console.log(e.target.files)
+                                    }} />
                                 <img className="h-28" src="./../assets/img/vectors/user.svg" alt="" />
                                 <i className="bg-blue-500 fill-current text-white p-1 rounded-full h-6 absolute top-1 right-2 fa fa-pencil"
                                     aria-hidden="true"></i>
