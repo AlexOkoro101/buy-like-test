@@ -2742,6 +2742,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             <>
                                                 <button
                                                     onClick={
+                                                        
+                                                        // placeBid
                                                         OpenSendSheetModal
                                                     }
                                                     className={
