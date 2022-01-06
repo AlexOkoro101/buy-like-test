@@ -2743,8 +2743,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                 <button
                                                     onClick={
                                                         
-                                                        // placeBid
-                                                        OpenSendSheetModal
+                                                        placeBid
+                                                        // OpenSendSheetModal
                                                     }
                                                     className={
                                                         `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
@@ -2760,7 +2760,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             loading
                                                         />
                                                     ) : (
-                                                        "SUBMIT A REQUEST"
+                                                        "ADD TO COLLECTIONS"
                                                     )}
                                                 </button>
                                                 
