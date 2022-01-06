@@ -1061,7 +1061,7 @@ const Transaction = () => {
 
     var raw = JSON.stringify({
       source: id,
-      amount: `2`,
+      amount: `${collection.vehicles[0].price}`,
     });
 
     var requestOptions = {
@@ -1361,14 +1361,14 @@ const Transaction = () => {
                     </>
                     
 
-                    <tr className="detail-row mb-2 ">
+                    {/* <tr className="detail-row mb-2 ">
                       <td className="sec-black text-sm font-semibold py-1.5 total-border">
                         Amount
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5 total-border">
                         ${collection?.Amount}
                       </td>
-                    </tr>
+                    </tr> */}
                     <tr className="detail-row mb-2 ">
                       
                       <td className="sec-black text-sm font-semibold py-1.5 total-border">

@@ -396,7 +396,7 @@ const MyCollection = ({
                               </div>
                               <div className="flex flex-col mx-auxo items-end  text-right">
                                 <div>
-                                  {collection?.done === true ? (
+                                  {!collection?.done === true ? (
                                     <div className="flex flex-col mx-auxo items-end">
                                       <h6 className="text-xs font-normal light-gray-text">
                                         $1000 deposit paid
