@@ -397,7 +397,9 @@ const Transaction = () => {
             const formatData = JSON.parse(data);
             // setcollection(formatData.data);
             if (formatData.data.status) {
-              frontendPayment(ref, formatData);
+                setTimeout(() => {
+                    frontendPayment(ref, formatData);
+                }, 1000);
             }
           }
         }
