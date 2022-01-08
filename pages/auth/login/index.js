@@ -47,7 +47,7 @@ const LoginOptions = ({ beginLogin }) => {
 
     //Google Auth
     const googleClientId =
-        "134674760557-ond8201e5n9t9f3ri7akevf62ku6uruf.apps.googleusercontent.com";
+        "567677744916-439tbe6ok8mmf823hg4uu75rqs918oj0.apps.googleusercontent.com";
 
     const onGoogleLoginSuccess = (res) => {
         const googleProfile = {
