@@ -281,7 +281,7 @@ const Transaction = () => {
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 100000,
+    amount: /*amount * 100*/ 50000000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
@@ -487,12 +487,13 @@ const Transaction = () => {
       owner: carDetails?.owner,
       vehicle: bnvehicleID,
       bid: bidID,
-      amount: carDetails?.total,
-      amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+      amount: 500000,
+      amountBalance: carDetails?.total ? Number(carDetails?.total) - 500000 : 0,
       reference: ref,
       currency: "",
       metadata: "",
-      balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+      symbol:"NGN",
+      balance: carDetails?.total ? Number(carDetails?.total) - 500000 : 0,
       status: verifiedData.data.status,
       statusTrans: verifiedData.data.data.status,
     });
