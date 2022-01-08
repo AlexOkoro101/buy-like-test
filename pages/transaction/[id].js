@@ -1286,7 +1286,7 @@ const Transaction = () => {
                         Deposit Due
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        {carDetails?.carDestination == 'Nigeria' ? `₦${(carDetails?.total * carDetails?.usd) - 500000}` : `$${carDetails?.total - (500000/carDetails?.usd)}`}
+                        {carDetails?.carDestination == 'Nigeria' ? `₦500000` : (500000/carDetails?.usd)}
                       </td>
                     </tr>
                   </tbody>
