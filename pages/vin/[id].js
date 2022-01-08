@@ -917,7 +917,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         shipping: shipAccessory ? "1150" : 0,
         expiry: now.getTime() + 3600000,
         total: accessories(),
-        carDestination: carDestination?.label
+        carDestination: carDestination?.label,
+        usd: Number(usd)
     });
     const buyNowFunction = () => {
 
