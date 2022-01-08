@@ -1279,6 +1279,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     //
     const [truckAccessory, settruckAccessory] = useState(true);
     const [shipAccessory, setshipAccessory] = useState(true);
+    
 
     const accessories = () => {
         var carPrice = Number(carDetail.buyNowPrice);
@@ -2572,7 +2573,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                                     !placebidShipAccessory
                                                                                 )
                                                                             }
-                                                                            checked={placebidShipAccessory}
+                                                                            checked={carDestination == "United States" ? false : placebidShipAccessory}
                                                                         />
                                                                         <span className="detail"></span>
                                                                     </label>
