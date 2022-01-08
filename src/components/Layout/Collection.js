@@ -243,7 +243,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                     </div>
                                 </div>
                                 <div className="ml-10 flex items-start -mt-4">
-                                    {carCollection?.length > 1 && (
+                                    {carCollection?.length > 0 && (
                                         <img
                                             src={
                                                 !collectionDropdown
@@ -305,17 +305,21 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                             </div>
                                                         </div>
                                                         <div className="flex justify-between">
-                                                            <button
-                                                                className="mx-2 text-sm text-blue-400"
-                                                                onClick={() =>
-                                                                    editCollection(
-                                                                        collection?._id
-                                                                    )
-                                                                }
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
+                                                            
+                                                             <button
+                                                             className="mx-2 text-sm text-blue-400"
+                                                             onClick={() =>
+                                                                 editCollection(
+                                                                     collection?._id
+                                                                 )
+                                                             }
+                                                         >
+                                                             Edit
+                                                         </button>
+                                                    
+                                                            {
+                                                                collection?.done?<></>:
+                                                                <button
                                                                 className="mx-2 text-red-600 text-sm"
                                                                 onClick={() =>
                                                                     deleteCollection(
@@ -325,6 +329,9 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                             >
                                                                 Delete
                                                             </button>
+                                                            }
+                                                           
+                                                           
                                                         </div>
                                                     </>
                                                 </div>
@@ -352,7 +359,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                         Start a new bid
                                     </p>
                                 </Link>
-
+{/* 
                                 <p
                                     onClick={() => {
                                         setcollectionDropdown(false);
@@ -362,7 +369,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 >
                                     {" "}
                                     Add Collection
-                                </p>
+                                </p> */}
                             </div>
                         </div>
                     </div>
