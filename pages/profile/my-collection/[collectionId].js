@@ -84,6 +84,8 @@ const CollectionDetails = () => {
             .catch((error) => console.log("error", error));
     };
 
+    console.log(collection)
+
     return (
         <div>
             <Meta></Meta>
@@ -173,10 +175,10 @@ const CollectionDetails = () => {
                         </div>
 
                         <section className="grid gap-y-4 mx-auto mb-10 mr-20">
-                            {Collection?.data?.vehicles.length <= 0 && (
+                            {collection?.data?.vehicles.length <= 0 ?
                                 <div>No cars to show</div>
-                            )}
-                            {collection?.data?.vehicles?.map((vehicle) => (
+                            :
+                            collection?.data?.vehicles?.map((vehicle) => (
                                 <div
                                     key={vehicle._id}
                                     className="bid-card mt-5 lg:mt-0 mx-2 lg:mx-0 flex-col lg:flex-row flex py-3 px-3"
