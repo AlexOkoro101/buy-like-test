@@ -282,7 +282,7 @@ const Transaction = () => {
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 10000,
+    amount: /*amount * 100*/ 50000000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
@@ -398,7 +398,9 @@ const Transaction = () => {
             const formatData = JSON.parse(data);
             // setcollection(formatData.data);
             if (formatData.data.status) {
-              frontendPayment(ref, formatData);
+                setTimeout(() => {
+                    frontendPayment(ref, formatData);
+                }, 1000);
             }
           }
         }
@@ -488,14 +490,15 @@ console.log(carDetails)
       owner: carDetails?.owner,
       vehicle: bnvehicleID,
       bid: bidID,
-      amount: "1000",
-      amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+      amount: 500000,
+      amountBalance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
       reference: ref,
       symbol:  userCountry==="Nigeria"? "NGN":"USD",
       total: carDetails?.total,
       currency: "",
       metadata: "",
-      balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+      symbol:"NGN",
+      balance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
       status: verifiedData.data.status,
       statusTrans: verifiedData.data.data.status,
     });
@@ -1306,7 +1309,8 @@ console.log(carDetails)
                         Total
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5 total-border">
-                        {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.total): "N"+ dollarFormatter.format(carDetails?.total* naira)}
+                        {carDetails?.carDestination == 'Nigeria' ? `₦${carDetails?.total * carDetails?.usd}` : `$${carDetails?.total}`}
+                        
                       </td>
                     </tr>
 
@@ -1315,7 +1319,7 @@ console.log(carDetails)
                         Deposit Due
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        {!userCountry==="Nigeria"? "$"+1000: "N"+ dollarFormatter.format(1000* naira)}
+                        {carDetails?.carDestination == 'Nigeria' ? `₦500000` : (500000/carDetails?.usd)}
                       </td>
                     </tr>
                   </tbody>
@@ -1766,7 +1770,7 @@ console.log(carDetails)
                             </div>
                           ) : userCountry !== "Nigeria" &&
                             carDetails?.carDestination == "Nigeria" ? (
-                            <div className="flex flex-col gap-y-2">
+                            <div className="flex flex-col gap-y-4">
                               <div className="flex  justify-center items-center">
                                 <button
                                   onClick={() => {
@@ -1788,7 +1792,7 @@ console.log(carDetails)
                                 </button>
                               </div>
 
-                              <div>OR</div>
+                              <div className="items-center">OR</div>
 
                               <div className=" px-2 ">
                                 <div
@@ -2170,32 +2174,6 @@ console.log(carDetails)
                         </form>
                       </div>
                     </div>
-                    {userCountry == "Nigeria" &&
-                      carDetails?.carDestination == "Nigeria" && (
-                        <div className="info-holder text-xs   py-4 pb-5 mb-3 ">
-                          <div className="transfer-payment px-4">
-                            <p className="text-xs font-semibold">
-                              Or make transfer payment using these details
-                            </p>
-                            <table className="mt-2 min-w-full">
-                              <tbody className="">
-                                <tr>
-                                  <th className="text-left ">Bank Name</th>
-                                  <th className="text-left">Account Number</th>
-                                  <th className="text-left">Account Name</th>
-                                  <th className="text-left">REF</th>
-                                </tr>
-                                <tr>
-                                  <td>Name of Bank</td>
-                                  <td>0123456789</td>
-                                  <td>0123456789</td>
-                                  <td>SJTKPOLVAX123</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      )}
                   </div>
                 )}
                 {state === 3 && (
