@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
+import Collection from "../../src/components/Layout/Collection"
 import Collapsible from "react-collapsible";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -94,7 +95,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         location: "",
     });
     const [pageIndex, setPageIndex] = useState(1);
-    const [active, setActive] = useState("all");
+    const [active, setActive] = useState(!localStorage.getItem("ACTIVE")?"all":localStorage.getItem("ACTIVE"));
     const [bodyType, setBodyType]=useState("")
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
@@ -149,6 +150,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 getVehicleModels();
             }
         }
+        console.log(localStorage.getItem("ACTIVE"))
         // fetchPage(pageIndex);
     }, []);
     useEffect(() => {
@@ -1072,13 +1074,23 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
     return (
         <div>
+
             <Meta title="Buylike Dealers search page"  />
-            <main>
+            <Collection></Collection>
+            
+            
+            <main >
+                
+            
                 {/* <!-- Search region here --> */}
+                
                 <div
                     className="flex items-start main h-full m-0  pb-12 pt-16"
                     id="carDeets"
+                   
+
                 >
+                    
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div
@@ -1093,6 +1105,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 buttom: 0,
                             }}
                         >
+                        
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>

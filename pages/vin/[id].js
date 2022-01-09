@@ -21,6 +21,7 @@ import { searchCars } from "../../redux/actions/carsAction";
 import countryList from 'react-select-country-list'
 import { useMemo } from "react";
 import Select from "react-select";
+import Collection from "../../src/components/Layout/Collection";
 
 const Url = "https://buylikepoint.us/json.php/view.php";
 
@@ -138,6 +139,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [imageD, setimageD] = useState([]);
     const [id, setId] = useState(0);
     const [percentage, setPercentage] = useState();
+    const [selectedCollection, setSelectedCollection] = useState([])
     const [days, setdays] = useState(0);
     const [distance, setDistance] = useState(null);
     const [hours, sethours] = useState(0);
@@ -152,6 +154,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     const [error, seterror] = useState(null);
     const [isLoading, setisLoading] = useState(false);
+    const [isPBLoading, setisPBLoading] = useState(false);
     const [message, setmessage] = useState(false);
 
     const [vin, setvin] = useState("");
@@ -355,6 +358,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         getZipLocation();
 
         setbuyNowPrice(carDetail?.buyNowPrice);
+
+        
 
         getSimilarVehicles();
         getRate();
@@ -654,6 +659,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 })
                 .then((data) => {
                     if (data.error === false) {
+                        console.log(data.data.rate)
                         setUsd(data.data.rate);
                     }
                 })
@@ -730,9 +736,15 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
 
     const placeBid = () => {
+        
         async function addCar() {
+
+
             seterror(null);
-            setisLoading(true);
+            setisPBLoading(true);
+           
+            
+
 
             const bidObject = {
                 vin: vin,
@@ -780,7 +792,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 redirect: "follow",
             })
                 .then((response) => {
-                    setisLoading(false);
+                    setisPBLoading(false);
+                    console.log(response)
                     if (!response.ok) {
                         placeBidInfo();
                     } else {
@@ -805,8 +818,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         }
 
         function getCollections() {
-            // console.log("get collection", collection)
-            return collection || [];
+            console.log("get collection", collection)
+            return collection;
         }
 
         function getAvailableCollection() {
@@ -815,16 +828,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
             let filterCollection = null;
 
-            for (let index = 0; index < replaceCollections.length; index++) {
-                const currentCollection = replaceCollections[index];
-                if (currentCollection.vehicles.length < 10) {
-                    filterCollection = currentCollection._id; // console.log(filterCollection)
+            // for (let index = 0; index < replaceCollections.length; index++) {
+            //     const currentCollection = replaceCollections[index];
+            //     if (currentCollection._id=== selectedCollection._id) {
+            //         filterCollection = selectedCollection._id;
+            //          console.log(filterCollection)
 
-                    break;
-                }
-            }
+            //         break;
+            //     }
+            // }
+            // console.log(filterCollection)
 
-            return filterCollection;
+            return JSON.parse(localStorage.getItem("placeBidData"))._id;
         }
 
         async function createCollection() {
@@ -844,7 +859,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 redirect: "follow",
             })
                 .then((response) => {
-                    setisLoading(false);
+                    setisPBLoading(false);
 
                     if (!response.ok) {
                         // toastError()
@@ -864,6 +879,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             return newCollection;
         }
 
+        setSelectedCollection(JSON.parse(localStorage.getItem("placeBidData")))
         addCar();
     };
     const now = new Date();
@@ -899,7 +915,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         Vehicle_location: vehicleLocation,
         images: carImages,
         auctionEndTime: carDetail?.auctionEndTime,
-        trucking: truckingPrice.includes(",") ?  (truckAccessory ? ( Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
+        trucking: truckingPrice?.includes(",") ?  (truckAccessory ? ( Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
         ? Number(truckingPrice?.slice(1).replace(/,/g, '')) / 3
         : Number(truckingPrice?.slice(1).replace(/,/g, '')) > 400 &&
           Number(truckingPrice?.slice(1).replace(/,/g, '')) < 1000
@@ -1094,6 +1110,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 break;
         }
     };
+    // console.log(naira)
 
     function startTimer(e) {
         let { total, hours, minutes, seconds, days } = getTimeRemaining(e);
@@ -1393,6 +1410,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
     return (
         <main>
+        
             {loading && distance === null ? (
                 <div className="flex justify-center items-center w-full h-80">
                     <div className="relative mt-5">
@@ -1421,6 +1439,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                 </div>
             ) : (
                 <div>
+                
                     <Meta
                         title={
                             cardD?.vehicleName +
@@ -1439,11 +1458,13 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 
                         
                     />
+                    <Collection></Collection>
+                    
                     <ToastContainer />
                     {cardD && (
                         <>
-                            <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
-                                <div className="flex gap-x-4 relative">
+                            <div className="pt-10 lg:px-24 px-4 flex items-center justify-end" >
+                                <div className="flex gap-x-4 relative" style={{zIndex:"-3"}}>
                                     <p className="font-medium font-10 sec-black">
                                         Share via
                                     </p>
@@ -1558,7 +1579,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         )}
                                     </div>
                                 </div>
-                                <div className="w-full lg:w-3/5">
+                                <div className="w-full lg:w-3/5" style={{zIndex:"-3"}}>
                                     {cardD.images.length ? (
                                         <>
                                             <div className="w-full relative displayLargeimage">
@@ -2743,8 +2764,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                 <button
                                                     onClick={
                                                         
-                                                        placeBid
-                                                        // OpenSendSheetModal
+                                                       
+                                                        OpenSendSheetModal
                                                     }
                                                     className={
                                                         `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
@@ -2760,7 +2781,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                             loading
                                                         />
                                                     ) : (
-                                                        "ADD TO COLLECTIONS"
+                                                        "SUBMIT REQUEST"
                                                     )}
                                                 </button>
                                                 
@@ -2838,7 +2859,35 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             </button>
 
                                         ) : (
-                                            <></>
+                                            <>
+                                             <button
+                                                type="button"
+                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                onClick={() => {
+                                                    if(token) {
+                                                        localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                        collection?.length<=0?
+                                                        router.push('/profile/my-collection/transaction/' + vin) : 
+                                                        placeBid()
+                                                    } else {
+                                                        router.push('/auth/login')
+                                                    }
+                                                }}
+                                            >
+                                                {isPBLoading ? (
+                                                        <ClipLoader
+                                                            color="#fff"
+                                                            size={20}
+                                                            loading
+                                                        />
+                                                    ) : (
+                                                        "PLACE BID"
+                                                    )}
+                                                
+                                                
+                                            
+                                            </button>
+                                            </>
                                         )}
                                     </div>
                                 </div>
