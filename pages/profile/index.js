@@ -30,6 +30,7 @@ const Profile = () => {
 
   const [userToken, setuserToken] = useState(null);
   const [user, setuser] = useState(null);
+  const [userID, setuserID] = useState(null);
   const [stripeId, setstripeId] = useState(null);
   const [userCards, setuserCards] = useState(null);
 
@@ -52,7 +53,8 @@ const Profile = () => {
   const [confirmPassword, setconfirmPassword] = useState("");
 
   //Picture
-  const [profilePicture, setprofilePicture] = useState("");
+  const [changeDPModal, setchangeDPModal] = useState(false)
+  const [profilePicture, setprofilePicture] = useState(null);
 
   useEffect(() => {
     getUserID();
@@ -66,6 +68,7 @@ const Profile = () => {
     if (user) {
       const item = JSON.parse(user);
       fetchUserData(item);
+      setuserID(item?.userId)
       setuserToken(item.userToken);
       if (item?.stripeId) {
         setstripeId(item?.stripeId);
@@ -237,16 +240,31 @@ const Profile = () => {
       .catch((error) => console.log("error", error));
   };
 
-  // const getDP = () => {
-  //   const input = document.getElementById("profile-picture");
-  //   input.click();
-  // };
+  const getDP = () => {
+    setchangeDPModal(true)
+  };
 
-  const changeDP = (data) => {
-    console.log(data);
-    // const formdata = new FormData();
+  const changeDP = () => {
+    setisLoading(true)
 
-    // formdata.append('name', data[0])
+    const formData = new FormData();
+    formData.append("user", userID);
+    formData.append("file", profilePicture);
+
+    var requestOptions = {
+      method: 'POST',
+      redirect: 'follow',
+      mode: 'no-cors',
+      body: formData
+    };
+    
+    fetch(enviroment.BASE_URL + "auth/user/upload", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        console.log(result)
+        setisLoading(false)
+      })
+      .catch(error => console.log('error', error));
   };
 
   return (
@@ -260,15 +278,8 @@ const Profile = () => {
             <aside className="hidden md:grid  profile-sidebar lg:grid auto-rows-min justify-items-center">
               <span
                 className="inline-block relative mt-20 cursor-pointer"
-                
+                onClick={getDP}
               >
-                <input
-                  type="file"
-                  id="profile-picture"
-                  className="opacity-0 w-full h-full absolute"
-                  name="profile-picture"
-                  onChange={(e) => console.log(e)}
-                />
                 <img
                   className="h-28"
                   src="./../assets/img/vectors/user.svg"
@@ -850,7 +861,7 @@ const Profile = () => {
                   {isLoading ? (
                     <ClipLoader color="#fff" size={20} loading />
                   ) : (
-                    <>" ADD CARD"</>
+                    <> ADD CARD</>
                   )}
                 </button>
               </div>
@@ -859,6 +870,59 @@ const Profile = () => {
         </div>
       )}
       {/* <!-- end of modal --> */}
+
+         {/* <!-- DP Modal --> */}
+         {changeDPModal && (
+        <div id="myModal" className="modal">
+          {/* <!-- Modal content --> */}
+          <div className="modal-content bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+            <span
+              onClick={() => {
+                setchangeDPModal(false);
+              }}
+              className="close absolute right-5 top-1 text-4xl text-gray-500"
+            >
+              &times;
+            </span>
+            {/* <!-- <i className="absolute right-0 fa fa-times" aria-hidden="true"></i> --> */}
+            <form className="font-11 grid grid-cols-6 gap-2 mx-6 py-10 md:mx-0 md:py-0">
+              <div className="col-span-6 mb-2">
+                <label
+                  className="block pb-1.5 font-10 primary-black"
+                  htmlFor="dp"
+                >
+                  {" "}
+                  Profile Picture{" "}
+                </label>
+                <input
+                  onChange={(e) => console.log(e.target.value)}
+                  id="dp"
+                  className="focus:outline-none p-2 w-full border border-gray-500 rounded"
+                  type="file"
+                  onChange={(e) => setprofilePicture(e.target.files[0])}
+                />
+              </div>
+              <div className="col-span-6  "></div>
+
+              
+              <div className="col-span-6 place-self-center mt-4">
+                <button
+                  type="button"
+                  onClick={changeDP}
+                  className="focus:outline-none primary-btn font-10 font-semibold text-white py-1.5 px-8"
+                >
+                  {isLoading ? (
+                    <ClipLoader color="#fff" size={20} loading />
+                  ) : (
+                    <>ADD PICTURE</>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* <!-- end of DP modal --> */}
     </div>
   );
 };
