@@ -878,7 +878,7 @@ const Profile = () => {
           <div className="modal-content bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
             <span
               onClick={() => {
-                setshowModal(false);
+                setchangeDPModal(false);
               }}
               className="close absolute right-5 top-1 text-4xl text-gray-500"
             >
