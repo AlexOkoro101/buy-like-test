@@ -1987,7 +1987,7 @@ const stripePayment = (ref, verifiedData) => {
                               >
                                 Pay with
                                 <img
-                                  src="../../../../public/assets/img/paystack-logo.png"
+                                  src="/assets/img/paystack-logo.png"
                                   className="ml-2"
                                   alt="Paystack"
                                 />
@@ -2010,7 +2010,7 @@ const stripePayment = (ref, verifiedData) => {
                                 >
                                   Pay with
                                   <img
-                                    src="../../../../public/assets/img/paystack-logo.png"
+                                    src="assets/img/paystack-logo.png"
                                     className="ml-2"
                                     alt="Paystack"
                                   />
@@ -2430,7 +2430,7 @@ const stripePayment = (ref, verifiedData) => {
                 {state === 3 && (
                   <div className="confirm-holder tabcontent " id="confirmation">
                     <div className="flex justify-center mt-16">
-                      <img src="../../../../public/assets/img/vectors/check.svg" />
+                      <img src="/assets/img/vectors/check.svg" />
                     </div>
 
                     <div className="text-center mt-8">

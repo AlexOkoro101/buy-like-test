@@ -2871,7 +2871,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                 onClick={() => {
                                                     if(token) {
                                                         localStorage.setItem("buyNowData", JSON.stringify(bidData()));
-                                                        collection?.length<=0?
+                                                        !collection?.length<=0?
                                                         router.push('/profile/my-collection/transaction/' + vin) : 
                                                         placeBid()
                                                     } else {

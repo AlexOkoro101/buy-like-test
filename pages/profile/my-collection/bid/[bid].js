@@ -56,7 +56,7 @@ const BidDetails = () => {
         console.log(proccessBodyHeight)
 
         const processCircle = document.querySelector('.process-circle')
-        processCircle.style.setProperty('--height', `${proccessBodyHeight}px`)
+        processCircle?.style.setProperty('--height', `${proccessBodyHeight}px`)
 
     }
 
@@ -126,6 +126,8 @@ const BidDetails = () => {
             })
             .catch((error) => console.log("error", error));
     }, []);
+
+    
 
     useEffect(() => {
         displaySmall();
