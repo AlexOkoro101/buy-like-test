@@ -34,6 +34,7 @@ const BidDetails = () => {
 
     
     const [bidCollection, setbidCollection] = useState(null);
+    
 
     const [isLoading, setisLoading] = useState(true);
     const [error, seterror] = useState(null);
@@ -56,7 +57,7 @@ const BidDetails = () => {
         console.log(proccessBodyHeight)
 
         const processCircle = document.querySelector('.process-circle')
-        processCircle.style.setProperty('--height', `${proccessBodyHeight}px`)
+        processCircle?.style.setProperty('--height', `${proccessBodyHeight}px`)
 
     }
 
@@ -222,6 +223,33 @@ const BidDetails = () => {
         <div>
             <Meta></Meta>
             <ToastContainer />
+            {isLoading? 
+            <div className="flex justify-center items-center w-full h-80">
+            <div className="relative mt-5">
+                <img src="/img/Tag.png" alt="loader" />
+                <img
+                    className="absolute top-3.5 right-10 ease-in-out animate-pulse
+                    delay-1000"
+                    src="/img/Car.png"
+                    alt="loader"
+                />
+                <h1 className="mt-5 text-lg font-semibold">
+                    Loading
+                    <span className=" ">
+                        <span className="ml-2 ease-in-out tracking-widest delay-300	text-2xl animate-pulse ">
+                            .
+                        </span>
+                        <span className="ml-2 ease-in-out tracking-widest delay-700 text-2xl	 animate-pulse ">
+                            .
+                        </span>
+                        <span className="ml-2 ease-in-out tracking-widest text-2xl delay-100	 animate-pulse ">
+                            .
+                        </span>
+                    </span>
+                </h1>
+            </div>
+        </div>:<></>
+            }
             {bidCollection && (
                 <>
                
