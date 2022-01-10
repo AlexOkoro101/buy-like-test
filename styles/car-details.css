@@ -315,6 +315,10 @@ input.detail:checked~span:after {
     border-radius: 3px !important;
 }
 
+.placebid-destination .css-1pahdxg-control, .placebid-destination .css-1s2u09g-control {
+    border: none !important;
+}
+
 .css-1pahdxg-control .css-1wa3eu0-placeholder {
     top: 50% !important;
 

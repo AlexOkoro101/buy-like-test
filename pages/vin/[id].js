@@ -184,7 +184,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     const [deliveryDuration, setdeliveryDuration] = useState(36288e5);
     const [NGN, setNGN] = useState(true);
     const dollarPrice = Number(totalAmount) / parseInt(usd);
-    const [maxBidAmount, setmaxBidAmount] = useState("");
+    const [maxBidAmount, setmaxBidAmount] = useState(`${carDetail.mmrPrice}`);
     const [sendSheetModal, setsendSheetModal] = useState(false);
     const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState("");
     const [sendSheetEmail, setsendSheetEmail] = useState("");
@@ -245,9 +245,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             if(userIp === "NG") {
                 setcarDestination(options[161])
                 setSelectedCountryCurrency("NG")
+        
             } else {
                 setcarDestination(options[236])
                 setSelectedCountryCurrency("US")
+                // setplacebidShipAccessory(false)
                 setNGN(false)
             }
         }
@@ -2291,12 +2293,13 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
                                                                 </select> */}
-                                                                <Select options={options} value={carDestination} 
+                                                                <Select options={options} value={carDestination}
+                                                                className="placebid-destination" 
                                                                 onChange={(e) => {
                                                                 console.log(e.label)
                                                                 setcarDestination(e)
                                                                 if(e.label == "United States") {
-                                                                    setshipAccessory(false)
+                                                                    setplacebidShipAccessory(false)
                                                                 }
 
                                                                 }} />
