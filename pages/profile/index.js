@@ -19,6 +19,17 @@ const Profile = () => {
       progress: undefined,
     });
 
+    const pictureChanged = () =>
+    toast.success("Photo Updated!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   const [isLoading, setisLoading] = useState(false);
 
   // Initial Tab state
@@ -61,7 +72,7 @@ const Profile = () => {
     return () => {
       getUserID();
     };
-  }, [showModal]);
+  }, [showModal, changeDPModal]);
 
   const getUserID = () => {
     const user = localStorage.getItem("user");
@@ -263,6 +274,8 @@ const Profile = () => {
       .then(result => {
         console.log(result)
         setisLoading(false)
+        setchangeDPModal(false)
+        pictureChanged()
       })
       .catch(error => console.log('error', error));
   };
@@ -277,12 +290,12 @@ const Profile = () => {
             {/* <!-- sidebar --> */}
             <aside className="hidden md:grid  profile-sidebar lg:grid auto-rows-min justify-items-center">
               <span
-                className="inline-block relative mt-20 cursor-pointer"
+                className="inline-block w-32 h-32 relative mt-20 cursor-pointer"
                 onClick={getDP}
               >
                 <img
-                  className="h-28"
-                  src="./../assets/img/vectors/user.svg"
+                  className="w-full h-full"
+                  src={user?.image ? user?.image : "./../assets/img/vectors/user.svg"}
                   alt=""
                 />
                 <i
