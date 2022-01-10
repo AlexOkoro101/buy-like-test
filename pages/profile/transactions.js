@@ -126,7 +126,7 @@ const Transactions = () => {
                                     <tbody className="flex-1 sm:flex-none text-xs primary-black">
 
                                     {transactions?.slice(0).reverse().map((transaction) => (
-                                        <Link href={"/profile/my-collection/bid/" + (transaction?.vehicle?.vin || "")}>
+                                        <Link href={"/profile/my-collection/bid/" + (transaction?.vehicle?.vin || transaction?.BidCollection?._id)}>
                                             <tr key={transaction?._id} className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100">
                                                 <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle?.year || ""} ${transaction?.vehicle?.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
                                                 <td className="p-3.5">${transaction?.amount || 0}</td>
