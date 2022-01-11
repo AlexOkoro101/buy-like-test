@@ -310,8 +310,8 @@ const placeBidError = () =>
       return;
     } else {
       console.log("verify payment");
-      // placeBid();
-      verifyPaystackPayment(refNumber);
+      placeBid(refNumber);
+      // verifyPaystackPayment(refNumber);
     }
   }, [confimation, state, refNumber]);
 
@@ -411,7 +411,7 @@ const placeBidError = () =>
             console.log(formatData)
             // setcollection(formatData.data);
             if (formatData.data.status) {
-              placeBid();
+              // placeBid();
               frontendPayment(ref, formatData);
             }
           }
@@ -439,7 +439,7 @@ const placeBidError = () =>
         return result;
     }
 
-  const placeBid = () => {
+  const placeBid = (ref) => {
         
     async function addCar() {
         seterror(null);
@@ -497,6 +497,7 @@ const placeBidError = () =>
               console.log(response)
               //  setmessage(response.statusText);
                 placeBidSuccess();
+                verifyPaystackPayment(ref)
                 
                 // getBidId(resultFormat);
                 // setbnvehicleID(resultFormat.data._id);
@@ -637,7 +638,7 @@ const frontendPayment = (ref, verifiedData) => {
       const resultFormat = JSON.parse(result);
       console.log("front end payment", resultFormat);
       if (resultFormat.error === false) {
-        placeBidSuccess();
+      stripeSuccess();
       }
     })
     .catch((error) => console.log("error", error));

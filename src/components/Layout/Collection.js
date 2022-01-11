@@ -333,7 +333,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                          </button>
                                                     
                                                             
-                                                                
+                                                               {collection.deposit?<></>:
                                                                 <button
                                                                 className="mx-2 text-red-600 text-sm"
                                                                 onClick={() =>
@@ -344,6 +344,8 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                             >
                                                                 Delete
                                                             </button>
+                                                               } 
+                                                               
                                                             
                                                            
                                                            

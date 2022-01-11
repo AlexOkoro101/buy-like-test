@@ -25,6 +25,8 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     useEffect(() => {
         dispatch(getCars());
     }, []);
+
+
     useEffect(() => {
         router.pathname == "/vin"
             ? setTotalCount(dollarFormatter.format(cars.total))
@@ -33,7 +35,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     //Get Data from Local Storage
     const retrieveData = () => {
         const userActive = localStorage.getItem("user");
-        // console.log(userActive)
+        console.log(JSON.parse(userActive))
         if (!userActive) {
             settoken(null);
             return null;
@@ -87,12 +89,43 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
 
     }
 
+const getNotifications=()=>{
+    let id=JSON.parse(localStorage.getItem("user"))?.userId
+    console.log(id)
+    var requestOptions = {
+        mode: 'no-cors',
+        method: 'GET',
+        redirect: 'follow'
+    };
+      
+    fetch(enviroment.BASE_URL + `notification/${id}`, requestOptions)
+    .then(response => {response.text();
+    console.log("notification", response)})
+    .then(result => {
+        // const ipData = JSON.parse(result)
+        console.log("notification", result)
+        
+
+        // if(ipData.error === false) {
+        //     setCountry()
+        // }
+    })
+    .catch(error => console.log('error', error));
+
+}
+
+
     //Get Data from local Storage
     useEffect(() => {
         retrieveData();
+        
         getIp()
         return retrieveData;
     }, [router.pathname, token]);
+
+    useEffect(()=>{
+        getNotifications();
+    },[])
 
     //Navbar State
     function toggleView() {
