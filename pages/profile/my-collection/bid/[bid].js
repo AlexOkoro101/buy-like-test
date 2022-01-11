@@ -1202,13 +1202,13 @@ const BidDetails = () => {
 
                                     </div> */}
 
-                        <button
+                        {/* <button
                           type="button"
                           className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12"
                           onClick={()=>initializePayment(onSuccess, onClose)}
                         >
                           Make Full Payment
-                        </button>
+                        </button> */}
                       </div>
                     </section>
                   </div>
