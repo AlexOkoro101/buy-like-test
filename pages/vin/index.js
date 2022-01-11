@@ -130,6 +130,17 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     const [carModels, setcarModels] = useState([]);
     
 
+    useEffect(()=>{
+        if(params.make==""||params.model==""||params.year==""){
+            return
+        }else{
+        removeItem(params.make);
+        removeItem(params.model);
+        removeItem(params.year);
+        }
+
+    },[])
+
     useEffect(() => {
         console.log(cars)
         if (paramValue && cars.data === []) {
@@ -173,8 +184,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             if (data[f] === "") {
                 delete data[f];
                 setParam({ ...data });
+                getChips()
             }
         }
+
         if (paramValue.make) {
             getVehicleModels(paramValue.make);
         }

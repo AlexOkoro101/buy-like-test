@@ -21,6 +21,7 @@ const MyCollection = ({
   const [userEmail, setuserEmail] = useState(null);
   const [userPhone, setuserPhone] = useState(null);
   const [userName, setuserName] = useState(null);
+  const [depositVisibility, setDepositVisibility] = useState("none");
   const router = useRouter();
 
   const [amount, setAmount] = useState(0);
@@ -74,6 +75,8 @@ const MyCollection = ({
   const [activeTab, setactiveTab] = useState("place-bid");
   const [placeBidView, setplaceBidView] = useState(true);
   const [buyNowCars, setbuyNowCars] = useState(null);
+  const [vehicleId, setVehicleId] = useState(null);
+
   const newCollection = useRef();
   const initializePayment = usePaystackPayment(config);
 
@@ -191,9 +194,9 @@ const MyCollection = ({
       .then((data) => {
         // console.log(data)
         if (data) {
-          //  console.log(data.data)
           if (Object.entries(data).length >= 1) {
             const formatBuyNow = JSON.parse(data);
+            console.log(formatBuyNow);
             setbuyNowCars(formatBuyNow.data);
           }
         }
@@ -315,6 +318,12 @@ const MyCollection = ({
     frontendPayment(collectionID);
   };
 
+  const showDepositDetails = (id) => {
+    setVehicleId(id);
+
+    setDepositVisibility(depositVisibility === "none" ? "block" : "none");
+  };
+
   return (
     <div>
       <Meta></Meta>
@@ -359,30 +368,32 @@ const MyCollection = ({
                 id="headlessui-menu-items-117"
                 role="menu"
               >
+                {carCollection?.length <= 0 && (
+                  <div> No Collection to Show</div>
+                )}
                 {carCollection?.map((collection) => (
                   <div key={collection?._id}>
                     <div className="border-gray-100 border mb-3 lg:px-5 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
                       <>
                         <div className="flex w-full">
                           <div className="mx-2 w-2/6 xl:w-1/5">
-                            {collection?.vehicles.length>0?
+                            {collection?.vehicles.length > 0 ? (
                               <img
-                              key={collection?.image_id}
-                              src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
-                              alt="car"
-                              className="img-fluid rounded text-center w-full h-full"
-                            />
-                            :
-                            <div
-                            style={{
-                                backgroundImage: `url(/img/Rectangle.png)`,
-                            }}
-                            className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center img-fluid"
-                        >
-                            IMAGE COMING SOON
-                        </div>
-                            
-                           }
+                                key={collection?.image_id}
+                                src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
+                                alt="car"
+                                className="img-fluid rounded text-center w-full h-full"
+                              />
+                            ) : (
+                              <div
+                                style={{
+                                  backgroundImage: `url(/img/Rectangle.png)`,
+                                }}
+                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center img-fluid"
+                              >
+                                IMAGE COMING SOON
+                              </div>
+                            )}
                           </div>
                           <div className="w-4/5 flex flex-col">
                             <div className="flex  w-full justify-between">
@@ -402,7 +413,7 @@ const MyCollection = ({
                                         $1000 deposit paid
                                       </h6>
                                       <h6 className="text-xs font-normal text-green-300">
-                                      Deposit paid
+                                        Deposit paid
                                       </h6>
                                     </div>
                                   ) : (
@@ -413,7 +424,8 @@ const MyCollection = ({
                                           //     collection?._id
                                           // )
                                           router.push(
-                                            "my-collection/transaction/" + collection?._id
+                                            "my-collection/transaction/" +
+                                              collection?._id
                                           )
                                         }
                                         className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
@@ -469,12 +481,12 @@ const MyCollection = ({
             {buyNowCars?.map((vehicle) => (
               <div
                 key={vehicle._id}
-                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2"
+                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2 w-5/6 mx-auto"
               >
                 <img
                   src={`https://proxybuylike.herokuapp.com/?url=${vehicle.vehicle?.images[0]?.image_largeUrl}`}
                   alt="benz"
-                  className="rounded-md w-64 h-36 flex-no-shrink mr-4"
+                  className="rounded-md w-64 h-36 flex-no-shrink mr-4 w-1/6"
                 />
                 <div className="flex flex-col justify-between flex-grow">
                   <div className="flex justify-between">
@@ -502,6 +514,43 @@ const MyCollection = ({
                       </div>
                     </div>
                     <div className="flex flex-col mx-auxo items-end">
+                      <div className="mb-2" key={vehicle._id}>
+                        <h4 className="text-xs  font-normal gray-text">
+                          Deposit Status-{" "}
+                          {vehicle.done ? (
+                            <span
+                              style={{ color: "green",cursor:"pointer" }}
+                              onClick={() => showDepositDetails(vehicle._id)}
+                            >
+                              Paid
+                            </span>
+                          ) : (
+                            <span style={{ color: "red" }}>Not Paid</span>
+                          )}
+                        </h4>
+                        {vehicleId === vehicle._id ? (
+                          <div
+                            className="text-xs gray-text"
+                            style={{ display: depositVisibility }}
+                          >
+                            <h1>Amount : {nairaFormatter.format(1000)}</h1>
+                            <h1>
+                              Date Paid :{" "}
+                              {new Date(vehicle?.updatedAt).toLocaleDateString(
+                                "en-NG",
+                                {
+                                  year: "numeric",
+                                  day: "numeric",
+                                  month: "long",
+                                }
+                              )}
+                            </h1>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+
                       <h4 className="text-base font-normal gray-text">
                         {nairaFormatter.format(vehicle.vehicle?.bidAmount)}
                       </h4>

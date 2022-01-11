@@ -515,11 +515,7 @@ const placeBidError = () =>
 
 async function placeItem() {
     let availableCollection = await createCollection();
-
-    // if (!availableCollection) {
-    //     availableCollection = await createCollection();
-    // }
-
+   
     return availableCollection;
 }
 
@@ -616,7 +612,6 @@ const frontendPayment = (ref, verifiedData) => {
     // bid: bidID,
     amount: "1000",
     // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-    reference: ref,
     // currency: "",
     // metadata: "",
     // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
@@ -666,7 +661,6 @@ const stripePayment = (ref, verifiedData) => {
     // bid: bidID,
     amount: "1000",
     // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-    reference: ref,
     // currency: "",
     // metadata: "",
     // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
