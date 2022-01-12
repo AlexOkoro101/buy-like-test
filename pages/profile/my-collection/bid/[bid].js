@@ -134,7 +134,7 @@ const BidDetails = () => {
   };
 
 
-  const frontendPayment = (ref, verifiedData) => {
+  const frontendPayment = (ref) => {
 
     console.log('did you get here')
     var myHeaders = new Headers();
@@ -143,7 +143,7 @@ const BidDetails = () => {
     var raw = JSON.stringify({
       vin: bidCollection?.vin,
       number: `${userPhone}`,
-      fullname: ``,
+      fullname: '',
       email: `${userEmail}`,
       buyNow: true,
       username: "",
@@ -152,14 +152,14 @@ const BidDetails = () => {
       vehicle: bidCollection?._id,
       bid: processDetails?.bid,
       amount: (Number(bidCollection?.bidAmount)* 570)-500000,
-    //   amountBalance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
+      amountBalance: '',
       reference: ref,
-    //   currency: "",
-    //   metadata: "",
+      currency: "",
+      metadata: "",
       symbol:"NGN",
-    //   balance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
-    //   status: verifiedData.data.status,
-    //   statusTrans: verifiedData.data.data.status,
+      balance: '',
+      status: true,
+      statusTrans: '',
     });
     console.log("frontend data", raw);
 
@@ -1202,13 +1202,13 @@ const BidDetails = () => {
 
                                     </div> */}
 
-                        {/* <button
+                        <button
                           type="button"
                           className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12"
                           onClick={()=>initializePayment(onSuccess, onClose)}
                         >
                           Make Full Payment
-                        </button> */}
+                        </button>
                       </div>
                     </section>
                   </div>
