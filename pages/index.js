@@ -272,9 +272,9 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
         }else{
             dispatch(searchTerm(data));
             router.push("/vin");
+            searchItem(data)
         }
 
-        searchItem(data)
        
     };
 

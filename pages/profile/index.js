@@ -19,6 +19,17 @@ const Profile = () => {
       progress: undefined,
     });
 
+    const pictureChanged = () =>
+    toast.success("Photo Updated!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   const [isLoading, setisLoading] = useState(false);
 
   // Initial Tab state
@@ -61,7 +72,7 @@ const Profile = () => {
     return () => {
       getUserID();
     };
-  }, [showModal]);
+  }, [showModal, changeDPModal]);
 
   const getUserID = () => {
     const user = localStorage.getItem("user");
@@ -263,6 +274,8 @@ const Profile = () => {
       .then(result => {
         console.log(result)
         setisLoading(false)
+        setchangeDPModal(false)
+        pictureChanged()
       })
       .catch(error => console.log('error', error));
   };
@@ -277,12 +290,12 @@ const Profile = () => {
             {/* <!-- sidebar --> */}
             <aside className="hidden md:grid  profile-sidebar lg:grid auto-rows-min justify-items-center">
               <span
-                className="inline-block relative mt-20 cursor-pointer"
+                className="inline-block w-32 h-32 relative mt-20 cursor-pointer"
                 onClick={getDP}
               >
                 <img
-                  className="h-28"
-                  src="./../assets/img/vectors/user.svg"
+                  className="w-full h-full"
+                  src={user?.image ? user?.image : "./../assets/img/vectors/user.svg"}
                   alt=""
                 />
                 <i
@@ -878,7 +891,7 @@ const Profile = () => {
           <div className="modal-content bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
             <span
               onClick={() => {
-                setshowModal(false);
+                setchangeDPModal(false);
               }}
               className="close absolute right-5 top-1 text-4xl text-gray-500"
             >
