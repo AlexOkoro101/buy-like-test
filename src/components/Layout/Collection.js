@@ -318,7 +318,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                          </button>
                                                     
                                                             {
-                                                                collection?.done?<></>:
+                                                                collection?.payedStatus?<></>:
                                                                 <button
                                                                 className="mx-2 text-red-600 text-sm"
                                                                 onClick={() =>

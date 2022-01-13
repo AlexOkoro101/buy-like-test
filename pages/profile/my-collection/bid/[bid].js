@@ -35,8 +35,8 @@ const BidDetails = () => {
 
   const [bidCollection, setbidCollection] = useState(null);
   const [CollectionBid, setCollectionBid] = useState(null);
-  const [userEmail,setUserEmail] =useState(null)
-  const [userPhone,setUserPhone] =useState(null)
+  const [userEmail, setUserEmail] = useState(null);
+  const [userPhone, setUserPhone] = useState(null);
 
   const [isLoading, setisLoading] = useState(true);
   const [error, seterror] = useState(null);
@@ -50,16 +50,17 @@ const BidDetails = () => {
   const [userId, setuserId] = useState(null);
   const [processDetails, setprocessDetails] = useState(null);
   const [refNumber, setrefNumber] = useState(null);
+  const [transactionById, setTransactionById] = useState([]);
+  const [transactionByCollection, setTransactionByCollection] = useState(null);
 
   const router = useRouter();
   const bidId = router.query.bid;
 
-
-  useEffect(()=>{
-      console.log(JSON.parse(localStorage.getItem("user")))
-      setUserEmail(JSON.parse(localStorage.getItem("user")).userEmail)
-      setUserPhone(JSON.parse(localStorage.getItem("user")).phoneNumber)
-  },[])
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("user")));
+    setUserEmail(JSON.parse(localStorage.getItem("user")).userEmail);
+    setUserPhone(JSON.parse(localStorage.getItem("user")).phoneNumber);
+  }, []);
 
   const adjustHeight = () => {
     const proccessBody = document.getElementsByClassName("tracker-table");
@@ -74,6 +75,27 @@ const BidDetails = () => {
     return "bld" + Math.floor(Math.random() * 1000000000 + 1);
   };
 
+  const AmountToPayonPayStack =
+    transactionById?.length == 0 &&
+    (transactionByCollection == null || transactionByCollection == {})
+      ? 50000000
+      : transactionByCollection && transactionById.length == 0
+      ? Number(bidCollection?.bidAmount) * 570 - 500000 >= 2000000
+        ? 200000000
+        : (Number(bidCollection?.bidAmount) * 570 - 500000) * 100
+      : transactionById[0]?.amountBalance >= 2000000
+      ? 200000000
+      : transactionById[0]?.amountBalance * 100;
+  const BalanceToDisplayToUser =
+    transactionById?.length == 0 &&
+    (transactionByCollection == null || transactionByCollection == {})
+      ? Number(bidCollection?.bidAmount) * 570
+      : transactionByCollection && transactionById.length == 0
+      ? Number(bidCollection?.bidAmount) * 570 - 500000
+      : transactionById[0]?.amountBalance * 100;
+  const BalanceToFrontEndPayments =
+    BalanceToDisplayToUser - AmountToPayonPayStack;
+
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
@@ -84,21 +106,20 @@ const BidDetails = () => {
   // you can call this function anything
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
-    console.log( reference.trxref)
+    console.log(reference.trxref);
     setrefNumber(reference.trxref);
     verifyPaystackPayment(refNumber);
     // console.log("vehicle ID", bnvehicleID);
     // console.log("bid ID", bidID);
-    
   };
-//   useEffect(() => {
-//     if (refNumber === null) {
-//       return;
-//     } else {
-//       console.log("verify payment");
-//       verifyPaystackPayment(refNumber);
-//     }
-//   }, [confimation, state, refNumber]);
+  //   useEffect(() => {
+  //     if (refNumber === null) {
+  //       return;
+  //     } else {
+  //       console.log("verify payment");
+  //       verifyPaystackPayment(refNumber);
+  //     }
+  //   }, [confimation, state, refNumber]);
 
   // you can call this function anything
   const onClose = () => {
@@ -123,9 +144,9 @@ const BidDetails = () => {
             const formatData = JSON.parse(data);
             console.log(formatData.data);
             if (formatData.data.status) {
-                setTimeout(() => {
-                    frontendPayment(ref, formatData);
-                }, 1000);
+              setTimeout(() => {
+                frontendPayment(ref, formatData);
+              }, 1000);
             }
           }
         }
@@ -133,17 +154,14 @@ const BidDetails = () => {
       .catch((error) => console.log("payment error", error));
   };
 
-
-  const frontendPayment = (ref) => {
-
-    console.log('did you get here')
+  const frontendPayment = (ref, verifiedData) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
       vin: bidCollection?.vin,
       number: `${userPhone}`,
-      fullname: '',
+      fullname: ``,
       email: `${userEmail}`,
       buyNow: true,
       username: "",
@@ -151,15 +169,20 @@ const BidDetails = () => {
       owner: bidCollection?.owner,
       vehicle: bidCollection?._id,
       bid: processDetails?.bid,
-      amount: (Number(bidCollection?.bidAmount)* 570)-500000,
-      amountBalance: '',
+      amount: AmountToPayonPayStack/100,
+      amountBalance: BalanceToFrontEndPayments,
       reference: ref,
       currency: "",
       metadata: "",
-      symbol:"NGN",
-      balance: '',
+      symbol: "NGN",
+      balance: BalanceToFrontEndPayments,
       status: true,
-      statusTrans: '',
+      statusTrans: true,
+      balanceTrans:
+        !transactionByCollection == {} || !transactionByCollection == null
+          ? transactionByCollection.BidCollection.transactions
+          : transactionById[0]?.transaction,
+      linkBalance: true,
     });
     console.log("frontend data", raw);
 
@@ -168,7 +191,6 @@ const BidDetails = () => {
       headers: myHeaders,
       body: raw,
       redirect: "follow",
-
     };
 
     fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
@@ -246,6 +268,8 @@ const BidDetails = () => {
             const formatCollection = JSON.parse(result);
             setbidCollection(formatCollection?.data?.vehicle);
             console.log(formatCollection?.data?.vehicle);
+            getVehicleTransactionById(formatCollection?.data?.vehicle._id);
+            getVehicleTransactionByCollection();
           }
         }
         console.log(bidCollection);
@@ -275,6 +299,38 @@ const BidDetails = () => {
       })
       .catch((error) => console.log("error", error));
   }, []);
+
+  const getVehicleTransactionById = (id) => {
+    fetch(enviroment.BASE_URL + "transactions/vehicle-trans/" + id, {
+      method: "GET",
+      redirect: "follow",
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((result) => {
+        console.log(JSON.parse(result));
+        setTransactionById(JSON.parse(result).data);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const getVehicleTransactionByCollection = () => {
+    let transsId = localStorage.getItem("CollectionTransactionId");
+    console.log(transsId)
+    fetch(enviroment.BASE_URL + "transactions/" + transsId, {
+      method: "GET",
+      redirect: "follow",
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((result) => {
+        console.log(JSON.parse(result));
+        setTransactionByCollection(JSON.parse(result).data);
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   useEffect(() => {
     displaySmall();
@@ -1201,14 +1257,38 @@ const BidDetails = () => {
                                         </div>
 
                                     </div> */}
-
-                        <button
-                          type="button"
-                          className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12"
-                          onClick={()=>initializePayment(onSuccess, onClose)}
-                        >
-                          Make Full Payment
-                        </button>
+                        <div>
+                          <h5>No Documents available</h5>
+                          <h2>
+                            Balance To be Paid: NGN
+                            <span>
+                              {dollarFormatter.format(BalanceToDisplayToUser)}
+                            </span>
+                          </h2>
+                          {BalanceToDisplayToUser > 0 ? (
+                            <button
+                              type="button"
+                              className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12 mt-5"
+                              onClick={() =>
+                                initializePayment(onSuccess, onClose)
+                              }
+                            >
+                              Pay NGN
+                              {dollarFormatter.format(
+                                AmountToPayonPayStack / 100
+                              )}{" "}
+                              Now
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12 mt-5"
+                              style={{ background: "green" }}
+                            >
+                              Payment Completed
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </section>
                   </div>

@@ -363,7 +363,7 @@ const MyCollection = ({
           <div className="lg:px-20 px-5 mt-5 py-3 flex justify-between items-center">
             <>
               <div
-                className=" w-full mt-2 origin-top-right bg-white divide-y divide-gray-200 outline-none font-10"
+                className=" w-full mt-2 origin-top-right bg-white outline-none font-10"
                 aria-labelledby="headlessui-menu-button-1"
                 id="headlessui-menu-items-117"
                 role="menu"
@@ -373,23 +373,23 @@ const MyCollection = ({
                 )}
                 {carCollection?.map((collection) => (
                   <div key={collection?._id}>
-                    <div className="border-gray-100 border mb-3 lg:px-5 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50">
-                      <>
-                        <div className="flex w-full">
-                          <div className="mx-2 w-2/6 xl:w-1/5">
+                    <div className="border-gray-100 border mb-3 lg:px-5 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-5/6 mx-auto">
+                      
+                        <div className="flex w-full ">
+                          <div className="mx-2 w-2/6 xl:w-1/5 ">
                             {collection?.vehicles.length > 0 ? (
                               <img
                                 key={collection?.image_id}
                                 src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
                                 alt="car"
-                                className="img-fluid rounded text-center w-full h-full"
+                                className="img-fluid rounded text-center w-full h-46"
                               />
                             ) : (
                               <div
                                 style={{
                                   backgroundImage: `url(/img/Rectangle.png)`,
                                 }}
-                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center img-fluid"
+                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-36 rounded-md object-center img-fluid"
                               >
                                 IMAGE COMING SOON
                               </div>
@@ -407,7 +407,7 @@ const MyCollection = ({
                               </div>
                               <div className="flex flex-col mx-auxo items-end  text-right">
                                 <div>
-                                  {collection?.done === true ? (
+                                  {collection?.payedStatus ? (
                                     <div className="flex flex-col mx-auxo items-end">
                                       <h6 className="text-xs font-normal light-gray-text">
                                         $1000 deposit paid
@@ -418,7 +418,7 @@ const MyCollection = ({
                                     </div>
                                   ) : (
                                     <div>
-                                      <button
+                                      {/* <button
                                         onClick={() =>
                                           // initializePaystack(
                                           //     collection?._id
@@ -434,14 +434,14 @@ const MyCollection = ({
                                       </button>
                                       <h6 className="text-xs font-normal text-red-300 my-2">
                                         Not Completed
-                                      </h6>
+                                      </h6> */}
                                     </div>
                                   )}
                                 </div>
                               </div>
                             </div>
                             <div
-                              className="w-full flex justify-between items-bottom mt-20 py-2"
+                              className="w-full flex justify-between items-bottom mt-8 py-2"
                               style={{ borderTop: "2px solid gray" }}
                             >
                               <div className="flex flex-wrap py-2">
@@ -468,7 +468,7 @@ const MyCollection = ({
                             </div>
                           </div>
                         </div>
-                      </>
+                      
                     </div>
                   </div>
                 ))}
