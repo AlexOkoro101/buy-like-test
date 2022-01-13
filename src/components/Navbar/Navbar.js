@@ -35,26 +35,26 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
   }, [router.pathname, cars.total, total]);
   //Get Data from Local Storage
   const retrieveData = () => {
-    // const userActive = localStorage.getItem("user");
-    // // console.log(userActive)
-    // if (!userActive) {
-    //   settoken(null);
-    //   return null;
-    // }
-    // const item = JSON.parse(userActive);
-    // const now = new Date();
-    // if (now.getTime() > item.expiry) {
-    //   // If the item is expired, delete the item from storage
-    //   // and return null
-    //   window.localStorage.clear();
-    //   return null;
-    // }
-    // settoken(item?.userToken);
-    // setuserName(item?.userName);
-    // // return item.value
-    // beginLogin({
-    //   token: item.userToken,
-    // });
+    const userActive = localStorage.getItem("user");
+    // console.log(userActive)
+    if (!userActive) {
+      settoken(null);
+      return null;
+    }
+    const item = JSON.parse(userActive);
+    const now = new Date();
+    if (now.getTime() > item.expiry) {
+      // If the item is expired, delete the item from storage
+      // and return null
+      window.localStorage.clear();
+      return null;
+    }
+    settoken(item?.userToken);
+    setuserName(item?.userName);
+    // return item.value
+    beginLogin({
+      token: item.userToken,
+    });
   };
 
   const getIp = () => {
