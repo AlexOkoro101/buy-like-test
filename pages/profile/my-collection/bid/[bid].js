@@ -750,6 +750,7 @@ const BidDetails = () => {
                               </p>
                             </>
                           )}
+                         
 
                           {/* <!-- <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
                                                 <p className="text-xs font-bold" id="date">Feb 28, 2021</p>
@@ -1152,6 +1153,61 @@ const BidDetails = () => {
                               </p>
                             </>
                           )}
+                           {
+                            transactionById.length>0?
+                            <>
+
+                            
+                             <div className="">
+                            <div className="block w-full overflow-x-auto overflow-y-auto h-96 mb-20 mt-20">
+                            <h1 className="my-5">Transaction History For This Vehicle</h1>
+                                <table className="items-center w-full  border-collapse">
+                                    <thead className="tertiary-gray text-xs font-medium border-transactions">
+                                       
+
+                                        <tr className="">
+                                            <th  className="p-3.5 text-left ">Vehicle/Collection Name</th>
+                                            <th  className="p-3.5 text-left">Amount paid</th>
+                                            {/* <th className="p-3.5 text-left">Form of payment</th> */}
+                                            <th  className="p-3.5 text-left">Status</th>
+                                            <th className="p-3.5 text-left">Balance</th>
+                                            <th  className="p-3.5 text-left">Date</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody className="flex-1 sm:flex-none text-xs primary-black">
+
+                                    {transactionById?.slice(0).reverse().map((transaction) => (
+                                        <Link href={"/profile/my-collection/bid/" + (transaction?.vehicle?.vin || transaction?.BidCollection?._id)}>
+                                            <tr key={transaction?._id} className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100">
+                                                <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle?.year || ""} ${transaction?.vehicle?.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
+                                                <td className="p-3.5">NGN{transaction?.amount || 0}</td>
+                                                {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
+                                                <td className="p-3.5">{transaction?.statusTrans === "true" && (<>Success</>)}</td>
+                                                <td className="p-3.5">NGN{transaction?.amountBalance || 0}</td>
+                                                <td className="p-3.5 ">{new Date(
+                                                                    transaction?.createdAt
+                                                            ).toLocaleDateString(
+                                                                "en-NG",
+                                                                {
+                                                                    year: "numeric",
+                                                                    day: "numeric",
+                                                                    month: "long",
+                                                                }
+                                                            )}</td>
+                                            </tr>
+
+                                        </Link>
+
+                                    ))}
+
+
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div></>:<div>No Available Transaction for this Car</div>
+                          }
 
                           {/* <!-- <div className=" px-3 mb-3  text-right leading-3 md:mb-0">
                                                 <p className="text-xs font-bold" id="date">Feb 28, 2021</p>

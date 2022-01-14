@@ -375,52 +375,31 @@ const MyCollection = ({
                 )}
                 {carCollection?.map((collection) => (
                   <div key={collection?._id}>
-                    <div className="border-gray-100 border mb-3 lg:px-5 px-2 py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-5/6 mx-auto">
-                      
-                        <div className="flex w-full ">
-                          <div className="mx-2 w-2/6 xl:w-1/5 ">
-                            {collection?.vehicles.length > 0 ? (
-                              <img
-                                key={collection?.image_id}
-                                src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
-                                alt="car"
-                                className="img-fluid rounded text-center w-full h-46"
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  backgroundImage: `url(/img/Rectangle.png)`,
-                                }}
-                                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-36 rounded-md object-center img-fluid"
-                              >
-                                IMAGE COMING SOON
-                              </div>
-                            )}
+                    <div className="border-gray-100 border mb-3 lg:px-5 px-2 md:py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-full lg:w-5/6 mx-auto rounded-lg shadow-lg">
+                      <div className="md:flex w-full ">
+                        <div className="flex justify-between md:hidden p-2 text-sm">
+                          <div>
+                            <h4 className=" text-xs md:text-sm font-medium blue-text uppercase mb-2 ">
+                              {collection?.name}
+                            </h4>
+                            <h4 className="text-xs">
+                              {" "}
+                              {collection?.vehicles.length} cars selected
+                            </h4>
                           </div>
-                          <div className="w-4/5 flex flex-col">
-                            <div className="flex  w-full justify-between">
-                              <div className="mb-5">
-                                <h4 className="text-sm font-medium blue-text uppercase mb-2 ">
-                                  {collection?.name}
-                                </h4>
-                                <h6 className="text-sm font-normal blue-text">
-                                  {collection?.vehicles.length} cars selected
+                          <div>
+                            {collection?.payedStatus ? (
+                              <div className="flex flex-col mx-auxo items-end">
+                                <h6 className="text-xs font-normal light-gray-text">
+                                  $1000 deposit paid
+                                </h6>
+                                <h6 className="text-xs font-normal text-green-300">
+                                  Deposit paid
                                 </h6>
                               </div>
-                              <div className="flex flex-col mx-auxo items-end  text-right">
-                                <div>
-                                  {collection?.payedStatus ? (
-                                    <div className="flex flex-col mx-auxo items-end">
-                                      <h6 className="text-xs font-normal light-gray-text">
-                                        $1000 deposit paid
-                                      </h6>
-                                      <h6 className="text-xs font-normal text-green-300">
-                                        Deposit paid
-                                      </h6>
-                                    </div>
-                                  ) : (
-                                    <div>
-                                      {/* <button
+                            ) : (
+                              <div>
+                                {/* <button
                                         onClick={() =>
                                           // initializePaystack(
                                           //     collection?._id
@@ -437,40 +416,134 @@ const MyCollection = ({
                                       <h6 className="text-xs font-normal text-red-300 my-2">
                                         Not Completed
                                       </h6> */}
-                                    </div>
-                                  )}
-                                </div>
                               </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="md:mx-2 w-full md:w-2/5 xl:w-1/5 ">
+                          {collection?.vehicles.length > 0 ? (
+                            <img
+                              key={collection?.image_id}
+                              src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
+                              alt="car"
+                              className="img-fluid rounded text-center w-full h-26"
+                            />
+                          ) : (
+                            // <div
+                            //   style={{
+                            //     backgroundImage: `url(/img/Rectangle.png)`,
+                            //   }}
+                            //   className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-6 w-full rounded-md img-fluid rounded "
+                            // >
+                            //   IMAGE COMING SOON
+                            // </div>
+
+                            <img
+                              key={collection?.image_id}
+                              src={`/img/Rectangle.png`}
+                              alt="car"
+                              className="img-fluid rounded text-center w-full h-26"
+                            />
+                          )}
+                        </div>
+                        <div className=" w-4/5 flex flex-col">
+                          <div className="hidden md:flex w-full justify-between">
+                            <div className="mb-5">
+                              <h4 className=" text-xs md:text-sm font-medium blue-text uppercase mb-2 ">
+                                {collection?.name}
+                              </h4>
+                              <h6 className="hidden md:block md-text-sm font-normal blue-text">
+                                {collection?.vehicles.length} cars selected
+                              </h6>
                             </div>
-                            <div
-                              className="w-full flex justify-between items-bottom mt-8 py-2"
-                              style={{ borderTop: "2px solid gray" }}
-                            >
-                              <div className="flex flex-wrap py-2">
-                                {collection?.vehicles?.map((vehicle) => (
-                                  <img
-                                    key={vehicle?.image_id}
-                                    src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
-                                    alt="car"
-                                    className="tiny-car-card mb-2"
-                                  />
-                                ))}
-                              </div>
-                              <div className="flex cursor-pointer group">
-                                <Link
-                                  href={
-                                    "/profile/my-collection/" + collection?._id
-                                  }
-                                >
-                                  <h6 className="text-xs text-blue-400 my-2 font-bold">
-                                    Manage this collection
-                                  </h6>
-                                </Link>
+                            <div className="flex flex-col mx-auxo items-end text-right">
+                              <div>
+                                {collection?.payedStatus ? (
+                                  <div className="flex flex-col mx-auxo items-end">
+                                    <h6 className="hidden md:block lg:text-xs font-normal light-gray-text">
+                                      $1000 deposit paid
+                                    </h6>
+                                    <h6 className="lg:text-xs font-normal text-green-300">
+                                      Deposit paid
+                                    </h6>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    {/* <button
+                                        onClick={() =>
+                                          // initializePaystack(
+                                          //     collection?._id
+                                          // )
+                                          router.push(
+                                            "my-collection/transaction/" +
+                                              collection?._id
+                                          )
+                                        }
+                                        className="z-50 cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                      >
+                                        Make Deposit
+                                      </button>
+                                      <h6 className="text-xs font-normal text-red-300 my-2">
+                                        Not Completed
+                                      </h6> */}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
+                          <div
+                            className="w-full md:hidden  py-2"
+                          >
+                            <div className="flex flex-wrap py-2">
+                              {collection?.vehicles?.map((vehicle) => (
+                                <img
+                                  key={vehicle?.image_id}
+                                  src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
+                                  alt="car"
+                                  className="tiny-car-card mb-2"
+                                />
+                              ))}
+                            </div>
+                            <div className="cursor-pointer text-center object-center" >
+                              <Link
+                                href={
+                                  "/profile/my-collection/" + collection?._id
+                                }
+                              >
+                                <h6 className="text-center text-xs text-blue-400 my-2 font-bold mx-auto ml-10"  > 
+                                  Manage this collection
+                                </h6>
+                              </Link>
+                            </div>
+                          </div>
+                          <div
+                            className="w-full hidden md:flex justify-between items-bottom mt-4 md:mt-8 py-2"
+                            style={{ borderTop: "2px solid gray" }}
+                          >
+                            <div className="flex flex-wrap py-2">
+                              {collection?.vehicles?.map((vehicle) => (
+                                <img
+                                  key={vehicle?.image_id}
+                                  src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
+                                  alt="car"
+                                  className="tiny-car-card mb-2"
+                                />
+                              ))}
+                            </div>
+                            <div className="flex cursor-pointer group">
+                              <Link
+                                href={
+                                  "/profile/my-collection/" + collection?._id
+                                }
+                              >
+                                <h6 className="md:text-xs text-blue-400 my-2 font-bold">
+                                  Manage this collection
+                                </h6>
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                      
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -483,12 +556,12 @@ const MyCollection = ({
             {buyNowCars?.map((vehicle) => (
               <div
                 key={vehicle._id}
-                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2 w-5/6 mx-auto"
+                className="bid-card flex-col lg:flex-row flex py-3 px-3 mb-2 w-full md:w-5/6 mx-auto "
               >
                 <img
                   src={`https://proxybuylike.herokuapp.com/?url=${vehicle.vehicle?.images[0]?.image_largeUrl}`}
                   alt="benz"
-                  className="rounded-md w-64 h-36 flex-no-shrink mr-4 w-1/6"
+                  className="rounded-md w-64 h-36 flex-no-shrink mr-4 w-full md:w-1/6"
                 />
                 <div className="flex flex-col justify-between flex-grow">
                   <div className="flex justify-between">
@@ -521,7 +594,7 @@ const MyCollection = ({
                           Deposit Status-{" "}
                           {vehicle.done ? (
                             <span
-                              style={{ color: "green",cursor:"pointer" }}
+                              style={{ color: "green", cursor: "pointer" }}
                               onClick={() => showDepositDetails(vehicle._id)}
                             >
                               Paid
