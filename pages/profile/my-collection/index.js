@@ -126,6 +126,7 @@ const MyCollection = ({
     style: "currency",
     currency: "NGN",
   });
+  var dollarFormatter = new Intl.NumberFormat();
 
   useEffect(() => {
     const getUserId = () => {
@@ -198,6 +199,7 @@ const MyCollection = ({
             const formatBuyNow = JSON.parse(data);
             console.log(formatBuyNow);
             setbuyNowCars(formatBuyNow.data);
+            localStorage.setItem("CollectionTransactionId", null);
           }
         }
       })
@@ -552,7 +554,7 @@ const MyCollection = ({
                       </div>
 
                       <h4 className="text-base font-normal gray-text">
-                        {nairaFormatter.format(vehicle.vehicle?.bidAmount)}
+                        ${dollarFormatter.format(vehicle.vehicle?.bidAmount)}
                       </h4>
                     </div>
                   </div>

@@ -54,7 +54,7 @@ const CollectionDetails = () => {
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
                         setcollection(formatCollection);
-                        // localStorage.setItem("CollectionTransactionId", collection?.data?.transaction);
+                        localStorage.setItem("CollectionTransactionId", formatCollection?.data?.transaction);
                     }
                 }
             })

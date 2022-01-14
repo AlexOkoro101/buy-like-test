@@ -92,9 +92,9 @@ const BidDetails = () => {
       ? Number(bidCollection?.bidAmount) * 570
       : transactionByCollection && transactionById.length == 0
       ? Number(bidCollection?.bidAmount) * 570 - 500000
-      : transactionById[0]?.amountBalance * 100;
+      : transactionById[0]?.amountBalance;
   const BalanceToFrontEndPayments =
-    BalanceToDisplayToUser - AmountToPayonPayStack;
+    BalanceToDisplayToUser - AmountToPayonPayStack / 100;
 
   const config = {
     reference: referenceNumber(),
@@ -108,7 +108,7 @@ const BidDetails = () => {
     // Implementation for whatever you want to do with reference and after success call.
     console.log(reference.trxref);
     setrefNumber(reference.trxref);
-    verifyPaystackPayment(refNumber);
+    verifyPaystackPayment(reference.trxref);
     // console.log("vehicle ID", bnvehicleID);
     // console.log("bid ID", bidID);
   };
@@ -144,9 +144,7 @@ const BidDetails = () => {
             const formatData = JSON.parse(data);
             console.log(formatData.data);
             if (formatData.data.status) {
-              setTimeout(() => {
-                frontendPayment(ref, formatData);
-              }, 1000);
+              frontendPayment(ref);
             }
           }
         }
@@ -154,7 +152,7 @@ const BidDetails = () => {
       .catch((error) => console.log("payment error", error));
   };
 
-  const frontendPayment = (ref, verifiedData) => {
+  const frontendPayment = (ref) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -169,7 +167,7 @@ const BidDetails = () => {
       owner: bidCollection?.owner,
       vehicle: bidCollection?._id,
       bid: processDetails?.bid,
-      amount: AmountToPayonPayStack/100,
+      amount: AmountToPayonPayStack / 100,
       amountBalance: BalanceToFrontEndPayments,
       reference: ref,
       currency: "",
@@ -178,10 +176,9 @@ const BidDetails = () => {
       balance: BalanceToFrontEndPayments,
       status: true,
       statusTrans: true,
-      balanceTrans:
-        !transactionByCollection == {} || !transactionByCollection == null
-          ? transactionByCollection.BidCollection.transactions
-          : transactionById[0]?.transaction,
+      balanceTrans: transactionByCollection?.BidCollection?.transaction
+        ? transactionByCollection?.BidCollection?.transaction
+        : transactionById[0]?.transaction,
       linkBalance: true,
     });
     console.log("frontend data", raw);
@@ -317,7 +314,7 @@ const BidDetails = () => {
 
   const getVehicleTransactionByCollection = () => {
     let transsId = localStorage.getItem("CollectionTransactionId");
-    console.log(transsId)
+    console.log(transsId);
     fetch(enviroment.BASE_URL + "transactions/" + transsId, {
       method: "GET",
       redirect: "follow",
@@ -1269,8 +1266,9 @@ const BidDetails = () => {
                             <button
                               type="button"
                               className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12 mt-5"
-                              onClick={() =>
-                                initializePayment(onSuccess, onClose)
+                              onClick={
+                                () => initializePayment(onSuccess, onClose)
+                                // console.log(BalanceToFrontEndPayments)
                               }
                             >
                               Pay NGN
