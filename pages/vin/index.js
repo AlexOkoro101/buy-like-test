@@ -131,12 +131,13 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
     
 
     // useEffect(()=>{
-    //     if(params.make==""||params.model==""||params.year==""){
-    //         return
+    //     if(params.make==""&&params.model==""&&params.year&&""){
+    //         removeItem(params.make);
+    //         removeItem(params.model);
+    //         removeItem(params.year);
     //     }else{
-    //     removeItem(params.make);
-    //     removeItem(params.model);
-    //     removeItem(params.year);
+    //         return;
+      
     //     }
 
     // },[])

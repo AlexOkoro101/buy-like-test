@@ -54,6 +54,7 @@ const CollectionDetails = () => {
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
                         setcollection(formatCollection);
+                        localStorage.setItem("CollectionTransactionId", formatCollection?.data?.transaction);
                     }
                 }
             })
@@ -85,7 +86,7 @@ const CollectionDetails = () => {
     };
 
     console.log(collection)
-
+    
     return (
         <div>
             <Meta></Meta>
@@ -229,8 +230,8 @@ const CollectionDetails = () => {
                                                 <h3 className="font-medium font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
                                                     <Link
                                                         href={
-                                                            "/vin/" +
-                                                            vehicle._id
+                                                            "/profile/my-collection/bid/" +
+                                                            vehicle.vin
                                                         }
                                                     >
                                                         view details
