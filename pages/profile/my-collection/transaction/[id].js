@@ -293,7 +293,7 @@ const placeBidError = () =>
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 500,
+    amount: /*amount * 100*/ 10000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
@@ -610,11 +610,11 @@ const frontendPayment = (ref, verifiedData) => {
     symbol:  userCountry==="Nigeria"? "NGN":"USD",
     // vehicle: bnsvehicleID,
     // bid: bidID,
-    amount: "1000",
-    // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+    amount: "500000",
+    // amountBalance: carDetails?.total ? (Number(carDetails?.total)*570) - 500000 : 0,
     // currency: "",
     // metadata: "",
-    // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+    // balance: carDetails?.total ? (Number(carDetails?.total)*570) - 500000 : 0,
     status: verifiedData.data.paid,
     statusTrans: verifiedData.data.paid,
   });
