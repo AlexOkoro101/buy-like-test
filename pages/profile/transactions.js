@@ -6,6 +6,7 @@ import Link from 'next/link'
 const Transactions = () => {
     const [transactions, settransactions] = useState([]);
     const [id, setId] = useState(null);
+    const [isLoading, setisLoading] = useState(true);
 
     useEffect(() => {
         const getUserId = () => {
@@ -36,6 +37,7 @@ const Transactions = () => {
             .then((result) => {
                 if (result) {
                     // console.log(result)
+                    setisLoading(false)
                     if (Object.entries(result).length >= 1) {
                         const formatTrans = JSON.parse(result);
                         console.log("formated", formatTrans.data);
@@ -54,7 +56,35 @@ const Transactions = () => {
         <div>
             <Meta></Meta>
             <div className="h-screen  mt-24 mb-20 lg:px-32 px-4">
-                {!transactions?.length ? (
+            {isLoading? 
+            <div className="flex justify-center items-center w-full h-80">
+            <div className="relative mt-5">
+                <img src="/img/Tag.png" alt="loader" />
+                <img
+                    className="absolute top-3.5 right-10 ease-in-out animate-pulse
+                    delay-1000"
+                    src="/img/Car.png"
+                    alt="loader"
+                />
+                <h1 className="mt-5 text-lg font-semibold">
+                    Loading
+                    <span className=" ">
+                        <span className="ml-2 ease-in-out tracking-widest delay-300	text-2xl animate-pulse ">
+                            .
+                        </span>
+                        <span className="ml-2 ease-in-out tracking-widest delay-700 text-2xl	 animate-pulse ">
+                            .
+                        </span>
+                        <span className="ml-2 ease-in-out tracking-widest text-2xl delay-100	 animate-pulse ">
+                            .
+                        </span>
+                    </span>
+                </h1>
+            </div>
+        </div>:
+        <>
+            
+                {transactions?.length<=0 ? (
                     <div>
                         <p className="sec-black">No transaction available</p>
                     </div>
@@ -95,8 +125,8 @@ const Transactions = () => {
 
                                     <tbody className="flex-1 sm:flex-none text-xs primary-black">
 
-                                    {transactions.slice(0).reverse().map((transaction) => (
-                                        <Link href={"/profile/my-collection/bid/" + transaction?.vehicle?.vin}>
+                                    {transactions?.slice(0).reverse().map((transaction) => (
+                                        <Link href={"/profile/my-collection/bid/" + (transaction?.vehicle?.vin || transaction?.BidCollection?._id)}>
                                             <tr key={transaction?._id} className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100">
                                                 <td className="p-3.5">{transaction?.BidCollection?.name || (`${transaction?.vehicle?.year || ""} ${transaction?.vehicle?.make || ""} ${transaction?.vehicle?.model || ""}` )}</td>
                                                 <td className="p-3.5">${transaction?.amount || 0}</td>
@@ -126,9 +156,14 @@ const Transactions = () => {
                             </div>
                         </div>
                     </>
+                    
                 )}
+                </>
+                        
+            }                                    
             </div>
         </div>
+        
     );
 };
 
