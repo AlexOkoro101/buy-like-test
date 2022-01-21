@@ -25,6 +25,7 @@ function VerifyEmail() {
         .then(result => {
             console.log(result)
             if(result.error == false) {
+                localStorage.setItem('verifiedUser', true)
                 router.push("/")
             }
         })
