@@ -11,15 +11,34 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { searchTerm, getCategory, getMakes } from "../redux/actions/carsAction";
 import { enviroment } from "../src/components/enviroment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //
 const Home = ({ getCars, cars, makes, getMakes }) => {
+
+    const verifiedSuccess = () =>
+    toast.success("Email Verified!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      onClose: () => localStorage.clear('verifiedUser')
+    });
+
     const [isComponentFullyMounted, setIsComponentFullyMounted] =
         useState(false);
 
     useEffect(() => {
         setIsComponentFullyMounted(true);
     }, []);
+
+    useEffect(() => {
+        checkUserVerified()
+    }, [])
 
     useEffect(() => {
         const user = localStorage.getItem('user')
@@ -327,6 +346,14 @@ const Home = ({ getCars, cars, makes, getMakes }) => {
     };
     //
     //
+
+    const checkUserVerified = () => {
+        const item = localStorage.getItem('verifiedUser')
+
+        if(item) {
+            verifiedSuccess()
+        }
+    }
     return (
         <>
             <Meta title={"Buylike Dealers Home page"} />
