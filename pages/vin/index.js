@@ -1959,7 +1959,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                     value="bid"
                                     onClick={() => filterTab("bid")}
                                 >
-                                    Place Bid
+                                    Auction
                                 </button>
                             </div>
 
