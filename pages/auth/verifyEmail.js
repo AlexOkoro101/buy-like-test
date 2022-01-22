@@ -4,7 +4,7 @@ import { enviroment } from "../../src/components/enviroment"
 
 function VerifyEmail() {
     const router = useRouter()
-    const token = router?.query()
+    const token = router.query;
 
     useEffect(() => {
         verifyUser()
