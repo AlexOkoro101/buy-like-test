@@ -1,10 +1,10 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { enviroment } from "../../../src/components/enviroment"
+import { enviroment } from "../../src/components/enviroment"
 
 function VerifyEmail() {
     const router = useRouter()
-    const token = router.query.id || "Hello";
+    const token = router;
 
     useEffect(() => {
         verifyUser()
