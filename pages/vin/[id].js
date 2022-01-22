@@ -415,6 +415,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         };
         if (getZipLocation() === "") {
             setnoZipValue(true);
+
             return;
         }
         fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
@@ -1308,8 +1309,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         var ship = 0;
 
         if (truckAccessory === true) {
+            if(noZipValue) {
+                truck = 0
+            }
             // setaddTrucking(true);
-            if(truckingPrice?.includes(",")) {
+            else if(truckingPrice?.includes(",")) {
                 
                 truck =
                 Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
@@ -1355,8 +1359,11 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         var ship = 0;
 
         if (placebidTruckAccessory === true) {
+            if(noZipValue) {
+                truck = 0
+            }
             // setaddTrucking(true);
-            if(truckingPrice?.includes(",")) {
+            else if(truckingPrice?.includes(",")) {
                 
                 truck =
                 Number(truckingPrice?.slice(1).replace(/,/g, '')) > 1000
@@ -1763,7 +1770,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                 </p>
                                             </div>
                                             <div>
-                                                {offer ? (
+                                                {cardD?.buyNowPrice ? (
                                                     <p className="sec-black font-11 font-bold">
                                                         BUY NOW AT {""}$
                                                         {dollarFormatter.format(
@@ -1782,74 +1789,80 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         </div>
                                     </div>
 
-                                    <div className="flex mt-4 lg:mt-0 justify-between">
-                                        <div
-                                            className={
-                                                "flex buy-now-tab cursor-pointer items-center justify-center " +
-                                                (!cardD?.buyNowPrice
-                                                    ? "pointer-events-none"
-                                                    : "active")
-                                            }
-                                            onClick={(e) => openForm(e, true)}
-                                        >
-                                            <div className="text-center">
-                                                <img
-                                                    src={
-                                                        offer
-                                                            ? "../assets/img/buy-now-active.svg"
-                                                            : "../assets/img/buy-now.svg"
+                                    <div className=" mt-4 lg:mt-0 flex justify-center lg:justify-start">
+                                        {cardD?.buyNowPrice ? (
+                                            <div
+                                                className={
+                                                    "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                                    (cardD?.buyNowPrice
+                                                        && "active"
+                                                        )
+                                                }
+                                                onClick={() => {
+                                                    if(token) {
+                                                        router.push('/transaction/' + vin)
+                                                        localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                        console.log(bidData())
+                                                    } else {
+                                                        router.push('/auth/login')
                                                     }
-                                                    className="inline"
-                                                    alt="bid"
-                                                />
-                                                <p
-                                                    className={
-                                                        offer
-                                                            ? "buy-now-active-tab-text"
-                                                            : "place-bid-tab-text"
-                                                    }
-                                                >
-                                                    Buy Now
-                                                </p>
+                                                }}
+                                            >
+                                                <div className="text-center">
+                                                    <img
+                                                        src={
+                                                            cardD?.buyNowPrice
+                                                                && "../assets/img/buy-now-active.svg"
+                                                                
+                                                        }
+                                                        className="inline"
+                                                        alt="buy now"
+                                                    />
+                                                    <p
+                                                        className={
+                                                            cardD?.buyNowPrice
+                                                                && "buy-now-active-tab-text"
+                                                        }
+                                                    >
+                                                        Buy Now
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div
-                                            className={
-                                                "flex buy-now-tab cursor-pointer items-center justify-center " +
-                                                (!cardD?.mmrPrice &&
-                                                    "pointer-events-none ") +
-                                                (!cardD?.buyNowPrice &&
-                                                cardD?.mmrPrice
-                                                    ? " active"
-                                                    : "")
-                                            }
-                                            onClick={(e) => openForm(e, false)}
-                                        >
-                                            <div className="text-center">
-                                                <img
-                                                    src={
-                                                        offer
-                                                            ? "../assets/img/bid.svg"
-                                                            : "../assets/img/bid-active.svg"
-                                                    }
-                                                    className="inline"
-                                                    alt="bid"
-                                                />
-                                                <p
-                                                    className={
-                                                        offer
-                                                            ? "place-bid-tab-text"
-                                                            : "buy-now-active-tab-text"
-                                                    }
-                                                >
-                                                    Place Bid
-                                                </p>
+                                        ) : (
+                                            <div
+                                                className={
+                                                    "flex buy-now-tab cursor-pointer items-center justify-center " +
+                                                        (!cardD?.buyNowPrice
+                                                        && "active")
+                                                }
+                                                // onClick={(e) => openForm(e, false)}
+                                            >
+                                                <div className="text-center">
+                                                    <img
+                                                        src={
+                                                            !cardD?.buyNowPrice
+                                                                && "../assets/img/bid-active.svg"
+                                                        }
+                                                        className="inline"
+                                                        alt="bid"
+                                                    />
+                                                    <p
+                                                        className={
+                                                            !cardD?.buyNowPrice
+                                                                && "buy-now-active-tab-text"
+                                                        }
+                                                    >
+                                                        Place Bid
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
+
+                                        )}
+
                                     </div>
                                     <div className="mt-3">
-                                        {offer && (
+                                        {cardD?.buyNowPrice && (
                                             <div
                                                 className="tabcontent"
                                                 id="offer-amount"
@@ -2278,7 +2291,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                 </table>
                                             </div>
                                         )}
-                                        {!offer && (
+                                        {!cardD?.buyNowPrice && (
                                             <div
                                                 className="tabcontent"
                                                 id="budget"
@@ -2845,7 +2858,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         )}
                                     </div>
                                     <div className="flex justify-center mt-5">
-                                        {offer ? (
+                                        {cardD?.buyNowPrice ? (
                                             <button
                                                 type="button"
                                                 className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
