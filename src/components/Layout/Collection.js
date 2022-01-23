@@ -226,7 +226,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                 <>
                     <ToastContainer />
                     {carCollection?.length ? (
-                        <div className="blue-div px-20 mt-16 py-3 flex justify-between items-center">
+                        <div className="blue-div px-20 mt-16 py-3 flex justify-between items-center" style={{zIndex:"5"}} >
                             <>
                                 <div
                                     key={selectedCollection._id}
@@ -280,14 +280,14 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 ? "opacity-0 invisible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10 transition duration-500 ease-in-out"
                                 : " opacity-100 visible dropdown-menu  transform origin-top-right -translate-y-2 scale-95 font-10 transition duration-500 ease-in-out  "
                         }
-                        style={{zIndex:"999"}}
+                        style={{zIndex:5}}
                     >
                         <div
-                            className="absolute -left-8 w-full mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-200 rounded-md shadow-lg outline-none font-10"
+                            className="absolute left-8 w-full mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-200 rounded-md shadow-lg outline-none font-10"
                             aria-labelledby="headlessui-menu-button-1"
                             id="headlessui-menu-items-117"
                             role="menu"
-                            style={{zIndex:"9999"}}
+                            style={{zIndex:5}}
                             
                         >
                             <>
@@ -372,7 +372,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                     </>
                                 )}
                             </>
-                            <div className="px-20 py-3 flex justify-between items-center" style={{zIndex:"1"}}>
+                            <div className="px-20 py-3 flex justify-between items-center" style={{zIndex:"5"}}>
                                 <Link href="/vin">
                                     <p className="start-bid">
                                         {" "}

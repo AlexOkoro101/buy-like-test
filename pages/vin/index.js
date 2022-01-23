@@ -1090,20 +1090,22 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         <div>
 
             <Meta title="Buylike Dealers search page"  />
-            <Collection></Collection>
             
+            {/* <Collection className="absolute" style={{position:"absolute"}}/> */}
             
+    
             
-            <main  >
+
             
             
                 
             
                 {/* <!-- Search region here --> */}
                 
-                <div
-                    className="flex items-start main h-full m-0  pb-12 pt-16"
+                <main
+                    className="flex items-start  main h-full m-0  pb-12 pt-16"
                     id="carDeets"
+                     
                    
 
                 >
@@ -1112,7 +1114,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div
-                            className="filter-holder transition-all delay-300   h-full lg:block p-3 w-3/12 xl:w-2/12"
+                            className="filter-holder transition-all delay-300 h-full lg:block p-3 w-3/12 xl:w-2/12"
                             style={{
                                 position: width <= 900 ? "absolute" : "",
                                 zIndex: 0,
@@ -1120,7 +1122,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 top: 44,
                                 left: 0,
                                 right: 0,
-                                buttom: 0,
+                                bottom: 0,
                             }}
                         >
                         
@@ -1924,7 +1926,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                         </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between  lg:px-4">
+                        <div className="search-results-holder flex items-center justify-between lg:px-4">
                             {/* <!-- first section here --> */}
                             <div className="w-5/6 lg:w-1/3 flex items-center">
                                 {!open && (
@@ -2643,9 +2645,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                             </div>
                         )}
                     </div>
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        
     );
 };
 const mapStateToProps = (state) => {
