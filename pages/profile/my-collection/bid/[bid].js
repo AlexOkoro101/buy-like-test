@@ -1336,15 +1336,16 @@ const BidDetails = () => {
                                               style={{
                                                 border: "1px solid grey",
                                               }}
+                                              className="p-10"
                                             >
-                                              <h4 className="text-sm">
+                                              <h4 className="text-sm text-center">
                                                 Details
                                               </h4>
                                               <div className="flex justify-between p-2">
                                                 <h3>Form of Payment</h3>
                                                 <h3>
                                                   {transactionByCollection?.type ||
-                                                    ""}
+                                                  ""}
                                                 </h3>
                                               </div>
                                               <div className="flex justify-between p-2">
@@ -1373,14 +1374,14 @@ const BidDetails = () => {
                                           <tr
                                             key={transactionByCollection?._id}
                                             className="pr-4 mb-3  text-center leading-3 md:mb-0"
-                                            onClick={() =>
-                                              showDetails
-                                                ? setShowDetails(false)
-                                                : setShowDetails(true)
-                                            }
+                                            // onClick={() =>
+                                            //   showDetails
+                                            //     ? setShowDetails(false)
+                                            //     : setShowDetails(true)
+                                            // }
                                           >
 
-<td className="circle"></td>
+                                            <td className="circle mt-5" style={{background:"red"}}></td>
                                             <td className="p-3.5 ">
                                                                 <p className="text-xs font-bold" id="date"> {new Date(
                                                 transactionByCollection?.createdAt
@@ -1489,13 +1490,13 @@ const BidDetails = () => {
                                                 <tr
                                                   key={transaction?._id}
                                                   className="pr-4 mb-3 text-center leading-3 md:mb-0"
-                                                  onClick={() =>
-                                                    showDetails
-                                                      ? setShowDetails(false)
-                                                      : setShowDetails(true)
-                                                  }
+                                                  // onClick={() =>
+                                                  //   showDetails
+                                                  //     ? setShowDetails(false)
+                                                  //     : setShowDetails(true)
+                                                  // }
                                                 >
-                                                  <td className="circle"></td>
+                                                <td className="circle mt-5" style={{background:"red"}}></td>
                                             <td className="p-3.5 ">
                                                                 <p className="text-xs font-bold" id="date"> {new Date(
                                                 transaction?.createdAt

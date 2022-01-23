@@ -123,7 +123,7 @@ const CollectionDetails = () => {
                             </div>
 
                             <div className="">
-                                <h4 className="text-xs font-semibold">{selectedCar.name}</h4>
+                                <h4 className="text-xs font-semibold">{selectedCar?.name}</h4>
                                 
                                 
                                 <h4 className="text-xs font-semibold">VIN: {selectedCar?.vin}</h4>
@@ -216,7 +216,7 @@ const CollectionDetails = () => {
                                         <div className="flex justify-between">
                                             <div>
                                                 <h4 className="text-xs font-normal">
-                                                    {vehicle.name}
+                                                    {vehicle?.name}
                                                 </h4>
                                                 <div className="flex mt-0.5">
                                                     <img
@@ -226,22 +226,22 @@ const CollectionDetails = () => {
                                                     />
                                                     <p className="text-xs font-normal">
                                                         {
-                                                            vehicle.Vehicle_location
+                                                            vehicle?.Vehicle_location
                                                         }
                                                     </p>
                                                 </div>
                                                 <div className="flex mt-0.5">
                                                     <h4 className="font-normal font-sm mr-5">
-                                                        {vehicle.year}
+                                                        {vehicle?.year}
                                                     </h4>
                                                     <h4 className="font-normal font-sm">
-                                                        {vehicle.audometer} miles
+                                                        {vehicle?.audometer} miles
                                                     </h4>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
-                                                    ${vehicle.bidAmount}
+                                                    ${vehicle?.bidAmount}
                                                 </h4>
                                             </div>
                                         </div>
@@ -263,7 +263,7 @@ const CollectionDetails = () => {
                                                     <Link
                                                         href={
                                                             "/profile/my-collection/bid/" +
-                                                            vehicle.vin
+                                                            vehicle?.vin
                                                         }
                                                     >
                                                         view details
@@ -299,7 +299,7 @@ const CollectionDetails = () => {
                                                         className="font-normal font-sm gray-text group-hover:text-red-500"
                                                         onClick={() =>
                                                             removeBid(
-                                                                vehicle._id
+                                                                vehicle?._id
                                                             )
                                                         }
                                                     >
