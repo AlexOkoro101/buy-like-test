@@ -1256,6 +1256,7 @@ const BidDetails = () => {
 
                                     </div> */}
                         <div>
+                          <>
                           <h5>No Documents available</h5>
                           <h2>
                             Balance To be Paid: NGN
@@ -1287,36 +1288,45 @@ const BidDetails = () => {
                               Payment Completed
                             </button>
                           )}
+                          </>
 
-                          <div className="">
-                            <div className="block w-full overflow-x-auto overflow-y-auto h-96 mb-20 mt-20">
-                              <h1 className="my-5">
+                          <div className="text-right">
+                            <div className="block w-full  h-96 mb-20 mt-20">
+                              <h1 className="my-5 text-right">
                                 Transaction History For This Vehicle
                               </h1>
-                              <table className="items-center w-full  border-collapse">
-                                <thead className=" text-xs font-medium">
-                                  <tr className="">
-                                  <th className="p-3.5 text-left">Date</th>
+                              <table className="items-right w-full  text-right border-collapse">
+                                {/* <thead className=" text-xs font-medium">
+                                   <tr className="">
+                                  <th className="p-3.5 text-left">Date</th>  */}
                                     {/* <th className="p-3.5 text-left ">
                                       Vehicle/Collection Name
                                     </th> */}
-                                    <th className="p-3.5 text-left">
+                                    {/* <th className="p-3.5 text-left">
                                       Amount paid
-                                    </th>
+                                    </th> */}
                                     {/* <th className="p-3.5 text-left">Form of payment</th> */}
                                     {/* <th className="p-3.5 text-left">Status</th>
                                     <th className="p-3.5 text-left">Balance</th>
                                     <th className="p-3.5 text-left">Date</th> */}
-                                  </tr>
-                                </thead>
+                                  {/* </tr>
+                                </thead> */}
 
-                                <tbody className="flex-1 sm:flex-none text-xs primary-black">
+                                <tbody className="flex-1 sm:flex-none text-xs item-right primary-black">
                                   {transactionByCollection == null &&
                                   transactionById.length < 1 ? (
-                                    <div>
+                                    <>
+                                    <p className="">
                                       No Available Transaction History For this
                                       Vehicle
-                                    </div>
+                                    </p>
+                                
+                                    
+                                                       
+                                                        
+                                                        
+                                    </>
+                                    
                                   ) : (
                                     <>
                                       {transactionByCollection !== null ? (
@@ -1362,21 +1372,32 @@ const BidDetails = () => {
 
                                           <tr
                                             key={transactionByCollection?._id}
-                                            className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100"
+                                            className="pr-4 mb-3  text-center leading-3 md:mb-0"
                                             onClick={() =>
                                               showDetails
                                                 ? setShowDetails(false)
                                                 : setShowDetails(true)
                                             }
                                           >
+
+<td className="circle"></td>
                                             <td className="p-3.5 ">
-                                              {new Date(
+                                                                <p className="text-xs font-bold" id="date"> {new Date(
                                                 transactionByCollection?.createdAt
                                               ).toLocaleDateString("en-NG", {
                                                 year: "numeric",
                                                 day: "numeric",
-                                                month: "long",
-                                              })}
+                                                month: "short",
+                                              })}</p>
+                                                                <small className="text-xs " id="time">{new Date(
+                                                transactionByCollection?.createdAt
+                                              ).toLocaleTimeString("en-NG", {
+                                                hour: "numeric",
+                                                minute: "numeric",
+                                                
+                                              })}</small>
+                                             
+                                             
                                             </td>
                                             {/* <td className="p-3.5">
                                             {transactionByCollection
@@ -1467,25 +1488,32 @@ const BidDetails = () => {
 
                                                 <tr
                                                   key={transaction?._id}
-                                                  className="border-transactions flex-no wrap sm:table-row mb-2 sm:mb-0 cursor-pointer hover:bg-gray-100"
+                                                  className="pr-4 mb-3 text-center leading-3 md:mb-0"
                                                   onClick={() =>
                                                     showDetails
                                                       ? setShowDetails(false)
                                                       : setShowDetails(true)
                                                   }
                                                 >
-                                                  <td className="p-3.5 ">
-                                                    {new Date(
-                                                      transaction?.createdAt
-                                                    ).toLocaleDateString(
-                                                      "en-NG",
-                                                      {
-                                                        year: "numeric",
-                                                        day: "numeric",
-                                                        month: "long",
-                                                      }
-                                                    )}
-                                                  </td>
+                                                  <td className="circle"></td>
+                                            <td className="p-3.5 ">
+                                                                <p className="text-xs font-bold" id="date"> {new Date(
+                                                transaction?.createdAt
+                                              ).toLocaleDateString("en-NG", {
+                                                year: "numeric",
+                                                day: "numeric",
+                                                month: "short",
+                                              })}</p>
+                                                                <small className="text-xs " id="time">{new Date(
+                                                transaction?.createdAt
+                                              ).toLocaleTimeString("en-NG", {
+                                                hour: "numeric",
+                                                minute: "numeric",
+                                                
+                                              })}</small>
+                                             
+                                             
+                                            </td>
                                                   {/* <td className="p-3.5">
                                                     {transaction?.BidCollection
                                                       ?.name ||

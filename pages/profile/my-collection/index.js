@@ -375,7 +375,7 @@ const MyCollection = ({
                 )}
                 {carCollection?.map((collection) => (
                   <div key={collection?._id}>
-                    <div className="border-gray-100 border mb-3 lg:px-5 px-2 md:py-5 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-full lg:w-5/6 mx-auto rounded-lg shadow-lg">
+                    <div className="border-gray-100 border mb-3 lg:px-2  md:py-2 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-full lg:w-5/6 mx-auto rounded-lg ">
                       <div className="md:flex w-full ">
                         <div className="flex justify-between md:hidden p-2 text-sm">
                           <div>
@@ -420,11 +420,11 @@ const MyCollection = ({
                             )}
                           </div>
                         </div>
-                        <div className="md:mx-2 w-full md:w-2/5 xl:w-1/5 ">
+                        <div className="md:mr-2 w-full md:w-1/5 xl:w-1/5 ">
                           {collection?.vehicles.length > 0 ? (
                             <img
                               key={collection?.image_id}
-                              src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_smallUrl}`}
+                              src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_largeUrl}`}
                               alt="car"
                               className="img-fluid rounded text-center w-full h-26"
                             />
@@ -517,10 +517,10 @@ const MyCollection = ({
                             </div>
                           </div>
                           <div
-                            className="w-full hidden md:flex justify-between items-bottom mt-4 md:mt-8 py-2"
-                            style={{ borderTop: "2px solid gray" }}
+                            className="w-full hidden md:flex justify-between items-bottom mt-6 xl:mt-16  md:object-bottom"
+                            style={{ borderTop: "0.2px solid grey" }}
                           >
-                            <div className="flex flex-wrap py-2">
+                            <div className="flex flex-wrap pt-2">
                               {collection?.vehicles?.map((vehicle) => (
                                 <img
                                   key={vehicle?.image_id}
@@ -536,7 +536,7 @@ const MyCollection = ({
                                   "/profile/my-collection/" + collection?._id
                                 }
                               >
-                                <h6 className="md:text-xs text-blue-400 my-2 font-bold">
+                                <h6 className="md:text-xs text-blue-400 mt-2 font-bold">
                                   Manage this collection
                                 </h6>
                               </Link>

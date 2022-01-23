@@ -221,7 +221,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
 
     console.log(carCollection)
     return (
-        <div style={{zIndex:"99999"}} className="collec">
+        <div style={{zIndex:"5"}} className="collec">
             {id && (
                 <>
                     <ToastContainer />
@@ -241,13 +241,13 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                             cars selected
                                         </h6>
                                     </div>
-                                    <div className="flex py-2 ml-3">
+                                    <div className="flex py-2 ml-3 ">
                                         {selectedCollection?.vehicles?.map(
                                             (vehicle) => (
                                                 <img
                                                     src={`https://proxybuylike.herokuapp.com/?url=${vehicle?.images[0]?.image_smallUrl}`}
                                                     alt={"car"}
-                                                    className="tiny-car-card"
+                                                    className="tiny-car-card w-14"
                                                 />
                                             )
                                         )}
@@ -299,6 +299,9 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                                     key={collection?._id}
                                                     className="px-20 py-3 flex justify-between items-center cursor-pointer"
                                                     onClick={()=>changeCollection(collection)}
+                                                    style={{
+                                                        zIndex:"5"
+                                                    }}
                                                 >
                                                     <>
                                                         <div className="flex">

@@ -281,6 +281,7 @@ const placeBidError = () =>
 
   const retrieveCountry = () => {
     const country = localStorage.getItem("userCountry");
+    console.log(country)
     if (!country) return;
 
     const item = JSON.parse(country);

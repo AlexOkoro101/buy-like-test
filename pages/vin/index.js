@@ -1093,7 +1093,10 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
             <Collection></Collection>
             
             
-            <main >
+            
+            <main  >
+            
+            
                 
             
                 {/* <!-- Search region here --> */}
@@ -1105,13 +1108,14 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
                 >
                     
+                    
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div
                             className="filter-holder transition-all delay-300   h-full lg:block p-3 w-3/12 xl:w-2/12"
                             style={{
                                 position: width <= 900 ? "absolute" : "",
-                                zIndex: 999,
+                                zIndex: 0,
                                 width: width <= 900 ? "100%" : "",
                                 top: 44,
                                 left: 0,
