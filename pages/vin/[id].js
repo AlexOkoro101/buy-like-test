@@ -408,7 +408,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             packingCode: `${getZipLocation()}`,
             packingName: "",
         };
-        if (getZipLocation() === "") {
+        if (getZipLocation() == "") {
             setnoZipValue(true);
 
             return;
@@ -453,10 +453,19 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             .catch((error) => console.log("error", error));
     };
     useEffect(() => {
+       
         if (typeof getZipLocation() !== "undefined") {
             fetchLocalTrucking();
         }
     }, []);
+
+    // useEffect(() => {
+    //     bidAmountRef.focus()
+
+    //     return () => {
+    //         bidAmountRef.focus()
+    //     }
+    // }, [])
 
     useEffect(() => {
         clearTimer(getDeadTime());
@@ -1127,7 +1136,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         setmaxBidAmount(dollarFormatter.format(maxBidAmount));
     };
     const removeComma = () => {
-        setmaxBidAmount(bidAmountRef.current.value.replace(/\,/g, ""));
+        setmaxBidAmount(bidAmountRef.current.value?.replace(/\,/g, ""));
     };
 
     const removeAlpha = () => {
@@ -2351,6 +2360,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                     value={
                                                                         maxBidAmount
                                                                     }
+                                                                    autoFocus
                                                                 />
                                                             </td>
                                                             <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
@@ -2836,7 +2846,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             </>
                                         )}
                                     </div>
-                                    <div className="flex justify-center mt-5">
+                                    {/* <div className="flex justify-center mt-5">
                                         {cardD?.buyNowPrice ? (
                                             <button
                                                 type="button"
@@ -2858,7 +2868,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                         ) : (
                                             <></>
                                         )}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
