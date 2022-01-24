@@ -90,7 +90,7 @@ const CollectionDetails = () => {
     console.log(collection)
     
     return (
-        <div>
+        <div className="h-full">
             <Meta></Meta>
             <main className="mb-20">
                 <Collection></Collection>
@@ -111,9 +111,9 @@ const CollectionDetails = () => {
 
                 {!collection?.error && (
                     
-                    <div className="flex font-11 mt-10 flex-col lg:flex-row h-full">
+                    <div className="flex font-11 mt-10 flex-col lg:flex-row h-full mb-60">
                         {collection!==null?
-                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px h-full mb-10">
+                        <div className="side-card lg:mx-20 px-5 py-10 space-y-4 m-auto lg:m-px h-full mb-30">
                              <div className="flex justify-between">
                              <img
                                         src={`https://proxybuylike.herokuapp.com/?url=${selectedCar?.images[0]?.image_largeUrl}`}
