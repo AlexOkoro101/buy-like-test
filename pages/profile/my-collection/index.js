@@ -375,7 +375,7 @@ const MyCollection = ({
                 )}
                 {carCollection?.map((collection) => (
                   <div key={collection?._id}>
-                    <div className="border-gray-100 border mb-3 lg:px-2  md:py-2 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-full lg:w-5/6 mx-auto rounded-lg ">
+                    <div className="border-gray-100 border mb-3 lg:px-2  md:py-2 flex justify-between items-center cursor-pointer hover:bg-blue-50 w-full sm:w-5/6 mx-auto rounded-lg ">
                       <div className="md:flex w-full ">
                         <div className="flex justify-between md:hidden p-2 text-sm">
                           <div>
@@ -420,13 +420,13 @@ const MyCollection = ({
                             )}
                           </div>
                         </div>
-                        <div className="md:mr-2 w-full md:w-1/5 xl:w-1/5 ">
+                        <div className="md:mr-2 w-full md:w-1/5 xl:w-1/5  h-full">
                           {collection?.vehicles.length > 0 ? (
                             <img
                               key={collection?.image_id}
                               src={`https://proxybuylike.herokuapp.com/?url=${collection?.vehicles[0]?.images[0]?.image_largeUrl}`}
                               alt="car"
-                              className="img-fluid rounded text-center w-full h-26"
+                              className="img-fluid rounded text-center w-full h-full"
                             />
                           ) : (
                             // <div
@@ -442,12 +442,12 @@ const MyCollection = ({
                               key={collection?.image_id}
                               src={`/img/Rectangle.png`}
                               alt="car"
-                              className="img-fluid rounded text-center w-full h-26"
+                              className="img-fluid rounded text-center w-full h-full md:h-26"
                             />
                           )}
                         </div>
                         <div className=" w-4/5 flex flex-col">
-                          <div className="hidden md:flex w-full justify-between">
+                          <div className="hidden sm:flex w-full justify-between">
                             <div className="mb-5">
                               <h4 className=" text-xs md:text-sm font-medium blue-text uppercase mb-2 ">
                                 {collection?.name}
@@ -517,7 +517,7 @@ const MyCollection = ({
                             </div>
                           </div>
                           <div
-                            className="w-full hidden md:flex justify-between items-bottom mt-6 xl:mt-16  md:object-bottom"
+                            className="w-full hidden md:flex justify-between items-bottom md:mt-0 lg:mt-6  xl:mt-16  md:object-bottom"
                             style={{ borderTop: "0.2px solid grey" }}
                           >
                             <div className="flex flex-wrap pt-2">
@@ -561,7 +561,7 @@ const MyCollection = ({
                 <img
                   src={`https://proxybuylike.herokuapp.com/?url=${vehicle.vehicle?.images[0]?.image_largeUrl}`}
                   alt="benz"
-                  className="rounded-md w-64 h-36 flex-no-shrink mr-4 w-full md:w-1/6"
+                  className="rounded-md w-64 h-36 flex-no-shrink mr-4 w-full sm:w-1/6"
                 />
                 <div className="flex flex-col justify-between flex-grow">
                   <div className="flex justify-between">

@@ -376,7 +376,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                 <Link href="/vin">
                                     <p className="start-bid">
                                         {" "}
-                                        Start a new bid
+                                        Add More Cars
                                     </p>
                                 </Link>
 
@@ -388,7 +388,7 @@ const Collection = ({ loading, getCollection, carCollection: collection }) => {
                                     className="start-bid"
                                 >
                                     {" "}
-                                    Add Collection
+                                    Create a new Collection
                                 </p>
                             </div>
                         </div>

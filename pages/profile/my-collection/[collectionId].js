@@ -111,9 +111,9 @@ const CollectionDetails = () => {
 
                 {!collection?.error && (
                     
-                    <div className="flex font-11 mt-10 flex-col lg:flex-row">
+                    <div className="flex font-11 mt-10 flex-col lg:flex-row h-full">
                         {collection!==null?
-                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px h-full">
+                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px h-full mb-10">
                              <div className="flex justify-between">
                              <img
                                         src={`https://proxybuylike.herokuapp.com/?url=${selectedCar?.images[0]?.image_largeUrl}`}
@@ -167,7 +167,7 @@ const CollectionDetails = () => {
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">Total</h4>
                                 <p className="text-xs font-medium">
-                                    ${selectedCar?.bidAmount}
+                                    ${ Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400}
                                 </p>
                             </div>
 
@@ -187,7 +187,7 @@ const CollectionDetails = () => {
                                     Balance
                                 </h4>
                                 <p className="text-xs font-medium">
-                                    ${selectedCar?.price - 1000-400-400}
+                                    ${Number(selectedCar?.bidAmount)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400 - 1000}
                                 </p>
                             </div>
 
@@ -197,7 +197,7 @@ const CollectionDetails = () => {
                             </h4>
                         </div>:<h4> Loading..</h4>}
 
-                        <section className="grid gap-y-4 mx-auto mb-10 mr-20">
+                        <section className="grid gap-y-4 mx-auto mb-10 mr-20 h-full">
                             {collection?.data?.vehicles.length <= 0 ?
                                 <div>No cars to show</div>
                             :
@@ -241,7 +241,7 @@ const CollectionDetails = () => {
                                             </div>
                                             <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
-                                                    ${vehicle?.bidAmount}
+                                                    ${Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400}
                                                 </h4>
                                             </div>
                                         </div>

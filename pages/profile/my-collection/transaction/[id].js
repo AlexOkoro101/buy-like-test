@@ -479,6 +479,7 @@ const placeBidError = () =>
       images: carDetails?.images,
       trucking: carDetails?.trucking||"",
       shipping: carDetails?.shipping||"",
+      auctionEndDate: carDetails?.auctionEndDate
         };
 
       //Add car to collection
@@ -1469,8 +1470,8 @@ const stripePayment = (ref, verifiedData) => {
                       vin: {carDetails?.vin}
                     </p>
                     <p className="primary-black font-medium font-11 uppercase">
-                    {!userCountry==="Nigeria" ? "$" + dollarFormatter.format(carDetails?.bidAmount): "N"+ dollarFormatter.format(carDetails?.bidAmount* naira)}
-                      {/* ${dollarFormatter.format(carDetails?.bidAmount)} */}
+                    {/* {!userCountry==="Nigeria" ? "$" + dollarFormatter.format(carDetails?.price): "N"+ dollarFormatter.format(carDetails?.price* naira)} */}
+                      ${dollarFormatter.format(carDetails?.price)}
                     </p>
                   </div>
                 </div>
@@ -1483,21 +1484,23 @@ const stripePayment = (ref, verifiedData) => {
                           Trucking
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.trucking): "N"+ dollarFormatter.format(carDetails?.trucking* naira)}
+                          {/* {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.trucking): "N"+ dollarFormatter.format(carDetails?.trucking* naira)} */}
+                          ${dollarFormatter.format(carDetails?.trucking)}
                         </td>
                       </tr>
                     )}
 
-                    {(carDetails?.shipping || carDetails?.shipping != 0) && (
+                    {(carDetails?.shipping || carDetails?.shipping != 0) && userCountry=="Nigeria"? (
                       <tr className="detail-row mb-2">
                         <td className="sec-black text-sm font-semibold py-1.5">
                           Shipping
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.shipping): "N"+ dollarFormatter.format(carDetails?.shipping* naira)}
+                          {/* {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.shipping): "N"+ dollarFormatter.format(carDetails?.shipping* naira)} */}
+                        ${dollarFormatter.format(carDetails?.shipping)}
                         </td>
                       </tr>
-                    )}
+                    ):<></>}
 
                     <tr className="detail-row mb-2">
                       <td className="sec-black text-sm font-semibold py-1.5">
@@ -1513,7 +1516,8 @@ const stripePayment = (ref, verifiedData) => {
                         Service Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        {!userCountry==="Nigeria" ? "$"+400: "N"+ dollarFormatter.format(400* naira)}
+                        {/* {!userCountry==="Nigeria" ? "$"+400: "₦"+ dollarFormatter.format(400* naira)} */}
+                        $400
                       </td>
                     </tr>
  
@@ -1522,7 +1526,8 @@ const stripePayment = (ref, verifiedData) => {
                         Auction Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        {!userCountry==="Nigeria" ? "$"+450: "N"+ dollarFormatter.format(450* naira)}
+                        {/* {!userCountry==="Nigeria" ? "$"+450: "₦"+ dollarFormatter.format(450* naira)} */}
+                        $450
                       </td>
                     </tr>
 
@@ -1531,7 +1536,9 @@ const stripePayment = (ref, verifiedData) => {
                         Total
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5 total-border">
-                        {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.total): "N"+ dollarFormatter.format(carDetails?.total* naira)}
+                        {/* {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.total): "N"+ dollarFormatter.format(carDetails?.total* naira)} */}
+
+                        {carDetails?.carDestination == 'Nigeria' ? `₦${dollarFormatter.format( carDetails?.total * carDetails?.usd +(Number(carDetails.price)*carDetails?.usd))}` : `$${dollarFormatter.format(carDetails?.total + Number(carDetail.price))}`}
                       </td>
                     </tr>
 
@@ -1540,7 +1547,8 @@ const stripePayment = (ref, verifiedData) => {
                         Deposit Due
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        {!userCountry==="Nigeria"? "$"+ 1000: "N"+ dollarFormatter.format(1000 * naira)}
+                        {!userCountry==="Nigeria"? "$"+ 1000: "₦"+ dollarFormatter.format(1000 * 500)}
+                       
                       </td>
                     </tr>
                   </tbody>

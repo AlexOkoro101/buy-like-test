@@ -479,16 +479,16 @@ const BidDetails = () => {
                           <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
                             {`${CollectionBid?.name}`}
                           </p>
-                          {/* <p className="primary-black font-medium py-1 text-xs uppercase">
+                          <p className="primary-black font-medium py-1 text-xs uppercase">
                                             {dollarFormatter.format(bidCollection?.odometer)} mi
                                         </p>
                                         <p className="primary-black font-medium text-xs uppercase">
                                             vin: {bidCollection?.vin}
-                                        </p> */}
-                          <p className="primary-black font-medium font-11 uppercase">
-                            {dollarFormatter.format(
-                              CollectionBid?.bids[0]?.bidAmount
-                            )}
+                                        </p>
+                          <p className="primary-black font-medium font-11 ">
+                            {
+                              bidCollection?.bidAmount
+                          }
                           </p>
                         </div>
                       </div>
