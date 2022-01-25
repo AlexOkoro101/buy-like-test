@@ -4,7 +4,7 @@ import { enviroment } from "../../src/components/enviroment"
 
 function VerifyEmail() {
     const router = useRouter()
-    const token = router.query;
+    const token = router.asPath.slice(30);
 
     useEffect(() => {
         verifyUser()
@@ -14,6 +14,7 @@ function VerifyEmail() {
     }, [])
 
     const verifyUser = () => {
+        console.log(token);
         var requestOptions = {
             method: 'POST',
             redirect: 'follow',
