@@ -81,18 +81,18 @@ const BidDetails = () => {
     (transactionByCollection == null || transactionByCollection == {})
       ? 50000000
       : transactionByCollection && transactionById.length == 0
-      ? Number(bidCollection?.bidAmount) * 570 - 500000 >= 2000000
+      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000 >= 2000000
         ? 200000000
-        : (Number(bidCollection?.bidAmount) * 570 - 500000) * 100
+        : ((Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000) * 100
       : transactionById[0]?.amountBalance >= 2000000
       ? 200000000
       : transactionById[0]?.amountBalance * 100;
   const BalanceToDisplayToUser =
     transactionById?.length == 0 &&
     (transactionByCollection == null || transactionByCollection == {})
-      ? Number(bidCollection?.bidAmount) * 570
+      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570
       : transactionByCollection && transactionById.length == 0
-      ? Number(bidCollection?.bidAmount) * 570 - 500000
+      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000
       : transactionById[0]?.amountBalance;
   const BalanceToFrontEndPayments =
     BalanceToDisplayToUser - AmountToPayonPayStack / 100;
@@ -502,7 +502,7 @@ const BidDetails = () => {
                                 Trucking
                               </td>
                               <td className="text-xs primary-black font-normal py-1.5">
-                                ${bidCollection?.trucking || 0}
+                                ${bidCollection?.trucking }
                               </td>
                             </tr>
                           ) : (
@@ -516,7 +516,7 @@ const BidDetails = () => {
                                   Shipping
                                 </td>
                                 <td className="text-xs primary-black font-normal py-1.5">
-                                  ${bidCollection?.shipping || 0}
+                                  ${bidCollection?.shipping }
                                 </td>
                               </tr>
                             )}
@@ -553,7 +553,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                              {bidCollection?.bidAmount}
+                              {Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 
@@ -890,7 +890,7 @@ const BidDetails = () => {
                             vin: {bidCollection?.vin}
                           </p>
                           <p className="primary-black font-medium font-11 uppercase">
-                            {dollarFormatter.format(bidCollection?.price)}
+                            {dollarFormatter.format(bidCollection?.bidAmount)}
                           </p>
                         </div>
                       </div>
@@ -955,7 +955,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                              {bidCollection?.bidAmount}
+                            {Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 

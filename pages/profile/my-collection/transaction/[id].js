@@ -2457,7 +2457,6 @@ const stripePayment = (ref, verifiedData) => {
                       <button
                         onClick={() => {
                           localStorage.setItem("ACTIVE", "bid");
-
                           router.push("/vin");
                         }}
                         type="button"

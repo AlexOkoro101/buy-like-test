@@ -151,6 +151,24 @@ const CollectionDetails = () => {
                                     Clearing
                                 </h4>
                                 <p className="text-xs font-normal">
+                                    N/A
+                                </p>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                                <h4 className="text-xs font-semibold">
+                                    Auction fee
+                                </h4>
+                                <p className="text-xs font-normal">
+                                    ${450}
+                                </p>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                                <h4 className="text-xs font-semibold">
+                                    Service fee
+                                </h4>
+                                <p className="text-xs font-normal">
                                     ${400}
                                 </p>
                             </div>
@@ -167,7 +185,7 @@ const CollectionDetails = () => {
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">Total</h4>
                                 <p className="text-xs font-medium">
-                                    ${ Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400}
+                                    ${ Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+450+ 400}
                                 </p>
                             </div>
 
@@ -187,7 +205,7 @@ const CollectionDetails = () => {
                                     Balance
                                 </h4>
                                 <p className="text-xs font-medium">
-                                    ${Number(selectedCar?.bidAmount)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400 - 1000}
+                                    ${Number(selectedCar?.bidAmount)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450 - 1000}
                                 </p>
                             </div>
 
@@ -241,7 +259,7 @@ const CollectionDetails = () => {
                                             </div>
                                             <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
-                                                    ${Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400}
+                                                    ${Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450}
                                                 </h4>
                                             </div>
                                         </div>
