@@ -86,6 +86,7 @@ const LoginOptions = ({ beginLogin }) => {
                         email: data.data.user.email,
                         phone: data.data.user.profile.phoneNumber,
                         expiry: now.getTime() + 3600000,
+                        emailVerified: data.data.user.emailVerified
                     };
                     localStorage.setItem("user", JSON.stringify(item));
                     router.push("/vin");
@@ -152,6 +153,7 @@ const LoginOptions = ({ beginLogin }) => {
                         phone: data.data.user.profile.phoneNumber,
                         email: data.data.user.email,
                         expiry: now.getTime() + 3600000,
+                        emailVerified: data.data.user.emailVerified
                     };
                     localStorage.setItem("user", JSON.stringify(item));
                     router.push("/vin");
