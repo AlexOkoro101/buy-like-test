@@ -95,33 +95,25 @@ const ResetPassword = () => {
                 body: JSON.stringify(values),
             })
                 .then((res) => {
-                    console.log("reset res", res)
-                    if (!res.ok) {
-                        setisLoading(false);
-                        throw Error("Could not change password");
-                    }
-                    setisLoading(false);
-                    return res.json();
+                    res.json()
                 })
-                .then((data) => {
-                    console.log("reset", data)
-                    if (data?.success === true) {
+                .then((result) => {
+                    setisLoading(false);
+                    if (result.error == true) {
                         seterror(data?.message);
+                        toastError();
+                    }
+                    if (result?.error == false) {
+                        seterror(result?.message);
                         toastSuccess();
                         setTimeout(function () {
                             router.push('/auth/login/email')
                         }, 1500);
-                    } else {
-                        seterror(data?.message);
-                        toastError();
-                    }
+                    } 
                 })
                 .catch((e) => {
-                    // seterror(e.message)
-                    setisLoading(false);
                     console.log(e.message);
                 });
-                
 
         },
     });
