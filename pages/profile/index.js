@@ -360,7 +360,7 @@ const Profile = () => {
                   <i className="fa fa-lock" aria-hidden="true"></i>
                   <span className="ml-1.5 text-sm font-medium">Password</span>
                 </button>
-                {!user.emailVerified && (
+                {!user?.emailVerified && (
                   <button className="head w-full py-3.5 pl-10 flex items-center bg-green-500 text-white hover:bg-green-400" onClick={verifyMail}>
                     {isLoading ? (
                       <ClipLoader color="#fff" size="24px"></ClipLoader>
