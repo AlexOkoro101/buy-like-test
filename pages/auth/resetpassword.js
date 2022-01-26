@@ -98,6 +98,7 @@ const ResetPassword = () => {
                     res.json()
                 })
                 .then((result) => {
+                    console.log(result);
                     setisLoading(false);
                     if (result.error == true) {
                         seterror(data?.message);
