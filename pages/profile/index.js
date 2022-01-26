@@ -365,7 +365,7 @@ const Profile = () => {
                     {isLoading ? (
                       <ClipLoader color="#fff" size="24px"></ClipLoader>
                     ) : (
-                      <span className="ml-1.5 text-sm font-medium">Verify Email</span>
+                      <span className="ml-1.5 text-sm font-medium">Verify Account</span>
                     )}
                   </button>
 
