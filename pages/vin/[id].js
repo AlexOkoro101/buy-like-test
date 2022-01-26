@@ -399,35 +399,20 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       });
   };
 
-  const fetchScrapperTrucking = () => {
-    const getTrucking = {
-      packingCode: `${getZipLocation()}`,
-      packingName: "",
-    };
-    if (getZipLocation() === "") {
-      setnoZipValue(true);
+    const fetchScrapperTrucking = () => {
+        const getTrucking = {
+            packingCode: `${getZipLocation()}`,
+            packingName: "",
+        };
+        if (getZipLocation() == "") {
+            setnoZipValue(true);
 
-      return;
-    }
-    fetch("https://buylink-shiping.herokuapp.com/api/ng-trucking", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        credentials: "same-origin",
-      },
-      body: JSON.stringify(getTrucking),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status) {
-          createLocalTrucking(data);
+            return;
         }
         settruckingPrice(data.raw[1] || 0);
         console.log(data.raw[1]);
-      });
-  };
+      }
+
 
   const createLocalTrucking = (data) => {
     const localTruckingObject = {
@@ -435,24 +420,24 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       location: "",
       raw: [`${data.raw[0]}`, `${data.raw[1]}`],
     };
+    useEffect(() => {
+       
+        if (typeof getZipLocation() !== "undefined") {
+            fetchLocalTrucking();
+        }
+    }, []);
 
-    fetch(enviroment.BASE_URL + "truck", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(localTruckingObject),
-      redirect: "follow",
-    })
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
-  };
-  useEffect(() => {
-    if (typeof getZipLocation() !== "undefined") {
-      fetchLocalTrucking();
-    }
-  }, []);
+    // useEffect(() => {
+    //     bidAmountRef.focus()
+
+    //     return () => {
+    //         bidAmountRef.focus()
+    //     }
+    // }, [])
+
+    useEffect(() => {
+        clearTimer(getDeadTime());
+    }, []);
 
   useEffect(() => {
     clearTimer(getDeadTime());
@@ -817,10 +802,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       //         filterCollection = selectedCollection._id;
       //          console.log(filterCollection)
 
-      //         break;
-      //     }
-      // }
-      // console.log(filterCollection)
+    function getDeadTime() {
+        let deadline = new Date(carDetail?.auctionEndTime);
+        deadline.setSeconds(deadline.getSeconds());
+        return deadline;
+    }
+    const bidAmountRef = useRef("");
+    const formatbidAmount = () => {
+        setmaxBidAmount(dollarFormatter.format(maxBidAmount));
+    };
+    const removeComma = () => {
+        setmaxBidAmount(bidAmountRef.current.value?.replace(/\,/g, ""));
+    };
 
       return JSON.parse(localStorage.getItem("placeBidData"))._id;
     }
@@ -2147,518 +2140,600 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                                                         <option key={country.label} value={country.label}>{country.label}</option>
                                                                     ))}
                                                                 </select> */}
-                                <Select
-                                  options={options}
-                                  value={carDestination}
-                                  className="placebid-destination"
-                                  onChange={(e) => {
-                                    console.log(e.label);
-                                    setcarDestination(e);
-                                    if (e.label == "United States") {
-                                      setplacebidShipAccessory(false);
-                                    }
-                                  }}
-                                />
-                              </td>
-                            </tr>
+                                                                <Select options={options} value={carDestination}
+                                                                className="placebid-destination" 
+                                                                onChange={(e) => {
+                                                                console.log(e.label)
+                                                                setcarDestination(e)
+                                                                if(e.label == "United States") {
+                                                                    setplacebidShipAccessory(false)
+                                                                }
 
-                            <tr className="max-bid-row">
-                              <td className="font-semibold sec-black font-11 p-2 max-bid">
-                                Enter max. bid
-                              </td>
-                              <td
-                                colSpan="3"
-                                className="text-sm font-medium sec-gray max-bid-content"
-                              >
-                                <input
-                                  ref={bidAmountRef}
-                                  id="budget"
-                                  className="font-11 bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
-                                  type="text"
-                                  onBlur={() => formatbidAmount()}
-                                  onFocus={() => {
-                                    removeComma();
-                                  }}
-                                  onChange={(e) => {
-                                    includeMaxBid(e);
-                                    removeAlpha();
-                                  }}
-                                  value={maxBidAmount}
-                                />
-                              </td>
-                              <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
-                                USD
-                              </td>
-                            </tr>
+                                                                }} />
+                                                            </td>
+                                                        </tr>
 
-                            <tr className="">
-                              <td className="sec-black font-11 font-semibold w-28 p-2">
-                                Auction Fee
-                              </td>
-                              <td
-                                colSpan="3"
-                                className="font-11 sec-black font-normal pr-20 py-2"
-                              >
-                                $
-                                {dollarFormatter.format(
-                                  getAuctionFee(cardD?.mmrPrice)
-                                )}
-                              </td>
-                              <td className=" px-2 text-right">
-                                <img
-                                  className="inline"
-                                  src="../assets/img/vectors/tool-tip.svg"
-                                  alt="tooltip"
-                                />
-                              </td>
-                            </tr>
+                                                        <tr className="max-bid-row">
+                                                            <td className="font-semibold sec-black font-11 p-2 max-bid">
+                                                                Enter max. bid
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="text-sm font-medium sec-gray max-bid-content"
+                                                            >
+                                                                <input
+                                                                    ref={
+                                                                        bidAmountRef
+                                                                    }
+                                                                    id="budget"
+                                                                    className="font-11 bidingAmt border-none edit-control focus:outline-none text-black focus:text-blue-500 w-full"
+                                                                    type="text"
+                                                                    onBlur={() =>
+                                                                        formatbidAmount()
+                                                                    }
+                                                                    onFocus={() => {
+                                                                        removeComma();
+                                                                    }}
+                                                                    onChange={(
+                                                                        e
+                                                                    ) => {
+                                                                        includeMaxBid(
+                                                                            e
+                                                                        );
+                                                                        removeAlpha();
+                                                                    }}
+                                                                    value={
+                                                                        maxBidAmount
+                                                                    }
+                                                                    autoFocus
+                                                                />
+                                                            </td>
+                                                            <td className="font-11 font-normal sec-black max-bid-dropdown pl-3">
+                                                                USD
+                                                            </td>
+                                                        </tr>
 
-                            <tr className="">
-                              <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                Tax and Reg
-                              </td>
-                              <td
-                                colSpan="3"
-                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                              >
-                                Not Applicable
-                              </td>
-                              <td className="px-2 border-b border-gray-200 text-right">
-                                <img
-                                  className="inline"
-                                  src="../assets/img/vectors/tool-tip.svg"
-                                  alt="tooltip"
-                                />
-                              </td>
-                            </tr>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Auction Fee
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal pr-20 py-2"
+                                                            >
+                                                                ${dollarFormatter.format(getAuctionFee(cardD?.mmrPrice))}
+                                                            </td>
+                                                            <td className=" px-2 text-right">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
 
-                            <tr className="">
-                              <td className="sec-black font-11 font-semibold w-28 p-2">
-                                Trucking
-                              </td>
-                              {noZipValue ? (
-                                <td
-                                  colSpan="2"
-                                  className="font-11 sec-black font-normal py-2"
-                                >
-                                  <>Contact Support</>
-                                  <a
-                                    onClick={(e) => sendSheet(e)}
-                                    href="https://api.whatsapp.com/send?phone=+17135130111"
-                                    style={{
-                                      margin: "0 10px",
-                                    }}
-                                    target="_blank"
-                                  >
-                                    <i
-                                      style={{
-                                        fontSize: "17px",
-                                        color: "green",
-                                      }}
-                                      className="fa fa-whatsapp"
-                                    ></i>
-                                  </a>
-                                  <a
-                                    href="mailto:buylikedealers@gmail.com"
-                                    style={{
-                                      margin: "0 10px",
-                                    }}
-                                    target="_blank"
-                                  >
-                                    <i
-                                      style={{
-                                        fontSize: "17px",
-                                        color: "blue",
-                                      }}
-                                      className="fa fa-envelope-o"
-                                    ></i>
-                                  </a>
-                                </td>
-                              ) : (
-                                <>
-                                  <td
-                                    colSpan="3"
-                                    className="font-11 sec-black font-normal py-2"
-                                  >
-                                    {truckingPrice?.includes(",") ? (
-                                      <>
-                                        {"$"}
-                                        {truckingPrice
-                                          ? Number(
-                                              truckingPrice
-                                                ?.slice(1)
-                                                .replace(/,/g, "")
-                                            ) > 1000
-                                            ? Number(
-                                                truckingPrice
-                                                  ?.slice(1)
-                                                  .replace(/,/g, "")
-                                              ) / 3
-                                            : Number(
-                                                truckingPrice
-                                                  ?.slice(1)
-                                                  .replace(/,/g, "")
-                                              ) > 400 &&
-                                              Number(
-                                                truckingPrice
-                                                  ?.slice(1)
-                                                  .replace(/,/g, "")
-                                              ) < 1000
-                                            ? Number(
-                                                truckingPrice
-                                                  ?.slice(1)
-                                                  .replace(/,/g, "")
-                                              ) / 2
-                                            : Number(
-                                                truckingPrice
-                                                  ?.slice(1)
-                                                  .replace(/,/g, "")
-                                              )
-                                          : "0"}
-                                      </>
-                                    ) : (
-                                      <>
-                                        {"$"}
-                                        {truckingPrice
-                                          ? Number(truckingPrice?.slice(1)) >
-                                            1000
-                                            ? Number(truckingPrice?.slice(1)) /
-                                              3
-                                            : Number(truckingPrice?.slice(1)) >
-                                                400 &&
-                                              Number(truckingPrice?.slice(1)) <
-                                                1000
-                                            ? Number(truckingPrice?.slice(1)) /
-                                              2
-                                            : Number(truckingPrice?.slice(1))
-                                          : "0"}
-                                      </>
-                                    )}
-                                  </td>
-                                  <td className="text-right px-2">
-                                    <label className="detail">
-                                      <input
-                                        value={placebidTruckAccessory}
-                                        type="checkbox"
-                                        className="focus:outline-none detail self-center"
-                                        onChange={() =>
-                                          setplacebidTruckAccessory(
-                                            !placebidTruckAccessory
-                                          )
-                                        }
-                                        checked={placebidTruckAccessory}
-                                      />
-                                      <span className="detail"></span>
-                                    </label>
-                                  </td>
-                                </>
-                              )}
-                            </tr>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                                Tax and Reg
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                Not Applicable
+                                                            </td>
+                                                            <td className="px-2 border-b border-gray-200 text-right">
+                                                                <img
+                                                                    className="inline"
+                                                                    src="../assets/img/vectors/tool-tip.svg"
+                                                                    alt="tooltip"
+                                                                />
+                                                            </td>
+                                                        </tr>
 
-                            {carDestination?.label !== "United States" && (
-                              <tr className="">
-                                <td className="sec-black font-11 font-semibold w-28 p-2">
-                                  Shipping
-                                </td>
-                                <td
-                                  colSpan="3"
-                                  className="font-11 sec-black font-normal pr-20 py-2"
-                                >
-                                  $1,150
-                                </td>
-                                <td className="text-right px-2">
-                                  <label className="detail">
-                                    <input
-                                      value={placebidShipAccessory}
-                                      type="checkbox"
-                                      className="focus:outline-none detail self-center"
-                                      onChange={() =>
-                                        setplacebidShipAccessory(
-                                          !placebidShipAccessory
-                                        )
-                                      }
-                                      checked={
-                                        carDestination == "United States"
-                                          ? false
-                                          : placebidShipAccessory
-                                      }
-                                    />
-                                    <span className="detail"></span>
-                                  </label>
-                                </td>
-                              </tr>
-                            )}
+                                                        
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                Trucking
+                                                            </td>
+                                                            {noZipValue ? (
+                                                                    <td
+                                                                        colSpan="2"
+                                                                        className="font-11 sec-black font-normal py-2"
+                                                                    >
+                                                                        <>
+                                                                            Contact
+                                                                            Support
+                                                                        </>
+                                                                        <a
+                                                                            onClick={(
+                                                                                e
+                                                                            ) =>
+                                                                                sendSheet(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            href="https://api.whatsapp.com/send?phone=+17135130111"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "green",
+                                                                                }}
+                                                                                className="fa fa-whatsapp"
+                                                                            ></i>
+                                                                        </a>
+                                                                        <a
+                                                                            href="mailto:buylikedealers@gmail.com"
+                                                                            style={{
+                                                                                margin: "0 10px",
+                                                                            }}
+                                                                            target="_blank"
+                                                                        >
+                                                                            <i
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        "17px",
+                                                                                    color: "blue",
+                                                                                }}
+                                                                                className="fa fa-envelope-o"
+                                                                            ></i>
+                                                                        </a>
+                                                                    </td>
+                                                                ) : (
+                                                                    <>
+                                                                        <td
+                                                                            colSpan="3"
+                                                                            className="font-11 sec-black font-normal py-2"
+                                                                        >
+                                                                            {truckingPrice?.includes(",") ? (
+                                                                                <>
+                                                                                    
+                                                                                    {"$"}
+                                                                                    {truckingPrice
+                                                                                        ? Number(
+                                                                                            truckingPrice?.slice(
+                                                                                                1
+                                                                                            ).replace(/,/g, '')
+                                                                                        ) > 
+                                                                                        1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            3
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) >
+                                                                                                400 &&
+                                                                                            Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) <
+                                                                                                1000
+                                                                                            ? Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            ) /
+                                                                                            2
+                                                                                            : Number(
+                                                                                                truckingPrice?.slice(
+                                                                                                    1
+                                                                                                ).replace(/,/g, '')
+                                                                                            )
+                                                                                        : "0"}
+                                                                                </>
+                                                                            ) : (
+                                                                            <>
 
-                            {carDestination?.label !== "United States" && (
-                              <tr className="">
-                                <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
-                                  Clearing
-                                </td>
-                                <td
-                                  colSpan="3"
-                                  className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
-                                >
-                                  N/A
-                                </td>
-                                <td className="text-right px-2 border-b border-gray-200">
-                                  <img
-                                    className="inline"
-                                    src="../assets/img/vectors/tool-tip.svg"
-                                    alt="tooltip"
-                                  />
-                                </td>
-                              </tr>
-                            )}
+                                                                            {"$"}
+                                                                            {truckingPrice
+                                                                                ? Number(
+                                                                                    truckingPrice?.slice(
+                                                                                        1
+                                                                                    )
+                                                                                ) >
+                                                                                1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    3
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) >
+                                                                                        400 &&
+                                                                                    Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) <
+                                                                                        1000
+                                                                                    ? Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    ) /
+                                                                                    2
+                                                                                    : Number(
+                                                                                        truckingPrice?.slice(
+                                                                                            1
+                                                                                        )
+                                                                                    )
+                                                                                : "0"}
+                                                                            </>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="text-right px-2">
+                                                                            <label className="detail">
+                                                                                <input
+                                                                                    value={
+                                                                                        placebidTruckAccessory
+                                                                                    }
+                                                                                    type="checkbox"
+                                                                                    className="focus:outline-none detail self-center"
+                                                                                    onChange={() =>
+                                                                                        setplacebidTruckAccessory(
+                                                                                            !placebidTruckAccessory
+                                                                                        )
+                                                                                    }
+                                                                                    checked={placebidTruckAccessory}
+                                                                                />
+                                                                                <span className="detail"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </>
+                                                                )}
+                                                                
+                                                        </tr>
+                                                        
 
-                            <tr className="">
-                              <td
-                                colSpan="1"
-                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
-                              >
-                                Service Fee
-                              </td>
-                              <td
-                                colSpan="4"
-                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
-                              >
-                                $400
-                              </td>
-                            </tr>
+                                                        {carDestination?.label !== "United States" && (
+                                                            <tr className="">
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2">
+                                                                    Shipping
+                                                                </td>
+                                                                <td
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2"
+                                                                >
+                                                                    $1,150
+                                                                </td>
+                                                                <td className="text-right px-2">
+                                                                    <label className="detail">
+                                                                        <input
+                                                                            value={
+                                                                                placebidShipAccessory
+                                                                            }
+                                                                            type="checkbox"
+                                                                            className="focus:outline-none detail self-center"
+                                                                            onChange={() =>
+                                                                                setplacebidShipAccessory(
+                                                                                    !placebidShipAccessory
+                                                                                )
+                                                                            }
+                                                                            checked={carDestination == "United States" ? false : placebidShipAccessory}
+                                                                        />
+                                                                        <span className="detail"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
 
-                            <tr className="">
-                              <td className="sec-black font-11 font-bold w-28 p-2">
-                                Total
-                              </td>
-                              <td
-                                colSpan="3"
-                                className="font-11 sec-black font-bold pr-8 py-2"
-                              >
-                                {NGN ? (
-                                  <>
-                                    N
-                                    {/* {(placebidAccessories() * Number(usd)).toLocaleString()} */}
-                                    {(
-                                      (Number(maxBidAmount.replace(/\,/g, "")) +
-                                        Number(placebidAccessories())) *
-                                      Number(usd)
-                                    ).toLocaleString()}
-                                  </>
-                                ) : (
-                                  <>
-                                    $
-                                    {(
-                                      Number(maxBidAmount.replace(/\,/g, "")) +
-                                      Number(placebidAccessories())
-                                    ).toLocaleString()}
-                                  </>
-                                )}
-                              </td>
-                              <td className="font-11 font-normal sec-black">
-                                <ReactFlagsSelect
-                                  selected={selectedCountryCurrency}
-                                  countries={["NG", "US"]}
-                                  searchPlaceholder="Search countries"
-                                  selectedSize={10}
-                                  optionsSize={10}
-                                  showSelectedLabel={false}
-                                  fullWidth={false}
-                                  onSelect={(code) => {
-                                    convertCurrency(code);
-                                    setSelectedCountryCurrency(code);
-                                  }}
-                                  className="currency-flags"
-                                  selectButtonClassName="currency-flags-button"
-                                  customLabels={{
-                                    NG: {
-                                      primary: "NGN",
-                                    },
-                                    US: {
-                                      primary: "USD",
-                                    },
-                                  }}
-                                />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
+                                                        )}
 
-                  <div className="flex justify-center my-3">
-                    <div className="flex">
-                      <label className="detail">
-                        <input
-                          type="checkbox"
-                          className="focus:outline-none detail self-center"
-                          checked={terms}
-                          onChange={(e) => {
-                            setterms(!terms);
-                          }}
-                        />
-                        <span className="detail"></span>
-                      </label>
-                      <label className="font-11 sec-black ml-1.5">
-                        I agree with {""}
-                        <span className="primary-blue">
-                          terms and conditions
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="flex justify-center">
-                    {token ? (
-                      <>
-                        <button
-                          onClick={OpenSendSheetModal}
-                          className={
-                            `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
-                            (!terms && `opacity-50 cursor-not-allowed`)
-                          }
-                          disabled={!terms}
-                        >
-                          {isLoading ? (
-                            <ClipLoader color="#fff" size={20} loading />
-                          ) : (
-                            "SUBMIT REQUEST"
-                          )}
-                        </button>
+                                                        {carDestination?.label !== "United States" && (
+                                                            <tr className="">
+                                                                <td className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200">
+                                                                    Clearing
+                                                                </td>
+                                                                <td
+                                                                    colSpan="3"
+                                                                    className="font-11 sec-black font-normal pr-20 py-2 border-b border-gray-200"
+                                                                >
+                                                                    N/A
+                                                                </td>
+                                                                <td className="text-right px-2 border-b border-gray-200">
+                                                                    <img
+                                                                        className="inline"
+                                                                        src="../assets/img/vectors/tool-tip.svg"
+                                                                        alt="tooltip"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        )}
 
-                        <p className="font-11 sec-black mx-2 mt-2">OR</p>
 
-                        <button
-                          type="button"
-                          className="whatsapp-proceed"
-                          onClick={() => {
-                            OpenSendSheetModal();
-                          }}
-                        >
-                          <img
-                            src="../assets/img/whatsapp-btn.svg"
-                            className="inline"
-                            alt=""
-                          />{" "}
-                          WHATSAPP US
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link href="/auth/login">
-                          <button
-                            type="button"
-                            className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                          >
-                            REQUEST FOR MORE INFO
-                          </button>
-                        </Link>
 
-                        <p className="font-11 sec-black mx-2 mt-2">OR</p>
+                                                        <tr className="">
+                                                            <td
+                                                                colSpan="1"
+                                                                className="sec-black font-11 font-semibold w-28 p-2 border-b border-gray-200"
+                                                            >
+                                                                Service Fee
+                                                            </td>
+                                                            <td
+                                                                colSpan="4"
+                                                                className="font-11 sec-black font-normal py-2 border-b border-gray-200"
+                                                            >
+                                                                $400
+                                                            </td>
+                                                        </tr>
 
-                        <button
-                          type="button"
-                          className="whatsapp-proceed"
-                          onClick={() => {
-                            OpenSendSheetModal();
-                          }}
-                        >
-                          <img
-                            src="../assets/img/whatsapp-btn.svg"
-                            className="inline"
-                            alt=""
-                          />{" "}
-                          WHATSAPP US
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  <div className="flex justify-center mt-5">
-                    {cardD?.buyNowPrice ? (
-                      <button
-                        type="button"
-                        className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                        onClick={() => {
-                          if (token) {
-                            router.push("/transaction/" + vin);
-                            localStorage.setItem(
-                              "buyNowData",
-                              JSON.stringify(bidData())
-                            );
-                            console.log(bidData());
-                          } else {
-                            router.push("/auth/login");
-                          }
-                        }}
-                      >
-                        BUY NOW
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
-                          onClick={() => {
-                            if (token) {
-                              localStorage.setItem(
-                                "buyNowData",
-                                JSON.stringify(bidData())
-                              );
-                              collection?.length <= 0
-                                ? router.push(
-                                    "/profile/my-collection/transaction/" + vin
-                                  )
-                                : placeBid();
-                            } else {
-                              router.push("/auth/login");
-                            }
-                          }}
-                        >
-                          {isPBLoading ? (
-                            <ClipLoader color="#fff" size={20} loading />
-                          ) : (
-                            CheckBidPlaced()
-                          )}
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
+                                                        <tr className="">
+                                                            <td className="sec-black font-11 font-bold w-28 p-2">
+                                                                Total
+                                                            </td>
+                                                            <td
+                                                                colSpan="3"
+                                                                className="font-11 sec-black font-bold pr-8 py-2"
+                                                            >
+                                                                {NGN ? (
+                                                                    <>
+                                                                        N
+                                                                        {/* {(placebidAccessories() * Number(usd)).toLocaleString()} */}
+                                                                        {(
+                                                                            (Number(
+                                                                                maxBidAmount.replace(
+                                                                                    /\,/g,
+                                                                                    ""
+                                                                                )
+                                                                            ) +
+                                                                                Number(
+                                                                                    placebidAccessories()
+                                                                                )) *
+                                                                            Number(
+                                                                                usd
+                                                                            )
+                                                                        ).toLocaleString()}
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        $
+                                                                        {(
+                                                                            Number(
+                                                                                maxBidAmount.replace(
+                                                                                    /\,/g,
+                                                                                    ""
+                                                                                )
+                                                                            ) +
+                                                                            Number(
+                                                                                placebidAccessories()
+                                                                            )
+                                                                        ).toLocaleString()}
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                            <td className="font-11 font-normal sec-black">
+                                                                <ReactFlagsSelect
+                                                                    selected={
+                                                                        selectedCountryCurrency
+                                                                    }
+                                                                    countries={[
+                                                                        "NG",
+                                                                        "US",
+                                                                    ]}
+                                                                    searchPlaceholder="Search countries"
+                                                                    selectedSize={
+                                                                        10
+                                                                    }
+                                                                    optionsSize={
+                                                                        10
+                                                                    }
+                                                                    showSelectedLabel={
+                                                                        false
+                                                                    }
+                                                                    fullWidth={
+                                                                        false
+                                                                    }
+                                                                    onSelect={(
+                                                                        code
+                                                                    ) => {
+                                                                        convertCurrency(
+                                                                            code
+                                                                        );
+                                                                        setSelectedCountryCurrency(
+                                                                            code
+                                                                        );
+                                                                    }}
+                                                                    className="currency-flags"
+                                                                    selectButtonClassName="currency-flags-button"
+                                                                    customLabels={{
+                                                                        NG: {
+                                                                            primary:
+                                                                                "NGN",
+                                                                        },
+                                                                        US: {
+                                                                            primary:
+                                                                                "USD",
+                                                                        },
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                    </div>
 
-              <section className="w-full mt-20">
-                <div className=" justify-center mb-10 block lg:hidden"></div>
+                                    <div className="flex justify-center my-3">
+                                        <div className="flex">
+                                            <label className="detail">
+                                                <input
+                                                    type="checkbox"
+                                                    className="focus:outline-none detail self-center"
+                                                    checked={terms}
+                                                    onChange={(e) => {
+                                                        setterms(!terms);
+                                                    }}
+                                                />
+                                                <span className="detail"></span>
+                                            </label>
+                                            <label className="font-11 sec-black ml-1.5">
+                                                I agree with {""}
+                                                <span className="primary-blue">
+                                                    terms and conditions
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        {token ? (
+                                            <>
+                                                <button
+                                                    onClick={
+                                                        
+                                                        // placeBid
+                                                        OpenSendSheetModal
+                                                    }
+                                                    className={
+                                                        `cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3 ` +
+                                                        (!terms &&
+                                                            `opacity-50 cursor-not-allowed`)
+                                                    }
+                                                    disabled={!terms}
+                                                >
+                                                    {isLoading ? (
+                                                        <ClipLoader
+                                                            color="#fff"
+                                                            size={20}
+                                                            loading
+                                                        />
+                                                    ) : (
+                                                        "SUBMIT A REQUEST"
+                                                    )}
+                                                </button>
+                                                
+                                                <p className="font-11 sec-black mx-2 mt-2">
+                                                    OR
+                                                </p>
 
-                <div className="flex justify-around flex-col lg:flex-row flex-wrap items-center gap-y-8">
-                  <div className="flex flex-col self-center">
-                    <div className="items-center self-center">
-                      <img
-                        src="../assets/img/vectors/location.svg"
-                        alt="location"
-                      />
-                    </div>
-                    <p className="pt-5 primary-black font-semibold text-base text-center">
-                      Vehicle location
-                    </p>
-                    <p className="pt-0.5 primary-gray font-medium font-11 text-center">
-                      {editLocation(cardD?.pickupLocation)}
-                    </p>
-                  </div>
-                  <div className="flex flex-col relative  lg:block">
-                    <div
-                      style={{ padding: "15px" }}
-                      className="timer-container relative"
-                    >
-                      {distance !== null && (
-                        <div>{renderCounter(distance)}</div>
-                      )}
+                                                <button
+                                                    type="button"
+                                                    className="whatsapp-proceed"
+                                                    onClick={() => {
+                                                        OpenSendSheetModal();
+                                                    }}
+                                                >
+                                                    <img
+                                                        src="../assets/img/whatsapp-btn.svg"
+                                                        className="inline"
+                                                        alt=""
+                                                    />{" "}
+                                                    WHATSAPP US
+                                                </button>
+                                                
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Link href="/auth/login">
+                                                    <button
+                                                        type="button"
+                                                        className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                    >
+                                                        REQUEST FOR MORE 
+                                                        INFO
 
-                      <div className="timer text-center">
-                        <button
-                          type="button"
-                          className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
-                        >
-                          Auction Day
-                        </button>
-                        {/* {car.data.length === 0 ? (
+                                                    </button>
+                                                </Link>
+
+                                                <p className="font-11 sec-black mx-2 mt-2">
+                                                    OR
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    className="whatsapp-proceed"
+                                                    onClick={() => {
+                                                        OpenSendSheetModal();
+                                                    }}
+                                                >
+                                                    <img
+                                                        src="../assets/img/whatsapp-btn.svg"
+                                                        className="inline"
+                                                        alt=""
+                                                    />{" "}
+                                                    WHATSAPP US
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    {/* <div className="flex justify-center mt-5">
+                                        {cardD?.buyNowPrice ? (
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer focus:outline-none primary-btn text-white font-9 font-semibold py-2 px-3"
+                                                onClick={() => {
+                                                    if(token) {
+                                                        router.push('/transaction/' + vin)
+                                                        localStorage.setItem("buyNowData", JSON.stringify(bidData()));
+                                                        console.log(bidData())
+                                                    } else {
+                                                        router.push('/auth/login')
+                                                    }
+                                                }}
+                                            >
+                                                
+                                                BUY NOW
+                                            </button>
+
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div> */}
+                                </div>
+                            </div>
+
+                            <section className="w-full mt-20">
+                                <div className=" justify-center mb-10 block lg:hidden"></div>
+
+                                <div className="flex justify-around flex-col lg:flex-row flex-wrap items-center gap-y-8">
+                                    <div className="flex flex-col self-center">
+                                        <div className="items-center self-center">
+                                            <img
+                                                src="../assets/img/vectors/location.svg"
+                                                alt="location"
+                                            />
+                                        </div>
+                                        <p className="pt-5 primary-black font-semibold text-base text-center">
+                                            Vehicle location
+                                        </p>
+                                        <p className="pt-0.5 primary-gray font-medium font-11 text-center">
+                                            {editLocation(cardD?.pickupLocation)}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col relative  lg:block">
+                                        <div
+                                            style={{ padding: "15px" }}
+                                            className="timer-container relative"
+                                        >
+                                            {distance !== null && (
+                                                <div>
+                                                    {renderCounter(distance)}
+                                                </div>
+                                            )}
+
+                                            <div className="timer text-center">
+                                                <button
+                                                    type="button"
+                                                    className="focus:outline-none cursor-auto pill  auction-pill text-white font-semibold font-9 py-1 uppercase px-3 "
+                                                >
+                                                    Auction Day
+                                                </button>
+                                                {/* {car.data.length === 0 ? (
                                         <></>
                                     ) : (
                                         <p className="font-9 font-semibold text-center primary-blue pt-4">
@@ -3511,4 +3586,4 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, { getCollection, searchCars })(
   CarDetails
-);
+)}

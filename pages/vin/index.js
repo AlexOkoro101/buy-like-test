@@ -1091,7 +1091,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
             <Meta title="Buylike Dealers search page"  />
             
-            {/* <Collection className="absolute" style={{position:"absolute"}}/> */}
+            {/* <Collection/> */}
             
     
             
@@ -1104,7 +1104,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 
                 <main
                     className="flex items-start  main h-full m-0  pb-12 pt-16"
-                    id="carDeets"
+                
                      
                    
 
