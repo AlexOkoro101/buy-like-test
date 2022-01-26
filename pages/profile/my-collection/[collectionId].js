@@ -36,6 +36,7 @@ const CollectionDetails = () => {
     const [error, seterror] = useState(null);
     const [message, setmessage] = useState(null);
     const [editCollectionId, seteditCollectionId] = useState(null);
+    const [selectedCar, setselectedCar]= useState(null)
 
     const router = useRouter();
     const collectionId = router.query.collectionId;
@@ -54,6 +55,8 @@ const CollectionDetails = () => {
                     if (Object.entries(result).length >= 1) {
                         const formatCollection = JSON.parse(result);
                         setcollection(formatCollection);
+                        setselectedCar(formatCollection?.data?.vehicles[0])
+                        localStorage.setItem("CollectionTransactionId", formatCollection?.data?.transaction);
                     }
                 }
             })
@@ -85,9 +88,9 @@ const CollectionDetails = () => {
     };
 
     console.log(collection)
-
+    
     return (
-        <div>
+        <div className="h-full">
             <Meta></Meta>
             <main className="mb-20">
                 <Collection></Collection>
@@ -107,20 +110,40 @@ const CollectionDetails = () => {
                 )}
 
                 {!collection?.error && (
-                    <div className="flex font-11 mt-10 flex-col lg:flex-row">
-                        <div className="side-card lg:mx-20 px-5 py-5 space-y-4 m-auto lg:m-px">
+                    
+                    <div className="flex font-11 mt-10 flex-col lg:flex-row h-full mb-60">
+                        {collection!==null?
+                        <div className="side-card lg:mx-20 px-5 py-10 space-y-4 m-auto lg:m-px h-full mb-30">
+                             <div className="flex justify-between">
+                             <img
+                                        src={`https://proxybuylike.herokuapp.com/?url=${selectedCar?.images[0]?.image_largeUrl}`}
+                                        alt="benz"
+                                        className="rounded-md w-64 h-36 flex-no-shrink mr-4"
+                                    />
+                            </div>
+
+                            <div className="">
+                                <h4 className="text-xs font-semibold">{selectedCar?.name}</h4>
+                                
+                                
+                                <h4 className="text-xs font-semibold">VIN: {selectedCar?.vin}</h4>
+                            
+                               
+                            </div>
+
+                            <div className="border"></div>
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">
                                     Trucking
                                 </h4>
-                                <p className="text-xs font-normal">$300</p>
+                                <p className="text-xs font-normal">{selectedCar?.trucking}</p>
                             </div>
 
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">
                                     Shipping
                                 </h4>
-                                <p className="text-xs font-normal">$950</p>
+                                <p className="text-xs font-normal">${selectedCar?.shipping}</p>
                             </div>
 
                             <div className="flex justify-between">
@@ -128,23 +151,41 @@ const CollectionDetails = () => {
                                     Clearing
                                 </h4>
                                 <p className="text-xs font-normal">
-                                    $2,000,000
+                                    N/A
+                                </p>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                                <h4 className="text-xs font-semibold">
+                                    Auction fee
+                                </h4>
+                                <p className="text-xs font-normal">
+                                    ${450}
+                                </p>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                                <h4 className="text-xs font-semibold">
+                                    Service fee
+                                </h4>
+                                <p className="text-xs font-normal">
+                                    ${400}
                                 </p>
                             </div>
 
-                            <div className="flex justify-between">
+                            {/* <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">
                                     Trucking
                                 </h4>
                                 <p className="text-xs font-normal">$400</p>
-                            </div>
+                            </div> */}
 
                             <div className="border"></div>
 
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">Total</h4>
                                 <p className="text-xs font-medium">
-                                    $46,000,000
+                                    ${ Number(selectedCar?.bidAmount||selectedCar?.price) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+450+ 400}
                                 </p>
                             </div>
 
@@ -164,7 +205,7 @@ const CollectionDetails = () => {
                                     Balance
                                 </h4>
                                 <p className="text-xs font-medium">
-                                    $45,530,000
+                                    ${Number(selectedCar?.bidAmount||selectedCar?.price)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450 - 1000}
                                 </p>
                             </div>
 
@@ -172,9 +213,9 @@ const CollectionDetails = () => {
                                 You will be directed to make the rest of the
                                 payment after a bid is won for you.
                             </h4>
-                        </div>
+                        </div>:<h4> Loading..</h4>}
 
-                        <section className="grid gap-y-4 mx-auto mb-10 mr-20">
+                        <section className="grid gap-y-4 mx-auto mb-10 mr-20 h-full">
                             {collection?.data?.vehicles.length <= 0 ?
                                 <div>No cars to show</div>
                             :
@@ -186,13 +227,14 @@ const CollectionDetails = () => {
                                     <img
                                         src={`https://proxybuylike.herokuapp.com/?url=${vehicle.images[0]?.image_largeUrl}`}
                                         alt="benz"
-                                        className="rounded-md w-64 h-36 flex-no-shrink mr-4"
+                                        className="rounded-md w-64 h-36 flex-no-shrink mr-4 cursor-pointer"
+                                        onClick={()=>setselectedCar(vehicle)}
                                     />
                                     <div className="flex flex-col justify-between flex-grow">
                                         <div className="flex justify-between">
                                             <div>
                                                 <h4 className="text-xs font-normal">
-                                                    {vehicle.name}
+                                                    {vehicle?.name}
                                                 </h4>
                                                 <div className="flex mt-0.5">
                                                     <img
@@ -202,35 +244,44 @@ const CollectionDetails = () => {
                                                     />
                                                     <p className="text-xs font-normal">
                                                         {
-                                                            vehicle.Vehicle_location
+                                                            vehicle?.Vehicle_location
                                                         }
                                                     </p>
                                                 </div>
                                                 <div className="flex mt-0.5">
                                                     <h4 className="font-normal font-sm mr-5">
-                                                        {vehicle.year}
+                                                        {vehicle?.year}
                                                     </h4>
                                                     <h4 className="font-normal font-sm">
-                                                        205,456 miles
+                                                        {vehicle?.audometer} miles
                                                     </h4>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
-                                                    ${vehicle.bidAmount}
+                                                    ${Number(vehicle?.bidAmount||vehicle?.price) +Number(vehicle?.shipping)+Number(vehicle?.trucking)+400+450}
                                                 </h4>
                                             </div>
                                         </div>
                                         <div>
                                             <div className="flex justify-between mb-1">
                                                 <h3 className="font-medium font-xs primary-blue uppercase">
-                                                    Awaiting bid - April 22,2021
+                                                    Awaiting bid -   {new Date(
+                                                            vehicle?.auctionEndTime
+                                                        ).toLocaleDateString(
+                                                            "en-NG",
+                                                            {
+                                                                year: "numeric",
+                                                                day: "numeric",
+                                                                month: "long",
+                                                            }
+                                                        )}
                                                 </h3>
                                                 <h3 className="font-medium font-xs primary-blue uppercase cursor-pointer hover:opacity-70">
                                                     <Link
                                                         href={
-                                                            "/vin/" +
-                                                            vehicle._id
+                                                            "/profile/my-collection/bid/" +
+                                                            vehicle?.vin
                                                         }
                                                     >
                                                         view details
@@ -266,7 +317,7 @@ const CollectionDetails = () => {
                                                         className="font-normal font-sm gray-text group-hover:text-red-500"
                                                         onClick={() =>
                                                             removeBid(
-                                                                vehicle._id
+                                                                vehicle?._id
                                                             )
                                                         }
                                                     >

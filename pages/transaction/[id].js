@@ -203,6 +203,7 @@ const Transaction = () => {
   const [addressModalContent1, setaddressModalContent1] = useState(true);
   const [addressModalContent2, setaddressModalContent2] = useState(false);
   const [addressModalContent3, setaddressModalContent3] = useState(false);
+  const [naira, setNaira] = useState(0);
 
   //Set Address
   const [country, setcountry] = useState("Nigeria");
@@ -281,7 +282,7 @@ const Transaction = () => {
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 50000000,
+    amount: /*amount * 100*/ 10000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
@@ -473,7 +474,7 @@ const Transaction = () => {
       })
       .catch((error) => console.log("error", error));
   };
-
+console.log(carDetails)
   const frontendPayment = (ref, verifiedData) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -492,6 +493,8 @@ const Transaction = () => {
       amount: 500000,
       amountBalance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
       reference: ref,
+      symbol:  userCountry==="Nigeria"? "NGN":"USD",
+      total: carDetails?.total,
       currency: "",
       metadata: "",
       symbol:"NGN",
@@ -534,16 +537,18 @@ const Transaction = () => {
       username: "",
       collection: "",
       owner: carDetails?.owner,
-      vehicle: bnsvehicleID,
+      vehicle: bnvehicleID,
       bid: bidID,
-      amount: carDetails?.total,
+      amount: "1000",
       amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
       reference: ref,
+      symbol:  userCountry==="Nigeria"? "NGN":"USD",
+      total: carDetails?.total,
       currency: "",
       metadata: "",
       balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-      status: verifiedData.data.paid,
-      statusTrans: verifiedData.data.paid,
+      status: verifiedData.data.status,
+      statusTrans: verifiedData.data.data.status,
     });
     console.log("stripe data", raw);
 
@@ -621,6 +626,7 @@ const Transaction = () => {
 
   useEffect(() => {
     retrieveCar();
+    getRate();
     console.log("car deets", carDetails);
   }, []);
 
@@ -1186,6 +1192,30 @@ const Transaction = () => {
       .catch((error) => console.log("error", error));
   };
 
+   const getRate = () => {
+          let id = "613b98b1e28f970016362ae3";
+        try {
+            fetch(enviroment.BASE_URL + "rates/" + `${id}`, {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.error === false) {
+                        console.log(data.data.rate)
+                        setNaira(data.data.rate);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    console.log(carDetails)
+
   return (
     <div>
       <ToastContainer />
@@ -1217,7 +1247,8 @@ const Transaction = () => {
                       vin: {carDetails?.vin}
                     </p>
                     <p className="primary-black font-medium font-11 uppercase">
-                      ${dollarFormatter.format(carDetails?.bidAmount)}
+                    {!userCountry==="Nigeria"? "$" + dollarFormatter.format(carDetails?.bidAmount): "N"+ dollarFormatter.format(carDetails?.bidAmount* naira)}
+                      {/* ${dollarFormatter.format(carDetails?.bidAmount)} */}
                     </p>
                   </div>
                 </div>
@@ -1230,7 +1261,7 @@ const Transaction = () => {
                           Trucking
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          ${carDetails?.trucking}
+                          {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.trucking): "N"+ dollarFormatter.format(carDetails?.trucking* naira)}
                         </td>
                       </tr>
                     )}
@@ -1241,7 +1272,7 @@ const Transaction = () => {
                           Shipping
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          ${carDetails?.shipping}
+                          {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.shipping): "N"+ dollarFormatter.format(carDetails?.shipping* naira)}
                         </td>
                       </tr>
                     )}
@@ -1260,7 +1291,7 @@ const Transaction = () => {
                         Service Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        $400
+                        {!userCountry==="Nigeria"? "$"+400: "N"+ dollarFormatter.format(400* naira)}
                       </td>
                     </tr>
 
@@ -1269,7 +1300,7 @@ const Transaction = () => {
                         Auction Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        $450
+                        {!userCountry==="Nigeria"? "$"+450: "N"+ dollarFormatter.format(450* naira)}
                       </td>
                     </tr>
 

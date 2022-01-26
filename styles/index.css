@@ -141,6 +141,13 @@ body {
 }
 
 
+/*collection style*/
+.collec {
+    z-index:999;
+    top:10;
+    ;
+}
+
 /* Nav Bar styles here */
 
 .nav-bar {

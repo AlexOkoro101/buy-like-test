@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { enviroment } from "../../src/components/enviroment"
 import Meta from "../../src/components/Head/Meta"
 import Link from 'next/link'
@@ -17,6 +17,7 @@ const Transactions = () => {
                 return null;
             }
             const item = JSON.parse(userActive);
+            console.log(item?.userId)
             setId(item?.userId);
             // setuserEmail(item?.email)
         };
