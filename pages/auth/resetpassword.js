@@ -94,27 +94,25 @@ const ResetPassword = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             })
-                .then((res) => {
-                    res.json()
-                })
-                .then((result) => {
-                    console.log(result);
-                    setisLoading(false);
-                    if (result.error == true) {
-                        seterror(data?.message);
-                        toastError();
-                    }
-                    if (result?.error == false) {
-                        seterror(result?.message);
-                        toastSuccess();
-                        setTimeout(function () {
-                            router.push('/auth/login/email')
-                        }, 1500);
-                    } 
-                })
-                .catch((e) => {
-                    console.log(e.message);
-                });
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                setisLoading(false);
+                if (result.error == true) {
+                    seterror(data?.message);
+                    toastError();
+                }
+                if (result?.error == false) {
+                    seterror(result?.message);
+                    toastSuccess();
+                    setTimeout(function () {
+                        router.push('/auth/login/email')
+                    }, 1500);
+                } 
+            })
+            .catch((e) => {
+                console.log(e.message);
+            });
 
         },
     });
