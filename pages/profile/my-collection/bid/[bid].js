@@ -81,18 +81,18 @@ const BidDetails = () => {
     (transactionByCollection == null || transactionByCollection == {})
       ? 50000000
       : transactionByCollection && transactionById.length == 0
-      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000 >= 2000000
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000 >= 2000000
         ? 200000000
-        : ((Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000) * 100
+        : ((Number(bidCollection?.bidAmount||bidCollection.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000) * 100
       : transactionById[0]?.amountBalance >= 2000000
       ? 200000000
       : transactionById[0]?.amountBalance * 100;
   const BalanceToDisplayToUser =
     transactionById?.length == 0 &&
     (transactionByCollection == null || transactionByCollection == {})
-      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570
       : transactionByCollection && transactionById.length == 0
-      ? (Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000
       : transactionById[0]?.amountBalance;
   const BalanceToFrontEndPayments =
     BalanceToDisplayToUser - AmountToPayonPayStack / 100;
@@ -487,7 +487,7 @@ const BidDetails = () => {
                                         </p>
                           <p className="primary-black font-medium font-11 ">
                             {
-                              bidCollection?.bidAmount
+                              bidCollection?.bidAmount|| bidCollection?.price
                           }
                           </p>
                         </div>
@@ -553,7 +553,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                              {Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
+                              {Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 
@@ -890,7 +890,7 @@ const BidDetails = () => {
                             vin: {bidCollection?.vin}
                           </p>
                           <p className="primary-black font-medium font-11 uppercase">
-                            {dollarFormatter.format(bidCollection?.bidAmount)}
+                            {dollarFormatter.format(bidCollection?.bidAmount||bidCollection?.price)}
                           </p>
                         </div>
                       </div>
@@ -955,7 +955,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                            {Number(bidCollection?.bidAmount) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
+                            {Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 

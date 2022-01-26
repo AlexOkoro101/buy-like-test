@@ -143,7 +143,7 @@ const CollectionDetails = () => {
                                 <h4 className="text-xs font-semibold">
                                     Shipping
                                 </h4>
-                                <p className="text-xs font-normal">${selectedCar?.shipping||400}</p>
+                                <p className="text-xs font-normal">${selectedCar?.shipping}</p>
                             </div>
 
                             <div className="flex justify-between">
@@ -185,7 +185,7 @@ const CollectionDetails = () => {
                             <div className="flex justify-between">
                                 <h4 className="text-xs font-semibold">Total</h4>
                                 <p className="text-xs font-medium">
-                                    ${ Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+450+ 400}
+                                    ${ Number(selectedCar?.bidAmount||selectedCar?.price) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+450+ 400}
                                 </p>
                             </div>
 
@@ -205,7 +205,7 @@ const CollectionDetails = () => {
                                     Balance
                                 </h4>
                                 <p className="text-xs font-medium">
-                                    ${Number(selectedCar?.bidAmount)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450 - 1000}
+                                    ${Number(selectedCar?.bidAmount||selectedCar?.price)+ Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450 - 1000}
                                 </p>
                             </div>
 
@@ -259,7 +259,7 @@ const CollectionDetails = () => {
                                             </div>
                                             <div className="flex flex-col mx-auxo items-end">
                                                 <h4 className="text-base font-normal gray-text">
-                                                    ${Number(selectedCar?.bidAmount) +Number(selectedCar?.shipping)+Number(selectedCar?.trucking)+400+450}
+                                                    ${Number(vehicle?.bidAmount||vehicle?.price) +Number(vehicle?.shipping)+Number(vehicle?.trucking)+400+450}
                                                 </h4>
                                             </div>
                                         </div>
