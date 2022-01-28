@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { useSelector, useDispatch } from "react-redux";
 import { selectToken } from "../../redux/reducers/userReducer";
+import Collection from "../../src/components/Layout/Collection"
 import Collapsible from "react-collapsible";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -94,7 +95,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         location: "",
     });
     const [pageIndex, setPageIndex] = useState(1);
-    const [active, setActive] = useState("all");
+    const [active, setActive] = useState(!localStorage.getItem("ACTIVE")?"all":localStorage.getItem("ACTIVE"));
     const [bodyType, setBodyType]=useState("")
     const [filter, setfilter] = useState([]);
     const [options, setoptions] = useState([]);
@@ -161,6 +162,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 getVehicleModels();
             }
         }
+        console.log(localStorage.getItem("ACTIVE"))
         // fetchPage(pageIndex);
     }, []);
     useEffect(() => {
@@ -1086,27 +1088,44 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
 
     return (
         <div>
+
             <Meta title="Buylike Dealers search page"  />
-            <main>
+            
+            {/* <Collection/> */}
+            
+    
+            
+
+            
+            
+                
+            
                 {/* <!-- Search region here --> */}
-                <div
-                    className="flex items-start main h-full m-0  pb-12 pt-16"
-                    id="carDeets"
+                
+                <main
+                    className="flex items-start  main h-full m-0  pb-12 pt-16"
+                
+                     
+                   
+
                 >
+                    
+                    
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div
-                            className="filter-holder transition-all delay-300   h-full lg:block p-3 w-3/12 xl:w-2/12"
+                            className="filter-holder transition-all delay-300 h-full lg:block p-3 w-3/12 xl:w-2/12"
                             style={{
                                 position: width <= 900 ? "absolute" : "",
-                                zIndex: 999,
+                                zIndex: 0,
                                 width: width <= 900 ? "100%" : "",
                                 top: 44,
                                 left: 0,
                                 right: 0,
-                                buttom: 0,
+                                bottom: 0,
                             }}
                         >
+                        
                             {/* <!-- Filter icon --> */}
                             <div className="flex pb-2">
                                 <div>
@@ -1907,7 +1926,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                         </div>
 
                         {/* <!-- Search tabs here --> */}
-                        <div className="search-results-holder flex items-center justify-between  lg:px-4">
+                        <div className="search-results-holder flex items-center justify-between lg:px-4">
                             {/* <!-- first section here --> */}
                             <div className="w-5/6 lg:w-1/3 flex items-center">
                                 {!open && (
@@ -2626,9 +2645,9 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                             </div>
                         )}
                     </div>
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        
     );
 };
 const mapStateToProps = (state) => {

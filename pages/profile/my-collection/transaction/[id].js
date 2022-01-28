@@ -87,8 +87,8 @@ const Transaction = () => {
   var dollarFormatter = new Intl.NumberFormat();
 
   //Notifiers
-  const buyNowInfo = () =>
-    toast.info("Car already bought by you", {
+  const placeBidSuccess = () =>
+  toast.success("Car added to your collection", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: true,
@@ -96,9 +96,9 @@ const Transaction = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-    });
-  const buyNowSuccess = () =>
-    toast.success("Success", {
+  });
+const placeBidInfo = () =>
+  toast.info("Bid already placed by you", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: true,
@@ -106,7 +106,17 @@ const Transaction = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-    });
+  });
+const placeBidError = () =>
+  toast.error(`${error ? error : "Could not perform operation"}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+  });
 
   const addAddressSuccess = () =>
     toast.success("New address added", {
@@ -174,9 +184,6 @@ const Transaction = () => {
     });
   //End of Notifiers
 
-  const [collection, setcollection] = useState(null);
-
-  const [id, setId] = useState(null);
   const [token, settoken] = useState("");
   const [userEmail, setuserEmail] = useState(null);
   const [userPhone, setuserPhone] = useState(null);
@@ -206,6 +213,8 @@ const Transaction = () => {
   const [addressModalContent1, setaddressModalContent1] = useState(true);
   const [addressModalContent2, setaddressModalContent2] = useState(false);
   const [addressModalContent3, setaddressModalContent3] = useState(false);
+  const [naira, setNaira] = useState(0);
+  const [collection, setCollection]= useState(null)
 
   //Set Address
   const [country, setcountry] = useState("Nigeria");
@@ -245,8 +254,6 @@ const Transaction = () => {
   const [billingAddress, setbillingAddress] = useState("");
   const [billingZip, setbillingZip] = useState("");
 
-  const collectionId = router.query.id;
-
   async function stripeTokenHandler(token) {
     const paymentData = {
       source: token,
@@ -274,6 +281,7 @@ const Transaction = () => {
 
   const retrieveCountry = () => {
     const country = localStorage.getItem("userCountry");
+    console.log(country)
     if (!country) return;
 
     const item = JSON.parse(country);
@@ -286,7 +294,7 @@ const Transaction = () => {
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 100000,
+    amount: /*amount * 100*/ 10000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
@@ -298,14 +306,15 @@ const Transaction = () => {
     console.log("bid ID", bidID);
     setstate(3);
   };
-    useEffect(() => {
-      if (refNumber === null) {
-        return;
-      } else {
-        console.log("verify payment");
-        verifyPaystackPayment(refNumber);
-      }
-    }, [confimation, state, refNumber]);
+  useEffect(() => {
+    if (refNumber === null) {
+      return;
+    } else {
+      console.log("verify payment");
+      placeBid(refNumber);
+      // verifyPaystackPayment(refNumber);
+    }
+  }, [confimation, state, refNumber]);
 
   // you can call this function anything
   const onClose = () => {
@@ -375,34 +384,17 @@ const Transaction = () => {
   };
 
   useEffect(() => {
-    const getUserId = () => {
-      const userActive = localStorage.getItem("user");
-      // console.log(userActive)
-      if (!userActive) {
-        setId(null);
-        return null;
-      }
-      const item = JSON.parse(userActive);
-      setId(item?.userId);
-      //   setuserEmail(item?.email);
-      //   setuserPhone(item?.phone);
-      //   setuserName(item?.userName);
+    retrieveCountry();
+    return () => {
+      retrieveCountry();
     };
-    getUserId();
-  }, [id]);
+  }, [router.pathname, token, switchAddress]);
 
-  //   useEffect(() => {
-  //     retrieveCountry();
-  //     return () => {
-  //       retrieveCountry();
-  //     };
-  //   }, [router.pathname, token, switchAddress]);
-
-    useEffect(() => {
-      retrieveData();
-      // console.log(options)
-      return retrieveData;
-    }, [router.pathname, token, switchAddress, addressModalContent1]);
+  useEffect(() => {
+    retrieveData();
+    // console.log(options)
+    return retrieveData;
+  }, [router.pathname, token, switchAddress, addressModalContent1]);
 
   const verifyPaystackPayment = (ref) => {
     fetch(enviroment.BASE_URL + "transactions/initialize/verify/" + ref, {
@@ -417,8 +409,10 @@ const Transaction = () => {
           //  console.log(data.data)
           if (Object.entries(data).length >= 1) {
             const formatData = JSON.parse(data);
+            console.log(formatData)
             // setcollection(formatData.data);
             if (formatData.data.status) {
+              // placeBid();
               frontendPayment(ref, formatData);
             }
           }
@@ -427,190 +421,293 @@ const Transaction = () => {
       .catch((error) => console.log("payment error", error));
   };
 
-  // const buyNowFunction = () => {
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "application/json");
 
-  //   const bidObject = {
-  //     vin: carDetails?.vin,
-  //     link: carDetails?.link,
-  //     name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
-  //     site: carDetails?.site,
-  //     price: carDetails?.bidAmount,
-  //     year: carDetails?.year,
-  //     exterior_color: carDetails?.exterior_color,
-  //     vehicle_type: carDetails?.vehicle_type,
-  //     interior_color: carDetails?.interior_color,
-  //     transmission: carDetails?.transmission,
-  //     odometer: carDetails?.odometer,
-  //     driveTrain: carDetails?.driveTrain,
-  //     doors: carDetails?.doors,
-  //     Model: carDetails?.model,
-  //     make: carDetails?.make,
-  //     equipment: "",
-  //     EngineType: "",
-  //     interior_type: "",
-  //     body_style: carDetails?.body_style,
-  //     fuel_type: "",
-  //     passengerCapacity: "",
-  //     sellerCity: "",
-  //     description: "",
-  //     Zip: carDetails?.Zip,
-  //     tilteImage: carDetails?.tilteImage,
-  //     bidAmount: carDetails?.total,
-  //     owner: carDetails?.owner,
-  //     facilitationLocation: carDetails?.facilitationLocation,
-  //     Vehicle_location: carDetails?.Vehicle_location,
-  //     images: carDetails?.images,
-  //     trucking: carDetails?.trucking,
-  //     shipping: carDetails?.shipping,
-  //     auctionEndTime: carDetails?.auctionEndTime,
-  //   };
+  const placeBidPayStack=()=>{
+    initializePayment(onSuccess, onClose);
+    setconfimation(true);
 
-  //   console.log("bid object", bidObject);
+  }
+      function makeCollectionName(length) {
+        var result = "";
+        var characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
+    }
+
+  const placeBid = (ref) => {
+        
+    async function addCar() {
+        seterror(null);
+      
+        const bidObject = {
+          vin: carDetails?.vin,
+          link: carDetails?.link,
+          name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
+          site: carDetails?.site,
+          price: carDetails?.bidAmount,
+          year: carDetails?.year,
+          exterior_color: carDetails?.exterior_color,
+          vehicle_type: carDetails?.vehicle_type,
+          interior_color: carDetails?.interior_color,
+          transmission: carDetails?.transmission,
+          odometer: carDetails?.odometer,
+          driveTrain: carDetails?.driveTrain,
+          doors: carDetails?.doors,
+          Model: carDetails?.model,
+          make: carDetails?.make,
+          equipment: "",
+          EngineType: "",
+          interior_type: "",
+          body_style: carDetails?.body_style,
+          fuel_type: "",
+          passengerCapacity: "",
+          sellerCity: "",
+          description: "",
+          Zip: carDetails?.Zip,
+          tilteImage: carDetails?.tilteImage,
+          bidAmount: carDetails?.total,
+          owner: carDetails?.owner,
+            collection: await placeItem(),
+            facilitationLocation: carDetails?.facilitationLocation,
+      Vehicle_location: carDetails?.Vehicle_location,
+      images: carDetails?.images,
+      trucking: carDetails?.trucking||"",
+      shipping: carDetails?.shipping||"",
+      auctionEndDate: carDetails?.auctionEndDate
+        };
+
+      //Add car to collection
+      fetch(enviroment.BASE_URL + "bids/add-bid", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bidObject),
+        redirect: "follow",
+    })
+        .then((response) => {
+            if (!response.ok) {
+              console.log(response)
+                placeBidInfo();
+            } else {
+              console.log(response)
+              //  setmessage(response.statusText);
+                placeBidSuccess();
+                verifyPaystackPayment(ref)
+                
+                // getBidId(resultFormat);
+                // setbnvehicleID(resultFormat.data._id);
+
+                console.log("hiiiiiiii")
+               
+               
+            }
+        })
+        .catch((error) => {
+            seterror(error);
+            console.log("error", error);
+        });
+}
+
+async function placeItem() {
+    let availableCollection = await createCollection();
+   
+    return availableCollection;
+}
+
+// function getCollections() {
+//     console.log("get collection", collection)
+//     return collection;
+// }
+
+// function getAvailableCollection() {
+//     // Replace getCollections
+//     // const replaceCollections = getCollections();
+
+//     // let filterCollection = null;
+
+//     // for (let index = 0; index < replaceCollections.length; index++) {
+//     //     const currentCollection = replaceCollections[index];
+//     //     if (currentCollection._id=== selectedCollection._id) {
+//     //         filterCollection = selectedCollection._id;
+//     //          console.log(filterCollection)
+
+//     //         break;
+//     //     }
+//     // }
+//     // console.log(filterCollection)
+
+//     return JSON.parse(localStorage.getItem("placeBidData"))._id;
+// }
+
+async function createCollection() {
+    let randomName = makeCollectionName(7);
+
+    const collectionObject = {
+        owner: `${userId}`,
+        name: `${randomName}`,
+    };
+    let newCollection;
+    await fetch(enviroment.BASE_URL + "collections", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(collectionObject),
+        redirect: "follow",
+    })
+        .then((response) => {
+            // setisPBLoading(false);
+            console.log(response)
+
+            if (!response.ok) {
+                // toastError()
+                // throw Error("Could not create collection")
+            } else {
+                // setmessage(response.statusText);
+                return response.json(); // toastSuccess();
+            }
+        })
+        .then((data) => {
+            newCollection = data.data._id;
+            localStorage.setItem("newCollectionData", JSON.stringify(data.data));
+            setCollection(data.data)
+            console.log(data.data)
+        })
+        .catch((error) => {
+            seterror(error);
+            console.log("error", error);
+        });
+    return newCollection;
+}
+
+// setSelectedCollection(JSON.parse(localStorage.getItem("placeBidData")))'
+console.log("i work")
+addCar();
+};
+
+const frontendPayment = (ref, verifiedData) => {
+  let Collect= JSON.parse(localStorage.getItem("newCollectionData"));
+  console.log(JSON.parse(localStorage.getItem("newCollectionData")))
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    vin: carDetails?.vin,
+    number: `${userPhone}`,
+    fullname: `${userName}`,
+    email: `${userEmail}`,
+    buyNow: false,
+    username: "",
+    collection: Collect._id,
+    colectionName: Collect?.name,
+    reference: ref,
+    owner: Collect?.owner,
+    symbol:  userCountry==="Nigeria"? "NGN":"USD",
+    // vehicle: bnsvehicleID,
+    // bid: bidID,
+    amount: "500000",
+    // amountBalance: carDetails?.total ? (Number(carDetails?.total)*570) - 500000 : 0,
+    // currency: "",
+    // metadata: "",
+    // balance: carDetails?.total ? (Number(carDetails?.total)*570) - 500000 : 0,
+    status: verifiedData.data.paid,
+    statusTrans: verifiedData.data.paid,
+  });
+  console.log("frontend data", raw);
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      const resultFormat = JSON.parse(result);
+      console.log("front end payment", resultFormat);
+      if (resultFormat.error === false) {
+      stripeSuccess();
+      }
+    })
+    .catch((error) => console.log("error", error));
+};
+
+const stripePayment = (ref, verifiedData) => {
+  console.log("vehicle id", bnsvehicleID);
+  let Collect= JSON.parse(localStorage.getItem("newCollectionData"))
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    vin: carDetails?.vin,
+    number: `${userPhone}`,
+    fullname: `${userName}`,
+    email: `${userEmail}`,
+    buyNow: false,
+    username: "",
+    collection: Collect._id,
+    colectionName: Collect?.name,
+    reference: ref,
+    owner: Collect?.owner,
+    symbol:  userCountry==="Nigeria"? "NGN":"USD",
+    // vehicle: bnsvehicleID,
+    // bid: bidID,
+    amount: "1000",
+    // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+    // currency: "",
+    // metadata: "",
+    // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
+    status: verifiedData.data.paid,
+    statusTrans: verifiedData.data.paid,
+  });
+  console.log("stripe data", raw);
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      const resultFormat = JSON.parse(result);
+      console.log("front end payment", resultFormat);
+      if (resultFormat.error === false) {
+        setstate(3);
+        stripeSuccess();
+      }
+    })
+    .catch((error) => console.log("error", error));
+};
+
+
+  // const getBidId = (bnfResult) => {
+  //   const vehicleID = bnfResult.data._id;
   //   var requestOptions = {
-  //     method: "POST",
-  //     headers: myHeaders,
-  //     body: JSON.stringify(bidObject),
+  //     method: "GET",
   //     redirect: "follow",
   //   };
 
-  //   //Add car to buy now
-  //   fetch(enviroment.BASE_URL + "bids/buy-now", requestOptions)
+  //   fetch(enviroment.BASE_URL + "bids/vehicle/" + vehicleID, requestOptions)
   //     .then((response) => response.text())
   //     .then((result) => {
-  //       // console.log(result)
+  //       console.log("gbID", result);
   //       const resultFormat = JSON.parse(result);
-  //       console.log("bnf", resultFormat);
-  //       if (resultFormat.error === false) {
-  //         getBidId(resultFormat);
-  //         setbnvehicleID(resultFormat.data._id);
-  //         initializePayment(onSuccess, onClose);
-  //         setconfimation(true);
-  //       } else {
-  //         buyNowInfo();
-  //       }
+  //       setbidID(resultFormat.data._id);
   //     })
   //     .catch((error) => console.log("error", error));
   // };
-
-
-  const collectionFunction=()=>{
-    initializePayment(onSuccess,onClose);
-    setconfimation(true)
-  }
-
-  const frontendPayment = (ref, verifiedData) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      // vin: carDetails?.vin,
-      number: `${userPhone}`,
-      fullname: `${userName}`,
-      email: `${userEmail}`,
-      buyNow: false,
-      username: "",
-      collection: `${collection._id}`,
-      colectionName:`${collection?.name}`,
-      reference:`${ref}`,
-      owner: collection?.owner,
-      // vehicle: bnvehicleID,
-      // bid: bidID,
-      // amount: carDetails?.total,
-      // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-      currency: "",
-      metadata: "",
-      // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-      // status: verifiedData.data.status,
-      // statusTrans: verifiedData.data.data.status,
-    });
-    console.log("frontend data", raw);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        const resultFormat = JSON.parse(result);
-        console.log("front end payment", resultFormat);
-        if (resultFormat.error === false) {
-          buyNowSuccess();
-        }
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  const stripePayment = (ref, verifiedData) => {
-    console.log("vehicle id", bnsvehicleID);
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      vin: carDetails?.vin,
-      number: `${userPhone}`,
-      fullname: `${userName}`,
-      email: `${userEmail}`,
-      buyNow: false,
-      username: "",
-      collection: `${collection?._id}`,
-      colectionName:`${collection?.name}`,
-      reference:`${ref}`,
-      owner: collection?.owner,
-      // vehicle: bnsvehicleID,
-      // bid: bidID,
-      // amount: carDetails?.total,
-      // amountBalance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-      // reference: ref,
-      // currency: "",
-      // metadata: "",
-      // balance: carDetails?.total ? Number(carDetails?.total) - 1000 : 0,
-      // status: verifiedData.data.paid,
-      // statusTrans: verifiedData.data.paid,
-    });
-    console.log("stripe data", raw);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        const resultFormat = JSON.parse(result);
-        console.log("front end payment", resultFormat);
-        if (resultFormat.error === false) {
-          setstate(3);
-          stripeSuccess();
-        }
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  const getBidId = (bnfResult) => {
-    const vehicleID = bnfResult.data._id;
-    var requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    fetch(enviroment.BASE_URL + "bids/vehicle/" + vehicleID, requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("gbID", result);
-        const resultFormat = JSON.parse(result);
-        setbidID(resultFormat.data._id);
-      })
-      .catch((error) => console.log("error", error));
-  };
 
   const [state, setstate] = useState(1);
   const openForm = (evt, status) => {
@@ -629,51 +726,29 @@ const Transaction = () => {
     evt.currentTarget.className += " active";
   };
 
-  // const retrieveCar = () => {
-  //   const activeCollection = localStorage.getItem("collectionData");
-  //   if (!activeCollection) {
-  //     router.back();
-  //     console.log('not active')
-  //     return null;
+  const retrieveCar = () => {
+    const activeCar = localStorage.getItem("buyNowData");
+    if (!activeCar) {
+      router.back();
+      return null;
+    }
 
-  //   }
-
-  //   const now = new Date();
-  //   const item = JSON.parse(activeCollection);
-  //   if (now.getTime() > item.expiry) {
-  //     // If the item is expired, delete the item from storage
-  //     // and return null
-  //     window.localStorage.clear();
-  //     return null;
-  //   }
-  //   // setcarDetails(item);
-  // }; //Get Data from local Storage
-
-  // useEffect(() => {
-  //   retrieveCar();
-  //   console.log("car deets", carDetails);
-  // }, []);
+    const now = new Date();
+    const item = JSON.parse(activeCar);
+    if (now.getTime() > item.expiry) {
+      // If the item is expired, delete the item from storage
+      // and return null
+      window.localStorage.clear();
+      return null;
+    }
+    setcarDetails(item);
+  }; //Get Data from local Storage
 
   useEffect(() => {
-    fetch(enviroment.BASE_URL + "collections/" + collectionId, {
-      method: "GET",
-      redirect: "follow",
-    })
-      .then((response) => {
-        setisLoading(false);
-        return response.text();
-      })
-      .then((result) => {
-        if (result) {
-          if (Object.entries(result).length >= 1) {
-            const formatCollection = JSON.parse(result);
-            setcollection(formatCollection.data);
-            console.log(formatCollection);
-          }
-        }
-      })
-      .catch((error) => console.log("error", error));
-  }, [collectionId]);
+    retrieveCar();
+    getRate();
+    console.log("car deets", carDetails);
+  }, []);
 
   const validatePhone = () => {
     if (!phoneNumber) {
@@ -1022,7 +1097,6 @@ const Transaction = () => {
 
   const sendDefaultAddress = () => {
     setstate(2);
-    console.log(state)
   };
 
   const changeFirstName = (e) => {
@@ -1061,9 +1135,10 @@ const Transaction = () => {
 
     var raw = JSON.stringify({
       source: id,
-      amount: `2`,
+      amount: `${carDetails?.total}`,
     });
 
+    console.log(raw)
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -1160,161 +1235,274 @@ const Transaction = () => {
       .catch((error) => console.log("error", error));
   };
 
-  const buyNowStripe = (e) => {
+
+  const placeBidStripe = (e) => {
     e.preventDefault();
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    setisLoading(true);
 
-    const bidObject = {
-      vin: carDetails?.vin,
-      link: carDetails?.link,
-      name:
-        carDetails?.name ||
-        `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
-      site: carDetails?.site,
-      price: carDetails?.bidAmount,
-      year: carDetails?.year,
-      exterior_color: carDetails?.exterior_color,
-      vehicle_type: carDetails?.vehicle_type,
-      interior_color: carDetails?.interior_color,
-      transmission: carDetails?.transmission,
-      odometer: carDetails?.odometer,
-      driveTrain: carDetails?.driveTrain,
-      doors: carDetails?.doors,
-      Model: carDetails?.model,
-      make: carDetails?.make,
-      equipment: "",
-      EngineType: "",
-      interior_type: "",
-      body_style: carDetails?.body_style,
-      fuel_type: "",
-      passengerCapacity: "",
-      sellerCity: "",
-      description: "",
-      Zip: carDetails?.Zip,
-      tilteImage: carDetails?.tilteImage,
-      bidAmount: carDetails?.total,
-      owner: carDetails?.owner,
-      facilitationLocation: carDetails?.facilitationLocation,
+   
+
+    // console.log("bid object", bidObject);
+    // var requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: JSON.stringify(bidObject),
+    //   redirect: "follow",
+    // };
+
+    
+
+
+     async function addCar() {
+        seterror(null);
+
+         const bidObject = {
+          vin: carDetails?.vin,
+          link: "https://members.manheim.com/",
+          name: `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`,
+          site: "https://members.manheim.com/",
+          price: carDetails?.bidAmount,
+          year: carDetails?.year,
+          exterior_color: carDetails?.exterior_color,
+          vehicle_type: carDetails?.vehicle_type,
+          interior_color: carDetails?.interior_color,
+          transmission: carDetails?.transmission,
+          odometer: carDetails?.odometer,
+          driveTrain: carDetails?.driveTrain,
+          doors: carDetails?.doors,
+          Model: carDetails?.model,
+          make: carDetails?.make,
+          equipment: "",
+          EngineType: "",
+          interior_type: "",
+          body_style: carDetails?.body_style,
+          fuel_type: "",
+          passengerCapacity: "",
+          sellerCity: "",
+          description: "",
+          Zip: carDetails?.Zip,
+          tilteImage: carDetails?.tilteImage,
+          bidAmount: carDetails?.total,
+          owner: carDetails?.owner,
+            collection: await placeItem(),
+            facilitationLocation: carDetails?.facilitationLocation,
       Vehicle_location: carDetails?.Vehicle_location,
       images: carDetails?.images,
-      trucking: carDetails?.trucking,
-      shipping: carDetails?.shipping,
-      auctionEndTime: carDetails?.auctionEndTime,
-    };
+      trucking: carDetails?.trucking||"",
+      shipping: carDetails?.shipping||"",
+        };
+      
+       
 
-    console.log("bid object", bidObject);
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(bidObject),
-      redirect: "follow",
-    };
+        //Add car to collection
+        fetch(enviroment.BASE_URL + "bids/add-bid", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bidObject),
+            redirect: "follow",
+        })
+            .then((response) => {
+                if (!response.ok) {
+                  console.log(response)
+                    placeBidInfo();
+                    setisLoading(false)
+                  
+                } else {
+                  console.log(response)
+                  //  setmessage(response.statusText);
+                    placeBidSuccess();
+                    generateToken();
+                    setisLoading(false)
+                    // getBidId(resultFormat);
+                    // setbnvehicleID(resultFormat.data._id);
 
-    //Add car to buy now
-    fetch(enviroment.BASE_URL + "bids/buy-now", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        // console.log(result)
-        const resultFormat = JSON.parse(result);
-        console.log("bns", resultFormat);
-        if (resultFormat.error === false) {
-          getBidId(resultFormat);
-          console.log("bnvID", resultFormat.data._id);
-          setbnsvehicleID(resultFormat.data._id);
-          generateToken();
-
-          var checkStripeId = JSON.parse(localStorage.getItem("user"));
-          if (!checkStripeId.stripeId) {
-            addStripeCustomer();
-          } else {
-            return;
-          }
-          //
-        } else {
-          buyNowInfo();
-        }
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  const stripeFunction=()=>{
-    generateToken();
-
-    var checkStripeId = JSON.parse(localStorage.getItem("user"));
-    if (!checkStripeId.stripeId) {
-      addStripeCustomer();
-    } else {
-      return;
+                    console.log("hiiiiiiii")
+                   
+                   
+                }
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
     }
 
-  }
+    async function placeItem() {
+        let availableCollection = await createCollection();
 
-  console.log(collection)
+        // if (!availableCollection) {
+        //     availableCollection = await createCollection();
+        // }
+
+        return availableCollection;
+    }
+
+    // function getCollections() {
+    //     console.log("get collection", collection)
+    //     return collection;
+    // }
+
+    // function getAvailableCollection() {
+    //     // Replace getCollections
+    //     // const replaceCollections = getCollections();
+
+    //     // let filterCollection = null;
+
+    //     // for (let index = 0; index < replaceCollections.length; index++) {
+    //     //     const currentCollection = replaceCollections[index];
+    //     //     if (currentCollection._id=== selectedCollection._id) {
+    //     //         filterCollection = selectedCollection._id;
+    //     //          console.log(filterCollection)
+
+    //     //         break;
+    //     //     }
+    //     // }
+    //     // console.log(filterCollection)
+
+    //     return JSON.parse(localStorage.getItem("placeBidData"))._id;
+    // }
+
+    async function createCollection() {
+        let randomName = makeCollectionName(7);
+
+        const collectionObject = {
+            owner: `${userId}`,
+            name: `${randomName}`,
+        };
+        let newCollection;
+        await fetch(enviroment.BASE_URL + "collections", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(collectionObject),
+            redirect: "follow",
+        })
+            .then((response) => {
+                // setisPBLoading(false);
+                console.log(response)
+
+                if (!response.ok) {
+                    // toastError()
+                    // throw Error("Could not create collection")
+                } else {
+                    // setmessage(response.statusText);
+                    return response.json(); // toastSuccess();
+                }
+            })
+            .then((data) => {
+                newCollection = data.data._id;
+                localStorage.setItem("newCollectionData", JSON.stringify(data.data));
+                setCollection(data.data)
+                console.log(data.data)
+            })
+            .catch((error) => {
+                seterror(error);
+                console.log("error", error);
+            });
+        return newCollection;
+    }
+
+    // setSelectedCollection(JSON.parse(localStorage.getItem("placeBidData")))'
+    console.log("i work")
+    addCar();
+
+  
+  };
+ 
+
+ const getRate = () => {
+          let id = "613b98b1e28f970016362ae3";
+        try {
+            fetch(enviroment.BASE_URL + "rates/" + `${id}`, {
+                method: "GET",
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.error === false) {
+                        console.log(data.data.rate)
+                        setNaira(data.data.rate);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+  console.log(carDetails)
 
   return (
-    <div className="w-full">
+    <div>
       <ToastContainer />
-      <div className="flex  pt-16 w-full">
-        <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder w-full ">
+      <div className="flex justify-center pt-16 w-full">
+        <div className="mx-auto flex-wrap lg:flex-nowrap flex page-holder  w-full">
           <aside className="deposit-holder lg:h-screen px-4 md:px-2 lg:pl-14 lg:pr-9 pt-9 pb-4 w-1/3">
-            {collection ? (
+            {carDetails ? (
               <>
                 <p className="primary-color text-sm font-bold mb-3">
                   Make Deposit
                 </p>
-
                 <div className="grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1 car-holder py-2.5">
                   <span className="col-span-3 inline-block overflow-hidden rounded-md">
                     <img
                       className="w-full"
-                      src={collection?.vehicles[0]?.images[0]?.image_largeUrl}
+                      src={carDetails?.images[0]?.image_largeUrl}
                       alt=""
                     />
                   </span>
                   <div className="col-span-3">
                     <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
-                      {collection.name}
+                      {`${carDetails?.name}` ||
+                        `${carDetails?.year} ${carDetails?.make} ${carDetails?.Model}`}
                     </p>
-
-                   
-                    {/* <p className="primary-black font-medium py-1 text-xs uppercase">
+                    <p className="primary-black font-medium py-1 text-xs uppercase">
                       {dollarFormatter.format(carDetails?.odometer)} mi
                     </p>
                     <p className="primary-black font-medium text-xs uppercase">
                       vin: {carDetails?.vin}
-                    </p> */}
-                    {/* <p className="primary-black font-medium font-11 uppercase">
-                      ${dollarFormatter.format(carDetails?.bidAmount)}
-                    </p> */}
+                    </p>
+                    <p className="primary-black font-medium font-11 uppercase">
+                    {/* {!userCountry==="Nigeria" ? "$" + dollarFormatter.format(carDetails?.price): "N"+ dollarFormatter.format(carDetails?.price* naira)} */}
+                      ${dollarFormatter.format(carDetails?.price)}
+                    </p>
                   </div>
                 </div>
 
-                <table className="min-w-full ">
+               <table className="min-w-full ">
                   <tbody>
-                    {/* {(carDetails?.trucking || carDetails?.trucking != 0) && (
+                    {(carDetails?.trucking || carDetails?.trucking != 0) && (
                       <tr className="detail-row mb-2">
                         <td className="sec-black text-sm font-semibold py-1.5">
                           Trucking
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          ${carDetails?.trucking}
+                          {/* {!userCountry==="Nigeria"? "$"+dollarFormatter.format(carDetails?.trucking): "N"+ dollarFormatter.format(carDetails?.trucking* naira)} */}
+                          ${dollarFormatter.format(carDetails?.trucking)}
                         </td>
                       </tr>
-                    )} */}
+                    )}
 
-                    {/* {(carDetails?.shipping || carDetails?.shipping != 0) && (
+                    {(carDetails?.shipping || carDetails?.shipping != 0) && userCountry=="Nigeria"? (
                       <tr className="detail-row mb-2">
                         <td className="sec-black text-sm font-semibold py-1.5">
                           Shipping
                         </td>
                         <td className="text-sm primary-black font-normal py-1.5">
-                          ${carDetails?.shipping}
+                          {/* {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.shipping): "N"+ dollarFormatter.format(carDetails?.shipping* naira)} */}
+                        ${dollarFormatter.format(carDetails?.shipping)}
                         </td>
                       </tr>
-                    )} */}
+                    ):<></>}
 
-                    {/* <tr className="detail-row mb-2">
+                    <tr className="detail-row mb-2">
                       <td className="sec-black text-sm font-semibold py-1.5">
                         Clearing
                       </td>
@@ -1328,64 +1516,29 @@ const Transaction = () => {
                         Service Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
+                        {/* {!userCountry==="Nigeria" ? "$"+400: "₦"+ dollarFormatter.format(400* naira)} */}
                         $400
                       </td>
                     </tr>
-
+ 
                     <tr className="detail-row mb-2">
                       <td className="sec-black text-sm font-semibold py-1.5">
                         Auction Fee
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
+                        {/* {!userCountry==="Nigeria" ? "$"+450: "₦"+ dollarFormatter.format(450* naira)} */}
                         $450
                       </td>
-                    </tr> */}
-
-                    
-                    <>
-                    
-                    {
-                      collection?.vehicles?.map((vehicle,index)=>(
-                        <tr className="detail-row mb-2 ">
-                        <td className="sec-black text-sm font-semibold py-1.5 total-border w-2/3">
-                        {vehicle?.name}
-                      </td>
-                      <td className="text-sm primary-black font-normal py-1.5 total-border ">
-                        ${vehicle?.price}
-                      </td>
-                      </tr>
-
-                        
-                      ))
-                    }
-                    </>
-                    
-
-                    <tr className="detail-row mb-2 ">
-                      <td className="sec-black text-sm font-semibold py-1.5 total-border">
-                        Amount
-                      </td>
-                      <td className="text-sm primary-black font-normal py-1.5 total-border">
-                        ${collection?.Amount}
-                      </td>
                     </tr>
+
                     <tr className="detail-row mb-2 ">
-                      
                       <td className="sec-black text-sm font-semibold py-1.5 total-border">
-                        Card Type
+                        Total
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5 total-border">
-                        <Select
-                          options={options}
-                          value={userCountry}
-                          onChange={(e) => {
-                            console.log(e);
-                          setuserCountry(e)
-                            // if (e.label == "United States") {
-                            //   setshipAccessory(false);
-                            // }
-                          }}
-                        />
+                        {/* {!userCountry==="Nigeria" ? "$"+dollarFormatter.format(carDetails?.total): "N"+ dollarFormatter.format(carDetails?.total* naira)} */}
+
+                        {carDetails?.carDestination == 'Nigeria' ? `₦${dollarFormatter.format( carDetails?.total * carDetails?.usd +(Number(carDetails.price)*carDetails?.usd))}` : `$${dollarFormatter.format(carDetails?.total + Number(carDetail.price))}`}
                       </td>
                     </tr>
 
@@ -1394,24 +1547,21 @@ const Transaction = () => {
                         Deposit Due
                       </td>
                       <td className="text-sm primary-black font-normal py-1.5">
-                        $1,000
+                        {!userCountry==="Nigeria"? "$"+ 1000: "₦"+ dollarFormatter.format(1000 * 500)}
+                       
                       </td>
                     </tr>
-
                   </tbody>
                 </table>
               </>
             ) : (
               <>
-                <p className="font-11 sec-black">
-                  Loading collection details...
-                </p>
+                <p className="font-11 sec-black">Loading car details...</p>
               </>
             )}
           </aside>
-          
 
-          <section className="px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28 w-2/3  ">
+          <section className="px-3 md:ml-5 lg:mx-12 lg:px-14 xl:px-28 w-2/3 ">
             <div className="py-6 max-w-3xl mx-auto">
               <div className="w-full flex uppercase ">
                 <div
@@ -1447,7 +1597,7 @@ const Transaction = () => {
                       <form
                         className="tabcontent mt-5 "
                         id="customer-info"
-                        onSubmit={formik?.handleSubmit}
+                        onSubmit={formik.handleSubmit}
                       >
                         <div className="info-holder text-xs px-4 py-4 mb-3">
                           <p className="font-semibold primary-color  ">
@@ -1468,14 +1618,14 @@ const Transaction = () => {
                                 name="firstName"
                                 placeholder="Dare"
                                 className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                onChange={formik?.handleChange}
-                                onBlur={formik?.handleBlur}
-                                value={formik?.values.firstName}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.firstName}
                               />
-                              {formik?.touched.firstName &&
-                              formik?.errors.firstName ? (
+                              {formik.touched.firstName &&
+                              formik.errors.firstName ? (
                                 <div className="input-error">
-                                  {formik?.errors.firstName}
+                                  {formik.errors.firstName}
                                 </div>
                               ) : null}
                             </div>
@@ -1493,9 +1643,9 @@ const Transaction = () => {
                                 name="lastName"
                                 placeholder="Thomas"
                                 className="mt-1 block w-full info-text py-2 px-2  bg-white  focus:outline-none"
-                                onChange={formik?.handleChange}
-                                onBlur={formik?.handleBlur}
-                                value={formik?.values.lastName}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.lastName}
                               />
                               {formik.touched.lastName &&
                               formik.errors.lastName ? (
@@ -1547,16 +1697,16 @@ const Transaction = () => {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.email}
                               />
-                              {formik?.touched.email && formik.errors.email ? (
+                              {formik.touched.email && formik.errors.email ? (
                                 <div className="input-error">
-                                  {formik?.errors.email}
+                                  {formik.errors.email}
                                 </div>
                               ) : null}
                             </div>
                           </div>
                         </div>
 
-                        {/* <div className="info-holder text-xs px-4 py-4 mb-3">
+                        <div className="info-holder text-xs px-4 py-4 mb-3">
                           <p className="font-semibold primary-color ">
                             Delivery address
                           </p>
@@ -1573,7 +1723,7 @@ const Transaction = () => {
                                 id="country"
                                 name="country"
                                 className="mt-1 block w-full info-select py-2 px-2  bg-white  focus:outline-none"
-                                onChange={formik?.handleChange}
+                                onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.country}
                               >
@@ -1667,10 +1817,9 @@ const Transaction = () => {
                               ) : null}
                             </div>
                           </div>
-                        </div> */}
+                        </div>
                         <div className="flex justify-center">
                           <button
-                          onClick={sendDefaultAddress}
                             type="submit"
                             className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-4 py-1.5 px-6"
                           >
@@ -1751,7 +1900,7 @@ const Transaction = () => {
                                 </div>
                               </div>
                             </div>
-{/* 
+
                             <div className="info-holder text-xs px-4 py-4 mb-3">
                               <p className="font-semibold primary-color ">
                                 Delivery address
@@ -1805,7 +1954,7 @@ const Transaction = () => {
                                   </div>
                                 </div>
                               </div>
-                            </div> */}
+                            </div>
                             <div className="flex justify-center">
                               <button
                                 onClick={sendDefaultAddress}
@@ -1826,7 +1975,8 @@ const Transaction = () => {
                     <div className="info-holder font-10 py-24 mb-3 ">
                       <div className="flex justify-center px-4 ">
                         <form className="w-full">
-                          {userCountry?.label == "Nigeria" ? (
+                          {userCountry == "Nigeria" &&
+                          carDetails?.carDestination == "Nigeria" ? (
                             <div className="flex  justify-center items-center">
                               <button
                                 onClick={() => {
@@ -1834,235 +1984,234 @@ const Transaction = () => {
                                   //     onSuccess,
                                   //     onClose
                                   // );
-                                  collectionFunction();
+                                  placeBidPayStack()
                                 }}
                                 type="button"
                                 className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
                               >
                                 Pay with
                                 <img
-                                  src="../../../../public/assets/img/paystack-logo.png"
+                                  src="/assets/img/paystack-logo.png"
                                   className="ml-2"
                                   alt="Paystack"
                                 />
                               </button>
                             </div>
-                            )
-                          // ) : userCountry?.label !== "Nigeria" ? (
-                          //   <div className="flex flex-col gap-y-2">
-                          //     <div className="flex  justify-center items-center">
-                          //       <button
-                          //         onClick={() => {
-                          //           // initializePayment(
-                          //           //     onSuccess,
-                          //           //     onClose
-                          //           // );
-                          //           buyNowFunction();
-                          //         }}
-                          //         type="button"
-                          //         className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
-                          //       >
-                          //         Pay with
-                          //         <img
-                          //           src="../assets/img/paystack-logo.png"
-                          //           className="ml-2"
-                          //           alt="Paystack"
-                          //         />
-                          //       </button>
-                          //     </div>
+                          ) : userCountry !== "Nigeria" &&
+                            carDetails?.carDestination == "Nigeria" ? (
+                            <div className="flex flex-col gap-y-2">
+                              <div className="flex  justify-center items-center">
+                                <button
+                                  onClick={() => {
+                                    // initializePayment(
+                                    //     onSuccess,
+                                    //     onClose
+                                    // );
+                                    placeBidPayStack();
+                                  }}
+                                  type="button"
+                                  className="focus:outline-none text-sm  paystack-btn font-medium primary-color flex justify-center items-center"
+                                >
+                                  Pay with
+                                  <img
+                                    src="assets/img/paystack-logo.png"
+                                    className="ml-2"
+                                    alt="Paystack"
+                                  />
+                                </button>
+                              </div>
 
-                          //     <div>OR</div>
+                              <div>OR</div>
 
-                          //     <div className=" px-2 ">
-                          //       <div
-                          //         id="PaymentForm"
-                          //         className="flex gap-x-3 flex-col gap-y-2 lg:gap-y-0 lg:flex-row justify-between"
-                          //       >
-                          //         <Cards
-                          //           cvc={cvc}
-                          //           expiry={stripeExpiry}
-                          //           focused={stripeFocus}
-                          //           name={stripeName}
-                          //           number={stripeNumber}
-                          //         />
-                          //         <form className="flex-1 p-1">
-                          //           <div className="flex flex-col gap-y-2 mb-4">
-                          //             <div>
-                          //               <input
-                          //                 className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                 type="tel"
-                          //                 name="number"
-                          //                 placeholder="Card Number"
-                          //                 onChange={(e) =>
-                          //                   setstripeNumber(e.target.value)
-                          //                 }
-                          //                 onFocus={(e) =>
-                          //                   setstripeFocus(e.target.name)
-                          //                 }
-                          //               />
-                          //             </div>
-                          //             <div>
-                          //               <input
-                          //                 className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                 type="text"
-                          //                 name="name"
-                          //                 placeholder="Card Name"
-                          //                 onChange={(e) =>
-                          //                   setstripeName(e.target.value)
-                          //                 }
-                          //                 onFocus={(e) =>
-                          //                   setstripeFocus(e.target.name)
-                          //                 }
-                          //               />
-                          //             </div>
-                          //             <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="tel"
-                          //                   name="expiry"
-                          //                   placeholder="Expiry"
-                          //                   onChange={(e) =>
-                          //                     setstripeExpiry(e.target.value)
-                          //                   }
-                          //                   onFocus={(e) =>
-                          //                     setstripeFocus(e.target.name)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="tel"
-                          //                   name="cvc"
-                          //                   placeholder="CVC"
-                          //                   onChange={(e) =>
-                          //                     setcvc(e.target.value)
-                          //                   }
-                          //                   onFocus={(e) =>
-                          //                     setstripeFocus(e.target.name)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //             </div>
+                              <div className=" px-2 ">
+                                <div
+                                  id="PaymentForm"
+                                  className="flex gap-x-3 flex-col gap-y-2 lg:gap-y-0 lg:flex-row justify-between"
+                                >
+                                  <Cards
+                                    cvc={cvc}
+                                    expiry={stripeExpiry}
+                                    focused={stripeFocus}
+                                    name={stripeName}
+                                    number={stripeNumber}
+                                  />
+                                  <form className="flex-1 p-1">
+                                    <div className="flex flex-col gap-y-2 mb-4">
+                                      <div>
+                                        <input
+                                          className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                          type="tel"
+                                          name="number"
+                                          placeholder="Card Number"
+                                          onChange={(e) =>
+                                            setstripeNumber(e.target.value)
+                                          }
+                                          onFocus={(e) =>
+                                            setstripeFocus(e.target.name)
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                          type="text"
+                                          name="name"
+                                          placeholder="Card Name"
+                                          onChange={(e) =>
+                                            setstripeName(e.target.value)
+                                          }
+                                          onFocus={(e) =>
+                                            setstripeFocus(e.target.name)
+                                          }
+                                        />
+                                      </div>
+                                      <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="tel"
+                                            name="expiry"
+                                            placeholder="Expiry"
+                                            onChange={(e) =>
+                                              setstripeExpiry(e.target.value)
+                                            }
+                                            onFocus={(e) =>
+                                              setstripeFocus(e.target.name)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="tel"
+                                            name="cvc"
+                                            placeholder="CVC"
+                                            onChange={(e) =>
+                                              setcvc(e.target.value)
+                                            }
+                                            onFocus={(e) =>
+                                              setstripeFocus(e.target.name)
+                                            }
+                                          />
+                                        </div>
+                                      </div>
 
-                          //             <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="text"
-                          //                   name="billingName"
-                          //                   placeholder="Full name"
-                          //                   value={billingName}
-                          //                   onChange={(e) =>
-                          //                     setbillingName(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="tel"
-                          //                   name="billingPhone"
-                          //                   placeholder="Phone number"
-                          //                   value={billingPhone}
-                          //                   onChange={(e) =>
-                          //                     setbillingPhone(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //             </div>
+                                      <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="text"
+                                            name="billingName"
+                                            placeholder="Full name"
+                                            value={billingName}
+                                            onChange={(e) =>
+                                              setbillingName(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="tel"
+                                            name="billingPhone"
+                                            placeholder="Phone number"
+                                            value={billingPhone}
+                                            onChange={(e) =>
+                                              setbillingPhone(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                      </div>
 
-                          //             <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="email"
-                          //                   name="billingEmail"
-                          //                   placeholder="Email"
-                          //                   value={billingEmail}
-                          //                   onChange={(e) =>
-                          //                     setbillingEmail(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="text"
-                          //                   name="billingCity"
-                          //                   placeholder="City"
-                          //                   value={billingCity}
-                          //                   onChange={(e) =>
-                          //                     setbillingCity(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //             </div>
-                          //             <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="text"
-                          //                   name="billingCountry"
-                          //                   placeholder="Country"
-                          //                   value={billingCountry}
-                          //                   onChange={(e) =>
-                          //                     setbillingCountry(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="text"
-                          //                   name="billingAddress"
-                          //                   placeholder="Address"
-                          //                   value={billingAddress}
-                          //                   onChange={(e) =>
-                          //                     setbillingAddress(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //             </div>
-                          //             <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
-                          //               <div>
-                          //                 <input
-                          //                   className="outline-none p-2 border border-gray-200 w-full text-xs"
-                          //                   type="tel"
-                          //                   name="billingZip"
-                          //                   placeholder="Zip Code"
-                          //                   value={billingZip}
-                          //                   onChange={(e) =>
-                          //                     setbillingZip(e.target.value)
-                          //                   }
-                          //                 />
-                          //               </div>
-                          //             </div>
-                          //           </div>
-                          //           <div>
-                          //             <button
-                          //               onClick={buyNowStripe}
-                          //               type="btn-primary"
-                          //               className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
-                          //             >
-                          //               {isLoading ? (
-                          //                 <ClipLoader
-                          //                   color="#fff"
-                          //                   size={20}
-                          //                   loading
-                          //                 />
-                          //               ) : (
-                          //                 "Submit"
-                          //               )}
-                          //             </button>
-                          //           </div>
-                          //         </form>
-                          //       </div>
-                          //     </div>
-                          //   </div>
-                          // ) : (
-                            :(
+                                      <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="email"
+                                            name="billingEmail"
+                                            placeholder="Email"
+                                            value={billingEmail}
+                                            onChange={(e) =>
+                                              setbillingEmail(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="text"
+                                            name="billingCity"
+                                            placeholder="City"
+                                            value={billingCity}
+                                            onChange={(e) =>
+                                              setbillingCity(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                      <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="text"
+                                            name="billingCountry"
+                                            placeholder="Country"
+                                            value={billingCountry}
+                                            onChange={(e) =>
+                                              setbillingCountry(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="text"
+                                            name="billingAddress"
+                                            placeholder="Address"
+                                            value={billingAddress}
+                                            onChange={(e) =>
+                                              setbillingAddress(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                      <div className="flex flex-col lg:flex-row lg:gap-x-2 gap-x-0 gap-y-4">
+                                        <div>
+                                          <input
+                                            className="outline-none p-2 border border-gray-200 w-full text-xs"
+                                            type="tel"
+                                            name="billingZip"
+                                            placeholder="Zip Code"
+                                            value={billingZip}
+                                            onChange={(e) =>
+                                              setbillingZip(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <button
+                                        onClick={placeBidStripe}
+                                        type="btn-primary"
+                                        className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
+                                      >
+                                        {isLoading ? (
+                                          <ClipLoader
+                                            color="#fff"
+                                            size={20}
+                                            loading
+                                          />
+                                        ) : (
+                                          "Submit"
+                                        )}
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
                             <div className=" px-2 ">
                               <div
                                 id="PaymentForm"
@@ -2232,10 +2381,7 @@ const Transaction = () => {
                                   </div>
                                   <div>
                                     <button
-                                      onClick={
-                                        // buyNowStripe
-                                        stripeFunction
-                                      }
+                                      onClick={placeBidStripe}
                                       type="btn-primary"
                                       className="uppercase focus:outline-none primary-btn text-white font-10 font-semibold mt-1 py-1.5 px-6"
                                     >
@@ -2257,8 +2403,8 @@ const Transaction = () => {
                         </form>
                       </div>
                     </div>
-                    {userCountry?.label == "Nigeria" &&
-                      (
+                    {/* {userCountry == "Nigeria" &&
+                      carDetails?.carDestination == "Nigeria" && (
                         <div className="info-holder text-xs   py-4 pb-5 mb-3 ">
                           <div className="transfer-payment px-4">
                             <p className="text-xs font-semibold">
@@ -2282,13 +2428,13 @@ const Transaction = () => {
                             </table>
                           </div>
                         </div>
-                      )}
+                      )} */}
                   </div>
                 )}
                 {state === 3 && (
                   <div className="confirm-holder tabcontent " id="confirmation">
                     <div className="flex justify-center mt-16">
-                      <img src="../../assets/img/vectors/check.svg" />
+                      <img src="/assets/img/vectors/check.svg" />
                     </div>
 
                     <div className="text-center mt-8">
@@ -2310,6 +2456,7 @@ const Transaction = () => {
                     <div className="flex justify-center mt-5 mb-16">
                       <button
                         onClick={() => {
+                          localStorage.setItem("ACTIVE", "bid");
                           router.push("/vin");
                         }}
                         type="button"
