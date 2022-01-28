@@ -280,30 +280,7 @@ const Profile = () => {
       .catch(error => console.log('error', error));
   };
 
-  const verifyMail = () => {
-    setisLoading(true)
-
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${userToken}`);
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-
-    fetch(enviroment.BASE_URL + "auth/user/resendverification", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        setisLoading(false)
-        console.log(result)
-        if(result.error == false) {
-          toast.success("Check your mail for next step of verification")
-        }
-
-      })
-      .catch(error => console.log('error', error));
-  }
+  
 
   return (
     <div>
@@ -360,16 +337,7 @@ const Profile = () => {
                   <i className="fa fa-lock" aria-hidden="true"></i>
                   <span className="ml-1.5 text-sm font-medium">Password</span>
                 </button>
-                {!user?.emailVerified && (
-                  <button className="head w-full py-3.5 pl-10 flex items-center bg-green-500 text-white hover:bg-green-400" onClick={verifyMail}>
-                    {isLoading ? (
-                      <ClipLoader color="#fff" size="24px"></ClipLoader>
-                    ) : (
-                      <span className="ml-1.5 text-sm font-medium">Verify Account</span>
-                    )}
-                  </button>
-
-                )}
+                
               </div>
             </aside>
             {/* <!-- end sidebar --> */}

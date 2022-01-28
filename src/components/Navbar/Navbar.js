@@ -9,6 +9,9 @@ import { connect } from "react-redux";
 import Select from "react-select";
 import { getCars } from "../../../redux/actions/carsAction";
 import { enviroment } from "../enviroment";
+import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const navRef = useRef(null);
@@ -20,8 +23,21 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     const [token, settoken] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
     const [userNmae, setuserName] = useState(null);
+    const [userId, setuserId] = useState(null);
     const [userIp, setuserIp] = useState(null)
-    let dropdown;
+    const [userVerified, setuserVerified] = useState(null)
+    const [isLoading, setisLoading] = useState(false)
+
+    let dropdown;   
+
+    useEffect(() => {
+        setTimeout(() => {
+            checkUserVerified()
+            
+        }, 1000);
+    }, [userId]);
+
+
     useEffect(() => {
         dispatch(getCars());
     }, []);
@@ -48,11 +64,33 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         }
         settoken(item?.userToken);
         setuserName(item?.userName);
+        setuserId(item?.userId)
         // return item.value
         beginLogin({
             token: item.userToken,
         });
     };
+
+    const checkUserVerified = () => {
+        console.log(userId);
+        var requestOptions = {
+            method: "GET",
+            redirect: "follow",
+        };
+    
+        fetch(
+            enviroment.BASE_URL + "auth/user/users/admin/" + userId,
+            requestOptions
+        )
+        .then((response) => response.json())
+        .then((result) => {
+            console.log(result);
+            if (result.error == false) {
+                setuserVerified(result.data.emailVerified);
+            }
+        })
+        .catch((error) => console.log("error", error));
+    }
 
     const getIp = () => {
         var requestOptions = {
@@ -265,8 +303,42 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         },
     };
 
+    const verifyMail = () => {
+        setisLoading(true)
+    
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", `Bearer ${token}`);
+    
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+    
+        fetch(enviroment.BASE_URL + "auth/user/resendverification", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            setisLoading(false)
+            console.log(result)
+            if(result.error == false) {
+              toast.success("Check your mail for next step of verification", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            }
+    
+          })
+          .catch(error => console.log('error', error));
+      }
+
     return (
         <header className="">
+            <ToastContainer />
             <nav className="nav-bar flex flex-wrap items-center justify-between px-3 py-2 lg:px-20">
                 <div className="md:flex hidden  flex-no-shrink items-center mr-6 py-3 px-2 text-grey-darkest">
                     <Link href="/">
@@ -555,6 +627,20 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
                             </>
                         )}
                     </>
+                    {token && (
+                        <li className="text-xs">
+                            {userVerified == false && (
+                                <button type="button" className="px-4 py-1 rounded focus:outline-none font-semibold font-10 flex items-center justify-center text-white bg-green-500 hover:bg-green-400" onClick={verifyMail}>
+                                    {isLoading ? (
+                                    <ClipLoader color="#fff" size="24px"></ClipLoader>
+                                    ) : (
+                                    <span>Verify Account</span>
+                                    )}
+                                </button>
+
+                            )}
+                        </li>
+                    )}
                 </ul>
             </nav>
         </header>
