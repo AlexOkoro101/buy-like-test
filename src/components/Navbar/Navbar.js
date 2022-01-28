@@ -398,7 +398,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         console.log(result)
         if(result.error == false) {
           toast.success("Check your mail for next step of verification", {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
             closeOnClick: true,
