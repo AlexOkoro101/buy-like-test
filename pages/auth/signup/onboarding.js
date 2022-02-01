@@ -67,6 +67,31 @@ const OnBoarding = () => {
             window.localStorage.clear();
             return null;
         }
+        sendOTP(item, data)
+    }
+
+    const sendOTP = (item, data) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            phoneNumber: data.data.user.profile.phoneNumber
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/verification/sender/" + item.userId, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            router.push("/auth/verifyphone");
+        })
+        .catch(error => console.log('error', error));
     }
     //router
     const router = useRouter();
@@ -174,7 +199,7 @@ const OnBoarding = () => {
                         seterror(data?.message);
                         toastSuccess();
                         retrieveTemp(data)
-                        router.push("/vin");
+                        
                     }
                 })
                 .catch((e) => {
