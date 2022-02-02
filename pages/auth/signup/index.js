@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../../redux/reducers/userReducer";
+import { signIn } from "next-auth/react"
 
 const SignupOptions = ({ beginLogin }) => {
     //redirect
@@ -199,7 +200,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 </span>
                                 Sign up with Facebook 
                             </button> */}
-                            <FacebookLogin
+                            {/* <FacebookLogin
                                 appId="1364176120701351"
                                 autoLoad={false}
                                 fields="name,email,picture"
@@ -211,7 +212,22 @@ const SignupOptions = ({ beginLogin }) => {
                                 authType="reauthenticate"
                                 scope="email"
 
-                            />
+                            /> */}
+
+                            <button
+                                type="button"
+                                className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs"
+                                onClick={signIn}
+                            >
+                                <span className="mr-3">
+                                    <img
+                                        src="../assets/img/vectors/email-icon-red.svg"
+                                        alt="facebook-icon"
+                                    />
+                                </span>
+                                Sign up with Facebook
+                            </button>
+
                             <button
                                 type="button"
                                 className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs"
