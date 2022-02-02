@@ -89,7 +89,7 @@ const OnBoarding = () => {
         .then(response => response.text())
         .then(result => {
             console.log(result)
-            router.push("/auth/verifyphone");
+            router.push("/verifyphone");
         })
         .catch(error => console.log('error', error));
     }

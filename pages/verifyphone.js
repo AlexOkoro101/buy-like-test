@@ -2,17 +2,17 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useRef, useState } from "react";
-import { enviroment } from "../../src/components/enviroment";
-import Meta from "../../src/components/Head/Meta";
+import { enviroment } from "../src/components/enviroment";
+import Meta from "../src/components/Head/Meta";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/features/userSlice";
+import { login } from "../redux/features/userSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { connect } from "react-redux";
-import { selectToken } from "../../redux/reducers/userReducer";
-import { logIn, logOut } from "../../redux/actions/carsAction";
+import { selectToken } from "../redux/reducers/userReducer";
+import { logIn, logOut } from "../redux/actions/carsAction";
 import Link from "next/link";
 
 const VerifyPhone = () => {
