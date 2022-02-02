@@ -200,7 +200,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 Sign up with Facebook 
                             </button> */}
                             <FacebookLogin
-                                appId="348837593684517"
+                                appId="1364176120701351"
                                 autoLoad={false}
                                 fields="name,email,picture"
                                 onClick={facebookClicked}
