@@ -1028,6 +1028,12 @@ img.hover-shadow {
     color: #1F2A53;
     line-height: 24px;
 }
+.fb-text {
+    font-weight: normal;
+    font-size: 16px;
+    color: #1F2A53;
+    line-height: 24px;
+}
 .primary-text {
     color: #D80739;
 }

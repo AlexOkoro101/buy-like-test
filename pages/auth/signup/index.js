@@ -205,7 +205,7 @@ const SignupOptions = ({ beginLogin }) => {
                         <div className="options-holder mx-auto mt-20 p-5 lg:px-24 lg:py-14">
                             <div className="text-center">
                                 {/* <img src="../../img/otp.svg" className="inline-block mb-6" alt="" /> */}
-                                <p className="otp-text mb-2">Enter your email</p>
+                                <p className="fb-text mb-2">Enter your email</p>
                                 {/* <p className="text-xs primary-color font-medium">
                                 Enter the code we sent to your inbox to verify your email address
                                 </p> */}
@@ -221,7 +221,7 @@ const SignupOptions = ({ beginLogin }) => {
                                             Code
                                         </label> */}
                                         <input
-                                            className="login-control focus:outline-none px-2"
+                                            className="login-control focus:outline-none px-2 text-sm"
                                             id="email"
                                             name="email"
                                             type="email"
