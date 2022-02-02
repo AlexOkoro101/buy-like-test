@@ -107,7 +107,7 @@ const SignupOptions = ({ beginLogin }) => {
     //Facebook Auth
     const responseFacebook = (res) => {
         // toastSuccess()
-        // console.log("Facebook login result", res);
+        console.log("Facebook login result", res);
         // router.push('/auth/signup/onboarding')
 
         const facebookProfile = {
