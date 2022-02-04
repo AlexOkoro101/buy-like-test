@@ -280,6 +280,8 @@ const Profile = () => {
       .catch(error => console.log('error', error));
   };
 
+  
+
   return (
     <div>
       <ToastContainer />
@@ -335,6 +337,7 @@ const Profile = () => {
                   <i className="fa fa-lock" aria-hidden="true"></i>
                   <span className="ml-1.5 text-sm font-medium">Password</span>
                 </button>
+                
               </div>
             </aside>
             {/* <!-- end sidebar --> */}

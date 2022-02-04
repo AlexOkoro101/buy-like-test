@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { enviroment } from "../../../src/components/enviroment";
 import { connect, useSelector } from "react-redux";
 import { selectToken } from "../../../redux/reducers/userReducer";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const LoginOptions = ({ beginLogin }) => {
     //redirect
@@ -16,6 +18,8 @@ const LoginOptions = ({ beginLogin }) => {
     const [error, seterror] = useState(null);
     const [message, setmessage] = useState(null);
     const [isLoading, setisLoading] = useState(false);
+    const [addEmail, setaddEmail] = useState(false)
+    const [facebookRes, setfacebookRes] = useState(null)
 
     const user = useSelector(selectToken);
     useEffect(() => {
@@ -86,6 +90,7 @@ const LoginOptions = ({ beginLogin }) => {
                         email: data.data.user.email,
                         phone: data.data.user.profile.phoneNumber,
                         expiry: now.getTime() + 3600000,
+                        emailVerified: data.data.user.emailVerified
                     };
                     localStorage.setItem("user", JSON.stringify(item));
                     router.push("/vin");
@@ -111,13 +116,46 @@ const LoginOptions = ({ beginLogin }) => {
 
     //Facebook Auth
     const responseFacebook = (res) => {
-        // toastSuccess()
-        // console.log("Facebook login result", res);
-        // router.push('/auth/signup/onboarding')
+        console.log("Facebook login result", res);
+        if(res.status == 'not_authorized') return;
+        setaddEmail(true)
+        setfacebookRes(res)
+
+      
+
+        // console.log("Login Successful", res.profileObj)
+
+        
+    };
+
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .required("Email is required")
+                .email("Enter valid email")
+        }),
+        onSubmit: (values) => {
+            // notify()
+            setisLoading(true);
+            seterror(null);
+            console.log(values);
+
+            accessWithFacebook(values)
+        },
+    });
+
+    const facebookClicked = (data) => {
+        console.warn(data);
+    };
+
+    const accessWithFacebook = (values) => {
 
         const facebookProfile = {
-            email: res.email,
-            facebookId: res.userID,
+            email: values.email,
+            facebookId: facebookRes.userID,
         };
 
         // console.log("Login Successful", res.profileObj)
@@ -152,6 +190,7 @@ const LoginOptions = ({ beginLogin }) => {
                         phone: data.data.user.profile.phoneNumber,
                         email: data.data.user.email,
                         expiry: now.getTime() + 3600000,
+                        emailVerified: data.data.user.emailVerified
                     };
                     localStorage.setItem("user", JSON.stringify(item));
                     router.push("/vin");
@@ -166,86 +205,144 @@ const LoginOptions = ({ beginLogin }) => {
             .catch((e) => {
                 setisLoading(false);
             });
-    };
-
-    const facebookClicked = (data) => {
-        console.warn(data);
-    };
+    }
 
     return (
         <section className="w-full">
             <Meta />
             <main>
                 <ToastContainer />
-                <div className="signup-bg py-20 ">
-                    <div className="form-holder w-11/12 lg:w-3/12 md:w-2/5  mx-auto mt-20 py-12 px-12">
-                        <div className="text-center">
-                            <p className="text-sm primary-color font-medium">
-                                Select an option to log in
-                            </p>
-                        </div>
-                        <div className="mt-3 signup-container">
-                            {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
-                                <span className="mr-3">
-                                    <img src="../assets/img/vectors/google-icon.svg" alt="facebook-icon" />
-                                </span> 
-                                Sign up with Google
-                            </button> */}
-                            <GoogleLogin
-                                clientId={googleClientId}
-                                buttonText="Log in with Google"
-                                onSuccess={onGoogleLoginSuccess}
-                                onFailure={onGoogleFailureSuccess}
-                                cookiePolicy={"single_host_origin"}
-                                style={{
-                                    border: "1px solid blue",
-                                    "background-color": "black",
-                                }}
-                            ></GoogleLogin>
-                            {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
-                                <span className="mr-3">
-                                    <img src="../assets/img/vectors/facebook-icon-blue.svg" alt="facebook-icon" />
-                                </span>
-                                Sign up with Facebook 
-                            </button> */}
-                            <FacebookLogin
-                                appId="348837593684517"
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                onClick={facebookClicked}
-                                callback={responseFacebook}
-                                icon="fa-facebook"
-                                cssClass="facebook-btn"
-                                textButton="Log in with Facebook"
-                                authType="reauthenticate"
-                            />
-                            <button
-                                type="button"
-                                className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs"
-                                onClick={() => {
-                                    router.push("/auth/login/email");
-                                }}
-                            >
-                                <span className="mr-3">
-                                    <img
-                                        src="../assets/img/vectors/email-icon-red.svg"
-                                        alt="facebook-icon"
-                                    />
-                                </span>
-                                Log in with Email
-                            </button>
+                {!addEmail ? (
+                    <div className="signup-bg py-20 ">
+                        <div className="form-holder w-11/12 lg:w-3/12 md:w-2/5  mx-auto mt-20 py-12 px-12">
                             <div className="text-center">
-                                <p
-                                    onClick={() => router.push("/auth/signup")}
-                                    style={{ color: "#0C74D4" }}
-                                    className="font-11 cursor-pointer mt-8"
-                                >
-                                    Or create an account
+                                <p className="text-sm primary-color font-medium">
+                                    Select an option to log in
                                 </p>
+                            </div>
+                            <div className="mt-3 signup-container">
+                                {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
+                                    <span className="mr-3">
+                                        <img src="../assets/img/vectors/google-icon.svg" alt="facebook-icon" />
+                                    </span> 
+                                    Sign up with Google
+                                </button> */}
+                                <GoogleLogin
+                                    clientId={googleClientId}
+                                    buttonText="Log in with Google"
+                                    onSuccess={onGoogleLoginSuccess}
+                                    onFailure={onGoogleFailureSuccess}
+                                    cookiePolicy={"single_host_origin"}
+                                    style={{
+                                        border: "1px solid blue",
+                                        "background-color": "black",
+                                    }}
+                                ></GoogleLogin>
+                                {/* <button type="button" className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs">
+                                    <span className="mr-3">
+                                        <img src="../assets/img/vectors/facebook-icon-blue.svg" alt="facebook-icon" />
+                                    </span>
+                                    Sign up with Facebook 
+                                </button> */}
+                                <FacebookLogin
+                                    appId="1364176120701351"
+                                    autoLoad={false}
+                                    fields="name,email,picture"
+                                    onClick={facebookClicked}
+                                    callback={responseFacebook}
+                                    icon="fa-facebook"
+                                    cssClass="facebook-btn"
+                                    textButton="Log in with Facebook"
+                                    authType="reauthenticate"
+                                />
+                                <button
+                                    type="button"
+                                    className="focus:outline-none mb-2.5 flex items-center px-2.5 w-full options-btn primary-color text-xs"
+                                    onClick={() => {
+                                        router.push("/auth/login/email");
+                                    }}
+                                >
+                                    <span className="mr-3">
+                                        <img
+                                            src="../assets/img/vectors/email-icon-red.svg"
+                                            alt="facebook-icon"
+                                        />
+                                    </span>
+                                    Log in with Email
+                                </button>
+                                <div className="text-center">
+                                    <p
+                                        onClick={() => router.push("/auth/signup")}
+                                        style={{ color: "#0C74D4" }}
+                                        className="font-11 cursor-pointer mt-8"
+                                    >
+                                        Or create an account
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                ) : (
+                    <div className="bg-white py-20">
+                        <div className="options-holder mx-auto mt-20 p-5 lg:px-24 lg:py-14">
+                            <div className="text-center">
+                                {/* <img src="../../img/otp.svg" className="inline-block mb-6" alt="" /> */}
+                                <p className="fb-text mb-2">Enter your email</p>
+                                {/* <p className="text-xs primary-color font-medium">
+                                Enter the code we sent to your inbox to verify your email address
+                                </p> */}
+                            </div>
+
+                            <form
+                                className="mt-2.5"
+                                onSubmit={formik.handleSubmit}
+                            >
+                                <div className="flex w-full flex-wrap lg:flex-nowrap md:flex-nowrap lg:mb-5 justify-center">
+                                    <div className="flex flex-col mb-3 w-full lg:w-8/12 lg:mb-0">
+                                        {/* <label className="pb-1 sec-black font-10 font-medium">
+                                            Code
+                                        </label> */}
+                                        <input
+                                            className="login-control focus:outline-none px-2 text-sm"
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.email}
+                                        />
+                                        {formik.touched.email &&
+                                        formik.errors.email ? (
+                                            <div className="input-error">
+                                                {formik.errors.email}
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+
+
+                                <div className="text-center pt-3">
+                                    
+                                    <button
+                                        type="submit"
+                                        className="focus:outline-none primary-btn text-white text-xs font-semibold uppercase py-2.5 px-4 w-full lg:w-1/3 md:w-1/2"
+                                    >
+                                        {isLoading ? (
+                                            <ClipLoader
+                                                color="#fff"
+                                                size={20}
+                                                loading
+                                            />
+                                        ) : (
+                                            "Confirm"
+                                        )}{" "}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </main>
         </section>
     );

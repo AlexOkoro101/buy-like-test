@@ -284,7 +284,7 @@ a:link {
 
 .tab input[type=checkbox]:checked+label::after {
     transform: rotate(315deg);
-}
+} 
 
 .tab input[type=radio]:checked+label::after {
     transform: rotateX(180deg);

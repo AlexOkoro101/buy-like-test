@@ -35,8 +35,8 @@ const BidDetails = () => {
 
   const [bidCollection, setbidCollection] = useState(null);
   const [CollectionBid, setCollectionBid] = useState(null);
-  const [userEmail,setUserEmail] =useState(null)
-  const [userPhone,setUserPhone] =useState(null)
+  const [userEmail, setUserEmail] = useState(null);
+  const [userPhone, setUserPhone] = useState(null);
 
   const [isLoading, setisLoading] = useState(true);
   const [error, seterror] = useState(null);
@@ -50,16 +50,18 @@ const BidDetails = () => {
   const [userId, setuserId] = useState(null);
   const [processDetails, setprocessDetails] = useState(null);
   const [refNumber, setrefNumber] = useState(null);
+  const [transactionById, setTransactionById] = useState([]);
+  const [transactionByCollection, setTransactionByCollection] = useState(null);
+  const [showDetails, setShowDetails]=useState(false)
 
   const router = useRouter();
   const bidId = router.query.bid;
 
-
-  useEffect(()=>{
-      console.log(JSON.parse(localStorage.getItem("user")))
-      setUserEmail(JSON.parse(localStorage.getItem("user")).userEmail)
-      setUserPhone(JSON.parse(localStorage.getItem("user")).phoneNumber)
-  },[])
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("user")));
+    setUserEmail(JSON.parse(localStorage.getItem("user")).userEmail);
+    setUserPhone(JSON.parse(localStorage.getItem("user")).phoneNumber);
+  }, []);
 
   const adjustHeight = () => {
     const proccessBody = document.getElementsByClassName("tracker-table");
@@ -74,31 +76,51 @@ const BidDetails = () => {
     return "bld" + Math.floor(Math.random() * 1000000000 + 1);
   };
 
+  const AmountToPayonPayStack =
+    transactionById?.length == 0 &&
+    (transactionByCollection == null || transactionByCollection == {})
+      ? 50000000
+      : transactionByCollection && transactionById.length == 0
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000 >= 2000000
+        ? 200000000
+        : ((Number(bidCollection?.bidAmount||bidCollection.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000) * 100
+      : transactionById[0]?.amountBalance >= 2000000
+      ? 200000000
+      : transactionById[0]?.amountBalance * 100;
+  const BalanceToDisplayToUser =
+    transactionById?.length == 0 &&
+    (transactionByCollection == null || transactionByCollection == {})
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570
+      : transactionByCollection && transactionById.length == 0
+      ? (Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)) * 570 - 500000
+      : transactionById[0]?.amountBalance;
+  const BalanceToFrontEndPayments =
+    BalanceToDisplayToUser - AmountToPayonPayStack / 100;
+
   const config = {
     reference: referenceNumber(),
     email: `${userEmail}`,
-    amount: /*amount * 100*/ 500,
+    amount: /*amount * 100*/ 10000,
     publicKey: "pk_live_e0ee86f89440e1bea4b8a6a020bb71e2ecc1f86f",
   };
 
   // you can call this function anything
   const onSuccess = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
-    console.log( reference.trxref)
+    console.log(reference.trxref);
     setrefNumber(reference.trxref);
-    verifyPaystackPayment(refNumber);
+    verifyPaystackPayment(reference.trxref);
     // console.log("vehicle ID", bnvehicleID);
     // console.log("bid ID", bidID);
-    
   };
-//   useEffect(() => {
-//     if (refNumber === null) {
-//       return;
-//     } else {
-//       console.log("verify payment");
-//       verifyPaystackPayment(refNumber);
-//     }
-//   }, [confimation, state, refNumber]);
+  //   useEffect(() => {
+  //     if (refNumber === null) {
+  //       return;
+  //     } else {
+  //       console.log("verify payment");
+  //       verifyPaystackPayment(refNumber);
+  //     }
+  //   }, [confimation, state, refNumber]);
 
   // you can call this function anything
   const onClose = () => {
@@ -123,9 +145,7 @@ const BidDetails = () => {
             const formatData = JSON.parse(data);
             console.log(formatData.data);
             if (formatData.data.status) {
-                setTimeout(() => {
-                    frontendPayment(ref, formatData);
-                }, 1000);
+              frontendPayment(ref);
             }
           }
         }
@@ -133,10 +153,7 @@ const BidDetails = () => {
       .catch((error) => console.log("payment error", error));
   };
 
-
-  const frontendPayment = (ref, verifiedData) => {
-
-    console.log('did you get here')
+  const frontendPayment = (ref) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -151,15 +168,19 @@ const BidDetails = () => {
       owner: bidCollection?.owner,
       vehicle: bidCollection?._id,
       bid: processDetails?.bid,
-      amount: (Number(bidCollection?.bidAmount)* 570)-500000,
-    //   amountBalance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
+      amount: AmountToPayonPayStack / 100,
+      amountBalance: BalanceToFrontEndPayments,
       reference: ref,
-    //   currency: "",
-    //   metadata: "",
-      symbol:"NGN",
-    //   balance: carDetails?.carDestination == "Nigeria" ? (Number(carDetails?.total) * carDetails?.usd) - 500000 : Number(carDetails?.total) - 500000/carDetails?.usd,
-    //   status: verifiedData.data.status,
-    //   statusTrans: verifiedData.data.data.status,
+      currency: "",
+      metadata: "",
+      symbol: "NGN",
+      balance: BalanceToFrontEndPayments,
+      status: true,
+      statusTrans: true,
+      balanceTrans: transactionByCollection?.BidCollection?.transaction
+        ? transactionByCollection?.BidCollection?.transaction
+        : transactionById[0]?.transaction,
+      linkBalance: true,
     });
     console.log("frontend data", raw);
 
@@ -168,7 +189,6 @@ const BidDetails = () => {
       headers: myHeaders,
       body: raw,
       redirect: "follow",
-
     };
 
     fetch(enviroment.BASE_URL + "transactions/payment", requestOptions)
@@ -246,6 +266,8 @@ const BidDetails = () => {
             const formatCollection = JSON.parse(result);
             setbidCollection(formatCollection?.data?.vehicle);
             console.log(formatCollection?.data?.vehicle);
+            getVehicleTransactionById(formatCollection?.data?.vehicle._id);
+            getVehicleTransactionByCollection();
           }
         }
         console.log(bidCollection);
@@ -275,6 +297,38 @@ const BidDetails = () => {
       })
       .catch((error) => console.log("error", error));
   }, []);
+
+  const getVehicleTransactionById = (id) => {
+    fetch(enviroment.BASE_URL + "transactions/vehicle-trans/" + id, {
+      method: "GET",
+      redirect: "follow",
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((result) => {
+        console.log(JSON.parse(result));
+        setTransactionById(JSON.parse(result).data);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const getVehicleTransactionByCollection = () => {
+    let transsId = localStorage.getItem("CollectionTransactionId");
+    console.log(transsId);
+    fetch(enviroment.BASE_URL + "transactions/" + transsId, {
+      method: "GET",
+      redirect: "follow",
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((result) => {
+        console.log(JSON.parse(result));
+        setTransactionByCollection(JSON.parse(result).data);
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   useEffect(() => {
     displaySmall();
@@ -425,16 +479,16 @@ const BidDetails = () => {
                           <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
                             {`${CollectionBid?.name}`}
                           </p>
-                          {/* <p className="primary-black font-medium py-1 text-xs uppercase">
+                          <p className="primary-black font-medium py-1 text-xs uppercase">
                                             {dollarFormatter.format(bidCollection?.odometer)} mi
                                         </p>
                                         <p className="primary-black font-medium text-xs uppercase">
                                             vin: {bidCollection?.vin}
-                                        </p> */}
-                          <p className="primary-black font-medium font-11 uppercase">
-                            {dollarFormatter.format(
-                              CollectionBid?.bids[0]?.bidAmount
-                            )}
+                                        </p>
+                          <p className="primary-black font-medium font-11 ">
+                            {
+                              bidCollection?.bidAmount|| bidCollection?.price
+                          }
                           </p>
                         </div>
                       </div>
@@ -448,7 +502,7 @@ const BidDetails = () => {
                                 Trucking
                               </td>
                               <td className="text-xs primary-black font-normal py-1.5">
-                                ${bidCollection?.trucking || 0}
+                                ${bidCollection?.trucking }
                               </td>
                             </tr>
                           ) : (
@@ -462,7 +516,7 @@ const BidDetails = () => {
                                   Shipping
                                 </td>
                                 <td className="text-xs primary-black font-normal py-1.5">
-                                  ${bidCollection?.shipping || 0}
+                                  ${bidCollection?.shipping }
                                 </td>
                               </tr>
                             )}
@@ -499,7 +553,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                              {bidCollection?.bidAmount}
+                              {Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 
@@ -836,7 +890,7 @@ const BidDetails = () => {
                             vin: {bidCollection?.vin}
                           </p>
                           <p className="primary-black font-medium font-11 uppercase">
-                            {dollarFormatter.format(bidCollection?.price)}
+                            {dollarFormatter.format(bidCollection?.bidAmount||bidCollection?.price)}
                           </p>
                         </div>
                       </div>
@@ -901,7 +955,7 @@ const BidDetails = () => {
                               Total
                             </td>
                             <td className="total-border text-xs primary-black font-normal py-1.5 ">
-                              {bidCollection?.bidAmount}
+                            {Number(bidCollection?.bidAmount||bidCollection?.price) +450+400 +Number(bidCollection?.shipping)+Number(bidCollection?.trucking)}
                             </td>
                           </tr>
 
@@ -1201,14 +1255,309 @@ const BidDetails = () => {
                                         </div>
 
                                     </div> */}
+                        <div>
+                          <>
+                          <h5>No Documents available</h5>
+                          <h2>
+                            Balance To be Paid: NGN
+                            <span>
+                              {dollarFormatter.format(BalanceToDisplayToUser)}
+                            </span>
+                          </h2>
+                          {BalanceToDisplayToUser > 0 ? (
+                            <button
+                              type="button"
+                              className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12 mt-5"
+                              onClick={
+                                () => initializePayment(onSuccess, onClose)
+                                // console.log(BalanceToFrontEndPayments)
+                              }
+                            >
+                              Pay NGN
+                              {dollarFormatter.format(
+                                AmountToPayonPayStack / 100
+                              )}{" "}
+                              Now
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12 mt-5"
+                              style={{ background: "green" }}
+                            >
+                              Payment Completed
+                            </button>
+                          )}
+                          </>
 
-                        {/* <button
-                          type="button"
-                          className="focus:outline-none text-white primary-btn py-1.5 font-10 fonr-semibold px-5 h-12"
-                          onClick={()=>initializePayment(onSuccess, onClose)}
-                        >
-                          Make Full Payment
-                        </button> */}
+                          <div className="text-right">
+                            <div className="block w-full  h-96 mb-20 mt-20">
+                              <h1 className="my-5 text-right">
+                                Transaction History For This Vehicle
+                              </h1>
+                              <table className="items-right w-full  text-right border-collapse">
+                                {/* <thead className=" text-xs font-medium">
+                                   <tr className="">
+                                  <th className="p-3.5 text-left">Date</th>  */}
+                                    {/* <th className="p-3.5 text-left ">
+                                      Vehicle/Collection Name
+                                    </th> */}
+                                    {/* <th className="p-3.5 text-left">
+                                      Amount paid
+                                    </th> */}
+                                    {/* <th className="p-3.5 text-left">Form of payment</th> */}
+                                    {/* <th className="p-3.5 text-left">Status</th>
+                                    <th className="p-3.5 text-left">Balance</th>
+                                    <th className="p-3.5 text-left">Date</th> */}
+                                  {/* </tr>
+                                </thead> */}
+
+                                <tbody className="flex-1 sm:flex-none text-xs item-right primary-black">
+                                  {transactionByCollection == null &&
+                                  transactionById.length < 1 ? (
+                                    <>
+                                    <p className="">
+                                      No Available Transaction History For this
+                                      Vehicle
+                                    </p>
+                                
+                                    
+                                                       
+                                                        
+                                                        
+                                    </>
+                                    
+                                  ) : (
+                                    <>
+                                      {transactionByCollection !== null ? (
+                                        <>
+                                          {showDetails ? (
+                                            <div
+                                              style={{
+                                                border: "1px solid grey",
+                                              }}
+                                              className="p-10"
+                                            >
+                                              <h4 className="text-sm text-center">
+                                                Details
+                                              </h4>
+                                              <div className="flex justify-between p-2">
+                                                <h3>Form of Payment</h3>
+                                                <h3>
+                                                  {transactionByCollection?.type ||
+                                                  ""}
+                                                </h3>
+                                              </div>
+                                              <div className="flex justify-between p-2">
+                                                <h3>Status</h3>
+                                                <h3>
+                                                  {transactionByCollection
+                                                    ?.BidCollection
+                                                    ?.payedStatus === true && (
+                                                    <>Success</>
+                                                  )}
+                                                </h3>
+                                              </div>
+                                              <div className="flex justify-between p-2">
+                                                <h3>Balance</h3>
+                                                <h3>
+                                                  {
+                                                    transactionByCollection?.amountBalance
+                                                  }
+                                                </h3>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <></>
+                                          )}
+
+                                          <tr
+                                            key={transactionByCollection?._id}
+                                            className="pr-4 mb-3  text-center leading-3 md:mb-0"
+                                            // onClick={() =>
+                                            //   showDetails
+                                            //     ? setShowDetails(false)
+                                            //     : setShowDetails(true)
+                                            // }
+                                          >
+
+                                            <td className="circle mt-5" style={{background:"red"}}></td>
+                                            <td className="p-3.5 ">
+                                                                <p className="text-xs font-bold" id="date"> {new Date(
+                                                transactionByCollection?.createdAt
+                                              ).toLocaleDateString("en-NG", {
+                                                year: "numeric",
+                                                day: "numeric",
+                                                month: "short",
+                                              })}</p>
+                                                                <small className="text-xs " id="time">{new Date(
+                                                transactionByCollection?.createdAt
+                                              ).toLocaleTimeString("en-NG", {
+                                                hour: "numeric",
+                                                minute: "numeric",
+                                                
+                                              })}</small>
+                                             
+                                             
+                                            </td>
+                                            {/* <td className="p-3.5">
+                                            {transactionByCollection
+                                              ?.BidCollection?.name
+                                             }
+                                            <span
+                                              className="text-xs"
+                                              style={{ color: "green" }}
+                                            >
+                                              {" "}
+                                              -Deposit
+                                            </span>
+                                          </td> */}
+                                            <td className="p-3.5">
+                                              NGN
+                                              {transactionByCollection?.amount ===
+                                              "1000"
+                                                ? "500000"
+                                                : transactionByCollection?.amount}
+                                            </td>
+                                            {/* <td className="p-3.5">{transactionByCollection?.type || ""}</td> */}
+                                            {/* <td className="p-3.5">
+                                            {transactionByCollection
+                                              ?.BidCollection?.payedStatus ===
+                                              true && <>Success</>}
+                                          </td>
+                                          <td className="p-3.5">
+                                            NGN
+                                            {transactionByCollection?.amountBalance
+                                              }
+                                          </td> */}
+                                          </tr>
+                                        </>
+                                      ) : (
+                                        <></>
+                                      )}
+                                      {transactionById.length > 0 ? (
+                                        <>
+                                          {transactionById
+                                            ?.slice(0)
+                                            .reverse()
+                                            .map((transaction) => (
+                                              <>
+                                                {/* // <Link
+                                              //   href={
+                                              //     "/profile/my-collection/bid/" +
+                                              //     (transaction?.vehicle?.vin ||
+                                              //       transaction?.BidCollection
+                                              //         ?._id)
+                                              //   }
+                                              // > */}
+
+                                                {showDetails ? (
+                                                  <div
+                                                    style={{
+                                                      border: "1px solid grey",
+                                                    }}
+                                                  >
+                                                    <h4 className="text-sm">
+                                                      Details
+                                                    </h4>
+                                                    <div className="flex justify-between p-2">
+                                                      <h3>Form of Payment</h3>
+                                                      <h3>
+                                                        {transaction?.type ||
+                                                          ""}
+                                                      </h3>
+                                                    </div>
+                                                    <div className="flex justify-between p-2">
+                                                      <h3>Status</h3>
+                                                      <h3>
+                                                        {transaction?.statusTrans ===
+                                                          true && <>Success</>}
+                                                      </h3>
+                                                    </div>
+                                                    <div className="flex justify-between p-2">
+                                                      <h3>Balance</h3>
+                                                      <h3>
+                                                        {
+                                                          transaction?.amountBalance
+                                                        }
+                                                      </h3>
+                                                    </div>
+                                                  </div>
+                                                ) : (
+                                                  <></>
+                                                )}
+
+                                                <tr
+                                                  key={transaction?._id}
+                                                  className="pr-4 mb-3 text-center leading-3 md:mb-0"
+                                                  // onClick={() =>
+                                                  //   showDetails
+                                                  //     ? setShowDetails(false)
+                                                  //     : setShowDetails(true)
+                                                  // }
+                                                >
+                                                <td className="circle mt-5" style={{background:"red"}}></td>
+                                            <td className="p-3.5 ">
+                                                                <p className="text-xs font-bold" id="date"> {new Date(
+                                                transaction?.createdAt
+                                              ).toLocaleDateString("en-NG", {
+                                                year: "numeric",
+                                                day: "numeric",
+                                                month: "short",
+                                              })}</p>
+                                                                <small className="text-xs " id="time">{new Date(
+                                                transaction?.createdAt
+                                              ).toLocaleTimeString("en-NG", {
+                                                hour: "numeric",
+                                                minute: "numeric",
+                                                
+                                              })}</small>
+                                             
+                                             
+                                            </td>
+                                                  {/* <td className="p-3.5">
+                                                    {transaction?.BidCollection
+                                                      ?.name ||
+                                                      `${
+                                                        transaction?.vehicle
+                                                          ?.year || ""
+                                                      } ${
+                                                        transaction?.vehicle
+                                                          ?.make || ""
+                                                      } ${
+                                                        transaction?.vehicle
+                                                          ?.model || ""
+                                                      }`}
+                                                  </td> */}
+                                                  <td className="p-3.5">
+                                                    NGN
+                                                    {transaction?.amount || 0}
+                                                  </td>
+                                                  {/* <td className="p-3.5">{transaction?.type || ""}</td> */}
+                                                  {/* <td className="p-3.5">
+                                                    {transaction?.statusTrans ===
+                                                      "true" && <>Success</>}
+                                                  </td>
+                                                  <td className="p-3.5">
+                                                    NGN
+                                                    {transaction?.amountBalance ||
+                                                      0}
+                                                  </td> */}
+                                                </tr>
+                                                {/* // </Link> */}
+                                              </>
+                                            ))}
+                                        </>
+                                      ) : (
+                                        <></>
+                                      )}
+                                    </>
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </section>
                   </div>

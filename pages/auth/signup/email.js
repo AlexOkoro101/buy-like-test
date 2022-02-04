@@ -112,51 +112,39 @@ const EmailSignup = ({ beginLogin }) => {
             fetch(enviroment.BASE_URL + "auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                credentials: "same-origin",
                 body: JSON.stringify(values),
+                redirect: 'follow'
             })
-                .then((res) => {
-                    // console.log(res)
-                    if (!res.ok) {
-                        setisLoading(false);
-                        seterror(res.statusText);
-                        toastError();
-                        throw Error("Could not sign up");
-                    }
-                    setisLoading(false);
-                    return res.json();
-                })
-                .then((data) => {
-                    //   console.log(data)
-                    if (data?.error) {
-                        seterror(data?.message);
-                        toastError();
-                    } else {
-                        // console.log(data)
-                        seterror(data?.message);
-                        toastSuccess();
-                        const now = new Date();
-                        const item = {
-                            userToken: data.data._token,
-                            userName: data.data.user.profile.firstName,
-                            userId: data.data.user._id,
-                            userEmail: data.data.user.email,
-                            expiry: now.getTime() + 3600000,
-                        };
-                        localStorage.setItem("temp", JSON.stringify(item));
-                        router.push("/auth/signup/onboarding");
-                    }
-                    //save data to store
-                    // beginLogin({
-                    //     token: data.data._token,
-                    //     login: true,
-                    // });
-                })
-                .catch((e) => {
-                    // seterror(e.message)
-                    setisLoading(false);
-                    console.log(e.message);
-                });
+            .then(response => response.json())
+            .then(result => {
+                setisLoading(false);
+                console.log(result)
+                if (result?.error) {
+                    // seterror(data?.message);
+                    toast.error(result?.message);
+                } else {
+                    // console.log(data)
+                    // seterror(data?.message);
+                    toast.success(result?.message);
+                    const now = new Date();
+                    const item = {
+                        userToken: result.data._token,
+                        userName: result.data.user.profile.firstName,
+                        userId: result.data.user._id,
+                        userEmail: result.data.user.email,
+                        expiry: now.getTime() + 3600000,
+                        emailVerified: result.data.user.emailVerified
+                    };
+                    localStorage.setItem("temp", JSON.stringify(item));
+                    router.push("/auth/signup/onboarding");
+                }
+
+            })
+            .catch((e) => {
+                // seterror(e.message)
+                setisLoading(false);
+                console.log(e.message);
+            });
         },
     });
 
