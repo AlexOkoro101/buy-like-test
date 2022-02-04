@@ -734,7 +734,7 @@ export const searchCars = (inputValue) => (dispatch) => {
         type: FETCHING_CARS,
     });
 
-    let url = `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`;
+    let url = `http://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`;
     fetch(url.trim(), {
         method: "GET",
         headers: {},

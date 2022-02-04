@@ -23,7 +23,7 @@ import { useMemo } from "react";
 import Select from "react-select";
 import Collection from "../../src/components/Layout/Collection";
 
-const Url = "https://buylikepoint.us/json.php/view.php";
+const Url = "http://buylikepoint.us/json.php/view.php";
 
 //
 //
@@ -3482,7 +3482,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
 };
 
 CarDetails.getInitialProps = async ({ query }) => {
-  let url = `https://buylikepoint.us/json.php/view.php?vin=${query.id}&apiKey=Switch!2020&apiKey=Switch!2020`;
+  let url = `http://buylikepoint.us/json.php/view.php?vin=${query.id}&apiKey=Switch!2020&apiKey=Switch!2020`;
   let res = await fetch(url.trim(), {
     method: "GET",
     headers: {},

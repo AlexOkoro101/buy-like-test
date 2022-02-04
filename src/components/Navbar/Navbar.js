@@ -276,7 +276,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     if (inputValue !== "") {
       try {
         fetch(
-          `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
+          `http://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
           {
             method: "GET",
             headers: {},
