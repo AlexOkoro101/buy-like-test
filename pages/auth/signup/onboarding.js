@@ -79,10 +79,10 @@ const OnBoarding = () => {
         });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
         };
 
         fetch(enviroment.BASE_URL + "auth/user/verification/sender/" + item.userId, requestOptions)

@@ -21,7 +21,9 @@ const VerifyPhone = () => {
     const [id, setid] = useState(null);
     const [userId, setuserId] = useState(null);
     const [phoneNumber, setphoneNumber] = useState(null);
-
+    //Redirect
+    const router = useRouter();
+    
     useEffect(() => {
         retrieveId()
         return () => {
@@ -66,8 +68,6 @@ const VerifyPhone = () => {
 
 
 
-    //Redirect
-    const router = useRouter();
 
 
     // let min = 6;
@@ -100,11 +100,14 @@ const VerifyPhone = () => {
                 })
                 .then((data) => {
                     if (data?.error) {
-                        seterror(data?.message);
-                        toastError();
+                        // seterror(data?.message);
+                        toast.error(data?.message);
                     } else {
                         seterror(data?.message);
-                        toastSuccess();
+                        toast.success(data?.message);
+                        setTimeout(() => {
+                            router.push('/vin')
+                        }, 1000);
                     }
 
                 })
