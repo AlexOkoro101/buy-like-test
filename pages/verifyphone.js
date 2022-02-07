@@ -156,7 +156,7 @@ const VerifyPhone = () => {
                                 <img src="../../img/otp.svg" className="inline-block mb-6" alt="" />
                                 <p className="otp-text mb-2">Enter your code</p>
                                 <p className="text-xs primary-color font-medium">
-                                Enter the code we sent to your inbox to verify your email address
+                                Enter the code we sent to your phone to verify your phone number
                                 </p>
                             </div>
 
