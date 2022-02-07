@@ -1,7 +1,7 @@
 module.exports = {
-    url:"http://buylikepoint.us/json.php/view.php?",
+    url:"https://buylikepoint.us/json.php/view.php?",
     env: {
-        cars_api: "http://buylikepoint.us/json.php",
+        cars_api: "https://buylikepoint.us/json.php",
     },
     
 };
