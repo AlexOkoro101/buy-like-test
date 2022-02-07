@@ -894,7 +894,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
         if (inputValue !== "") {
             try {
                 fetch(
-                    `http://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
+                    `https://buylikepoint.us/json.php/view.php?vin=${inputValue}&apiKey=Switch!2020&apiKey=Switch!2020`,
                     {
                         method: "GET",
                         headers: {},
