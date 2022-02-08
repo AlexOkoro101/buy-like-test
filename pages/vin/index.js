@@ -1103,7 +1103,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 {/* <!-- Search region here --> */}
                 
                 <main
-                    className="flex items-start  main h-full m-0  pb-12 pt-16"
+                    className="flex items-start main h-full m-0 pb-12 pt-16 lg:px-16 px-4"
                 
                      
                    
@@ -1906,7 +1906,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                     )}
 
                     {/* <!--  Display region here  --> */}
-                    <div className="display-holder min-h-screen  h-full w-full  relative px-2  lg:px-0 lg:pl-5">
+                    <div className="display-holder min-h-screen h-full w-full relative px-2 lg:px-0 lg:pl-5">
                         {/* <!-- Filter and search for mobile here --> */}
 
                         <div className="flex lg:hidden items-center justify-between w-full mb-3">
