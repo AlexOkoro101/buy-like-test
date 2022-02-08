@@ -834,6 +834,47 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                     )}
                 </div>
             );
+        }else if(params?.imageLink){
+            return(
+                <div
+                    style={{
+                        width:
+                            open && width >= 900
+                                ? ""
+                                : !open && width >= 900
+                                ? ""
+                                : "100%",
+                        height: "203px",
+                    }}
+                    className=" bg-opacity-20  cursor-pointer rounded-md"
+                >
+                     <a
+                            className="cursor-pointer relative block"
+                            href={`/vin/${params.VIN}`}
+                            style={{
+                                width:
+                                    open && width >= 900
+                                        ? ""
+                                        : !open && width >= 900
+                                        ? ""
+                                        : "100%",
+                                height: "203px",
+                            }}
+                        >
+                            <img
+                                src={params.imageLink}
+                                alt="hello"
+                                className="w-full object-cover h-full rounded-md object-center"
+                            />
+                            {/* <div className="watermark opacity-50 ">
+                                <p>BUYLIKEDEALERS.COM</p>
+                            </div> */}
+                        </a>
+
+
+                </div>
+            )
+
         } else {
             return (
                 <div
@@ -1103,12 +1144,14 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                 {/* <!-- Search region here --> */}
                 
                 <main
-                    className="flex items-start  main h-full m-0  pb-12 pt-16"
+                
                 
                      
                    
 
                 >
+                    <div className="flex items-start main h-full m-0  pb-12 pt-16"
+                    id="carDeets">
                     
                     
                     {/* <!-- filter tab here --> */}
@@ -1445,7 +1488,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 options={FuelType}
                                             />
                                         </div>
-                                        <div className="tab border-bt py-4 ">
+                                        {/* <div className="tab border-bt py-4 ">
                                          <Collapsible
                                                 overflowWhenOpen="visible"
                                                 contentOuterClassName="px-4"
@@ -1514,7 +1557,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                 
                                             />
                                             </Collapsible>
-                                        </div>
+                                        </div> */}
                                         <div className="tab border-bt py-4 ">
                                             <ReactMultiSelectCheckboxes
                                                 className="primary-black font-semibold font-11  "
@@ -2246,7 +2289,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                         editLocation(ele?.pickupLocation)
                                                                                     }
                                                                                 </p>
-                                                                                <div className="ml-auto flex self-center">
+                                                                                {/* <div className="ml-auto flex self-center">
                                                                                     <img
                                                                                         src="../../assets/img/vectors/red-date.svg"
                                                                                         alt="date"
@@ -2264,7 +2307,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                             }
                                                                                         )}
                                                                                     </p>
-                                                                                </div>
+                                                                                </div> */}
                                                                             </div>
 
                                                                             {/* Vehicle Year here */}
@@ -2449,7 +2492,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                                 </p>
                                                                                             </td>
 
-                                                                                            <td className="py-1.5 pr-20 whitespace-no-wrap">
+                                                                                            {/* <td className="py-1.5 pr-20 whitespace-no-wrap">
                                                                                                 <p className="flex items-center text-xs font-medium primary-black">
                                                                                                     {" "}
                                                                                                     <span className="mr-1">
@@ -2469,7 +2512,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                                                                                         }
                                                                                                     )}
                                                                                                 </p>
-                                                                                            </td>
+                                                                                            </td> */}
                                                                                         </tr>
 
                                                                                         <tr>
@@ -2644,6 +2687,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 </div>
                             </div>
                         )}
+                    </div>
                     </div>
                 </main>
             </div>
