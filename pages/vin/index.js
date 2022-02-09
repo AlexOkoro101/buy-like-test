@@ -1149,18 +1149,14 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                      
                    
 
-                >
-                    <div className="flex items-start main h-full m-0  pb-12 pt-16"
-                    id="carDeets">
-                    
-                    
+                >                    
                     {/* <!-- filter tab here --> */}
                     {open && (
                         <div
                             className="filter-holder transition-all delay-300 h-full lg:block p-3 w-3/12 xl:w-2/12"
                             style={{
                                 position: width <= 900 ? "absolute" : "",
-                                zIndex: 0,
+                                zIndex: 50,
                                 width: width <= 900 ? "100%" : "",
                                 top: 44,
                                 left: 0,
@@ -2687,7 +2683,6 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                                 </div>
                             </div>
                         )}
-                    </div>
                     </div>
                 </main>
             </div>
