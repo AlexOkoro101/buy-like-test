@@ -1156,7 +1156,7 @@ const Search = ({ cars, params, loading, getMakes, makes, total }) => {
                             className="filter-holder transition-all delay-300 h-full lg:block p-3 w-3/12 xl:w-2/12"
                             style={{
                                 position: width <= 900 ? "absolute" : "",
-                                zIndex: 50,
+                                zIndex: 20,
                                 width: width <= 900 ? "100%" : "",
                                 top: 44,
                                 left: 0,
