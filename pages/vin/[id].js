@@ -157,6 +157,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
   const [isPBLoading, setisPBLoading] = useState(false);
   const [message, setmessage] = useState(false);
 
+  const [auctionEndTime, setauctionEndTime] = useState("");
   const [vin, setvin] = useState("");
   const [name, setname] = useState("");
   const [price, setprice] = useState("");
@@ -187,14 +188,18 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
   const [deliveryDuration, setdeliveryDuration] = useState(36288e5);
   const [NGN, setNGN] = useState(true);
   const dollarPrice = Number(totalAmount) / parseInt(usd);
-  const [maxBidAmount, setmaxBidAmount] = useState(`${carDetail.mmrPrice}`);
+  const [maxBidAmount, setmaxBidAmount] = useState(`${carDetail?.mmrPrice}`);
   const [sendSheetModal, setsendSheetModal] = useState(false);
   const [sendSheetPhoneNumber, setsendSheetPhoneNumber] = useState("");
   const [sendSheetEmail, setsendSheetEmail] = useState("");
   const [sheetError, setsheetError] = useState(false);
   const [shareSuccess, setshareSuccess] = useState(false);
   const [userIp, setuserIp] = useState(null);
+  let UpdateBidText = null;
+  let bidPlaced = false;
+  const [isUpdateBid, setIsUpdateBid] = useState(false);
 
+  // console.log(carDetail)
   const retrieveData = () => {
     localStorage.removeItem("temp");
     const userActive = localStorage.getItem("user");
@@ -274,7 +279,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       .then((data) => {
         // console.log(data)
         if (data) {
-          //  console.log(data.data)
+          //  console.log(data.data)
           if (Object.entries(data).length >= 1) {
             const formatCollection = JSON.parse(data);
             console.log("new collection", formatCollection.data);
@@ -294,6 +299,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
   const [usd, setUsd] = useState(0);
   const user = useSelector(selectToken);
   const [size, setsize] = useState(4);
+  const [carMaxId, setCarMaxId]=useState(1)
 
   const getZipLocation = () => {
     let initialZip = null;
@@ -346,6 +352,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     setbodyStyle(carDetail?.bodyType);
     setzip(carDetail?.locationFullZipcode);
     setbidAmount(carDetail?.buyNowPrice);
+    setauctionEndTime(carDetail?.auctionEndTime);
 
     setfacilitationLocation(carDetail?.facilitationLocation);
     setvehicleLocation(carDetail?.pickupLocation);
@@ -365,6 +372,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
   }, [carDetail, cardD]);
 
+  console.log(cardD);
   useEffect(() => {
     if (carDetail) {
       setDetail(carDetail);
@@ -562,13 +570,20 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     setCount(count - size);
   };
   const returnLargeimage = () => {
-    const largeImageArray = cardD?.images.map((image) => {
-      return `https://proxybuylike.herokuapp.com/?url=${image.image_largeUrl}`;
-    });
+    const largeImageArray = cardD?.imageLink
+      ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, index) => {
+          return `https://img2.carmax.com/img/vehicles/${
+            cardD.imageLink.split("/")[5]
+          }/${num}.jpg?width=800&ratio=4`;
+        })
+      : cardD?.images.map((image) => {
+          return `https://proxybuylike.herokuapp.com/?url=${image.image_largeUrl}`;
+        });
     return largeImageArray;
   };
   const displayLargeimage = () => {
     // console.log(toggler)
+
     return (
       <>
         <FsLightbox
@@ -583,7 +598,13 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             setToggler(!toggler);
             setWaterMarkToggle(true);
           }}
-          src={`https://proxybuylike.herokuapp.com/?url=${cardD?.images[id]?.image_largeUrl}`}
+          src={
+            cardD?.imageLink && cardD.images.length <= 0
+              ? `https://img2.carmax.com/img/vehicles/${
+                cardD.imageLink.split("/")[5]
+              }/${carMaxId}.jpg?width=800&ratio=4`
+              : `https://proxybuylike.herokuapp.com/?url=${cardD?.images[id]?.image_largeUrl}`
+          }
           loading="lazy"
           className="br-5 w-full h-full object-cover object-center cursor-pointer"
           alt="Benz"
@@ -689,7 +710,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                             moment(carDetail.auctionEndTime)
                                 .endOf("seconds")
                                 .fromNow()
-
                         } */}
           </CountdownCircleTimer>
         </>
@@ -713,14 +733,14 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     }
   }
 
-  function makeCollectionName(length) {
-    var result = "";
+  function makeCollectionName(mke) {
+    var result = mke + " collection";
     var characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
+    // var charactersLength = characters.length;
+    // for (var i = 0; i < length; i++) {
+    //   result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    // }
     return result;
   }
 
@@ -753,7 +773,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         passengerCapacity: "",
         sellerCity: "",
         description: "",
-
         Zip: zip,
         bidAmount: bidAmount,
         owner: userId,
@@ -763,6 +782,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
         images: carImages,
         trucking: truckingPrice || "",
         shipping: "",
+        auctionEndTime: auctionEndTime,
       };
 
       //Add car to collection
@@ -822,11 +842,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       // }
       // console.log(filterCollection)
 
-      return JSON.parse(localStorage.getItem("placeBidData"))._id;
+      // return JSON.parse(localStorage.getItem("placeBidData"))._id;
+      return collection[0];
     }
 
     async function createCollection() {
-      let randomName = makeCollectionName(7);
+      let randomName = makeCollectionName(make);
 
       const collectionObject = {
         owner: `${userId}`,
@@ -862,7 +883,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       return newCollection;
     }
 
-    setSelectedCollection(JSON.parse(localStorage.getItem("placeBidData")));
+    // setSelectedCollection(JSON.parse(localStorage.getItem("placeBidData")));
+    setSelectedCollection(collection[0]);
     addCar();
   };
   const now = new Date();
@@ -897,7 +919,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
     facilitationLocation: facilitationLocation,
     Vehicle_location: vehicleLocation,
     images: carImages,
-    auctionEndTime: carDetail?.auctionEndTime,
+    auctionEndTime: auctionEndTime,
     trucking: truckingPrice?.includes(",")
       ? truckAccessory
         ? Number(truckingPrice?.slice(1).replace(/,/g, "")) > 1000
@@ -948,6 +970,37 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       });
   };
 
+  const updatePriceData = {
+    price: maxBidAmount,
+  };
+
+  const updateBidPrice = () => {
+    console.log(updatePriceData);
+    fetch(enviroment.BASE_URL + `bids/update/price/${vin}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ price: maxBidAmount }),
+      redirect: "follow",
+    })
+      .then((response) => {
+        setisLoading(false);
+        if (!response.ok) {
+          buyNowInfo();
+          console.log(response);
+        } else {
+          setmessage(response.statusText);
+          console.log(response);
+          buyNowSuccess();
+        }
+      })
+      .catch((error) => {
+        seterror(error);
+        console.log("error", error);
+      });
+  };
+
   const hideCar = (vin) => {
     fetch("https://buylikepoint.us/bid.php?apiKey=Switch!2020&vin=" + vin, {
       method: "GET",
@@ -968,7 +1021,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
       })
       .then((data) => {
         if (data) {
-          //  console.log(data.data)
+          //  console.log(data.data)
           if (Object.entries(data).length >= 1) {
             const formatData = JSON.parse(data);
             // setcollection(formatData.data);
@@ -1380,15 +1433,52 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
   //
 
   const CheckBidPlaced = () => {
-    if(collection==undefined){return "PLACE BID"}
+    if (collection == undefined) {
+      return (
+        <div className="text-center">
+          <img
+            src={!cardD?.buyNowPrice && "../assets/img/bid-active.svg"}
+            className="inline"
+            alt="bid"
+          />
+          <p className={!cardD?.buyNowPrice && "buy-now-active-tab-text"}>
+            Place Bid
+          </p>
+        </div>
+      );
+    }
+
     for (let i of collection) {
       for (let lo of i?.vehicles) {
         if (lo.vin === cardD?.VIN) {
-          return "BID ALREADY PLACED";
+          bidPlaced = true;
+          return (
+            <div className="text-center">
+              <img
+                src={!cardD?.buyNowPrice && "../assets/img/bid.svg"}
+                className="inline"
+                alt="bid"
+              />
+              <p className={!cardD?.buyNowPrice && "place-bid-tab-text"}>
+                Bid Placed
+              </p>
+            </div>
+          );
         }
       }
     }
-    return "PLACE BID";
+    return (
+      <div className="text-center">
+        <img
+          src={!cardD?.buyNowPrice && "../assets/img/bid-active.svg"}
+          className="inline"
+          alt="bid"
+        />
+        <p className={!cardD?.buyNowPrice && "buy-now-active-tab-text"}>
+          Place Bid
+        </p>
+      </div>
+    );
   };
 
   return (
@@ -1436,13 +1526,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
             }
             image={cardD?.images[id]?.image_smallUrl}
           />
-          <Collection></Collection>
 
           <ToastContainer />
           {cardD && (
             <>
-              <div className="pt-10 lg:px-24 px-4 flex items-center justify-end">
-                <div className="flex gap-x-4 relative" style={{ zIndex: "-3" }}>
+              <div className="pt-20 lg:px-24 px-4 flex items-center justify-end">
+                <div className="flex gap-x-4 relative">
                   <p className="font-medium font-10 sec-black">Share via</p>
                   <button>
                     <Link
@@ -1519,19 +1608,19 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                       <div>
                         {cardD?.buyNowPrice.length > 2 ? (
                           <p className="primary-color text-sm font-bold">
-                            ${dollarFormatter.format(carDetail.buyNowPrice)}
+                            ${dollarFormatter.format(carDetail?.buyNowPrice)}
                           </p>
                         ) : (
                           <p className="primary-color text-base font-extrabold">
-                            ${dollarFormatter.format(carDetail.mmrPrice)}
+                            ${dollarFormatter.format(carDetail?.mmrPrice)}
                           </p>
                         )}
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="w-full lg:w-3/5" style={{ zIndex: "-3" }}>
-                  {cardD.images.length ? (
+                <div className="w-full lg:w-3/5">
+                  {cardD.images.length || cardD.imageLink ? (
                     <>
                       <div className="w-full relative displayLargeimage">
                         {displayLargeimage()}
@@ -1580,7 +1669,31 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                               <img src="https://img.icons8.com/ios-filled/50/000000/double-left.png" />
                             </button>
                           </div>
-                          {imageD &&
+                          {cardD?.imageLink ? (
+                            <>
+                              {[1, 2, 3, 4, 5, 6, 7, 8,9,10].map(
+                                (num, index) => (
+                                  <div
+                                    key={id}
+                                    onClick={() => setCarMaxId(num)}
+                                    className="smallDisplay mr-3 h-full  transition-all cursor-pointer transform hover:scale-105"
+                                  >
+                                    <img
+                                      src={`https://img2.carmax.com/img/vehicles/${
+                                        cardD.imageLink.split("/")[5]
+                                      }/${num}.jpg?width=800&ratio=4`}
+                                      className="rounded-md object-cover w-full shadow-sm"
+                                      style={{
+                                        height: "60.3px",
+                                      }}
+                                      alt=""
+                                    />
+                                  </div>
+                                )
+                              )}
+                            </>
+                          ) : (
+                            imageD &&
                             imageD.map((ele, id) => (
                               <div
                                 key={id}
@@ -1596,7 +1709,8 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                   alt=""
                                 />
                               </div>
-                            ))}
+                            ))
+                          )}
                           {imageD &&
                           imageD.length ===
                             (window.innerWidth <= 760 ? 3 : 8) &&
@@ -1683,12 +1797,12 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                         {cardD?.buyNowPrice ? (
                           <p className="sec-black font-11 font-bold">
                             BUY NOW AT {""}$
-                            {dollarFormatter.format(carDetail.buyNowPrice)}
+                            {dollarFormatter.format(carDetail?.buyNowPrice)}
                           </p>
                         ) : (
                           <p className="sec-black font-11 font-bold">
                             EST PRICE {""}$
-                            {dollarFormatter.format(carDetail.mmrPrice)}
+                            {dollarFormatter.format(carDetail?.mmrPrice)}
                           </p>
                         )}
                       </div>
@@ -1737,27 +1851,28 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                       <div
                         className={
                           "flex buy-now-tab cursor-pointer items-center justify-center " +
-                          (!cardD?.buyNowPrice && "active")
+                          (!cardD?.buyNowPrice && bidPlaced
+                            ? "active"
+                            : "place-bid-tab-text")
                         }
+                        onClick={() => {
+                          if (token) {
+                            localStorage.setItem(
+                              "buyNowData",
+                              JSON.stringify(bidData())
+                            );
+                            collection?.length <= 0
+                              ? router.push(
+                                  "/profile/my-collection/transaction/" + vin
+                                )
+                              : placeBid();
+                          } else {
+                            router.push("/auth/login");
+                          }
+                        }}
                         // onClick={(e) => openForm(e, false)}
                       >
-                        <div className="text-center">
-                          <img
-                            src={
-                              !cardD?.buyNowPrice &&
-                              "../assets/img/bid-active.svg"
-                            }
-                            className="inline"
-                            alt="bid"
-                          />
-                          <p
-                            className={
-                              !cardD?.buyNowPrice && "buy-now-active-tab-text"
-                            }
-                          >
-                            Place Bid
-                          </p>
-                        </div>
+                        {CheckBidPlaced()}
                       </div>
                     )}
                   </div>
@@ -2181,6 +2296,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                   }}
                                   onChange={(e) => {
                                     includeMaxBid(e);
+
                                     removeAlpha();
                                   }}
                                   value={maxBidAmount}
@@ -2520,7 +2636,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                           {isLoading ? (
                             <ClipLoader color="#fff" size={20} loading />
                           ) : (
-                            "SUBMIT REQUEST"
+                            "REQUEST FOR MORE INFO"
                           )}
                         </button>
 
@@ -2571,7 +2687,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                       </>
                     )}
                   </div>
-                  <div className="flex justify-center mt-5">
+                  {/* <div className="flex justify-center mt-5">
                     {cardD?.buyNowPrice ? (
                       <button
                         type="button"
@@ -2620,7 +2736,7 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                         </button>
                       </>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -2665,7 +2781,6 @@ const CarDetails = ({ cars, loading, res, carDetail }) => {
                                             TIME LEFT
                                             <p>
                                                 {car.data[0].auctionEndTime}
-
                                                 used the data this way
                                             </p>
                                         </p>
