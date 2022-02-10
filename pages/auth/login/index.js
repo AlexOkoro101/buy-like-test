@@ -117,14 +117,45 @@ const LoginOptions = ({ beginLogin }) => {
     //Facebook Auth
     const responseFacebook = (res) => {
         console.log("Facebook login result", res);
+        if(res.status == 'not_authorized') return;
+        setaddEmail(true)
+        setfacebookRes(res)
+        
+    };
 
+    const facebookClicked = (data) => {
+        console.warn(data);
+    };
+
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .required("Email is required")
+                .email("Enter valid email")
+        }),
+        onSubmit: (values) => {
+            // notify()
+            setisLoading(true);
+            seterror(null);
+            console.log(values);
+
+            accessWithFacebook(values)
+        },
+    });
+
+    const accessWithFacebook = (values) => {
         const facebookProfile = {
-            email: res.email,
-            facebookId: res.userID,
+            email: values.email,
+            fullName: facebookRes.name,
+            facebookId: facebookRes.userID,
         };
 
         // console.log("Login Successful", res.profileObj)
-        fetch(enviroment.BASE_URL + "auth/login/facebook", {
+
+        fetch(enviroment.BASE_URL + "auth/register/facebook", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "same-origin",
@@ -133,6 +164,7 @@ const LoginOptions = ({ beginLogin }) => {
             .then((res) => {
                 if (!res.ok) {
                     setisLoading(false);
+                    //   seterror(res.statusText)
                     //   toastError()
                 }
                 setisLoading(false);
@@ -141,43 +173,29 @@ const LoginOptions = ({ beginLogin }) => {
             .then((data) => {
                 if (data?.error) {
                     seterror(data?.message);
-                    toast.error(data?.message);
+                    toastError();
                 } else {
                     setmessage(data?.message);
-                    toast.error(data?.message);
+                    toastSuccess();
                     const now = new Date();
-                    //save data to local storage
                     const item = {
                         userToken: data.data._token,
-                        userId: data.data.user._id,
                         userName: data.data.user.profile.firstName,
-                        email: data.data.user.email,
-                        phone: data.data.user.profile.phoneNumber,
+                        userId: data.data.user._id,
+                        userEmail: data.data.user.email,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified,
-                        phoneVerified: data.data.user.phoneVerified
+                        emailVerified: data.data.user.emailVerified
                     };
-                    localStorage.setItem("user", JSON.stringify(item));
-                    router.push("/vin");
+                    localStorage.setItem("temp", JSON.stringify(item));
+                    router.push("/auth/signup/onboarding");
                 }
-                //save data to store
-                beginLogin({
-                    token: data.data._token,
-                    login: true,
-                });
             })
             .catch((e) => {
-                // seterror(e.message)
                 setisLoading(false);
                 console.log(e.message);
             });
+    }
 
-        
-    };
-
-    const facebookClicked = (data) => {
-        console.warn(data);
-    };
 
 
     return (

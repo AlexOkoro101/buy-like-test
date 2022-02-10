@@ -300,10 +300,9 @@ const SignupOptions = ({ beginLogin }) => {
                                 callback={responseFacebook}
                                 icon="fa-facebook"
                                 cssClass="facebook-btn"
-                                textButton="Sign up with Facebook"
+                                textButton="Log in with Facebook"
                                 authType="reauthenticate"
-                                scope="public_profile"
-                                
+                                scope="public_profile,email"
                             />
                             <button
                                 type="button"
