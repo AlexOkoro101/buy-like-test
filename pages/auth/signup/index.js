@@ -243,7 +243,7 @@ const SignupOptions = ({ beginLogin }) => {
                                 cssClass="facebook-btn"
                                 textButton="Sign up with Facebook"
                                 authType="reauthenticate"
-                                scope="public_profile,user_friends"
+                                scope="public_profile,email"
                                 
                             />
                             <button
