@@ -117,13 +117,6 @@ const LoginOptions = ({ beginLogin }) => {
     //Facebook Auth
     const responseFacebook = (res) => {
         console.log("Facebook login result", res);
-        // if(res.status == 'not_authorized') return;
-        // setaddEmail(true)
-        // setfacebookRes(res)
-
-      
-
-        // console.log("Login Successful", res.profileObj)
 
         const facebookProfile = {
             email: res.email,
