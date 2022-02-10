@@ -77,10 +77,10 @@ const LoginOptions = ({ beginLogin }) => {
             .then((data) => {
                 if (data?.error) {
                     seterror(data?.message);
-                    toastError();
+                    toast.error(data?.message);
                 } else {
                     setmessage(data?.message);
-                    toastSuccess();
+                    toast.success(data?.message);
                     const now = new Date();
                     //save data to local storage
                     const item = {
@@ -127,7 +127,7 @@ const LoginOptions = ({ beginLogin }) => {
 
         const facebookProfile = {
             email: res.email,
-            googleId: res.userID,
+            facebookId: res.userID,
         };
 
         // console.log("Login Successful", res.profileObj)
@@ -148,10 +148,10 @@ const LoginOptions = ({ beginLogin }) => {
             .then((data) => {
                 if (data?.error) {
                     seterror(data?.message);
-                    toastError();
+                    toast.error(data?.message);
                 } else {
                     setmessage(data?.message);
-                    toastSuccess();
+                    toast.error(data?.message);
                     const now = new Date();
                     //save data to local storage
                     const item = {
@@ -181,84 +181,84 @@ const LoginOptions = ({ beginLogin }) => {
         
     };
 
-    const formik = useFormik({
-        initialValues: {
-            email: "",
-        },
-        validationSchema: Yup.object({
-            email: Yup.string()
-                .required("Email is required")
-                .email("Enter valid email")
-        }),
-        onSubmit: (values) => {
-            // notify()
-            setisLoading(true);
-            seterror(null);
-            console.log(values);
+    // const formik = useFormik({
+    //     initialValues: {
+    //         email: "",
+    //     },
+    //     validationSchema: Yup.object({
+    //         email: Yup.string()
+    //             .required("Email is required")
+    //             .email("Enter valid email")
+    //     }),
+    //     onSubmit: (values) => {
+    //         // notify()
+    //         setisLoading(true);
+    //         seterror(null);
+    //         console.log(values);
 
-            accessWithFacebook(values)
-        },
-    });
+    //         accessWithFacebook(values)
+    //     },
+    // });
 
     const facebookClicked = (data) => {
         console.warn(data);
     };
 
-    const accessWithFacebook = (values) => {
+    // const accessWithFacebook = (values) => {
 
-        const facebookProfile = {
-            email: values.email,
-            facebookId: facebookRes.userID,
-        };
+    //     const facebookProfile = {
+    //         email: values.email,
+    //         facebookId: facebookRes.userID,
+    //     };
 
-        // console.log("Login Successful", res.profileObj)
+    //     // console.log("Login Successful", res.profileObj)
 
-        fetch(enviroment.BASE_URL + "auth/login/facebook", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin",
-            body: JSON.stringify(facebookProfile),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    setisLoading(false);
-                    //   seterror(res.statusText)
-                    //   toastError()
-                }
-                setisLoading(false);
-                return res.json();
-            })
-            .then((data) => {
-                if (data?.error) {
-                    seterror(data?.message);
-                    toastError();
-                } else {
-                    seterror(data?.message);
-                    toastSuccess();
-                    const now = new Date();
-                    const item = {
-                        userToken: data.data._token,
-                        userId: data.data.user._id,
-                        userName: data.data.user.profile.firstName,
-                        phone: data.data.user.profile.phoneNumber,
-                        email: data.data.user.email,
-                        expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified
-                    };
-                    localStorage.setItem("user", JSON.stringify(item));
-                    router.push("/vin");
-                }
+    //     fetch(enviroment.BASE_URL + "auth/login/facebook", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         credentials: "same-origin",
+    //         body: JSON.stringify(facebookProfile),
+    //     })
+    //         .then((res) => {
+    //             if (!res.ok) {
+    //                 setisLoading(false);
+    //                 //   seterror(res.statusText)
+    //                 //   toastError()
+    //             }
+    //             setisLoading(false);
+    //             return res.json();
+    //         })
+    //         .then((data) => {
+    //             if (data?.error) {
+    //                 seterror(data?.message);
+    //                 toastError();
+    //             } else {
+    //                 seterror(data?.message);
+    //                 toastSuccess();
+    //                 const now = new Date();
+    //                 const item = {
+    //                     userToken: data.data._token,
+    //                     userId: data.data.user._id,
+    //                     userName: data.data.user.profile.firstName,
+    //                     phone: data.data.user.profile.phoneNumber,
+    //                     email: data.data.user.email,
+    //                     expiry: now.getTime() + 3600000,
+    //                     emailVerified: data.data.user.emailVerified
+    //                 };
+    //                 localStorage.setItem("user", JSON.stringify(item));
+    //                 router.push("/vin");
+    //             }
 
-                //save data to store
-                beginLogin({
-                    token: data.data._token,
-                    login: true,
-                });
-            })
-            .catch((e) => {
-                setisLoading(false);
-            });
-    }
+    //             //save data to store
+    //             beginLogin({
+    //                 token: data.data._token,
+    //                 login: true,
+    //             });
+    //         })
+    //         .catch((e) => {
+    //             setisLoading(false);
+    //         });
+    // }
 
     return (
         <section className="w-full">
