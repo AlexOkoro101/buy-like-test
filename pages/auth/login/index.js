@@ -246,7 +246,7 @@ const LoginOptions = ({ beginLogin }) => {
                                 </button> */}
                                 <FacebookLogin
                                     appId="1364176120701351"
-                                    autoLoad={false}
+                                    autoLoad={true}
                                     fields="name,email,picture"
                                     onClick={facebookClicked}
                                     callback={responseFacebook}
@@ -254,6 +254,7 @@ const LoginOptions = ({ beginLogin }) => {
                                     cssClass="facebook-btn"
                                     textButton="Log in with Facebook"
                                     authType="reauthenticate"
+                                    scope="public_profile,user_friends"
                                 />
                                 <button
                                     type="button"
