@@ -117,13 +117,66 @@ const LoginOptions = ({ beginLogin }) => {
     //Facebook Auth
     const responseFacebook = (res) => {
         console.log("Facebook login result", res);
-        if(res.status == 'not_authorized') return;
-        setaddEmail(true)
-        setfacebookRes(res)
+        // if(res.status == 'not_authorized') return;
+        // setaddEmail(true)
+        // setfacebookRes(res)
 
       
 
         // console.log("Login Successful", res.profileObj)
+
+        const facebookProfile = {
+            email: res.email,
+            googleId: res.userID,
+        };
+
+        // console.log("Login Successful", res.profileObj)
+        fetch(enviroment.BASE_URL + "auth/login/facebook", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify(facebookProfile),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    setisLoading(false);
+                    //   toastError()
+                }
+                setisLoading(false);
+                return res.json();
+            })
+            .then((data) => {
+                if (data?.error) {
+                    seterror(data?.message);
+                    toastError();
+                } else {
+                    setmessage(data?.message);
+                    toastSuccess();
+                    const now = new Date();
+                    //save data to local storage
+                    const item = {
+                        userToken: data.data._token,
+                        userId: data.data.user._id,
+                        userName: data.data.user.profile.firstName,
+                        email: data.data.user.email,
+                        phone: data.data.user.profile.phoneNumber,
+                        expiry: now.getTime() + 3600000,
+                        emailVerified: data.data.user.emailVerified
+                    };
+                    localStorage.setItem("user", JSON.stringify(item));
+                    router.push("/vin");
+                }
+                //save data to store
+                beginLogin({
+                    token: data.data._token,
+                    login: true,
+                });
+            })
+            .catch((e) => {
+                // seterror(e.message)
+                setisLoading(false);
+                console.log(e.message);
+            });
 
         
     };
@@ -246,7 +299,7 @@ const LoginOptions = ({ beginLogin }) => {
                                 </button> */}
                                 <FacebookLogin
                                     appId="1364176120701351"
-                                    autoLoad={true}
+                                    autoLoad={false}
                                     fields="name,email,picture"
                                     onClick={facebookClicked}
                                     callback={responseFacebook}
