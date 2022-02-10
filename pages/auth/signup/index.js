@@ -90,7 +90,8 @@ const SignupOptions = ({ beginLogin }) => {
                         userId: data.data.user._id,
                         userEmail: data.data.user.email,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified
+                        emailVerified: data.data.user.emailVerified,
+                        phoneVerified: data.data.user.phoneVerified,
                     };
                     localStorage.setItem("temp", JSON.stringify(item));
                     router.push("/auth/signup/onboarding");
@@ -183,7 +184,8 @@ const SignupOptions = ({ beginLogin }) => {
                         userId: data.data.user._id,
                         userEmail: data.data.user.email,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified
+                        emailVerified: data.data.user.emailVerified,
+                        phoneVerified: data.data.user.phoneVerified,
                     };
                     localStorage.setItem("temp", JSON.stringify(item));
                     router.push("/auth/signup/onboarding");

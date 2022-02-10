@@ -93,6 +93,8 @@ const LogIn = ({ beginLogin }) => {
                             userEmail: data.data.user.email,
                             userAddress: data.data.user.info,
                             expiry: now.getTime() + 3600000,
+                            emailVerified: data.data.user.emailVerified,
+                            phoneVerified: data.data.user.phoneVerified
                         };
                         localStorage.setItem("user", JSON.stringify(item));
                         setTimeout(function () {

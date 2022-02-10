@@ -210,6 +210,15 @@ const VerifyPhone = () => {
                                     </button>
                                 </div>
                             </form>
+                            <div className="text-center">
+                                <p
+                                    onClick={() => router.push("/vin")}
+                                    style={{ color: "#0C74D4" }}
+                                    className="font-11 cursor-pointer mt-8"
+                                >
+                                    Or, Skip
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </main>

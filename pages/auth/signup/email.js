@@ -133,7 +133,8 @@ const EmailSignup = ({ beginLogin }) => {
                         userId: result.data.user._id,
                         userEmail: result.data.user.email,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: result.data.user.emailVerified
+                        emailVerified: result.data.user.emailVerified,
+                        phoneVerified: result.data.user.phoneVerified
                     };
                     localStorage.setItem("temp", JSON.stringify(item));
                     router.push("/auth/signup/onboarding");

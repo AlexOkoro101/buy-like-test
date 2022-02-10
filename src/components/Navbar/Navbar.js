@@ -25,8 +25,10 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
   const [totalCount, setTotalCount] = useState(0);
   const [userNmae, setuserName] = useState(null);
   const [userId, setuserId] = useState(null);
+  const [userPhone, setuserPhone] = useState(null);
   const [userIp, setuserIp] = useState(null);
   const [userVerified, setuserVerified] = useState(null)
+  const [phoneVerified, setphoneVerified] = useState(null)
   const [isLoading, setisLoading] = useState(false)
   const [notifications, setNotifications] = useState([]);
   const [notificationModal, setNotificationModal] = useState(false);
@@ -66,7 +68,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
     }
     settoken(item?.userToken);
     setuserName(item?.userName);
-    // return item.value
+    setuserPhone(item?.phoneNumber)
     setuserId(item?.userId)
     beginLogin({
       token: item.userToken,
@@ -89,6 +91,7 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
         console.log(result);
         if (result.error == false) {
             setuserVerified(result.data.emailVerified);
+            setphoneVerified(result.data.phoneVerified);
         }
     })
     .catch((error) => console.log("error", error));
@@ -410,6 +413,34 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
 
       })
       .catch(error => console.log('error', error));
+  }
+
+  const verifyPhone = () => {
+      var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            phoneNumber: userPhone
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "auth/user/verification/sender/" + userId, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            // router.push("/auth/verifyphone");
+            toast.success("OTP has been resent")
+            setTimeout(() => {
+              router.push('/verifyphone')
+            }, 1500);
+        })
+        .catch(error => console.log('error', error));
   }
 
   return (
@@ -785,15 +816,23 @@ const Navbar = ({ beginLogin, beginLogout, userLoggedIn, total, cars }) => {
             </>
             {token && (
                 <li className="text-xs">
-                    {userVerified == false && (
+                    {userVerified == false ? (
                         <button type="button" className="px-4 py-1 rounded focus:outline-none font-semibold font-10 flex items-center justify-center text-white bg-green-500 hover:bg-green-400" onClick={verifyMail}>
                             {isLoading ? (
                             <ClipLoader color="#fff" size="24px"></ClipLoader>
                             ) : (
-                            <span>Verify Account</span>
+                            <span>Verify Email</span>
                             )}
                         </button>
 
+                    ) : (
+                      <button type="button" className="px-4 py-1 rounded focus:outline-none font-semibold font-10 flex items-center justify-center text-white bg-green-500 hover:bg-green-400" onClick={verifyPhone}>
+                            {isLoading ? (
+                            <ClipLoader color="#fff" size="24px"></ClipLoader>
+                            ) : (
+                            <span>Verify Phone</span>
+                            )}
+                        </button>
                     )}
                 </li>
             )}

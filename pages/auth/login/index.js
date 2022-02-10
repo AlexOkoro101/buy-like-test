@@ -154,7 +154,8 @@ const LoginOptions = ({ beginLogin }) => {
                         email: data.data.user.email,
                         phone: data.data.user.profile.phoneNumber,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified
+                        emailVerified: data.data.user.emailVerified,
+                        phoneVerified: data.data.user.phoneVerified
                     };
                     localStorage.setItem("user", JSON.stringify(item));
                     router.push("/vin");
@@ -174,84 +175,10 @@ const LoginOptions = ({ beginLogin }) => {
         
     };
 
-    // const formik = useFormik({
-    //     initialValues: {
-    //         email: "",
-    //     },
-    //     validationSchema: Yup.object({
-    //         email: Yup.string()
-    //             .required("Email is required")
-    //             .email("Enter valid email")
-    //     }),
-    //     onSubmit: (values) => {
-    //         // notify()
-    //         setisLoading(true);
-    //         seterror(null);
-    //         console.log(values);
-
-    //         accessWithFacebook(values)
-    //     },
-    // });
-
     const facebookClicked = (data) => {
         console.warn(data);
     };
 
-    // const accessWithFacebook = (values) => {
-
-    //     const facebookProfile = {
-    //         email: values.email,
-    //         facebookId: facebookRes.userID,
-    //     };
-
-    //     // console.log("Login Successful", res.profileObj)
-
-    //     fetch(enviroment.BASE_URL + "auth/login/facebook", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         credentials: "same-origin",
-    //         body: JSON.stringify(facebookProfile),
-    //     })
-    //         .then((res) => {
-    //             if (!res.ok) {
-    //                 setisLoading(false);
-    //                 //   seterror(res.statusText)
-    //                 //   toastError()
-    //             }
-    //             setisLoading(false);
-    //             return res.json();
-    //         })
-    //         .then((data) => {
-    //             if (data?.error) {
-    //                 seterror(data?.message);
-    //                 toastError();
-    //             } else {
-    //                 seterror(data?.message);
-    //                 toastSuccess();
-    //                 const now = new Date();
-    //                 const item = {
-    //                     userToken: data.data._token,
-    //                     userId: data.data.user._id,
-    //                     userName: data.data.user.profile.firstName,
-    //                     phone: data.data.user.profile.phoneNumber,
-    //                     email: data.data.user.email,
-    //                     expiry: now.getTime() + 3600000,
-    //                     emailVerified: data.data.user.emailVerified
-    //                 };
-    //                 localStorage.setItem("user", JSON.stringify(item));
-    //                 router.push("/vin");
-    //             }
-
-    //             //save data to store
-    //             beginLogin({
-    //                 token: data.data._token,
-    //                 login: true,
-    //             });
-    //         })
-    //         .catch((e) => {
-    //             setisLoading(false);
-    //         });
-    // }
 
     return (
         <section className="w-full">
