@@ -91,7 +91,7 @@ const SignupOptions = ({ beginLogin }) => {
                         userEmail: data.data.user.email,
                         expiry: now.getTime() + 3600000,
                         emailVerified: data.data.user.emailVerified,
-                        phoneVerified: data.data.user.phoneVerified
+                        phoneVerified: data.data.user.phoneVerified,
                     };
                     localStorage.setItem("temp", JSON.stringify(item));
                     router.push("/auth/signup/onboarding");
@@ -111,7 +111,7 @@ const SignupOptions = ({ beginLogin }) => {
 
     //Facebook Auth
     const responseFacebook = (res) => {
-        console.log("Facebook login result", res);
+        console.log("Facebook sign up result", res);
         if(res.status == 'not_authorized') return;
         setaddEmail(true)
         setfacebookRes(res)
