@@ -79,10 +79,10 @@ const SignupOptions = ({ beginLogin }) => {
             .then((data) => {
                 if (data?.error) {
                     seterror(data?.message);
-                    toastError();
+                    toast.error(data?.message);
                 } else {
                     setmessage(data?.message);
-                    toastSuccess();
+                    toast.success(data?.message);
                     const now = new Date();
                     const item = {
                         userToken: data.data._token,
@@ -90,7 +90,8 @@ const SignupOptions = ({ beginLogin }) => {
                         userId: data.data.user._id,
                         userEmail: data.data.user.email,
                         expiry: now.getTime() + 3600000,
-                        emailVerified: data.data.user.emailVerified
+                        emailVerified: data.data.user.emailVerified,
+                        phoneVerified: data.data.user.phoneVerified
                     };
                     localStorage.setItem("temp", JSON.stringify(item));
                     router.push("/auth/signup/onboarding");
