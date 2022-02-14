@@ -9,10 +9,11 @@ const Meta = ({ title, keywords, description, image }) => {
         {title === null ? "Buy cars like dealers with ease" : title}
       </title>
       <link rel="icon" href="/fav.svg" />
-      <meta
+      {/* <meta
         name="google-site-verification"
         content="yGcb4Qn0DdhCHl8N7gbLcniO0cexMV3HUMdeVFcehaw"
-      />
+      /> */}
+      <meta name="google-site-verification" content="0hRq2Jt6zNFDv2ACWNUe4txoVpq9QP9crsFwpxt6C28" />
       <meta property="og:site_name" content="Buy cars like dealers" />
       <meta property="og:title" content={title ? title : "Buylikedealers"} />
       <meta

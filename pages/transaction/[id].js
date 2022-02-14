@@ -1792,7 +1792,7 @@ console.log(carDetails)
                                 </button>
                               </div>
 
-                              <div className="items-center">OR</div>
+                              <div className="text-center">OR</div>
 
                               <div className=" px-2 ">
                                 <div
