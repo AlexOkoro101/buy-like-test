@@ -78,12 +78,12 @@ const LogIn = ({ beginLogin }) => {
                 .then((data) => {
                     if (data?.error) {
                         seterror(data?.message);
-                        toastError();
+                        toast.error(data?.message);
                         dispatch(logOut());
                     } else {
                         console.log(data.data)
                         seterror(data?.message);
-                        toastSuccess();
+                        toast.success(data?.message);
                         const now = new Date();
                         const item = {
                             userToken: data.data._token,
